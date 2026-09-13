@@ -1,7 +1,7 @@
 {
   "name": "graphward",
-  "version": "1.0.1",
-  "description": "Graph-backed engineering intelligence for AI coding IDEs. Real dependency graphs, MCP server, and installable skills/agents/workflows for 9 IDEs.",
+  "version": "1.0.2",
+  "description": "Graph-backed codebase intelligence for AI coding editors. Real dependency graphs, MCP server, and installable skills/agents/workflows across 10 AI IDEs.",
   "type": "module",
   "homepage": "https://github.com/vinideep/graphward#readme",
   "repository": {
@@ -37,18 +37,24 @@
   },
   "keywords": [
     "graphward",
+    "codebase-intelligence",
+    "dependency-graph",
+    "mcp",
     "agent-skills",
     "ai-ide",
     "ai-dlc",
     "agentic-workflows",
     "token-optimization",
     "agile",
-    "codex",
-    "claude-code",
+    "antigravity",
     "cursor",
+    "claude-code",
     "copilot",
     "gemini",
-    "antigravity"
+    "codex",
+    "commandcode",
+    "cline",
+    "roo-code"
   ],
   "license": "MIT",
   "engines": {

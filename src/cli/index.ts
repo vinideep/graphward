@@ -95,6 +95,7 @@ Usage:
   gw claims add --statement "..." --evidence "src/a.ts:10-20,src/b.ts" --author "name" [path]
   gw claims list [path] [--json]
   gw context "<task>" [path] [--files a,b] [--budget 2000] [--json]
+  gw prune [path] [--ttl-days 30] [--json]
   graphward telemetry [path] [--json]
 
 IDE ids: ${IDE_IDS.join(", ")}
@@ -113,7 +114,7 @@ Advanced commands (the 4 verbs above orchestrate these; use directly if you want
   freshness [path] [--threshold 60]    git-analysis [path] [--window 90]
   experiment candidates|history [path] [--json]
   aidlc gate|clarify|state [phase|prompt] [path] [--json]
-  user-profile [path] [--json]
+  user-profile [path] [--json]         prune [path] [--ttl-days 30] [--json]
 `;
 }
 

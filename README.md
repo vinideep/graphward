@@ -202,6 +202,9 @@ npx graphward verify .
 
 # Fast update of the dependency graph after manual file edits
 npx graphward sync . --files src/index.ts
+
+# Prune expired negative constraints and failed attempt records (default: 30 days)
+npx graphward prune . --ttl-days 30
 ```
 
 ### What GraphWard Stores in Your Repository
@@ -210,7 +213,7 @@ All intelligence lives safely under `.graphward/`:
 - `knowledge-base/` — Verified documentation and architecture maps.
 - `graph/` — `dependency-graph.json` tracking connections between all modules and symbols.
 - `aidlc/` — Project state, requirements, open questions, and backlog tickets.
-- `memory/` — Conventions, past decisions, and negative constraints (preventing repeated mistakes).
+- `memory/` — Conventions, past decisions, and negative constraints (failed attempt records with 30-day TTL expiry to keep context lean).
 - `reports/` — Impact and safety audit records.
 
 ---
@@ -219,7 +222,9 @@ All intelligence lives safely under `.graphward/`:
 
 **Your intelligence is portable.** GraphWard writes everything to `.graphward/` — a plain directory of markdown and JSON that works across **any** AI IDE. Switch from Cursor to Claude Code to Copilot? Your architecture graph, memory, and project context follow you. No vendor lock-in.
 
-**Supported AI IDEs:** Antigravity, Codex, Claude Code, Cursor, GitHub Copilot, Gemini CLI, Command Code, Cline, Roo Code, and any editor via the generic adapter.
+**Supported AI IDEs:**
+- **Tier 1 (Core / Actively Maintained):** Google Antigravity, Cursor, Claude Code (end-to-end integration tested, native hook lifecycle integration, automated verification receipts).
+- **Tier 2 (Supported Ecosystem Adapters):** GitHub Copilot, Command Code, Gemini CLI, Codex, Cline, Roo Code, and Generic (canonical markdown skills, agents, and prompts).
 
 **Cost-aware by design.** Every request gets a dynamic token budget based on task risk — trivial fixes use ~2,000 tokens of context, critical architecture changes scale up to 15,000. No uncapped context loading.
 
@@ -235,7 +240,7 @@ All intelligence lives safely under `.graphward/`:
 
 ```bash
 npm ci
-npm test               # Runs all 242 automated test suites
+npm test               # Runs all 337 automated tests
 npm run test:integration
 npm run build
 ```
