@@ -5,10 +5,10 @@
     "instructions": "./prompt.md",
     "memory": true,
     "context": [
-        ".engineering-intelligence/knowledge-base",
-        ".engineering-intelligence/aidlc",
-        ".engineering-intelligence/context",
-        ".engineering-intelligence/graph"
+        ".graphward/knowledge-base",
+        ".graphward/aidlc",
+        ".graphward/context",
+        ".graphward/graph"
     ],
     "skills": [
         "requirement-scoper",

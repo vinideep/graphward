@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-03T03:16:59.547Z",
+  "source": {
+    "root": "/Users/vinithr/personal/AI/graphward-OS",
+    "commit": "0d1997e1710a744257246f5b3335242c61202e73",
+    "approvedFiles": 192,
+    "languages": {
+      "JavaScript": 32,
+      "TypeScript": 59
+    },
+    "manifests": [
+      "package.json"
+    ]
+  },
+  "authority": {
+    "canonical": "EI knowledge base, claims, ADRs, memory, and normalized graph",
+    "structuralProvider": "Graphify code-only evidence; never canonical prose",
+    "retrievalProvider": "CCE current source spans inside EI-approved scope; never durable memory",
+    "sourcePrecedence": [
+      "repository source/tests/manifests/Git",
+      "verified EI knowledge and claims",
+      "fresh corroborated provider evidence",
+      "inferred/contested/unknown"
+    ]
+  },
+  "providers": {
+    "ok": true,
+    "degraded": false,
+    "policy": "auto",
+    "statuses": [
+      {
+        "name": "graphify",
+        "displayName": "Graphify",
+        "purpose": "structure",
+        "health": "healthy",
+        "requiredVersion": "0.9.29",
+        "detectedVersion": "0.9.29",
+        "executable": "/Users/vinithr/.graphward/providers/graphify/0.9.29/darwin-arm64/releases/d5f94b19-c19c-4228-b229-dd7bfb7bb5e0/bin/graphify",
+        "source": "managed",
+        "fingerprint": "d9a0572a7db6840553f833bae9f604435748ea292501cf0f149a192708da23dc",
+        "message": "Graphify 0.9.29 is ready.",
+        "checkedAt": "2026-09-03T03:16:56.063Z"
+      },
+      {
+        "name": "cce",
+        "displayName": "Code Context Engine",
+        "purpose": "retrieval",
+        "health": "healthy",
+        "requiredVersion": "0.4.25",
+        "detectedVersion": "0.4.25",
+        "executable": "/Users/vinithr/.graphward/providers/cce/0.4.25/darwin-arm64/releases/63496ea7-ec61-42a2-8030-4fbb5a50ea52/bin/cce",
+        "source": "managed",
+        "fingerprint": "c4081fabc9ba110915c00a469848a46bce59749a433a8d232c406ae1f1b5327c",
+        "message": "Code Context Engine 0.4.25 is ready.",
+        "checkedAt": "2026-09-03T03:16:56.144Z"
+      }
+    ],
+    "actions": [],
+    "manifestPath": ".graphward/providers/manifest.json"
+  },
+  "graph": {
+    "path": ".graphward/graph/dependency-graph.json",
+    "nodes": 743,
+    "edges": 1849,
+    "files": 91,
+    "graphifyCorroboratedEdges": 0,
+    "providerOnlyEdges": 71,
+    "contestedEdges": 0,
+    "unknowns": []
+  },
+  "claims": {
+    "total": 273,
+    "verified": 273,
+    "conflicts": 0
+  },
+  "knowledge": {
+    "status": "ready",
+    "citationDrift": 0,
+    "staleEvidence": 0
+  },
+  "topology": [
+    {
+      "id": "module:src/process/index",
+      "path": "src/process/index.ts",
+      "dependents": 15
+    },
+    {
+      "id": "module:src/graph/index",
+      "path": "src/graph/index.ts",
+      "dependents": 11
+    },
+    {
+      "id": "module:src/config/index",
+      "path": "src/config/index.ts",
+      "dependents": 10
+    },
+    {
+      "id": "module:src/providers/types",
+      "path": "src/providers/types.ts",
+      "dependents": 10
+    },
+    {
+      "id": "module:src/project-files/index",
+      "path": "src/project-files/index.ts",
+      "dependents": 9
+    },
+    {
+      "id": "module:src/gates/index",
+      "path": "src/gates/index.ts",
+      "dependents": 8
+    },
+    {
+      "id": "module:src/graph/schema",
+      "path": "src/graph/schema.ts",
+      "dependents": 8
+    },
+    {
+      "id": "module:src/providers/manager",
+      "path": "src/providers/manager.ts",
+      "dependents": 8
+    },
+    {
+      "id": "module:src/claims/index",
+      "path": "src/claims/index.ts",
+      "dependents": 7
+    },
+    {
+      "id": "module:src/types",
+      "path": "src/types.ts",
+      "dependents": 7
+    },
+    {
+      "id": "module:src/evidence/index",
+      "path": "src/evidence/index.ts",
+      "dependents": 6
+    },
+    {
+      "id": "module:src/providers/cce",
+      "path": "src/providers/cce.ts",
+      "dependents": 6
+    },
+    {
+      "id": "module:src/providers/graphify",
+      "path": "src/providers/graphify.ts",
+      "dependents": 6
+    },
+    {
+      "id": "module:src/verify/index",
+      "path": "src/verify/index.ts",
+      "dependents": 6
+    },
+    {
+      "id": "module:src/providers/compatibility",
+      "path": "src/providers/compatibility.ts",
+      "dependents": 5
+    },
+    {
+      "id": "module:src/providers/workspace",
+      "path": "src/providers/workspace.ts",
+      "dependents": 5
+    },
+    {
+      "id": "module:src/templates",
+      "path": "src/templates.ts",
+      "dependents": 5
+    },
+    {
+      "id": "module:src/context/orchestrator",
+      "path": "src/context/orchestrator.ts",
+      "dependents": 4
+    },
+    {
+      "id": "module:src/providers/project-status",
+      "path": "src/providers/project-status.ts",
+      "dependents": 4
+    },
+    {
+      "id": "module:src/token-optimizer",
+      "path": "src/token-optimizer.ts",
+      "dependents": 4
+    }
+  ],
+  "documentSkeletons": [
+    {
+      "file": "00-project-overview.md",
+      "sections": [
+        "purpose",
+        "languages",
+        "entry points",
+        "boundaries",
+        "unknowns"
+      ],
+      "evidenceQuery": "project entry points and primary runtime"
+    },
+    {
+      "file": "01-repository-structure.md",
+      "sections": [
+        "approved roots",
+        "modules",
+        "tests",
+        "generated exclusions"
+      ],
+      "evidenceQuery": "repository layout and module ownership"
+    },
+    {
+      "file": "02-architecture.md",
+      "sections": [
+        "components",
+        "dependencies",
+        "call paths",
+        "external systems",
+        "contested edges"
+      ],
+      "evidenceQuery": "architecture components and dependency paths"
+    },
+    {
+      "file": "03-runtime-flow.md",
+      "sections": [
+        "startup",
+        "request flow",
+        "background work",
+        "failure paths"
+      ],
+      "evidenceQuery": "runtime entry points and major call flows"
+    },
+    {
+      "file": "15-validation-report.md",
+      "sections": [
+        "sources",
+        "claims",
+        "confidence",
+        "unknowns",
+        "freshness"
+      ],
+      "evidenceQuery": "tests, gates, and evidence health"
+    }
+  ]
+}

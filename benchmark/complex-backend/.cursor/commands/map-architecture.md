@@ -11,11 +11,11 @@ Inspect repository evidence and generate or comprehensively refresh:
 
 | Artifact | Content |
 |---|---|
-| `.engineering-intelligence/graph/dependency-graph.json` | Module/package dependency relationships |
-| `.engineering-intelligence/graph/service-graph.json` | Service-to-service communication topology |
-| `.engineering-intelligence/graph/runtime-graph.json` | Runtime call flows and middleware chains |
-| `.engineering-intelligence/graph/business-flow-graph.json` | Business process flows across boundaries |
-| `.engineering-intelligence/graph/architecture-map.md` | Mermaid diagrams derived from JSON graphs |
+| `.graphward/graph/dependency-graph.json` | Module/package dependency relationships |
+| `.graphward/graph/service-graph.json` | Service-to-service communication topology |
+| `.graphward/graph/runtime-graph.json` | Runtime call flows and middleware chains |
+| `.graphward/graph/business-flow-graph.json` | Business process flows across boundaries |
+| `.graphward/graph/architecture-map.md` | Mermaid diagrams derived from JSON graphs |
 
 ## Requirements
 

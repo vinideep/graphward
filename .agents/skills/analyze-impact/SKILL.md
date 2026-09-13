@@ -15,7 +15,7 @@ Analyze the user-supplied scope: proposed change description, working-tree diff,
 
 ## Output
 
-Write `.engineering-intelligence/reports/IMP-XXX-<slug>.md` covering:
+Write `.graphward/reports/IMP-XXX-<slug>.md` covering:
 
 | Section | Content |
 |---|---|

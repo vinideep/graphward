@@ -1,6 +1,6 @@
-# Engineering Intelligence — documentation drift gate.
+# GraphWard — documentation drift gate.
 #
-# Fails a pull request when the committed intelligence in `.engineering-intelligence/`
+# Fails a pull request when the committed intelligence in `.graphward/`
 # has drifted below the freshness threshold relative to the source it documents.
 # This is the CI-side counterpart to the local Stop/PreToolUse enforcement hooks:
 # it stops stale documentation from merging even when contributors skip the hooks.
@@ -31,7 +31,7 @@ jobs:
 
       - name: Evaluate intelligence freshness
         run: |
-          npx --yes engineering-intelligence freshness . --threshold "${EI_FRESHNESS_THRESHOLD:-60}" --json > freshness.json
+          npx --yes gw freshness . --threshold "${EI_FRESHNESS_THRESHOLD:-60}" --json > freshness.json
           node -e '
             const r = JSON.parse(require("node:fs").readFileSync("freshness.json", "utf8"));
             if (!r.scores || r.scores.length === 0) {
@@ -42,7 +42,7 @@ jobs:
             for (const s of stale) console.log(`  ${s.score}\t${s.status}\t${s.docPath}`);
             console.log(`Drift decision: ${r.driftDecision}`);
             if (r.driftDecision === "Block implementation") {
-              console.error("::error::Intelligence has drifted below the block threshold. Run `npx engineering-intelligence` sync workflows and commit the refreshed docs.");
+              console.error("::error::Intelligence has drifted below the block threshold. Run `npx gw` sync workflows and commit the refreshed docs.");
               process.exit(1);
             }
             if (r.driftDecision === "Sync before implementation") {

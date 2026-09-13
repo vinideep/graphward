@@ -5,10 +5,10 @@
     "instructions": "./prompt.md",
     "memory": true,
     "context": [
-        ".engineering-intelligence/knowledge-base",
-        ".engineering-intelligence/aidlc",
-        ".engineering-intelligence/graph",
-        ".engineering-intelligence/memory"
+        ".graphward/knowledge-base",
+        ".graphward/aidlc",
+        ".graphward/graph",
+        ".graphward/memory"
     ],
     "skills": [
         "aidlc-lifecycle-engine",

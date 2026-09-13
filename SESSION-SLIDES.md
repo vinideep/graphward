@@ -1,10 +1,10 @@
-# Engineering Intelligence OS — Slide Content
+# GraphWard OS — Slide Content
 *(Source document for slide generation. Each "## Slide N" block = one slide. Title = slide title, bullets = on-slide content, "Speaker note" = talk track, not for the slide itself.)*
 
 ---
 
 ## Slide 1: Title
-**Engineering Intelligence OS**
+**GraphWard OS**
 Turn any AI coding IDE into a disciplined engineering team
 
 Subtitle: One install. 46 skills. 15 agents. 9 IDEs.
@@ -63,13 +63,13 @@ Speaker note: This slide builds trust — say it plainly, don't rush past it.
 
 ```
 # 1. Install
-npx engineering-intelligence install . --ide claude-code --yes
+npx gw install . --ide claude-code --yes
 
 # 2. Initialize (inside your AI IDE)
-/initialize-engineering-intelligence
+/initialize-graphward
 
 # 3. Build
-/engineering-intelligence Add rate limiting to auth endpoints
+/graphward Add rate limiting to auth endpoints
 ```
 
 Speaker note: Live demo starts here — switch to terminal.
@@ -100,7 +100,7 @@ Speaker note: Show `ls .claude/skills`, `ls .claude/agents` live.
 ---
 
 ## Slide 8: Initialize — Building Persistent Memory
-**`/initialize-engineering-intelligence`**
+**`/initialize-graphward`**
 
 Reads the actual codebase and generates:
 - `knowledge-base/` — architecture, domain, API knowledge
@@ -115,7 +115,7 @@ Speaker note: Show the generated architecture-map.md Mermaid diagram live.
 ---
 
 ## Slide 9: The Core Workflow
-**`/engineering-intelligence <your request>`**
+**`/graphward <your request>`**
 
 One command runs the full pipeline internally:
 
@@ -136,7 +136,7 @@ Speaker note: "You asked for rate limiting. It brought the discipline."
 **Same command, different mindset**
 
 ```
-/engineering-intelligence Harden checkout APIs using adversarial delivery mode
+/graphward Harden checkout APIs using adversarial delivery mode
 ```
 
 | Mode | When to use |
@@ -194,7 +194,7 @@ Speaker note: Not a marketing number — there's an actual test file for it.
 **Calibrated to you, not a generic default**
 
 ```
-npx engineering-intelligence user-profile .
+npx gw user-profile .
 ```
 
 - Zero LLM tokens — seeded from `git config` + commit history
@@ -210,10 +210,10 @@ Speaker note: My favorite feature — surprises people every time.
 **Terminal, not IDE**
 
 ```
-npx engineering-intelligence doctor .        # health check
-npx engineering-intelligence update .        # apply updates
-npx engineering-intelligence visualize .     # HTML dashboard
-npx engineering-intelligence uninstall .     # removes only managed content
+npx gw doctor .        # health check
+npx gw update .        # apply updates
+npx gw visualize .     # HTML dashboard
+npx gw uninstall .     # removes only managed content
 ```
 
 Speaker note: Doctor reports missing files and hash mismatches — good for CI.
@@ -225,7 +225,7 @@ Speaker note: Doctor reports missing files and hash mismatches — good for CI.
 
 - **46 skills** — knowledge/architecture, planning/delivery, quality/safety, operations, security/compliance
 - **15 specialist agents** — orchestrator, change agent, quality agent, security officer, test engineer, and more
-- **15 workflows** — engineering-intelligence, initialize, create-project, decompose-backlog, deliver-backlog, and more
+- **15 workflows** — graphward, initialize, create-project, decompose-backlog, deliver-backlog, and more
 
 Speaker note: Don't read all 46 skills — point at the categories.
 
@@ -235,11 +235,11 @@ Speaker note: Don't read all 46 skills — point at the categories.
 **Hands-on — open a terminal now**
 
 ```
-npx engineering-intelligence install . --ide claude-code --yes
-npx engineering-intelligence doctor .
+npx gw install . --ide claude-code --yes
+npx gw doctor .
 
-/initialize-engineering-intelligence
-/engineering-intelligence <one small real thing from your repo>
+/initialize-graphward
+/graphward <one small real thing from your repo>
 ```
 
 Speaker note: Hand off the room here. Circulate for questions.
@@ -254,10 +254,10 @@ Speaker note: Hand off the room here. Circulate for questions.
 - A paper trail you can audit
 
 ```
-npx engineering-intelligence
+npx gw
 ```
 
-MIT licensed · github.com/vinideep/engineering-intelligence
+MIT licensed · github.com/vinideep/graphward
 
 Speaker note: "Star it if it saves you the rate-limiting conversation for the fifth time this month."
 
@@ -267,16 +267,16 @@ Speaker note: "Star it if it saves you the rate-limiting conversation for the fi
 **Commands cheat sheet**
 
 ```
-npx engineering-intelligence install . --ide claude-code --yes
-npx engineering-intelligence doctor .
-npx engineering-intelligence update . --dry-run
-npx engineering-intelligence visualize . --open
-npx engineering-intelligence user-profile .
+npx gw install . --ide claude-code --yes
+npx gw doctor .
+npx gw update . --dry-run
+npx gw visualize . --open
+npx gw user-profile .
 ```
 ```
-/initialize-engineering-intelligence
-/engineering-intelligence <request>
-/engineering-intelligence <request> using adversarial delivery mode
+/initialize-graphward
+/graphward <request>
+/graphward <request> using adversarial delivery mode
 /scope-requirement <requirement>
 /analyze-impact <proposed change>
 /decompose-backlog <epic-sized initiative>

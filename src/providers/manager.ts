@@ -18,7 +18,7 @@ function platformKey(): string {
 export function defaultProviderHome(): string {
   return process.env.EI_PROVIDER_HOME
     ? path.resolve(process.env.EI_PROVIDER_HOME)
-    : path.join(os.homedir(), ".engineering-intelligence", "providers");
+    : path.join(os.homedir(), ".graphward", "providers");
 }
 
 export function managedProviderPaths(name: ProviderName, providerHome = defaultProviderHome()) {
@@ -85,7 +85,7 @@ async function probeExecutable(name: ProviderName, executable: string, source: "
     source,
     fingerprint: source === "managed" ? await fingerprint(executable) : undefined,
     message: compatible ? `${provider.displayName} ${detectedVersion} is ready.` : `${provider.displayName} version ${detectedVersion ?? "unknown"} does not match EI's tested ${provider.version}.`,
-    remediation: compatible ? undefined : [`Run engineering-intelligence providers install ${name} to install the tested managed version.`],
+    remediation: compatible ? undefined : [`Run graphward providers install ${name} to install the tested managed version.`],
     checkedAt: new Date().toISOString(),
   };
 }
@@ -99,12 +99,12 @@ export async function providerStatus(name: ProviderName, options: { providerHome
   const providerHome = options.providerHome ?? defaultProviderHome();
   const current = await currentProviderRelease(name, providerHome);
   if (current && !current.executable) {
-    return { name, displayName: provider.displayName, purpose: provider.purpose, health: "error", requiredVersion: provider.version, message: "The managed provider activation record points outside EI's provider directory and was rejected.", remediation: [`Run engineering-intelligence providers repair ${name}.`], checkedAt: new Date().toISOString() };
+    return { name, displayName: provider.displayName, purpose: provider.purpose, health: "error", requiredVersion: provider.version, message: "The managed provider activation record points outside EI's provider directory and was rejected.", remediation: [`Run graphward providers repair ${name}.`], checkedAt: new Date().toISOString() };
   }
   if (current?.executable) {
     const actualFingerprint = await fingerprint(current.executable);
     if (current.fingerprint && actualFingerprint !== current.fingerprint) {
-      return { name, displayName: provider.displayName, purpose: provider.purpose, health: "error", requiredVersion: provider.version, executable: current.executable, source: "managed", fingerprint: actualFingerprint, message: "The managed provider executable fingerprint changed after activation and was rejected.", remediation: [`Run engineering-intelligence providers repair ${name}.`], checkedAt: new Date().toISOString() };
+      return { name, displayName: provider.displayName, purpose: provider.purpose, health: "error", requiredVersion: provider.version, executable: current.executable, source: "managed", fingerprint: actualFingerprint, message: "The managed provider executable fingerprint changed after activation and was rejected.", remediation: [`Run graphward providers repair ${name}.`], checkedAt: new Date().toISOString() };
     }
     const activeStatus = await probeExecutable(name, current.executable, "managed", runner);
     if (activeStatus) return activeStatus;
@@ -121,7 +121,7 @@ export async function providerStatus(name: ProviderName, options: { providerHome
     health: "missing",
     requiredVersion: provider.version,
     message: `${provider.displayName} is not installed or did not pass its version handshake.`,
-    remediation: ["Install uv from https://docs.astral.sh/uv/.", `Run engineering-intelligence providers install ${name}.`],
+    remediation: ["Install uv from https://docs.astral.sh/uv/.", `Run graphward providers install ${name}.`],
     checkedAt: new Date().toISOString(),
   };
 }
@@ -257,7 +257,7 @@ export async function installProvider(name: ProviderName, options: InstallProvid
         message: "uv is required and was not found; EI requires uv to manage Graphify and CCE tools.",
         remediation: [
           "Install uv with: curl -LsSf https://astral.sh/uv/install.sh | sh (macOS/Linux) or brew install uv",
-          `Then run: engineering-intelligence providers install ${name}`,
+          `Then run: graphward providers install ${name}`,
         ],
         checkedAt: new Date().toISOString(),
       };

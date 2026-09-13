@@ -63,7 +63,7 @@ export async function runSetup(root: string, options: SetupOptions): Promise<Set
   const log = (m: string) => logs.push(m);
 
   // 1. Resolve IDEs: explicit → provided; else detect; else generic.
-  const alreadyInstalled = existsSync(path.join(root, ".engineering-intelligence", "install-manifest.json"));
+  const alreadyInstalled = existsSync(path.join(root, ".graphward", "install-manifest.json"));
   let ides = options.ides && options.ides.length > 0 ? options.ides : detectIdes(root);
   if (ides.length === 0) {
     ides = ["generic"];
@@ -137,8 +137,8 @@ export async function runSetup(root: string, options: SetupOptions): Promise<Set
   } catch { /* best-effort */ }
 
   // 6. Snapshot evidence hashes if a knowledge base already exists.
-  if (existsSync(path.join(root, ".engineering-intelligence", "knowledge-base")) &&
-      !existsSync(path.join(root, ".engineering-intelligence", "knowledge-base", ".evidence-hashes.json"))) {
+  if (existsSync(path.join(root, ".graphward", "knowledge-base")) &&
+      !existsSync(path.join(root, ".graphward", "knowledge-base", ".evidence-hashes.json"))) {
     try {
       const { recordEvidenceHashes } = await import("../evidence/index.js");
       const snap = await recordEvidenceHashes(root);
@@ -154,11 +154,11 @@ export async function runSetup(root: string, options: SetupOptions): Promise<Set
 export function mcpRegistrationHint(root: string, ides: IdeId[]): string {
   const lines = ["", "Next steps:"];
   if (ides.includes("claude-code")) {
-    lines.push(`  • Register the MCP server:  claude mcp add engineering-intelligence -- ei-mcp ${root}`);
+    lines.push(`  • Register the MCP server:  claude mcp add graphward -- ei-mcp ${root}`);
   } else {
     lines.push(`  • Start the MCP server for your IDE:  ei-mcp ${root}`);
   }
-  lines.push("  • In your IDE, run: /initialize-engineering-intelligence");
-  lines.push("  • Ask the codebase anything:  engineering-intelligence ask \"who calls <fn>\"");
+  lines.push("  • In your IDE, run: /initialize-graphward");
+  lines.push("  • Ask the codebase anything:  graphward ask \"who calls <fn>\"");
   return lines.join("\n") + "\n";
 }

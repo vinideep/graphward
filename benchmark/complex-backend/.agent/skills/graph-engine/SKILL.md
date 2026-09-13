@@ -7,7 +7,7 @@ description: Builds and maintains evidence-backed JSON architecture graphs and M
 
 Build and maintain structured, evidence-backed architecture graphs that enable impact analysis, dependency tracing, and architectural understanding.
 
-**Build the real graph first:** `npx engineering-intelligence map . [--update --files a,b]` produces the computed, schema-validated `dependency-graph.json` from source imports. It resolves specifiers against disk and records anything it cannot resolve in `unknowns` rather than guessing. Use the steps below to derive the service, runtime, and business-flow graphs the CLI does not compute.
+**Build the real graph first:** `npx gw map . [--update --files a,b]` produces the computed, schema-validated `dependency-graph.json` from source imports. It resolves specifiers against disk and records anything it cannot resolve in `unknowns` rather than guessing. Use the steps below to derive the service, runtime, and business-flow graphs the CLI does not compute.
 
 ## Inputs
 
@@ -17,7 +17,7 @@ Build and maintain structured, evidence-backed architecture graphs that enable i
 
 ## Graph Artifacts
 
-All graphs are stored in `.engineering-intelligence/graph/`.
+All graphs are stored in `.graphward/graph/`.
 
 ### Graph JSON Schema
 

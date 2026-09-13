@@ -1,0 +1,6239 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-09T19:26:10.558Z",
+  "claims": [
+    {
+      "id": "CLM-D0001",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "bench/replay.mjs",
+        "evidence": "bench/replay.mjs"
+      },
+      "statement": "Source module `bench/replay.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "bench/replay.mjs",
+          "contentHash": "12714d82f9b13eec"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0002",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/adapters/index.ts",
+        "evidence": "src/adapters/index.ts"
+      },
+      "statement": "Source module `src/adapters/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/adapters/index.ts",
+          "contentHash": "63dfc644716f952f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0003",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/templates.ts",
+        "evidence": "src/templates.ts"
+      },
+      "statement": "Source module `src/templates.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/templates.ts",
+          "contentHash": "0656c97b769bcde8"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0004",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/token-optimizer.ts",
+        "evidence": "src/token-optimizer.ts"
+      },
+      "statement": "Source module `src/token-optimizer.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/token-optimizer.ts",
+          "contentHash": "50331766f8581c31"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0005",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/hooks/index.ts",
+        "evidence": "src/hooks/index.ts"
+      },
+      "statement": "Source module `src/hooks/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/hooks/index.ts",
+          "contentHash": "09035fb2b80f2238"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0006",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/mcp/index.ts",
+        "evidence": "src/mcp/index.ts"
+      },
+      "statement": "Source module `src/mcp/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/mcp/index.ts",
+          "contentHash": "4688af6e0054f2be"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0007",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/types.ts",
+        "evidence": "src/types.ts"
+      },
+      "statement": "Source module `src/types.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/types.ts",
+          "contentHash": "912c99fb7b5b9e48"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0008",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/aidlc/backlog-graph.ts",
+        "evidence": "src/aidlc/backlog-graph.ts"
+      },
+      "statement": "Source module `src/aidlc/backlog-graph.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/aidlc/backlog-graph.ts",
+          "contentHash": "ad6db718657af1da"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0009",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/graph/builders/dependency.ts",
+        "evidence": "src/graph/builders/dependency.ts"
+      },
+      "statement": "Source module `src/graph/builders/dependency.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/graph/builders/dependency.ts",
+          "contentHash": "ac4c9dcea81e04e7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0010",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/graph/index.ts",
+        "evidence": "src/graph/index.ts"
+      },
+      "statement": "Source module `src/graph/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/graph/index.ts",
+          "contentHash": "68da9b87bf6e6513"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0011",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/graph/schema.ts",
+        "evidence": "src/graph/schema.ts"
+      },
+      "statement": "Source module `src/graph/schema.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/graph/schema.ts",
+          "contentHash": "13c971f007ea0eb2"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0012",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/aidlc/clarification.ts",
+        "evidence": "src/aidlc/clarification.ts"
+      },
+      "statement": "Source module `src/aidlc/clarification.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/aidlc/clarification.ts",
+          "contentHash": "2d05348e709056f6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0013",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/aidlc/types.ts",
+        "evidence": "src/aidlc/types.ts"
+      },
+      "statement": "Source module `src/aidlc/types.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/aidlc/types.ts",
+          "contentHash": "3447b082fa748550"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0014",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/aidlc/state.ts",
+        "evidence": "src/aidlc/state.ts"
+      },
+      "statement": "Source module `src/aidlc/state.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/aidlc/state.ts",
+          "contentHash": "4128e2dd4e2bc979"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0015",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/aidlc/gates.ts",
+        "evidence": "src/aidlc/gates.ts"
+      },
+      "statement": "Source module `src/aidlc/gates.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/aidlc/gates.ts",
+          "contentHash": "a6563f021eeaabd9"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0016",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/gates/index.ts",
+        "evidence": "src/gates/index.ts"
+      },
+      "statement": "Source module `src/gates/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/gates/index.ts",
+          "contentHash": "2b48709470bffaa1"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0017",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/flight/index.ts",
+        "evidence": "src/flight/index.ts"
+      },
+      "statement": "Source module `src/flight/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/flight/index.ts",
+          "contentHash": "c34fc1c22a59ffc0"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0018",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/aidlc/index.ts",
+        "evidence": "src/aidlc/index.ts"
+      },
+      "statement": "Source module `src/aidlc/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/aidlc/index.ts",
+          "contentHash": "30f3b3f5017f19f2"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0019",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/brief/index.ts",
+        "evidence": "src/brief/index.ts"
+      },
+      "statement": "Source module `src/brief/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/brief/index.ts",
+          "contentHash": "e21d48af45fdbc9c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0020",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/claims/derive.ts",
+        "evidence": "src/claims/derive.ts"
+      },
+      "statement": "Source module `src/claims/derive.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/claims/derive.ts",
+          "contentHash": "fff2d0de39a0637a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0021",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/gates/api-diff.ts",
+        "evidence": "src/gates/api-diff.ts"
+      },
+      "statement": "Source module `src/gates/api-diff.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/gates/api-diff.ts",
+          "contentHash": "b104f8af03623b0f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0022",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/claims/index.ts",
+        "evidence": "src/claims/index.ts"
+      },
+      "statement": "Source module `src/claims/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/claims/index.ts",
+          "contentHash": "1ab6b60541829360"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0023",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/cli/index.ts",
+        "evidence": "src/cli/index.ts"
+      },
+      "statement": "Source module `src/cli/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0024",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/installer/index.ts",
+        "evidence": "src/installer/index.ts"
+      },
+      "statement": "Source module `src/installer/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/installer/index.ts",
+          "contentHash": "b8cf07c054626f56"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0025",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/validation/index.ts",
+        "evidence": "src/validation/index.ts"
+      },
+      "statement": "Source module `src/validation/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/validation/index.ts",
+          "contentHash": "dbe97eec27ee2a52"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0026",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/visualizer/index.ts",
+        "evidence": "src/visualizer/index.ts"
+      },
+      "statement": "Source module `src/visualizer/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/visualizer/index.ts",
+          "contentHash": "a4aa0d9f393c5022"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0027",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/version.ts",
+        "evidence": "src/version.ts"
+      },
+      "statement": "Source module `src/version.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/version.ts",
+          "contentHash": "fc31b21528e0570c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0028",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/providers/types.ts",
+        "evidence": "src/providers/types.ts"
+      },
+      "statement": "Source module `src/providers/types.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/providers/types.ts",
+          "contentHash": "05285546b37ef5cd"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0029",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/config/index.ts",
+        "evidence": "src/config/index.ts"
+      },
+      "statement": "Source module `src/config/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/config/index.ts",
+          "contentHash": "f9ff5de7199954ef"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0030",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/orchestrators/setup.ts",
+        "evidence": "src/orchestrators/setup.ts"
+      },
+      "statement": "Source module `src/orchestrators/setup.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/setup.ts",
+          "contentHash": "eaadf02287a6d4db"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0031",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/providers/index.ts",
+        "evidence": "src/providers/index.ts"
+      },
+      "statement": "Source module `src/providers/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/providers/index.ts",
+          "contentHash": "33d34e25ffb1fd8c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0032",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/orchestrators/initialize.ts",
+        "evidence": "src/orchestrators/initialize.ts"
+      },
+      "statement": "Source module `src/orchestrators/initialize.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/initialize.ts",
+          "contentHash": "dcef728c8a977274"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0033",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/orchestrators/ask.ts",
+        "evidence": "src/orchestrators/ask.ts"
+      },
+      "statement": "Source module `src/orchestrators/ask.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/ask.ts",
+          "contentHash": "ddc0c37d9e1600b4"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0034",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/evidence/index.ts",
+        "evidence": "src/evidence/index.ts"
+      },
+      "statement": "Source module `src/evidence/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/evidence/index.ts",
+          "contentHash": "2675a5d5174e03ba"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0035",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/orchestrators/health.ts",
+        "evidence": "src/orchestrators/health.ts"
+      },
+      "statement": "Source module `src/orchestrators/health.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/health.ts",
+          "contentHash": "ef60040760c3dd90"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0036",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/freshness/index.ts",
+        "evidence": "src/freshness/index.ts"
+      },
+      "statement": "Source module `src/freshness/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/freshness/index.ts",
+          "contentHash": "e39ef16162f8eb94"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0037",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/verify/index.ts",
+        "evidence": "src/verify/index.ts"
+      },
+      "statement": "Source module `src/verify/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/verify/index.ts",
+          "contentHash": "de379d9e1c8cd4a6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0038",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/context/orchestrator.ts",
+        "evidence": "src/context/orchestrator.ts"
+      },
+      "statement": "Source module `src/context/orchestrator.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/context/orchestrator.ts",
+          "contentHash": "9cdef5eb61e207f6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0039",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/telemetry/index.ts",
+        "evidence": "src/telemetry/index.ts"
+      },
+      "statement": "Source module `src/telemetry/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/telemetry/index.ts",
+          "contentHash": "143f0f3c93176e3c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0040",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/git-analysis/index.ts",
+        "evidence": "src/git-analysis/index.ts"
+      },
+      "statement": "Source module `src/git-analysis/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/git-analysis/index.ts",
+          "contentHash": "f14c380e6292f9a9"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0041",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/user-profile/index.ts",
+        "evidence": "src/user-profile/index.ts"
+      },
+      "statement": "Source module `src/user-profile/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/user-profile/index.ts",
+          "contentHash": "e2f26afd5536a4c8"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0042",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/experiment/index.ts",
+        "evidence": "src/experiment/index.ts"
+      },
+      "statement": "Source module `src/experiment/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/experiment/index.ts",
+          "contentHash": "99bb92bf8074a28a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0043",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/process/index.ts",
+        "evidence": "src/process/index.ts"
+      },
+      "statement": "Source module `src/process/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/process/index.ts",
+          "contentHash": "e73ee7f408cfdabc"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0044",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/orchestrators/change.ts",
+        "evidence": "src/orchestrators/change.ts"
+      },
+      "statement": "Source module `src/orchestrators/change.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/change.ts",
+          "contentHash": "26226a2c6ba1afce"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0045",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/context/index.ts",
+        "evidence": "src/context/index.ts"
+      },
+      "statement": "Source module `src/context/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/context/index.ts",
+          "contentHash": "e5e4779a4e3abb7c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0046",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/project-files/index.ts",
+        "evidence": "src/project-files/index.ts"
+      },
+      "statement": "Source module `src/project-files/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/project-files/index.ts",
+          "contentHash": "31c8fb22b98bf7ce"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0047",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/providers/manager.ts",
+        "evidence": "src/providers/manager.ts"
+      },
+      "statement": "Source module `src/providers/manager.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/providers/manager.ts",
+          "contentHash": "23f8037b43222cc3"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0048",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/providers/cce.ts",
+        "evidence": "src/providers/cce.ts"
+      },
+      "statement": "Source module `src/providers/cce.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/providers/cce.ts",
+          "contentHash": "16ada5ccae132d2c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0049",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/providers/project-status.ts",
+        "evidence": "src/providers/project-status.ts"
+      },
+      "statement": "Source module `src/providers/project-status.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/providers/project-status.ts",
+          "contentHash": "af40b99931a88da0"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0050",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/experiment/ledger.ts",
+        "evidence": "src/experiment/ledger.ts"
+      },
+      "statement": "Source module `src/experiment/ledger.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/experiment/ledger.ts",
+          "contentHash": "3c4b1d9efddcbd50"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0051",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/experiment/candidates.ts",
+        "evidence": "src/experiment/candidates.ts"
+      },
+      "statement": "Source module `src/experiment/candidates.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/experiment/candidates.ts",
+          "contentHash": "b962b7f64e7c0015"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0052",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/experiment/types.ts",
+        "evidence": "src/experiment/types.ts"
+      },
+      "statement": "Source module `src/experiment/types.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/experiment/types.ts",
+          "contentHash": "35619e8c5309e28e"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0053",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/experiment/graph-sync.ts",
+        "evidence": "src/experiment/graph-sync.ts"
+      },
+      "statement": "Source module `src/experiment/graph-sync.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/experiment/graph-sync.ts",
+          "contentHash": "66f42ef919f60565"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0054",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/experiment/metric.ts",
+        "evidence": "src/experiment/metric.ts"
+      },
+      "statement": "Source module `src/experiment/metric.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/experiment/metric.ts",
+          "contentHash": "ff7e51c7c38c11c7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0055",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/experiment/runner.ts",
+        "evidence": "src/experiment/runner.ts"
+      },
+      "statement": "Source module `src/experiment/runner.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/experiment/runner.ts",
+          "contentHash": "dc0d6f56cbbf2644"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0056",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/experiment/workspace.ts",
+        "evidence": "src/experiment/workspace.ts"
+      },
+      "statement": "Source module `src/experiment/workspace.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/experiment/workspace.ts",
+          "contentHash": "a1b108ad4f66af99"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0057",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/gates/dead-exports.ts",
+        "evidence": "src/gates/dead-exports.ts"
+      },
+      "statement": "Source module `src/gates/dead-exports.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/gates/dead-exports.ts",
+          "contentHash": "4cf1a6c7cdc20db9"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0058",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/gates/env-vars.ts",
+        "evidence": "src/gates/env-vars.ts"
+      },
+      "statement": "Source module `src/gates/env-vars.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/gates/env-vars.ts",
+          "contentHash": "bbf41091a60c3bfe"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0059",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/gates/migration-lint.ts",
+        "evidence": "src/gates/migration-lint.ts"
+      },
+      "statement": "Source module `src/gates/migration-lint.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/gates/migration-lint.ts",
+          "contentHash": "618a9fc4d03f6627"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0060",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/graph/parsers/manifest.ts",
+        "evidence": "src/graph/parsers/manifest.ts"
+      },
+      "statement": "Source module `src/graph/parsers/manifest.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/graph/parsers/manifest.ts",
+          "contentHash": "4ad1be5e3c9b7897"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0061",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/graph/parsers/imports.ts",
+        "evidence": "src/graph/parsers/imports.ts"
+      },
+      "statement": "Source module `src/graph/parsers/imports.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/graph/parsers/imports.ts",
+          "contentHash": "1337295d1b89a830"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0062",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/graph/parsers/symbols.ts",
+        "evidence": "src/graph/parsers/symbols.ts"
+      },
+      "statement": "Source module `src/graph/parsers/symbols.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/graph/parsers/symbols.ts",
+          "contentHash": "397705c50b202d38"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0063",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/graph/provider-evidence.ts",
+        "evidence": "src/graph/provider-evidence.ts"
+      },
+      "statement": "Source module `src/graph/provider-evidence.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/graph/provider-evidence.ts",
+          "contentHash": "ceb0d1134b9718f7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0064",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/graph/parsers/scan.ts",
+        "evidence": "src/graph/parsers/scan.ts"
+      },
+      "statement": "Source module `src/graph/parsers/scan.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/graph/parsers/scan.ts",
+          "contentHash": "0904585294ee132f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0065",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/providers/graphify.ts",
+        "evidence": "src/providers/graphify.ts"
+      },
+      "statement": "Source module `src/providers/graphify.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/providers/graphify.ts",
+          "contentHash": "c6cfecbfda2de705"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0066",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/installer/blocks.ts",
+        "evidence": "src/installer/blocks.ts"
+      },
+      "statement": "Source module `src/installer/blocks.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/installer/blocks.ts",
+          "contentHash": "c7ccd90ab15553c3"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0067",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/manifest/index.ts",
+        "evidence": "src/manifest/index.ts"
+      },
+      "statement": "Source module `src/manifest/index.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/manifest/index.ts",
+          "contentHash": "9a862fa3f0d1a8e9"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0068",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/installer/json-merge.ts",
+        "evidence": "src/installer/json-merge.ts"
+      },
+      "statement": "Source module `src/installer/json-merge.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/installer/json-merge.ts",
+          "contentHash": "eecde53629bd50c4"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0069",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/mcp/cli.ts",
+        "evidence": "src/mcp/cli.ts"
+      },
+      "statement": "Source module `src/mcp/cli.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/mcp/cli.ts",
+          "contentHash": "1960849b1190c884"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0070",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/mcp/consolidated.ts",
+        "evidence": "src/mcp/consolidated.ts"
+      },
+      "statement": "Source module `src/mcp/consolidated.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/mcp/consolidated.ts",
+          "contentHash": "5c1da30640b6849f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0071",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/mcp/registry.ts",
+        "evidence": "src/mcp/registry.ts"
+      },
+      "statement": "Source module `src/mcp/registry.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/mcp/registry.ts",
+          "contentHash": "3c2d1ee86c13b89e"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0072",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/mcp/shaper.ts",
+        "evidence": "src/mcp/shaper.ts"
+      },
+      "statement": "Source module `src/mcp/shaper.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/mcp/shaper.ts",
+          "contentHash": "e0fd51a04a544f1f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0073",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/providers/compatibility.ts",
+        "evidence": "src/providers/compatibility.ts"
+      },
+      "statement": "Source module `src/providers/compatibility.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/providers/compatibility.ts",
+          "contentHash": "df5ca5cad3ac9169"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0074",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "src/providers/workspace.ts",
+        "evidence": "src/providers/workspace.ts"
+      },
+      "statement": "Source module `src/providers/workspace.ts` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "src/providers/workspace.ts",
+          "contentHash": "0336ad4339848633"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0075",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/accuracy.test.mjs",
+        "evidence": "test/accuracy.test.mjs"
+      },
+      "statement": "Source module `test/accuracy.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/accuracy.test.mjs",
+          "contentHash": "dcc888053881b47f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0076",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/adapters.test.mjs",
+        "evidence": "test/adapters.test.mjs"
+      },
+      "statement": "Source module `test/adapters.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/adapters.test.mjs",
+          "contentHash": "b6143ae3b8b089a6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0077",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/aidlc-clarification.test.mjs",
+        "evidence": "test/aidlc-clarification.test.mjs"
+      },
+      "statement": "Source module `test/aidlc-clarification.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/aidlc-clarification.test.mjs",
+          "contentHash": "6fe9c7e0ff5bd886"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0078",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/aidlc-state.test.mjs",
+        "evidence": "test/aidlc-state.test.mjs"
+      },
+      "statement": "Source module `test/aidlc-state.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/aidlc-state.test.mjs",
+          "contentHash": "3b7cac4d626d4ed9"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0079",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/backlog-graph.test.mjs",
+        "evidence": "test/backlog-graph.test.mjs"
+      },
+      "statement": "Source module `test/backlog-graph.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/backlog-graph.test.mjs",
+          "contentHash": "c1700220e349c3f3"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0080",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/cce.test.mjs",
+        "evidence": "test/cce.test.mjs"
+      },
+      "statement": "Source module `test/cce.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/cce.test.mjs",
+          "contentHash": "1f342a9bdcb3cecd"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0081",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/claims-derived.test.mjs",
+        "evidence": "test/claims-derived.test.mjs"
+      },
+      "statement": "Source module `test/claims-derived.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/claims-derived.test.mjs",
+          "contentHash": "6d3f2caf7ff929db"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0082",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/claims.test.mjs",
+        "evidence": "test/claims.test.mjs"
+      },
+      "statement": "Source module `test/claims.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/claims.test.mjs",
+          "contentHash": "95d0b0678e431335"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0083",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/context-v2.test.mjs",
+        "evidence": "test/context-v2.test.mjs"
+      },
+      "statement": "Source module `test/context-v2.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/context-v2.test.mjs",
+          "contentHash": "746c2a2326e94d6a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0084",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/context.test.mjs",
+        "evidence": "test/context.test.mjs"
+      },
+      "statement": "Source module `test/context.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/context.test.mjs",
+          "contentHash": "aaca3e38f8a965ba"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0085",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/evidence.test.mjs",
+        "evidence": "test/evidence.test.mjs"
+      },
+      "statement": "Source module `test/evidence.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/evidence.test.mjs",
+          "contentHash": "58dbf00fc70c5da6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0086",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/experiment.test.mjs",
+        "evidence": "test/experiment.test.mjs"
+      },
+      "statement": "Source module `test/experiment.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/experiment.test.mjs",
+          "contentHash": "dfcca47ddce5ef82"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0087",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/flight.test.mjs",
+        "evidence": "test/flight.test.mjs"
+      },
+      "statement": "Source module `test/flight.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/flight.test.mjs",
+          "contentHash": "9d964f0c22e8efe7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0088",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/freshness.test.mjs",
+        "evidence": "test/freshness.test.mjs"
+      },
+      "statement": "Source module `test/freshness.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/freshness.test.mjs",
+          "contentHash": "c529f8bf8c48e05b"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0089",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/gates.test.mjs",
+        "evidence": "test/gates.test.mjs"
+      },
+      "statement": "Source module `test/gates.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/gates.test.mjs",
+          "contentHash": "14a0a159a04b8cc5"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0090",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/graph-honesty.test.mjs",
+        "evidence": "test/graph-honesty.test.mjs"
+      },
+      "statement": "Source module `test/graph-honesty.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/graph-honesty.test.mjs",
+          "contentHash": "7bee6d356ddf804b"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0091",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/graph.test.mjs",
+        "evidence": "test/graph.test.mjs"
+      },
+      "statement": "Source module `test/graph.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/graph.test.mjs",
+          "contentHash": "ed307fb1674bab15"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0092",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/graphify-evidence.test.mjs",
+        "evidence": "test/graphify-evidence.test.mjs"
+      },
+      "statement": "Source module `test/graphify-evidence.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/graphify-evidence.test.mjs",
+          "contentHash": "da169344c8815dd3"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0093",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/hooks.test.mjs",
+        "evidence": "test/hooks.test.mjs"
+      },
+      "statement": "Source module `test/hooks.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/hooks.test.mjs",
+          "contentHash": "0106f87ca3b0a0cd"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0094",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/initialize.test.mjs",
+        "evidence": "test/initialize.test.mjs"
+      },
+      "statement": "Source module `test/initialize.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/initialize.test.mjs",
+          "contentHash": "d12083cd14dbbe5c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0095",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/install-integration.test.mjs",
+        "evidence": "test/install-integration.test.mjs"
+      },
+      "statement": "Source module `test/install-integration.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/install-integration.test.mjs",
+          "contentHash": "c4ba8f18c92aa8bc"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0096",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/installer.test.mjs",
+        "evidence": "test/installer.test.mjs"
+      },
+      "statement": "Source module `test/installer.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/installer.test.mjs",
+          "contentHash": "b680b4ef90f825e6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0097",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/json-merge.test.mjs",
+        "evidence": "test/json-merge.test.mjs"
+      },
+      "statement": "Source module `test/json-merge.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/json-merge.test.mjs",
+          "contentHash": "29381c18befe3fa9"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0098",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/mcp-registry.test.mjs",
+        "evidence": "test/mcp-registry.test.mjs"
+      },
+      "statement": "Source module `test/mcp-registry.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/mcp-registry.test.mjs",
+          "contentHash": "b5ede86cb7d87519"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0099",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/mcp.test.mjs",
+        "evidence": "test/mcp.test.mjs"
+      },
+      "statement": "Source module `test/mcp.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/mcp.test.mjs",
+          "contentHash": "4c534a3c6cb64fb7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0100",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/negative-constraints.test.mjs",
+        "evidence": "test/negative-constraints.test.mjs"
+      },
+      "statement": "Source module `test/negative-constraints.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/negative-constraints.test.mjs",
+          "contentHash": "c2aec30aeb38ec96"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0101",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/orchestrators.test.mjs",
+        "evidence": "test/orchestrators.test.mjs"
+      },
+      "statement": "Source module `test/orchestrators.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/orchestrators.test.mjs",
+          "contentHash": "8d258dfa92845e95"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0102",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/project-files.test.mjs",
+        "evidence": "test/project-files.test.mjs"
+      },
+      "statement": "Source module `test/project-files.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/project-files.test.mjs",
+          "contentHash": "0a1371fee3ed0ea4"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0103",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/providers.test.mjs",
+        "evidence": "test/providers.test.mjs"
+      },
+      "statement": "Source module `test/providers.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/providers.test.mjs",
+          "contentHash": "b28a4346357f6715"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0104",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/reachability.test.mjs",
+        "evidence": "test/reachability.test.mjs"
+      },
+      "statement": "Source module `test/reachability.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/reachability.test.mjs",
+          "contentHash": "bf0dad4d0747b495"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0105",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/shiplogic-integration.test.mjs",
+        "evidence": "test/shiplogic-integration.test.mjs"
+      },
+      "statement": "Source module `test/shiplogic-integration.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/shiplogic-integration.test.mjs",
+          "contentHash": "72bc6f57c6dfee83"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0106",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/telemetry.test.mjs",
+        "evidence": "test/telemetry.test.mjs"
+      },
+      "statement": "Source module `test/telemetry.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/telemetry.test.mjs",
+          "contentHash": "4fef58a26f4fc1a2"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0107",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/templates.test.mjs",
+        "evidence": "test/templates.test.mjs"
+      },
+      "statement": "Source module `test/templates.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/templates.test.mjs",
+          "contentHash": "28c3156a36600f89"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0108",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/token-budget.test.mjs",
+        "evidence": "test/token-budget.test.mjs"
+      },
+      "statement": "Source module `test/token-budget.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/token-budget.test.mjs",
+          "contentHash": "5e1ba8d1a25cecb0"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0109",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/token-reduction.test.mjs",
+        "evidence": "test/token-reduction.test.mjs"
+      },
+      "statement": "Source module `test/token-reduction.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/token-reduction.test.mjs",
+          "contentHash": "688a2e62f7f4598f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0110",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/verify.test.mjs",
+        "evidence": "test/verify.test.mjs"
+      },
+      "statement": "Source module `test/verify.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/verify.test.mjs",
+          "contentHash": "9525ef42f63ba340"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0111",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/visualizer.test.mjs",
+        "evidence": "test/visualizer.test.mjs"
+      },
+      "statement": "Source module `test/visualizer.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/visualizer.test.mjs",
+          "contentHash": "8edca736337e76b7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0112",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/workspace.test.mjs",
+        "evidence": "test/workspace.test.mjs"
+      },
+      "statement": "Source module `test/workspace.test.mjs` is in EI's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/workspace.test.mjs",
+          "contentHash": "b2cb77525eeb856a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0113",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/adapters/index.ts",
+        "to": "src/templates.ts",
+        "evidence": "src/adapters/index.ts:1"
+      },
+      "statement": "Module `src/adapters/index.ts` imports `src/templates.ts`.",
+      "evidence": [
+        {
+          "path": "src/adapters/index.ts",
+          "contentHash": "63dfc644716f952f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0114",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/adapters/index.ts",
+        "to": "src/token-optimizer.ts",
+        "evidence": "src/adapters/index.ts:2"
+      },
+      "statement": "Module `src/adapters/index.ts` imports `src/token-optimizer.ts`.",
+      "evidence": [
+        {
+          "path": "src/adapters/index.ts",
+          "contentHash": "63dfc644716f952f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0115",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/adapters/index.ts",
+        "to": "src/hooks/index.ts",
+        "evidence": "src/adapters/index.ts:10"
+      },
+      "statement": "Module `src/adapters/index.ts` imports `src/hooks/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/adapters/index.ts",
+          "contentHash": "63dfc644716f952f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0116",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/adapters/index.ts",
+        "to": "src/mcp/index.ts",
+        "evidence": "src/adapters/index.ts:11"
+      },
+      "statement": "Module `src/adapters/index.ts` imports `src/mcp/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/adapters/index.ts",
+          "contentHash": "63dfc644716f952f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0117",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/adapters/index.ts",
+        "to": "src/types.ts",
+        "evidence": "src/adapters/index.ts:12"
+      },
+      "statement": "Module `src/adapters/index.ts` imports `src/types.ts`.",
+      "evidence": [
+        {
+          "path": "src/adapters/index.ts",
+          "contentHash": "63dfc644716f952f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0118",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/aidlc/backlog-graph.ts",
+        "to": "src/graph/builders/dependency.ts",
+        "evidence": "src/aidlc/backlog-graph.ts:4"
+      },
+      "statement": "Module `src/aidlc/backlog-graph.ts` imports `src/graph/builders/dependency.ts`.",
+      "evidence": [
+        {
+          "path": "src/aidlc/backlog-graph.ts",
+          "contentHash": "ad6db718657af1da"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0119",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/aidlc/backlog-graph.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/aidlc/backlog-graph.ts:5"
+      },
+      "statement": "Module `src/aidlc/backlog-graph.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/aidlc/backlog-graph.ts",
+          "contentHash": "ad6db718657af1da"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0120",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/aidlc/clarification.ts",
+        "to": "src/aidlc/state.ts",
+        "evidence": "src/aidlc/clarification.ts:156"
+      },
+      "statement": "Module `src/aidlc/clarification.ts` imports `src/aidlc/state.ts`.",
+      "evidence": [
+        {
+          "path": "src/aidlc/clarification.ts",
+          "contentHash": "2d05348e709056f6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0121",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/aidlc/gates.ts",
+        "to": "src/gates/index.ts",
+        "evidence": "src/aidlc/gates.ts:4"
+      },
+      "statement": "Module `src/aidlc/gates.ts` imports `src/gates/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/aidlc/gates.ts",
+          "contentHash": "a6563f021eeaabd9"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0122",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/aidlc/gates.ts",
+        "to": "src/flight/index.ts",
+        "evidence": "src/aidlc/gates.ts:5"
+      },
+      "statement": "Module `src/aidlc/gates.ts` imports `src/flight/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/aidlc/gates.ts",
+          "contentHash": "a6563f021eeaabd9"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0123",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/aidlc/gates.ts",
+        "to": "src/aidlc/state.ts",
+        "evidence": "src/aidlc/gates.ts:6"
+      },
+      "statement": "Module `src/aidlc/gates.ts` imports `src/aidlc/state.ts`.",
+      "evidence": [
+        {
+          "path": "src/aidlc/gates.ts",
+          "contentHash": "a6563f021eeaabd9"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0124",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/aidlc/gates.ts",
+        "to": "src/aidlc/backlog-graph.ts",
+        "evidence": "src/aidlc/gates.ts:7"
+      },
+      "statement": "Module `src/aidlc/gates.ts` imports `src/aidlc/backlog-graph.ts`.",
+      "evidence": [
+        {
+          "path": "src/aidlc/gates.ts",
+          "contentHash": "a6563f021eeaabd9"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0125",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/aidlc/index.ts",
+        "to": "src/aidlc/types.ts",
+        "evidence": "src/aidlc/index.ts:1"
+      },
+      "statement": "Module `src/aidlc/index.ts` imports `src/aidlc/types.ts`.",
+      "evidence": [
+        {
+          "path": "src/aidlc/index.ts",
+          "contentHash": "30f3b3f5017f19f2"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0126",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/aidlc/index.ts",
+        "to": "src/aidlc/clarification.ts",
+        "evidence": "src/aidlc/index.ts:2"
+      },
+      "statement": "Module `src/aidlc/index.ts` imports `src/aidlc/clarification.ts`.",
+      "evidence": [
+        {
+          "path": "src/aidlc/index.ts",
+          "contentHash": "30f3b3f5017f19f2"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0127",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/aidlc/index.ts",
+        "to": "src/aidlc/gates.ts",
+        "evidence": "src/aidlc/index.ts:3"
+      },
+      "statement": "Module `src/aidlc/index.ts` imports `src/aidlc/gates.ts`.",
+      "evidence": [
+        {
+          "path": "src/aidlc/index.ts",
+          "contentHash": "30f3b3f5017f19f2"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0128",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/aidlc/index.ts",
+        "to": "src/aidlc/state.ts",
+        "evidence": "src/aidlc/index.ts:4"
+      },
+      "statement": "Module `src/aidlc/index.ts` imports `src/aidlc/state.ts`.",
+      "evidence": [
+        {
+          "path": "src/aidlc/index.ts",
+          "contentHash": "30f3b3f5017f19f2"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0129",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/aidlc/index.ts",
+        "to": "src/aidlc/backlog-graph.ts",
+        "evidence": "src/aidlc/index.ts:5"
+      },
+      "statement": "Module `src/aidlc/index.ts` imports `src/aidlc/backlog-graph.ts`.",
+      "evidence": [
+        {
+          "path": "src/aidlc/index.ts",
+          "contentHash": "30f3b3f5017f19f2"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0130",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/claims/derive.ts",
+        "to": "src/graph/builders/dependency.ts",
+        "evidence": "src/claims/derive.ts:23"
+      },
+      "statement": "Module `src/claims/derive.ts` imports `src/graph/builders/dependency.ts`.",
+      "evidence": [
+        {
+          "path": "src/claims/derive.ts",
+          "contentHash": "fff2d0de39a0637a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0131",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/claims/derive.ts",
+        "to": "src/gates/api-diff.ts",
+        "evidence": "src/claims/derive.ts:24"
+      },
+      "statement": "Module `src/claims/derive.ts` imports `src/gates/api-diff.ts`.",
+      "evidence": [
+        {
+          "path": "src/claims/derive.ts",
+          "contentHash": "fff2d0de39a0637a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0132",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/claims/derive.ts",
+        "to": "src/gates/index.ts",
+        "evidence": "src/claims/derive.ts:25"
+      },
+      "statement": "Module `src/claims/derive.ts` imports `src/gates/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/claims/derive.ts",
+          "contentHash": "fff2d0de39a0637a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0133",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/claims/index.ts",
+        "to": "src/claims/derive.ts",
+        "evidence": "src/claims/index.ts:17"
+      },
+      "statement": "Module `src/claims/index.ts` imports `src/claims/derive.ts`.",
+      "evidence": [
+        {
+          "path": "src/claims/index.ts",
+          "contentHash": "1ab6b60541829360"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0134",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/adapters/index.ts",
+        "evidence": "src/cli/index.ts:7"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/adapters/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0135",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/installer/index.ts",
+        "evidence": "src/cli/index.ts:8"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/installer/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0136",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/validation/index.ts",
+        "evidence": "src/cli/index.ts:9"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/validation/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0137",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/visualizer/index.ts",
+        "evidence": "src/cli/index.ts:10"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/visualizer/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0138",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/types.ts",
+        "evidence": "src/cli/index.ts:11"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/types.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0139",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/version.ts",
+        "evidence": "src/cli/index.ts:12"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/version.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0140",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/orchestrators/setup.ts",
+        "evidence": "src/cli/index.ts:340"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/orchestrators/setup.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0141",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/hooks/index.ts",
+        "evidence": "src/cli/index.ts:382"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/hooks/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0142",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/providers/index.ts",
+        "evidence": "src/cli/index.ts:414"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/providers/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0143",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/config/index.ts",
+        "evidence": "src/cli/index.ts:415"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/config/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0144",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/orchestrators/initialize.ts",
+        "evidence": "src/cli/index.ts:466"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/orchestrators/initialize.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0145",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/orchestrators/ask.ts",
+        "evidence": "src/cli/index.ts:511"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/orchestrators/ask.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0146",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/flight/index.ts",
+        "evidence": "src/cli/index.ts:526"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/flight/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0147",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/cli/index.ts:531"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0148",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/evidence/index.ts",
+        "evidence": "src/cli/index.ts:535"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/evidence/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0149",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/orchestrators/health.ts",
+        "evidence": "src/cli/index.ts:562"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/orchestrators/health.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0150",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/freshness/index.ts",
+        "evidence": "src/cli/index.ts:579"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/freshness/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0151",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/verify/index.ts",
+        "evidence": "src/cli/index.ts:598"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/verify/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0152",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/gates/index.ts",
+        "evidence": "src/cli/index.ts:625"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/gates/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0153",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/claims/index.ts",
+        "evidence": "src/cli/index.ts:655"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/claims/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0154",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/context/orchestrator.ts",
+        "evidence": "src/cli/index.ts:700"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/context/orchestrator.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0155",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/telemetry/index.ts",
+        "evidence": "src/cli/index.ts:720"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/telemetry/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0156",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/git-analysis/index.ts",
+        "evidence": "src/cli/index.ts:728"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/git-analysis/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0157",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/user-profile/index.ts",
+        "evidence": "src/cli/index.ts:742"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/user-profile/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0158",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/experiment/index.ts",
+        "evidence": "src/cli/index.ts:873"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/experiment/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0159",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/aidlc/index.ts",
+        "evidence": "src/cli/index.ts:904"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/aidlc/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0160",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/mcp/index.ts",
+        "evidence": "src/cli/index.ts:998"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/mcp/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0161",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/cli/index.ts:1023"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0162",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
+        "to": "src/orchestrators/change.ts",
+        "evidence": "src/cli/index.ts:1057"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/orchestrators/change.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "e401055d5eaac427"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0163",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/index.ts",
+        "to": "src/token-optimizer.ts",
+        "evidence": "src/context/index.ts:15"
+      },
+      "statement": "Module `src/context/index.ts` imports `src/token-optimizer.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/index.ts",
+          "contentHash": "e5e4779a4e3abb7c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0164",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/index.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/context/index.ts:16"
+      },
+      "statement": "Module `src/context/index.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/index.ts",
+          "contentHash": "e5e4779a4e3abb7c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0165",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/index.ts",
+        "to": "src/claims/index.ts",
+        "evidence": "src/context/index.ts:17"
+      },
+      "statement": "Module `src/context/index.ts` imports `src/claims/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/index.ts",
+          "contentHash": "e5e4779a4e3abb7c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0166",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/index.ts",
+        "to": "src/context/orchestrator.ts",
+        "evidence": "src/context/index.ts:19"
+      },
+      "statement": "Module `src/context/index.ts` imports `src/context/orchestrator.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/index.ts",
+          "contentHash": "e5e4779a4e3abb7c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0167",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/orchestrator.ts",
+        "to": "src/claims/index.ts",
+        "evidence": "src/context/orchestrator.ts:3"
+      },
+      "statement": "Module `src/context/orchestrator.ts` imports `src/claims/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/orchestrator.ts",
+          "contentHash": "9cdef5eb61e207f6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0168",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/orchestrator.ts",
+        "to": "src/evidence/index.ts",
+        "evidence": "src/context/orchestrator.ts:4"
+      },
+      "statement": "Module `src/context/orchestrator.ts` imports `src/evidence/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/orchestrator.ts",
+          "contentHash": "9cdef5eb61e207f6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0169",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/orchestrator.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/context/orchestrator.ts:5"
+      },
+      "statement": "Module `src/context/orchestrator.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/orchestrator.ts",
+          "contentHash": "9cdef5eb61e207f6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0170",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/orchestrator.ts",
+        "to": "src/project-files/index.ts",
+        "evidence": "src/context/orchestrator.ts:7"
+      },
+      "statement": "Module `src/context/orchestrator.ts` imports `src/project-files/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/orchestrator.ts",
+          "contentHash": "9cdef5eb61e207f6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0171",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/orchestrator.ts",
+        "to": "src/providers/manager.ts",
+        "evidence": "src/context/orchestrator.ts:8"
+      },
+      "statement": "Module `src/context/orchestrator.ts` imports `src/providers/manager.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/orchestrator.ts",
+          "contentHash": "9cdef5eb61e207f6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0172",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/orchestrator.ts",
+        "to": "src/providers/cce.ts",
+        "evidence": "src/context/orchestrator.ts:9"
+      },
+      "statement": "Module `src/context/orchestrator.ts` imports `src/providers/cce.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/orchestrator.ts",
+          "contentHash": "9cdef5eb61e207f6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0173",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/orchestrator.ts",
+        "to": "src/providers/project-status.ts",
+        "evidence": "src/context/orchestrator.ts:10"
+      },
+      "statement": "Module `src/context/orchestrator.ts` imports `src/providers/project-status.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/orchestrator.ts",
+          "contentHash": "9cdef5eb61e207f6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0174",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/orchestrator.ts",
+        "to": "src/token-optimizer.ts",
+        "evidence": "src/context/orchestrator.ts:12"
+      },
+      "statement": "Module `src/context/orchestrator.ts` imports `src/token-optimizer.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/orchestrator.ts",
+          "contentHash": "9cdef5eb61e207f6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0175",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/orchestrator.ts",
+        "to": "src/verify/index.ts",
+        "evidence": "src/context/orchestrator.ts:13"
+      },
+      "statement": "Module `src/context/orchestrator.ts` imports `src/verify/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/orchestrator.ts",
+          "contentHash": "9cdef5eb61e207f6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0176",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/context/orchestrator.ts",
+        "to": "src/experiment/ledger.ts",
+        "evidence": "src/context/orchestrator.ts:14"
+      },
+      "statement": "Module `src/context/orchestrator.ts` imports `src/experiment/ledger.ts`.",
+      "evidence": [
+        {
+          "path": "src/context/orchestrator.ts",
+          "contentHash": "9cdef5eb61e207f6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0177",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/candidates.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/experiment/candidates.ts:2"
+      },
+      "statement": "Module `src/experiment/candidates.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/candidates.ts",
+          "contentHash": "b962b7f64e7c0015"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0178",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/candidates.ts",
+        "to": "src/git-analysis/index.ts",
+        "evidence": "src/experiment/candidates.ts:3"
+      },
+      "statement": "Module `src/experiment/candidates.ts` imports `src/git-analysis/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/candidates.ts",
+          "contentHash": "b962b7f64e7c0015"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0179",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/graph-sync.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/experiment/graph-sync.ts:3"
+      },
+      "statement": "Module `src/experiment/graph-sync.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/graph-sync.ts",
+          "contentHash": "66f42ef919f60565"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0180",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/index.ts",
+        "to": "src/experiment/types.ts",
+        "evidence": "src/experiment/index.ts:1"
+      },
+      "statement": "Module `src/experiment/index.ts` imports `src/experiment/types.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/index.ts",
+          "contentHash": "99bb92bf8074a28a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0181",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/index.ts",
+        "to": "src/experiment/metric.ts",
+        "evidence": "src/experiment/index.ts:2"
+      },
+      "statement": "Module `src/experiment/index.ts` imports `src/experiment/metric.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/index.ts",
+          "contentHash": "99bb92bf8074a28a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0182",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/index.ts",
+        "to": "src/experiment/candidates.ts",
+        "evidence": "src/experiment/index.ts:3"
+      },
+      "statement": "Module `src/experiment/index.ts` imports `src/experiment/candidates.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/index.ts",
+          "contentHash": "99bb92bf8074a28a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0183",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/index.ts",
+        "to": "src/experiment/ledger.ts",
+        "evidence": "src/experiment/index.ts:4"
+      },
+      "statement": "Module `src/experiment/index.ts` imports `src/experiment/ledger.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/index.ts",
+          "contentHash": "99bb92bf8074a28a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0184",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/index.ts",
+        "to": "src/experiment/graph-sync.ts",
+        "evidence": "src/experiment/index.ts:5"
+      },
+      "statement": "Module `src/experiment/index.ts` imports `src/experiment/graph-sync.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/index.ts",
+          "contentHash": "99bb92bf8074a28a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0185",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/index.ts",
+        "to": "src/experiment/runner.ts",
+        "evidence": "src/experiment/index.ts:6"
+      },
+      "statement": "Module `src/experiment/index.ts` imports `src/experiment/runner.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/index.ts",
+          "contentHash": "99bb92bf8074a28a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0186",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/index.ts",
+        "to": "src/experiment/workspace.ts",
+        "evidence": "src/experiment/index.ts:7"
+      },
+      "statement": "Module `src/experiment/index.ts` imports `src/experiment/workspace.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/index.ts",
+          "contentHash": "99bb92bf8074a28a"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0187",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/metric.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/experiment/metric.ts:1"
+      },
+      "statement": "Module `src/experiment/metric.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/metric.ts",
+          "contentHash": "ff7e51c7c38c11c7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0188",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/runner.ts",
+        "to": "src/flight/index.ts",
+        "evidence": "src/experiment/runner.ts:4"
+      },
+      "statement": "Module `src/experiment/runner.ts` imports `src/flight/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/runner.ts",
+          "contentHash": "dc0d6f56cbbf2644"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0189",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/runner.ts",
+        "to": "src/gates/index.ts",
+        "evidence": "src/experiment/runner.ts:5"
+      },
+      "statement": "Module `src/experiment/runner.ts` imports `src/gates/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/runner.ts",
+          "contentHash": "dc0d6f56cbbf2644"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0190",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/runner.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/experiment/runner.ts:6"
+      },
+      "statement": "Module `src/experiment/runner.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/runner.ts",
+          "contentHash": "dc0d6f56cbbf2644"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0191",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/runner.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/experiment/runner.ts:7"
+      },
+      "statement": "Module `src/experiment/runner.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/runner.ts",
+          "contentHash": "dc0d6f56cbbf2644"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0192",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/runner.ts",
+        "to": "src/experiment/metric.ts",
+        "evidence": "src/experiment/runner.ts:8"
+      },
+      "statement": "Module `src/experiment/runner.ts` imports `src/experiment/metric.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/runner.ts",
+          "contentHash": "dc0d6f56cbbf2644"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0193",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/runner.ts",
+        "to": "src/experiment/ledger.ts",
+        "evidence": "src/experiment/runner.ts:9"
+      },
+      "statement": "Module `src/experiment/runner.ts` imports `src/experiment/ledger.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/runner.ts",
+          "contentHash": "dc0d6f56cbbf2644"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0194",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/runner.ts",
+        "to": "src/experiment/graph-sync.ts",
+        "evidence": "src/experiment/runner.ts:10"
+      },
+      "statement": "Module `src/experiment/runner.ts` imports `src/experiment/graph-sync.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/runner.ts",
+          "contentHash": "dc0d6f56cbbf2644"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0195",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/runner.ts",
+        "to": "src/experiment/workspace.ts",
+        "evidence": "src/experiment/runner.ts:11"
+      },
+      "statement": "Module `src/experiment/runner.ts` imports `src/experiment/workspace.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/runner.ts",
+          "contentHash": "dc0d6f56cbbf2644"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0196",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/experiment/workspace.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/experiment/workspace.ts:5"
+      },
+      "statement": "Module `src/experiment/workspace.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/experiment/workspace.ts",
+          "contentHash": "a1b108ad4f66af99"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0197",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/flight/index.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/flight/index.ts:4"
+      },
+      "statement": "Module `src/flight/index.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/flight/index.ts",
+          "contentHash": "c34fc1c22a59ffc0"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0198",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/flight/index.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/flight/index.ts:5"
+      },
+      "statement": "Module `src/flight/index.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/flight/index.ts",
+          "contentHash": "c34fc1c22a59ffc0"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0199",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/freshness/index.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/freshness/index.ts:4"
+      },
+      "statement": "Module `src/freshness/index.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/freshness/index.ts",
+          "contentHash": "e39ef16162f8eb94"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0200",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/gates/api-diff.ts",
+        "to": "src/gates/index.ts",
+        "evidence": "src/gates/api-diff.ts:11"
+      },
+      "statement": "Module `src/gates/api-diff.ts` imports `src/gates/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/gates/api-diff.ts",
+          "contentHash": "b104f8af03623b0f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0201",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/gates/dead-exports.ts",
+        "to": "src/gates/index.ts",
+        "evidence": "src/gates/dead-exports.ts:11"
+      },
+      "statement": "Module `src/gates/dead-exports.ts` imports `src/gates/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/gates/dead-exports.ts",
+          "contentHash": "4cf1a6c7cdc20db9"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0202",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/gates/env-vars.ts",
+        "to": "src/gates/index.ts",
+        "evidence": "src/gates/env-vars.ts:10"
+      },
+      "statement": "Module `src/gates/env-vars.ts` imports `src/gates/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/gates/env-vars.ts",
+          "contentHash": "bbf41091a60c3bfe"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0203",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/gates/index.ts",
+        "to": "src/project-files/index.ts",
+        "evidence": "src/gates/index.ts:20"
+      },
+      "statement": "Module `src/gates/index.ts` imports `src/project-files/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/gates/index.ts",
+          "contentHash": "2b48709470bffaa1"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0204",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/gates/index.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/gates/index.ts:21"
+      },
+      "statement": "Module `src/gates/index.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/gates/index.ts",
+          "contentHash": "2b48709470bffaa1"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0205",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/gates/index.ts",
+        "to": "src/gates/env-vars.ts",
+        "evidence": "src/gates/index.ts:134"
+      },
+      "statement": "Module `src/gates/index.ts` imports `src/gates/env-vars.ts`.",
+      "evidence": [
+        {
+          "path": "src/gates/index.ts",
+          "contentHash": "2b48709470bffaa1"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0206",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/gates/index.ts",
+        "to": "src/gates/dead-exports.ts",
+        "evidence": "src/gates/index.ts:135"
+      },
+      "statement": "Module `src/gates/index.ts` imports `src/gates/dead-exports.ts`.",
+      "evidence": [
+        {
+          "path": "src/gates/index.ts",
+          "contentHash": "2b48709470bffaa1"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0207",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/gates/index.ts",
+        "to": "src/gates/api-diff.ts",
+        "evidence": "src/gates/index.ts:136"
+      },
+      "statement": "Module `src/gates/index.ts` imports `src/gates/api-diff.ts`.",
+      "evidence": [
+        {
+          "path": "src/gates/index.ts",
+          "contentHash": "2b48709470bffaa1"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0208",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/gates/index.ts",
+        "to": "src/gates/migration-lint.ts",
+        "evidence": "src/gates/index.ts:137"
+      },
+      "statement": "Module `src/gates/index.ts` imports `src/gates/migration-lint.ts`.",
+      "evidence": [
+        {
+          "path": "src/gates/index.ts",
+          "contentHash": "2b48709470bffaa1"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0209",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/gates/migration-lint.ts",
+        "to": "src/gates/index.ts",
+        "evidence": "src/gates/migration-lint.ts:12"
+      },
+      "statement": "Module `src/gates/migration-lint.ts` imports `src/gates/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/gates/migration-lint.ts",
+          "contentHash": "618a9fc4d03f6627"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0210",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/git-analysis/index.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/git-analysis/index.ts:3"
+      },
+      "statement": "Module `src/git-analysis/index.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/git-analysis/index.ts",
+          "contentHash": "f14c380e6292f9a9"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0211",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/builders/dependency.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/graph/builders/dependency.ts:3"
+      },
+      "statement": "Module `src/graph/builders/dependency.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/builders/dependency.ts",
+          "contentHash": "ac4c9dcea81e04e7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0212",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/builders/dependency.ts",
+        "to": "src/graph/parsers/manifest.ts",
+        "evidence": "src/graph/builders/dependency.ts:5"
+      },
+      "statement": "Module `src/graph/builders/dependency.ts` imports `src/graph/parsers/manifest.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/builders/dependency.ts",
+          "contentHash": "ac4c9dcea81e04e7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0213",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/builders/dependency.ts",
+        "to": "src/graph/parsers/imports.ts",
+        "evidence": "src/graph/builders/dependency.ts:6"
+      },
+      "statement": "Module `src/graph/builders/dependency.ts` imports `src/graph/parsers/imports.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/builders/dependency.ts",
+          "contentHash": "ac4c9dcea81e04e7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0214",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/builders/dependency.ts",
+        "to": "src/graph/parsers/symbols.ts",
+        "evidence": "src/graph/builders/dependency.ts:7"
+      },
+      "statement": "Module `src/graph/builders/dependency.ts` imports `src/graph/parsers/symbols.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/builders/dependency.ts",
+          "contentHash": "ac4c9dcea81e04e7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0215",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/builders/dependency.ts",
+        "to": "src/project-files/index.ts",
+        "evidence": "src/graph/builders/dependency.ts:8"
+      },
+      "statement": "Module `src/graph/builders/dependency.ts` imports `src/project-files/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/builders/dependency.ts",
+          "contentHash": "ac4c9dcea81e04e7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0216",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/index.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/graph/index.ts:4"
+      },
+      "statement": "Module `src/graph/index.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/index.ts",
+          "contentHash": "68da9b87bf6e6513"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0217",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/index.ts",
+        "to": "src/project-files/index.ts",
+        "evidence": "src/graph/index.ts:5"
+      },
+      "statement": "Module `src/graph/index.ts` imports `src/project-files/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/index.ts",
+          "contentHash": "68da9b87bf6e6513"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0218",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/index.ts",
+        "to": "src/graph/schema.ts",
+        "evidence": "src/graph/index.ts:6"
+      },
+      "statement": "Module `src/graph/index.ts` imports `src/graph/schema.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/index.ts",
+          "contentHash": "68da9b87bf6e6513"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0219",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/index.ts",
+        "to": "src/graph/builders/dependency.ts",
+        "evidence": "src/graph/index.ts:7"
+      },
+      "statement": "Module `src/graph/index.ts` imports `src/graph/builders/dependency.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/index.ts",
+          "contentHash": "68da9b87bf6e6513"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0220",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/index.ts",
+        "to": "src/graph/provider-evidence.ts",
+        "evidence": "src/graph/index.ts:8"
+      },
+      "statement": "Module `src/graph/index.ts` imports `src/graph/provider-evidence.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/index.ts",
+          "contentHash": "68da9b87bf6e6513"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0221",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/index.ts",
+        "to": "src/brief/index.ts",
+        "evidence": "src/graph/index.ts:92"
+      },
+      "statement": "Module `src/graph/index.ts` imports `src/brief/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/index.ts",
+          "contentHash": "68da9b87bf6e6513"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0222",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/parsers/imports.ts",
+        "to": "src/graph/parsers/scan.ts",
+        "evidence": "src/graph/parsers/imports.ts:4"
+      },
+      "statement": "Module `src/graph/parsers/imports.ts` imports `src/graph/parsers/scan.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/parsers/imports.ts",
+          "contentHash": "1337295d1b89a830"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0223",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/provider-evidence.ts",
+        "to": "src/project-files/index.ts",
+        "evidence": "src/graph/provider-evidence.ts:3"
+      },
+      "statement": "Module `src/graph/provider-evidence.ts` imports `src/project-files/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/provider-evidence.ts",
+          "contentHash": "ceb0d1134b9718f7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0224",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/graph/provider-evidence.ts",
+        "to": "src/providers/graphify.ts",
+        "evidence": "src/graph/provider-evidence.ts:4"
+      },
+      "statement": "Module `src/graph/provider-evidence.ts` imports `src/providers/graphify.ts`.",
+      "evidence": [
+        {
+          "path": "src/graph/provider-evidence.ts",
+          "contentHash": "ceb0d1134b9718f7"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0225",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/hooks/index.ts",
+        "to": "src/freshness/index.ts",
+        "evidence": "src/hooks/index.ts:20"
+      },
+      "statement": "Module `src/hooks/index.ts` imports `src/freshness/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/hooks/index.ts",
+          "contentHash": "09035fb2b80f2238"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0226",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/hooks/index.ts",
+        "to": "src/config/index.ts",
+        "evidence": "src/hooks/index.ts:21"
+      },
+      "statement": "Module `src/hooks/index.ts` imports `src/config/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/hooks/index.ts",
+          "contentHash": "09035fb2b80f2238"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0227",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/hooks/index.ts",
+        "to": "src/telemetry/index.ts",
+        "evidence": "src/hooks/index.ts:411"
+      },
+      "statement": "Module `src/hooks/index.ts` imports `src/telemetry/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/hooks/index.ts",
+          "contentHash": "09035fb2b80f2238"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0228",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/hooks/index.ts",
+        "to": "src/verify/index.ts",
+        "evidence": "src/hooks/index.ts:420"
+      },
+      "statement": "Module `src/hooks/index.ts` imports `src/verify/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/hooks/index.ts",
+          "contentHash": "09035fb2b80f2238"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0229",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/installer/index.ts",
+        "to": "src/adapters/index.ts",
+        "evidence": "src/installer/index.ts:3"
+      },
+      "statement": "Module `src/installer/index.ts` imports `src/adapters/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/installer/index.ts",
+          "contentHash": "b8cf07c054626f56"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0230",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/installer/index.ts",
+        "to": "src/manifest/index.ts",
+        "evidence": "src/installer/index.ts:4"
+      },
+      "statement": "Module `src/installer/index.ts` imports `src/manifest/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/installer/index.ts",
+          "contentHash": "b8cf07c054626f56"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0231",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/installer/index.ts",
+        "to": "src/templates.ts",
+        "evidence": "src/installer/index.ts:5"
+      },
+      "statement": "Module `src/installer/index.ts` imports `src/templates.ts`.",
+      "evidence": [
+        {
+          "path": "src/installer/index.ts",
+          "contentHash": "b8cf07c054626f56"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0232",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/installer/index.ts",
+        "to": "src/validation/index.ts",
+        "evidence": "src/installer/index.ts:6"
+      },
+      "statement": "Module `src/installer/index.ts` imports `src/validation/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/installer/index.ts",
+          "contentHash": "b8cf07c054626f56"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0233",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/installer/index.ts",
+        "to": "src/installer/blocks.ts",
+        "evidence": "src/installer/index.ts:15"
+      },
+      "statement": "Module `src/installer/index.ts` imports `src/installer/blocks.ts`.",
+      "evidence": [
+        {
+          "path": "src/installer/index.ts",
+          "contentHash": "b8cf07c054626f56"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0234",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/installer/index.ts",
+        "to": "src/installer/json-merge.ts",
+        "evidence": "src/installer/index.ts:16"
+      },
+      "statement": "Module `src/installer/index.ts` imports `src/installer/json-merge.ts`.",
+      "evidence": [
+        {
+          "path": "src/installer/index.ts",
+          "contentHash": "b8cf07c054626f56"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0235",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/cli.ts",
+        "to": "src/mcp/index.ts",
+        "evidence": "src/mcp/cli.ts:3"
+      },
+      "statement": "Module `src/mcp/cli.ts` imports `src/mcp/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/cli.ts",
+          "contentHash": "1960849b1190c884"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0236",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/consolidated.ts",
+        "to": "src/config/index.ts",
+        "evidence": "src/mcp/consolidated.ts:3"
+      },
+      "statement": "Module `src/mcp/consolidated.ts` imports `src/config/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/consolidated.ts",
+          "contentHash": "5c1da30640b6849f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0237",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/consolidated.ts",
+        "to": "src/context/orchestrator.ts",
+        "evidence": "src/mcp/consolidated.ts:4"
+      },
+      "statement": "Module `src/mcp/consolidated.ts` imports `src/context/orchestrator.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/consolidated.ts",
+          "contentHash": "5c1da30640b6849f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0238",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/consolidated.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/mcp/consolidated.ts:5"
+      },
+      "statement": "Module `src/mcp/consolidated.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/consolidated.ts",
+          "contentHash": "5c1da30640b6849f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0239",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/consolidated.ts",
+        "to": "src/orchestrators/change.ts",
+        "evidence": "src/mcp/consolidated.ts:6"
+      },
+      "statement": "Module `src/mcp/consolidated.ts` imports `src/orchestrators/change.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/consolidated.ts",
+          "contentHash": "5c1da30640b6849f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0240",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/consolidated.ts",
+        "to": "src/providers/graphify.ts",
+        "evidence": "src/mcp/consolidated.ts:7"
+      },
+      "statement": "Module `src/mcp/consolidated.ts` imports `src/providers/graphify.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/consolidated.ts",
+          "contentHash": "5c1da30640b6849f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0241",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/consolidated.ts",
+        "to": "src/providers/manager.ts",
+        "evidence": "src/mcp/consolidated.ts:8"
+      },
+      "statement": "Module `src/mcp/consolidated.ts` imports `src/providers/manager.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/consolidated.ts",
+          "contentHash": "5c1da30640b6849f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0242",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/consolidated.ts",
+        "to": "src/providers/cce.ts",
+        "evidence": "src/mcp/consolidated.ts:9"
+      },
+      "statement": "Module `src/mcp/consolidated.ts` imports `src/providers/cce.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/consolidated.ts",
+          "contentHash": "5c1da30640b6849f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0243",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/consolidated.ts",
+        "to": "src/providers/project-status.ts",
+        "evidence": "src/mcp/consolidated.ts:10"
+      },
+      "statement": "Module `src/mcp/consolidated.ts` imports `src/providers/project-status.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/consolidated.ts",
+          "contentHash": "5c1da30640b6849f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0244",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/consolidated.ts",
+        "to": "src/providers/types.ts",
+        "evidence": "src/mcp/consolidated.ts:11"
+      },
+      "statement": "Module `src/mcp/consolidated.ts` imports `src/providers/types.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/consolidated.ts",
+          "contentHash": "5c1da30640b6849f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0245",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/consolidated.ts",
+        "to": "src/experiment/index.ts",
+        "evidence": "src/mcp/consolidated.ts:12"
+      },
+      "statement": "Module `src/mcp/consolidated.ts` imports `src/experiment/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/consolidated.ts",
+          "contentHash": "5c1da30640b6849f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0246",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/consolidated.ts",
+        "to": "src/aidlc/index.ts",
+        "evidence": "src/mcp/consolidated.ts:13"
+      },
+      "statement": "Module `src/mcp/consolidated.ts` imports `src/aidlc/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/consolidated.ts",
+          "contentHash": "5c1da30640b6849f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0247",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/consolidated.ts",
+        "to": "src/mcp/registry.ts",
+        "evidence": "src/mcp/consolidated.ts:14"
+      },
+      "statement": "Module `src/mcp/consolidated.ts` imports `src/mcp/registry.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/consolidated.ts",
+          "contentHash": "5c1da30640b6849f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0248",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/index.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/mcp/index.ts:7"
+      },
+      "statement": "Module `src/mcp/index.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/index.ts",
+          "contentHash": "4688af6e0054f2be"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0249",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/index.ts",
+        "to": "src/flight/index.ts",
+        "evidence": "src/mcp/index.ts:8"
+      },
+      "statement": "Module `src/mcp/index.ts` imports `src/flight/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/index.ts",
+          "contentHash": "4688af6e0054f2be"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0250",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/index.ts",
+        "to": "src/brief/index.ts",
+        "evidence": "src/mcp/index.ts:9"
+      },
+      "statement": "Module `src/mcp/index.ts` imports `src/brief/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/index.ts",
+          "contentHash": "4688af6e0054f2be"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0251",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/index.ts",
+        "to": "src/mcp/shaper.ts",
+        "evidence": "src/mcp/index.ts:10"
+      },
+      "statement": "Module `src/mcp/index.ts` imports `src/mcp/shaper.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/index.ts",
+          "contentHash": "4688af6e0054f2be"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0252",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/index.ts",
+        "to": "src/config/index.ts",
+        "evidence": "src/mcp/index.ts:11"
+      },
+      "statement": "Module `src/mcp/index.ts` imports `src/config/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/index.ts",
+          "contentHash": "4688af6e0054f2be"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0253",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/index.ts",
+        "to": "src/version.ts",
+        "evidence": "src/mcp/index.ts:12"
+      },
+      "statement": "Module `src/mcp/index.ts` imports `src/version.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/index.ts",
+          "contentHash": "4688af6e0054f2be"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0254",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/index.ts",
+        "to": "src/mcp/consolidated.ts",
+        "evidence": "src/mcp/index.ts:13"
+      },
+      "statement": "Module `src/mcp/index.ts` imports `src/mcp/consolidated.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/index.ts",
+          "contentHash": "4688af6e0054f2be"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0255",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/index.ts",
+        "to": "src/gates/index.ts",
+        "evidence": "src/mcp/index.ts:414"
+      },
+      "statement": "Module `src/mcp/index.ts` imports `src/gates/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/index.ts",
+          "contentHash": "4688af6e0054f2be"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0256",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/index.ts",
+        "to": "src/context/orchestrator.ts",
+        "evidence": "src/mcp/index.ts:433"
+      },
+      "statement": "Module `src/mcp/index.ts` imports `src/context/orchestrator.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/index.ts",
+          "contentHash": "4688af6e0054f2be"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0257",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/index.ts",
+        "to": "src/claims/index.ts",
+        "evidence": "src/mcp/index.ts:441"
+      },
+      "statement": "Module `src/mcp/index.ts` imports `src/claims/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/index.ts",
+          "contentHash": "4688af6e0054f2be"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0258",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/mcp/shaper.ts",
+        "to": "src/token-optimizer.ts",
+        "evidence": "src/mcp/shaper.ts:1"
+      },
+      "statement": "Module `src/mcp/shaper.ts` imports `src/token-optimizer.ts`.",
+      "evidence": [
+        {
+          "path": "src/mcp/shaper.ts",
+          "contentHash": "e0fd51a04a544f1f"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0259",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/ask.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/orchestrators/ask.ts:3"
+      },
+      "statement": "Module `src/orchestrators/ask.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/ask.ts",
+          "contentHash": "ddc0c37d9e1600b4"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0260",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/change.ts",
+        "to": "src/evidence/index.ts",
+        "evidence": "src/orchestrators/change.ts:1"
+      },
+      "statement": "Module `src/orchestrators/change.ts` imports `src/evidence/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/change.ts",
+          "contentHash": "26226a2c6ba1afce"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0261",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/change.ts",
+        "to": "src/gates/index.ts",
+        "evidence": "src/orchestrators/change.ts:2"
+      },
+      "statement": "Module `src/orchestrators/change.ts` imports `src/gates/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/change.ts",
+          "contentHash": "26226a2c6ba1afce"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0262",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/change.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/orchestrators/change.ts:3"
+      },
+      "statement": "Module `src/orchestrators/change.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/change.ts",
+          "contentHash": "26226a2c6ba1afce"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0263",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/change.ts",
+        "to": "src/providers/cce.ts",
+        "evidence": "src/orchestrators/change.ts:4"
+      },
+      "statement": "Module `src/orchestrators/change.ts` imports `src/providers/cce.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/change.ts",
+          "contentHash": "26226a2c6ba1afce"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0264",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/change.ts",
+        "to": "src/providers/graphify.ts",
+        "evidence": "src/orchestrators/change.ts:5"
+      },
+      "statement": "Module `src/orchestrators/change.ts` imports `src/providers/graphify.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/change.ts",
+          "contentHash": "26226a2c6ba1afce"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0265",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/change.ts",
+        "to": "src/providers/manager.ts",
+        "evidence": "src/orchestrators/change.ts:6"
+      },
+      "statement": "Module `src/orchestrators/change.ts` imports `src/providers/manager.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/change.ts",
+          "contentHash": "26226a2c6ba1afce"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0266",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/change.ts",
+        "to": "src/claims/index.ts",
+        "evidence": "src/orchestrators/change.ts:7"
+      },
+      "statement": "Module `src/orchestrators/change.ts` imports `src/claims/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/change.ts",
+          "contentHash": "26226a2c6ba1afce"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0267",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/change.ts",
+        "to": "src/verify/index.ts",
+        "evidence": "src/orchestrators/change.ts:8"
+      },
+      "statement": "Module `src/orchestrators/change.ts` imports `src/verify/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/change.ts",
+          "contentHash": "26226a2c6ba1afce"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0268",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/health.ts",
+        "to": "src/validation/index.ts",
+        "evidence": "src/orchestrators/health.ts:3"
+      },
+      "statement": "Module `src/orchestrators/health.ts` imports `src/validation/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/health.ts",
+          "contentHash": "ef60040760c3dd90"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0269",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/health.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/orchestrators/health.ts:4"
+      },
+      "statement": "Module `src/orchestrators/health.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/health.ts",
+          "contentHash": "ef60040760c3dd90"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0270",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/health.ts",
+        "to": "src/verify/index.ts",
+        "evidence": "src/orchestrators/health.ts:5"
+      },
+      "statement": "Module `src/orchestrators/health.ts` imports `src/verify/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/health.ts",
+          "contentHash": "ef60040760c3dd90"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0271",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/health.ts",
+        "to": "src/evidence/index.ts",
+        "evidence": "src/orchestrators/health.ts:6"
+      },
+      "statement": "Module `src/orchestrators/health.ts` imports `src/evidence/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/health.ts",
+          "contentHash": "ef60040760c3dd90"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0272",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/health.ts",
+        "to": "src/claims/index.ts",
+        "evidence": "src/orchestrators/health.ts:7"
+      },
+      "statement": "Module `src/orchestrators/health.ts` imports `src/claims/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/health.ts",
+          "contentHash": "ef60040760c3dd90"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0273",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/health.ts",
+        "to": "src/freshness/index.ts",
+        "evidence": "src/orchestrators/health.ts:8"
+      },
+      "statement": "Module `src/orchestrators/health.ts` imports `src/freshness/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/health.ts",
+          "contentHash": "ef60040760c3dd90"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0274",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/health.ts",
+        "to": "src/config/index.ts",
+        "evidence": "src/orchestrators/health.ts:9"
+      },
+      "statement": "Module `src/orchestrators/health.ts` imports `src/config/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/health.ts",
+          "contentHash": "ef60040760c3dd90"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0275",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/health.ts",
+        "to": "src/project-files/index.ts",
+        "evidence": "src/orchestrators/health.ts:10"
+      },
+      "statement": "Module `src/orchestrators/health.ts` imports `src/project-files/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/health.ts",
+          "contentHash": "ef60040760c3dd90"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0276",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/health.ts",
+        "to": "src/providers/manager.ts",
+        "evidence": "src/orchestrators/health.ts:11"
+      },
+      "statement": "Module `src/orchestrators/health.ts` imports `src/providers/manager.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/health.ts",
+          "contentHash": "ef60040760c3dd90"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0277",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/health.ts",
+        "to": "src/providers/types.ts",
+        "evidence": "src/orchestrators/health.ts:12"
+      },
+      "statement": "Module `src/orchestrators/health.ts` imports `src/providers/types.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/health.ts",
+          "contentHash": "ef60040760c3dd90"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0278",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/health.ts",
+        "to": "src/providers/project-status.ts",
+        "evidence": "src/orchestrators/health.ts:13"
+      },
+      "statement": "Module `src/orchestrators/health.ts` imports `src/providers/project-status.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/health.ts",
+          "contentHash": "ef60040760c3dd90"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0279",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/initialize.ts",
+        "to": "src/claims/index.ts",
+        "evidence": "src/orchestrators/initialize.ts:4"
+      },
+      "statement": "Module `src/orchestrators/initialize.ts` imports `src/claims/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/initialize.ts",
+          "contentHash": "dcef728c8a977274"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0280",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/initialize.ts",
+        "to": "src/config/index.ts",
+        "evidence": "src/orchestrators/initialize.ts:5"
+      },
+      "statement": "Module `src/orchestrators/initialize.ts` imports `src/config/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/initialize.ts",
+          "contentHash": "dcef728c8a977274"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0281",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/initialize.ts",
+        "to": "src/evidence/index.ts",
+        "evidence": "src/orchestrators/initialize.ts:6"
+      },
+      "statement": "Module `src/orchestrators/initialize.ts` imports `src/evidence/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/initialize.ts",
+          "contentHash": "dcef728c8a977274"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0282",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/initialize.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/orchestrators/initialize.ts:7"
+      },
+      "statement": "Module `src/orchestrators/initialize.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/initialize.ts",
+          "contentHash": "dcef728c8a977274"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0283",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/initialize.ts",
+        "to": "src/project-files/index.ts",
+        "evidence": "src/orchestrators/initialize.ts:8"
+      },
+      "statement": "Module `src/orchestrators/initialize.ts` imports `src/project-files/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/initialize.ts",
+          "contentHash": "dcef728c8a977274"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0284",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/initialize.ts",
+        "to": "src/providers/manager.ts",
+        "evidence": "src/orchestrators/initialize.ts:9"
+      },
+      "statement": "Module `src/orchestrators/initialize.ts` imports `src/providers/manager.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/initialize.ts",
+          "contentHash": "dcef728c8a977274"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0285",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/initialize.ts",
+        "to": "src/providers/cce.ts",
+        "evidence": "src/orchestrators/initialize.ts:10"
+      },
+      "statement": "Module `src/orchestrators/initialize.ts` imports `src/providers/cce.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/initialize.ts",
+          "contentHash": "dcef728c8a977274"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0286",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/initialize.ts",
+        "to": "src/providers/graphify.ts",
+        "evidence": "src/orchestrators/initialize.ts:11"
+      },
+      "statement": "Module `src/orchestrators/initialize.ts` imports `src/providers/graphify.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/initialize.ts",
+          "contentHash": "dcef728c8a977274"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0287",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/initialize.ts",
+        "to": "src/verify/index.ts",
+        "evidence": "src/orchestrators/initialize.ts:14"
+      },
+      "statement": "Module `src/orchestrators/initialize.ts` imports `src/verify/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/initialize.ts",
+          "contentHash": "dcef728c8a977274"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0288",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/initialize.ts",
+        "to": "src/orchestrators/setup.ts",
+        "evidence": "src/orchestrators/initialize.ts:16"
+      },
+      "statement": "Module `src/orchestrators/initialize.ts` imports `src/orchestrators/setup.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/initialize.ts",
+          "contentHash": "dcef728c8a977274"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0289",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/initialize.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/orchestrators/initialize.ts:75"
+      },
+      "statement": "Module `src/orchestrators/initialize.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/initialize.ts",
+          "contentHash": "dcef728c8a977274"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0290",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/setup.ts",
+        "to": "src/installer/index.ts",
+        "evidence": "src/orchestrators/setup.ts:3"
+      },
+      "statement": "Module `src/orchestrators/setup.ts` imports `src/installer/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/setup.ts",
+          "contentHash": "eaadf02287a6d4db"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0291",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/setup.ts",
+        "to": "src/graph/index.ts",
+        "evidence": "src/orchestrators/setup.ts:4"
+      },
+      "statement": "Module `src/orchestrators/setup.ts` imports `src/graph/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/setup.ts",
+          "contentHash": "eaadf02287a6d4db"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0292",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/setup.ts",
+        "to": "src/brief/index.ts",
+        "evidence": "src/orchestrators/setup.ts:5"
+      },
+      "statement": "Module `src/orchestrators/setup.ts` imports `src/brief/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/setup.ts",
+          "contentHash": "eaadf02287a6d4db"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0293",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/setup.ts",
+        "to": "src/config/index.ts",
+        "evidence": "src/orchestrators/setup.ts:79"
+      },
+      "statement": "Module `src/orchestrators/setup.ts` imports `src/config/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/setup.ts",
+          "contentHash": "eaadf02287a6d4db"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0294",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/setup.ts",
+        "to": "src/providers/index.ts",
+        "evidence": "src/orchestrators/setup.ts:98"
+      },
+      "statement": "Module `src/orchestrators/setup.ts` imports `src/providers/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/setup.ts",
+          "contentHash": "eaadf02287a6d4db"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0295",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/setup.ts",
+        "to": "src/git-analysis/index.ts",
+        "evidence": "src/orchestrators/setup.ts:126"
+      },
+      "statement": "Module `src/orchestrators/setup.ts` imports `src/git-analysis/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/setup.ts",
+          "contentHash": "eaadf02287a6d4db"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0296",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/orchestrators/setup.ts",
+        "to": "src/evidence/index.ts",
+        "evidence": "src/orchestrators/setup.ts:143"
+      },
+      "statement": "Module `src/orchestrators/setup.ts` imports `src/evidence/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/orchestrators/setup.ts",
+          "contentHash": "eaadf02287a6d4db"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0297",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/project-files/index.ts",
+        "to": "src/config/index.ts",
+        "evidence": "src/project-files/index.ts:3"
+      },
+      "statement": "Module `src/project-files/index.ts` imports `src/config/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/project-files/index.ts",
+          "contentHash": "31c8fb22b98bf7ce"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0298",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/cce.ts",
+        "to": "src/project-files/index.ts",
+        "evidence": "src/providers/cce.ts:4"
+      },
+      "statement": "Module `src/providers/cce.ts` imports `src/project-files/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/cce.ts",
+          "contentHash": "16ada5ccae132d2c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0299",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/cce.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/providers/cce.ts:5"
+      },
+      "statement": "Module `src/providers/cce.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/cce.ts",
+          "contentHash": "16ada5ccae132d2c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0300",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/cce.ts",
+        "to": "src/providers/compatibility.ts",
+        "evidence": "src/providers/cce.ts:6"
+      },
+      "statement": "Module `src/providers/cce.ts` imports `src/providers/compatibility.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/cce.ts",
+          "contentHash": "16ada5ccae132d2c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0301",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/cce.ts",
+        "to": "src/providers/manager.ts",
+        "evidence": "src/providers/cce.ts:7"
+      },
+      "statement": "Module `src/providers/cce.ts` imports `src/providers/manager.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/cce.ts",
+          "contentHash": "16ada5ccae132d2c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0302",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/cce.ts",
+        "to": "src/providers/workspace.ts",
+        "evidence": "src/providers/cce.ts:8"
+      },
+      "statement": "Module `src/providers/cce.ts` imports `src/providers/workspace.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/cce.ts",
+          "contentHash": "16ada5ccae132d2c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0303",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/graphify.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/providers/graphify.ts:4"
+      },
+      "statement": "Module `src/providers/graphify.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/graphify.ts",
+          "contentHash": "c6cfecbfda2de705"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0304",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/graphify.ts",
+        "to": "src/providers/manager.ts",
+        "evidence": "src/providers/graphify.ts:5"
+      },
+      "statement": "Module `src/providers/graphify.ts` imports `src/providers/manager.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/graphify.ts",
+          "contentHash": "c6cfecbfda2de705"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0305",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/graphify.ts",
+        "to": "src/providers/compatibility.ts",
+        "evidence": "src/providers/graphify.ts:6"
+      },
+      "statement": "Module `src/providers/graphify.ts` imports `src/providers/compatibility.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/graphify.ts",
+          "contentHash": "c6cfecbfda2de705"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0306",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/graphify.ts",
+        "to": "src/providers/workspace.ts",
+        "evidence": "src/providers/graphify.ts:7"
+      },
+      "statement": "Module `src/providers/graphify.ts` imports `src/providers/workspace.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/graphify.ts",
+          "contentHash": "c6cfecbfda2de705"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0307",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/index.ts",
+        "to": "src/providers/types.ts",
+        "evidence": "src/providers/index.ts:1"
+      },
+      "statement": "Module `src/providers/index.ts` imports `src/providers/types.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/index.ts",
+          "contentHash": "33d34e25ffb1fd8c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0308",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/index.ts",
+        "to": "src/providers/compatibility.ts",
+        "evidence": "src/providers/index.ts:2"
+      },
+      "statement": "Module `src/providers/index.ts` imports `src/providers/compatibility.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/index.ts",
+          "contentHash": "33d34e25ffb1fd8c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0309",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/index.ts",
+        "to": "src/providers/manager.ts",
+        "evidence": "src/providers/index.ts:3"
+      },
+      "statement": "Module `src/providers/index.ts` imports `src/providers/manager.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/index.ts",
+          "contentHash": "33d34e25ffb1fd8c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0310",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/index.ts",
+        "to": "src/providers/workspace.ts",
+        "evidence": "src/providers/index.ts:4"
+      },
+      "statement": "Module `src/providers/index.ts` imports `src/providers/workspace.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/index.ts",
+          "contentHash": "33d34e25ffb1fd8c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0311",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/index.ts",
+        "to": "src/providers/graphify.ts",
+        "evidence": "src/providers/index.ts:5"
+      },
+      "statement": "Module `src/providers/index.ts` imports `src/providers/graphify.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/index.ts",
+          "contentHash": "33d34e25ffb1fd8c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0312",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/index.ts",
+        "to": "src/providers/cce.ts",
+        "evidence": "src/providers/index.ts:6"
+      },
+      "statement": "Module `src/providers/index.ts` imports `src/providers/cce.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/index.ts",
+          "contentHash": "33d34e25ffb1fd8c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0313",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/index.ts",
+        "to": "src/providers/project-status.ts",
+        "evidence": "src/providers/index.ts:7"
+      },
+      "statement": "Module `src/providers/index.ts` imports `src/providers/project-status.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/index.ts",
+          "contentHash": "33d34e25ffb1fd8c"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0314",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/manager.ts",
+        "to": "src/config/index.ts",
+        "evidence": "src/providers/manager.ts:5"
+      },
+      "statement": "Module `src/providers/manager.ts` imports `src/config/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/manager.ts",
+          "contentHash": "23f8037b43222cc3"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0315",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/manager.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/providers/manager.ts:6"
+      },
+      "statement": "Module `src/providers/manager.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/manager.ts",
+          "contentHash": "23f8037b43222cc3"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0316",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/manager.ts",
+        "to": "src/providers/compatibility.ts",
+        "evidence": "src/providers/manager.ts:7"
+      },
+      "statement": "Module `src/providers/manager.ts` imports `src/providers/compatibility.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/manager.ts",
+          "contentHash": "23f8037b43222cc3"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0317",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/manager.ts",
+        "to": "src/providers/workspace.ts",
+        "evidence": "src/providers/manager.ts:8"
+      },
+      "statement": "Module `src/providers/manager.ts` imports `src/providers/workspace.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/manager.ts",
+          "contentHash": "23f8037b43222cc3"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0318",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/manager.ts",
+        "to": "src/providers/types.ts",
+        "evidence": "src/providers/manager.ts:9"
+      },
+      "statement": "Module `src/providers/manager.ts` imports `src/providers/types.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/manager.ts",
+          "contentHash": "23f8037b43222cc3"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0319",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/project-status.ts",
+        "to": "src/providers/cce.ts",
+        "evidence": "src/providers/project-status.ts:3"
+      },
+      "statement": "Module `src/providers/project-status.ts` imports `src/providers/cce.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/project-status.ts",
+          "contentHash": "af40b99931a88da0"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0320",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/project-status.ts",
+        "to": "src/providers/compatibility.ts",
+        "evidence": "src/providers/project-status.ts:4"
+      },
+      "statement": "Module `src/providers/project-status.ts` imports `src/providers/compatibility.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/project-status.ts",
+          "contentHash": "af40b99931a88da0"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0321",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/project-status.ts",
+        "to": "src/providers/graphify.ts",
+        "evidence": "src/providers/project-status.ts:5"
+      },
+      "statement": "Module `src/providers/project-status.ts` imports `src/providers/graphify.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/project-status.ts",
+          "contentHash": "af40b99931a88da0"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0322",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/project-status.ts",
+        "to": "src/providers/workspace.ts",
+        "evidence": "src/providers/project-status.ts:6"
+      },
+      "statement": "Module `src/providers/project-status.ts` imports `src/providers/workspace.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/project-status.ts",
+          "contentHash": "af40b99931a88da0"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0323",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/providers/workspace.ts",
+        "to": "src/project-files/index.ts",
+        "evidence": "src/providers/workspace.ts:4"
+      },
+      "statement": "Module `src/providers/workspace.ts` imports `src/project-files/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/providers/workspace.ts",
+          "contentHash": "0336ad4339848633"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0324",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/token-optimizer.ts",
+        "to": "src/templates.ts",
+        "evidence": "src/token-optimizer.ts:16"
+      },
+      "statement": "Module `src/token-optimizer.ts` imports `src/templates.ts`.",
+      "evidence": [
+        {
+          "path": "src/token-optimizer.ts",
+          "contentHash": "50331766f8581c31"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0325",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/user-profile/index.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/user-profile/index.ts:3"
+      },
+      "statement": "Module `src/user-profile/index.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/user-profile/index.ts",
+          "contentHash": "e2f26afd5536a4c8"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0326",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/validation/index.ts",
+        "to": "src/adapters/index.ts",
+        "evidence": "src/validation/index.ts:3"
+      },
+      "statement": "Module `src/validation/index.ts` imports `src/adapters/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/validation/index.ts",
+          "contentHash": "dbe97eec27ee2a52"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0327",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/validation/index.ts",
+        "to": "src/installer/blocks.ts",
+        "evidence": "src/validation/index.ts:4"
+      },
+      "statement": "Module `src/validation/index.ts` imports `src/installer/blocks.ts`.",
+      "evidence": [
+        {
+          "path": "src/validation/index.ts",
+          "contentHash": "dbe97eec27ee2a52"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0328",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/validation/index.ts",
+        "to": "src/installer/json-merge.ts",
+        "evidence": "src/validation/index.ts:5"
+      },
+      "statement": "Module `src/validation/index.ts` imports `src/installer/json-merge.ts`.",
+      "evidence": [
+        {
+          "path": "src/validation/index.ts",
+          "contentHash": "dbe97eec27ee2a52"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0329",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/validation/index.ts",
+        "to": "src/manifest/index.ts",
+        "evidence": "src/validation/index.ts:6"
+      },
+      "statement": "Module `src/validation/index.ts` imports `src/manifest/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/validation/index.ts",
+          "contentHash": "dbe97eec27ee2a52"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0330",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/validation/index.ts",
+        "to": "src/templates.ts",
+        "evidence": "src/validation/index.ts:7"
+      },
+      "statement": "Module `src/validation/index.ts` imports `src/templates.ts`.",
+      "evidence": [
+        {
+          "path": "src/validation/index.ts",
+          "contentHash": "dbe97eec27ee2a52"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0331",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/validation/index.ts",
+        "to": "src/version.ts",
+        "evidence": "src/validation/index.ts:9"
+      },
+      "statement": "Module `src/validation/index.ts` imports `src/version.ts`.",
+      "evidence": [
+        {
+          "path": "src/validation/index.ts",
+          "contentHash": "dbe97eec27ee2a52"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0332",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/verify/index.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/verify/index.ts:25"
+      },
+      "statement": "Module `src/verify/index.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/verify/index.ts",
+          "contentHash": "de379d9e1c8cd4a6"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0333",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/visualizer/index.ts",
+        "to": "src/templates.ts",
+        "evidence": "src/visualizer/index.ts:3"
+      },
+      "statement": "Module `src/visualizer/index.ts` imports `src/templates.ts`.",
+      "evidence": [
+        {
+          "path": "src/visualizer/index.ts",
+          "contentHash": "a4aa0d9f393c5022"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    },
+    {
+      "id": "CLM-D0334",
+      "kind": "derived",
+      "fact": {
+        "type": "package-dependency",
+        "name": "@modelcontextprotocol/sdk",
+        "evidence": "package.json"
+      },
+      "statement": "`@modelcontextprotocol/sdk` is a declared package dependency.",
+      "evidence": [
+        {
+          "path": "package.json",
+          "contentHash": "527c1d6d379a68b1"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-09-09T19:26:10.497Z"
+    }
+  ]
+}

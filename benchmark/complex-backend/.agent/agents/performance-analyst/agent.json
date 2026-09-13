@@ -5,9 +5,9 @@
     "instructions": "./prompt.md",
     "memory": true,
     "context": [
-        ".engineering-intelligence/knowledge-base",
-        ".engineering-intelligence/aidlc",
-        ".engineering-intelligence/graph"
+        ".graphward/knowledge-base",
+        ".graphward/aidlc",
+        ".graphward/graph"
     ],
     "skills": [
         "performance-analysis-engine",

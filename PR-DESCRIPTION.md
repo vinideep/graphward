@@ -1,6 +1,6 @@
 # From prompt library to verifiable, enforceable engineering intelligence
 
-> Historical note: this document records the v2.3.0 change set. It is not the current release-status source; use `package.json` and the current EI validation report for present state.
+> Historical note: this document records the v2.3.0 change set. It is not the current release-status source; use `package.json` and the current GraphWard validation report for present state.
 
 Repositions the toolkit from "prose the model is asked to follow" into a layer with **code-enforced** guarantees, **verifiable** knowledge, and **honest**, measurable claims — across IDEs and in CI. Seven commits, each independently shippable, all tests green.
 

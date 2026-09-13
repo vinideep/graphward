@@ -10,5 +10,5 @@ Owns production readiness.
 
 ## Outputs
 
-- `.engineering-intelligence/aidlc/operations/operations-readiness.md`
+- `.graphward/aidlc/operations/operations-readiness.md`
 - Runbook and alert updates when production behavior changes

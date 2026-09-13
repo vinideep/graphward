@@ -23,7 +23,7 @@ test("recordLearnedPattern saves conventions, constraints, and regressions", asy
       targetFiles: ["src/index.ts"],
     });
     assert.equal(r1.saved, true);
-    assert.ok(existsSync(path.join(dir, ".engineering-intelligence", "memory", "coding-patterns.md")));
+    assert.ok(existsSync(path.join(dir, ".graphward", "memory", "coding-patterns.md")));
 
     const r2 = await recordLearnedPattern(dir, {
       type: "regression",
@@ -32,7 +32,7 @@ test("recordLearnedPattern saves conventions, constraints, and regressions", asy
       description: "Prevent zombie listeners on re-render.",
     });
     assert.equal(r2.saved, true);
-    assert.ok(existsSync(path.join(dir, ".engineering-intelligence", "memory", "regression-patterns.md")));
+    assert.ok(existsSync(path.join(dir, ".graphward", "memory", "regression-patterns.md")));
 
     const r3 = await recordLearnedPattern(dir, {
       type: "constraint",
@@ -41,7 +41,7 @@ test("recordLearnedPattern saves conventions, constraints, and regressions", asy
       description: "Requires backward-compatible soft-deprecations.",
     });
     assert.equal(r3.saved, true);
-    assert.ok(existsSync(path.join(dir, ".engineering-intelligence", "memory", "project-constraints.md")));
+    assert.ok(existsSync(path.join(dir, ".graphward", "memory", "project-constraints.md")));
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -61,8 +61,8 @@ test("logUncertaintyEvent creates structured event records", async () => {
 
     assert.equal(res.logged, true);
     assert.ok(res.id.startsWith("unc-"));
-    assert.ok(existsSync(path.join(dir, ".engineering-intelligence", "events", "uncertainty-log.jsonl")));
-    assert.ok(existsSync(path.join(dir, ".engineering-intelligence", "events", "uncertainty-log.md")));
+    assert.ok(existsSync(path.join(dir, ".graphward", "events", "uncertainty-log.jsonl")));
+    assert.ok(existsSync(path.join(dir, ".graphward", "events", "uncertainty-log.md")));
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

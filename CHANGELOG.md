@@ -18,12 +18,12 @@ real or labelled honestly. Every claim below was reproduced before and after.
 
 | Change | Why | What to do |
 |---|---|---|
-| Path aliases (`$EI`, `$AIDLC`) removed from all rendered files | The alias preamble sat **above** the YAML fence, so no host could parse `name` / `description` / `argument-hint` — skill auto-invocation was silently dead for every skill and command. Aliases also produced 240 glued tokens like `$EIknowledge-base/`. | Nothing, unless you wrote custom skills using the aliases — replace them with literal `.engineering-intelligence/...` paths. |
+| Path aliases (`$EI`, `$AIDLC`) removed from all rendered files | The alias preamble sat **above** the YAML fence, so no host could parse `name` / `description` / `argument-hint` — skill auto-invocation was silently dead for every skill and command. Aliases also produced 240 glued tokens like `$EIknowledge-base/`. | Nothing, unless you wrote custom skills using the aliases — replace them with literal `.graphward/...` paths. |
 | `claims add` requires `--author`, and never yields `verified` | Free text anchored to real code used to report `verified` forever. | Add `--author "you"`. Use `claims derive` for facts you want machine-checked. |
 | `claims.json` gains `kind` (`derived` \| `asserted`) | Only re-computable statements may be called facts. | None — claims written before this are read as `asserted`, never promoted. |
 | `.claude/settings.json` / `.cursor/hooks.json` are **merged**, not owned | A pre-existing settings file used to conflict, silently skipping the whole enforcement layer. | None. Your `permissions`, `model`, `env` and your own hooks are preserved; `uninstall` removes only our entries. |
-| `ei.config.json` is seeded, not managed | Editing it — the documented way to enable enforcement — caused a permanent doctor warning and update conflicts. | None. It is yours after first write. |
-| Stop hook requires a verification **receipt** | The old gate matched shell history, so `rm -rf build` satisfied it. | Run `engineering-intelligence verify .` (or let the agent). |
+| `gw.config.json` is seeded, not managed | Editing it — the documented way to enable enforcement — caused a permanent doctor warning and update conflicts. | None. It is yours after first write. |
+| Stop hook requires a verification **receipt** | The old gate matched shell history, so `rm -rf build` satisfied it. | Run `gw verify .` (or let the agent). |
 | API: `isValidationCommand` → `looksLikeValidationCommand`; `statusFromFindings(findings, failOn?)` | The old name implied it gated something. | Only affects direct library consumers. |
 
 ### Fixed
@@ -51,11 +51,11 @@ real or labelled honestly. Every claim below was reproduced before and after.
 
 ### Added
 
-- `engineering-intelligence verify` — runs the project's own checks and writes a
+- `gw verify` — runs the project's own checks and writes a
   receipt binding the result to a sha256 of every changed file.
-- `engineering-intelligence claims derive` — computes module imports, package
+- `gw claims derive` — computes module imports, package
   dependencies and HTTP routes from source as **derived** (re-computable) claims.
-- `engineering-intelligence gate <name> --fail-on error|warning`.
+- `gw gate <name> --fail-on error|warning`.
 - `derive_claims` MCP tool; `.mcp.json` / `.cursor/mcp.json` registration.
 - `bench/replay.mjs` (`npm run bench`) — a zero-inference replay measuring
   whether the derived-fact layer notices real commits, and how noisy it is.

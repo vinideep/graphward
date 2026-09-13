@@ -1,0 +1,5 @@
+.hooks-state/
+memory/users/
+telemetry/
+providers/
+.verify/

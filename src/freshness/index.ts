@@ -204,7 +204,7 @@ async function listMarkdownFiles(dir: string): Promise<string[]> {
 }
 
 async function discoverDocuments(root: string): Promise<string[]> {
-  const eiDir = path.join(root, ".engineering-intelligence");
+  const eiDir = path.join(root, ".graphward");
   const dirs = [
     path.join(eiDir, "knowledge-base"),
     path.join(eiDir, "memory"),
@@ -325,7 +325,7 @@ export async function computeFreshness(root: string, threshold = 60): Promise<Fr
 
 export async function writeFreshnessReport(root: string, threshold = 60): Promise<{ reportPath: string; report: FreshnessReport }> {
   const report = await computeFreshness(root, threshold);
-  const reportsDir = path.join(root, ".engineering-intelligence", "reports");
+  const reportsDir = path.join(root, ".graphward", "reports");
   await mkdir(reportsDir, { recursive: true });
   const reportPath = path.join(reportsDir, "FRESHNESS-report.md");
   await writeFile(reportPath, renderReport(report), "utf8");

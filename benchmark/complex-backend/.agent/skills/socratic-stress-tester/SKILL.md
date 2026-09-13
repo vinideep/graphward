@@ -11,8 +11,8 @@ Interactively stress-test technical proposals, PRDs, or architecture plans using
 
 - Proposed plan, PRD, or architectural RFC
 - Target scope or feature requirements
-- Relevant ADRs and constraints from `.engineering-intelligence/knowledge-base/`
-- Verified claims and active context maps from `.engineering-intelligence/context/`
+- Relevant ADRs and constraints from `.graphward/knowledge-base/`
+- Verified claims and active context maps from `.graphward/context/`
 
 ## Procedure
 

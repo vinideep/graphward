@@ -16,11 +16,11 @@ export function toCanonicalPath(p: string): string {
   return path.resolve(p);
 }
 
-export const PROVIDER_DIR = ".engineering-intelligence/providers";
+export const PROVIDER_DIR = ".graphward/providers";
 export const PROVIDER_WORKSPACE = `${PROVIDER_DIR}/workspace`;
 
 export async function ensureProviderCacheIgnored(root: string): Promise<void> {
-  const ignorePath = path.join(root, ".engineering-intelligence", ".gitignore");
+  const ignorePath = path.join(root, ".graphward", ".gitignore");
   let current = "";
   try { current = await readFile(ignorePath, "utf8"); } catch { /* create below */ }
   const lines = current.split("\n").map((line) => line.trim());

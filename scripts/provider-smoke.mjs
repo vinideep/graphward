@@ -13,7 +13,7 @@ import { searchCodeContext } from "../dist/providers/cce.js";
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const quick = process.argv.includes("--quick");
 const fixtureRoot = path.join(repoRoot, "benchmark", "complex-backend");
-const generatedRoots = new Set([".agent", ".agents", ".claude", ".cursor", ".codex", ".gemini", ".commandcode", ".engineering-intelligence"]);
+const generatedRoots = new Set([".agent", ".agents", ".claude", ".cursor", ".codex", ".gemini", ".commandcode", ".graphward"]);
 const generatedFiles = new Set(["AGENTS.md", "CLAUDE.md", ".mcp.json"]);
 
 function copyFixtureSource(source) {
@@ -83,7 +83,7 @@ try {
   assert.equal(context.providers.cce.fallback, false, "CCE retrieval must not fall back");
   assert.ok(chunks.length > 0, "ContextPackV2 must contain code evidence");
   assert.ok(chunks.every((chunk) => chunk.provider === "cce" && chunk.current === true), "all provider smoke spans must be current CCE evidence");
-  assert.ok(context.evidence.every((item) => !/(^|\/)(?:dist|benchmark|node_modules|\.engineering-intelligence|\.agent|\.agents|\.claude|\.cursor)(?:\/|$)/.test(item.path.replace(/\\/g, "/"))), "context must not leak disallowed paths");
+  assert.ok(context.evidence.every((item) => !/(^|\/)(?:dist|benchmark|node_modules|\.graphward|\.agent|\.agents|\.claude|\.cursor)(?:\/|$)/.test(item.path.replace(/\\/g, "/"))), "context must not leak disallowed paths");
   assert.ok(context.tokenAllocation.used <= context.tokenAllocation.budget, "context must obey its token budget");
 
   const health = await runHealth(projectRoot);

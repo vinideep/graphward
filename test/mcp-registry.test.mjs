@@ -27,8 +27,8 @@ test("raw provider tools are hidden by default and exposed only by explicit expe
   assert.ok(names.includes("get_engineering_context"));
   assert.ok(names.includes("validate_change"));
   assert.ok(!names.some((name) => name.startsWith("provider_graphify_") || name.startsWith("provider_cce_")));
-  await mkdir(path.join(root, ".engineering-intelligence"), { recursive: true });
-  await writeFile(path.join(root, ".engineering-intelligence", "ei.config.json"), JSON.stringify({ schemaVersion: 2, providers: { exposeRawMcp: true } }));
+  await mkdir(path.join(root, ".graphward"), { recursive: true });
+  await writeFile(path.join(root, ".graphward", "gw.config.json"), JSON.stringify({ schemaVersion: 2, providers: { exposeRawMcp: true } }));
   registry = await createConsolidatedRegistry(root);
   names = registry.list().map((tool) => tool.name);
   assert.ok(names.includes("provider_graphify_evidence"));

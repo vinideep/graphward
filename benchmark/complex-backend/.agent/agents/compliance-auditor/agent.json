@@ -5,9 +5,9 @@
     "instructions": "./prompt.md",
     "memory": true,
     "context": [
-        ".engineering-intelligence/knowledge-base",
-        ".engineering-intelligence/aidlc",
-        ".engineering-intelligence/reports"
+        ".graphward/knowledge-base",
+        ".graphward/aidlc",
+        ".graphward/reports"
     ],
     "skills": [
         "nfr-adr-governor",

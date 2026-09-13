@@ -26,11 +26,11 @@ export interface MemoryQueryResult {
 }
 
 function memoryDir(root: string): string {
-  return path.join(root, ".engineering-intelligence", "memory");
+  return path.join(root, ".graphward", "memory");
 }
 
 function eventsDir(root: string): string {
-  return path.join(root, ".engineering-intelligence", "events");
+  return path.join(root, ".graphward", "events");
 }
 
 /**

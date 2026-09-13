@@ -1,4 +1,5 @@
 import { readdir, readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import path from "node:path";
 import { loadClaims, verifyClaims } from "../claims/index.js";
 import { checkEvidenceHashes } from "../evidence/index.js";
@@ -168,7 +169,7 @@ function excerpt(markdown: string, maxLines = 28): string {
 
 async function loadKnowledge(root: string, task: string, requestedFiles: string[] = []) {
   const [verification, evidence] = await Promise.all([verifyKnowledge(root), checkEvidenceHashes(root)]);
-  const files = await walkMarkdown(path.join(root, ".engineering-intelligence", "knowledge-base"));
+  const files = await walkMarkdown(path.join(root, ".graphward", "knowledge-base"));
   const taskWords = words(task);
   const fileKeywords = requestedFiles.flatMap((f) => {
     const rel = path.relative(root, path.resolve(root, f)).replace(/\\/g, "/").toLowerCase();
@@ -210,8 +211,8 @@ async function loadKnowledge(root: string, task: string, requestedFiles: string[
     }
   }
   const decisionFiles = [
-    ...(await walkMarkdown(path.join(root, ".engineering-intelligence", "aidlc", "decisions"))),
-    ...(await walkMarkdown(path.join(root, ".engineering-intelligence", "knowledge-base", "decisions"))),
+    ...(await walkMarkdown(path.join(root, ".graphward", "aidlc", "decisions"))),
+    ...(await walkMarkdown(path.join(root, ".graphward", "knowledge-base", "decisions"))),
   ];
   const decisions: KnowledgeContextItem[] = [];
   for (const absolute of decisionFiles.slice(0, 10)) {
@@ -259,7 +260,7 @@ interface ArchitectureNeighborhoodResult {
 
 async function architectureNeighborhood(root: string, task: string, requestedFiles: string[]): Promise<ArchitectureNeighborhoodResult> {
   await ensureFreshGraph(root);
-  const graph = await loadExistingGraph(path.join(root, ".engineering-intelligence", "graph", "dependency-graph.json"));
+  const graph = await loadExistingGraph(path.join(root, ".graphward", "graph", "dependency-graph.json"));
   if (!graph) return { seeds: [], nodes: [], edges: [], approvedScope: [], graph: null as DependencyGraph | null };
   const seeds = selectSeeds(graph, root, task, requestedFiles);
   const selected = new Set(seeds);
@@ -535,7 +536,22 @@ export async function getEngineeringContext(
   let negativeConstraints: NegativeConstraint[] = [];
   try {
     const experiments = await loadExperiments(root);
-    const reverts = experiments.filter((e) => e.verdict === "REVERT");
+    const DEFAULT_TTL_DAYS = 30;
+    let ttlDays = DEFAULT_TTL_DAYS;
+    try {
+      const configPath = path.join(root, '.graphward', 'gw.config.json');
+      if (existsSync(configPath)) {
+        const configContent = await readFile(configPath, 'utf8');
+        const config = JSON.parse(configContent);
+        if (typeof config.negativeConstraintTTLDays === 'number') {
+          ttlDays = config.negativeConstraintTTLDays;
+        }
+      }
+    } catch { /* use default */ }
+    const ttlCutoff = new Date(Date.now() - ttlDays * 86_400_000).toISOString();
+    const reverts = experiments
+      .filter((e) => e.verdict === "REVERT")
+      .filter((e) => !e.closedAt || e.closedAt >= ttlCutoff);
     const taskWords = words(request.task);
     const relevantReverts = reverts.filter((e) => {
       if (requestedSet.has(e.targetFile)) return true;

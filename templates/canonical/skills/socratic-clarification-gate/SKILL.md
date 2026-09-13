@@ -22,7 +22,7 @@ Never begin writing code or generating impact reports while requirements, non-fu
 4. **Present Concrete Trade-offs**:
    - Present 2–4 targeted multiple-choice options highlighting trade-offs (e.g. Option A: JWT vs Option B: Server-side cookies).
    - If 1–2 ambiguities exist: pose them inline in the response.
-   - If 3+ ambiguities exist: write a question file to `.engineering-intelligence/aidlc/open-questions/YYYYMMDD-<slug>.md` using `question-file-engine`.
+   - If 3+ ambiguities exist: write a question file to `.graphward/aidlc/open-questions/YYYYMMDD-<slug>.md` using `question-file-engine`.
 
 5. **Freeze Requirements in AI-DLC**:
    - When the user answers with an option letter (A/B/C/D), map it to `selectedOptionId`.
@@ -37,13 +37,32 @@ Never begin writing code or generating impact reports while requirements, non-fu
        ]
      }
      ```
-     This writes decisions to `.engineering-intelligence/aidlc/inception/requirements.md`.
+     This writes decisions to `.graphward/aidlc/inception/requirements.md`.
    - Call `update_aidlc_state` with `phase: "inception"`, `stage: "requirements-frozen"` to record the transition.
    - Mark resolved items in `open-questions.md` as `status: resolved` (do not delete them).
 
 6. **Phase Gate Enforcement**:
    - Call `check_aidlc_gate` with `phase: "inception"` before transitioning into Construction.
    - If the gate returns `status: "blocked"`, read the `blockers` array, resolve each blocker, and re-run the gate. Construction is strictly blocked while unresolved blocking questions remain.
+
+## Configuration
+
+The clarity threshold is configurable via `.graphward/gw.config.json`:
+
+```json
+{
+  "clarityThreshold": 75
+}
+```
+
+| Value | Effect |
+|-------|--------|
+| `0` | Disables the gate entirely — all prompts pass |
+| `1-74` | Relaxed gate — only extremely vague prompts are stopped |
+| `75` (default) | Standard gate — prompts with unspecified architectural constraints are questioned |
+| `76-100` | Strict gate — more prompts trigger clarification questions |
+
+Power users who write precise, well-scoped prompts can lower the threshold to reduce friction.
 
 ## Tools
 
@@ -56,5 +75,5 @@ Never begin writing code or generating impact reports while requirements, non-fu
 
 - Depends on: `question-file-engine` (for 3+ ambiguities)
 - Deeper analysis: `socratic-stress-tester` (for high-risk architectural stress-testing after clarity is established)
-- Used by: `engineering-intelligence` (Step 3), `engineering-intelligence-skill` (Step 2), `engineering-orchestrator` (Pre-flight)
+- Used by: `graphward` (Step 3), `graphward-skill` (Step 2), `engineering-orchestrator` (Pre-flight)
 - Related: `aidlc-lifecycle-engine` (phase model and gate definitions)

@@ -56,10 +56,10 @@ test("checkEvidenceHashes marks shifted citation as relocated", async () => {
   const dir = mkdtempSync(path.join(os.tmpdir(), "ei-healing-"));
   try {
     mkdirSync(path.join(dir, "src"), { recursive: true });
-    mkdirSync(path.join(dir, ".engineering-intelligence", "knowledge-base"), { recursive: true });
+    mkdirSync(path.join(dir, ".graphward", "knowledge-base"), { recursive: true });
     writeFileSync(path.join(dir, "src", "auth.ts"), "export function login() {\n  return checkPassword();\n}\n");
     writeFileSync(
-      path.join(dir, ".engineering-intelligence", "knowledge-base", "auth.md"),
+      path.join(dir, ".graphward", "knowledge-base", "auth.md"),
       "Login is handled at `src/auth.ts:2` which calls checkPassword.\n",
     );
 

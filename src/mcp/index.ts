@@ -22,7 +22,7 @@ function budgetOf(args: Record<string, unknown>, config: Record<string, number>,
   return fallback;
 }
 
-// Optional per-project budget overrides: .engineering-intelligence/config.json
+// Optional per-project budget overrides: .graphward/config.json
 // { "tokenBudgets": { "analyze_impact": 3000, ... } }
 async function loadBudgetConfig(root: string): Promise<Record<string, number>> {
   try { return (await loadEiConfig(root)).tokenBudgets; } catch { return {}; }
@@ -236,9 +236,9 @@ export function mcpServerRegistration(): string {
   return JSON.stringify(
     {
       mcpServers: {
-        "engineering-intelligence": {
+        "graphward": {
           command: "npx",
-          args: ["-y", "engineering-intelligence", "mcp"],
+          args: ["-y", "graphward", "mcp"],
         },
       },
     },
@@ -259,7 +259,7 @@ function safeRegex(pattern: string | undefined): RegExp | undefined {
 export async function startMcpServer(projectRoot: string): Promise<void> {
   const consolidated = await createConsolidatedRegistry(projectRoot);
   const server = new Server(
-    { name: "engineering-intelligence", version: await packageVersion() },
+    { name: "graphward", version: await packageVersion() },
     { capabilities: { tools: {} } },
   );
 
@@ -315,7 +315,7 @@ export async function startMcpServer(projectRoot: string): Promise<void> {
       if (name === "get_graph") {
         const type = typeof args.type === "string" ? args.type : "dependency";
         if (type === "dependency") await ensureFreshGraph(root);
-        const graphPath = path.join(root, ".engineering-intelligence", "graph", `${type}-graph.json`);
+        const graphPath = path.join(root, ".graphward", "graph", `${type}-graph.json`);
         const graph = await loadExistingGraph(graphPath);
         if (!graph) return text(JSON.stringify({ error: `No ${type}-graph.json found. Run map_dependencies first.` }), true);
 
@@ -462,13 +462,13 @@ export async function startMcpServer(projectRoot: string): Promise<void> {
       }
 
       if (name === "read_knowledge") {
-        const kbDir = path.join(root, ".engineering-intelligence", "knowledge-base");
+        const kbDir = path.join(root, ".graphward", "knowledge-base");
         if (typeof args.file === "string" && args.file) {
           const filePath = path.join(kbDir, args.file);
           try {
             return text(await readFile(filePath, "utf8"));
           } catch {
-            return text(JSON.stringify({ error: `.engineering-intelligence/knowledge-base/${args.file} not found` }), true);
+            return text(JSON.stringify({ error: `.graphward/knowledge-base/${args.file} not found` }), true);
           }
         }
         try {
@@ -476,7 +476,7 @@ export async function startMcpServer(projectRoot: string): Promise<void> {
           const files = (entries as string[]).filter((e) => e.endsWith(".md") || e.endsWith(".json"));
           return text(shape({ brief: "call get_brief for a ~500-token repo orientation", files }));
         } catch {
-          return text(JSON.stringify({ files: [], note: "knowledge-base/ not found. Run setup or /initialize-engineering-intelligence first." }));
+          return text(JSON.stringify({ files: [], note: "knowledge-base/ not found. Run setup or /initialize-graphward first." }));
         }
       }
 

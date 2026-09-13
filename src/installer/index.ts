@@ -248,7 +248,7 @@ export async function install(
     updatedAt: now,
   };
   if (!options.dryRun) {
-    await mkdir(path.join(root, ".engineering-intelligence"), { recursive: true });
+    await mkdir(path.join(root, ".graphward"), { recursive: true });
     await writeManifest(root, manifest);
   }
   return summarize(actions);

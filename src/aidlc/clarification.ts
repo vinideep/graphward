@@ -71,7 +71,10 @@ const ARCHITECTURAL_PATTERNS = [
   },
 ];
 
-export function assessPromptClarity(prompt: string): ClarityAssessment {
+export function assessPromptClarity(
+  prompt: string,
+  config?: { clarityThreshold?: number }
+): ClarityAssessment {
   const trimmed = prompt.trim();
   const ambiguities: AmbiguityItem[] = [];
   const questions: ClarificationQuestion[] = [];
@@ -146,7 +149,7 @@ export function assessPromptClarity(prompt: string): ClarityAssessment {
 
   return {
     clarityScore: finalScore,
-    isClear: finalScore >= 75 && ambiguities.length === 0,
+    isClear: finalScore >= (config?.clarityThreshold ?? 75) && ambiguities.length === 0,
     prompt: trimmed,
     ambiguities,
     questions,
@@ -175,5 +178,5 @@ export async function freezeRequirements(
   }
 
   await saveRequirements(root, reqs);
-  return path.join(root, ".engineering-intelligence", "aidlc", "inception", "requirements.md");
+  return path.join(root, ".graphward", "aidlc", "inception", "requirements.md");
 }

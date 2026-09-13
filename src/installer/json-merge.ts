@@ -9,15 +9,15 @@
  *
  * Markdown solves this with comment sentinels (see blocks.ts); JSON has no such
  * affordance, so ownership is established by VALUE instead: an entry is ours iff
- * its command invokes `engineering-intelligence hook`. That makes merge, verify
+ * its command invokes `gw hook`. That makes merge, verify
  * and uninstall all decidable without storing a side-channel manifest of array
  * indices, and it survives the user reordering or adding their own hooks.
  */
 
-const OWNERSHIP_MARKER = "engineering-intelligence hook";
+const OWNERSHIP_MARKER = "gw hook";
 
 /** The key under which we register ourselves in an `mcpServers` map. */
-export const MCP_SERVER_KEY = "engineering-intelligence";
+export const MCP_SERVER_KEY = "graphward";
 
 type Json = Record<string, unknown>;
 
@@ -92,7 +92,7 @@ export function hasOurEntries(existingSource: string | undefined, oursSource: st
     const theirValue = existing[topKey];
     if (!isObject(theirValue)) return false;
     for (const [key, ourEntries] of Object.entries(ourValue)) {
-      // Object-keyed ownership (mcpServers.engineering-intelligence).
+      // Object-keyed ownership (mcpServers.graphward).
       if (isOurKey(topKey, key)) {
         if (JSON.stringify(theirValue[key]) !== JSON.stringify(ourEntries)) return false;
         continue;

@@ -1,0 +1,2103 @@
+{
+  "schemaVersion": 1,
+  "templateVersion": "4.1.0",
+  "adapters": [
+    "claude-code",
+    "cursor",
+    "antigravity"
+  ],
+  "files": [
+    {
+      "path": ".agents/skills/SKILLS-INDEX.md",
+      "kind": "file",
+      "hash": "96524efaabdb68af21ec1dcbccdc95e53cd5e798bf8b9932a9cbd8e05bacde63",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/WORKFLOW-ROUTING.md",
+      "kind": "file",
+      "hash": "ba27005a8ac70f99986f28589cb6d823e1d6ae20c44e4d080bed3907de28cf6f",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".claude/skills/SKILLS-INDEX.md",
+      "kind": "file",
+      "hash": "38f7652e28aa6214f98accffa5da6f0d9b10db2eb415818d93fda293bfd67983",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/WORKFLOW-ROUTING.md",
+      "kind": "file",
+      "hash": "8ebd8a0767f6d42636cdb1a7e5f77444214f6d376905b922971d1955a0264c2e",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".agents/agents/adversary/agent.md",
+      "kind": "file",
+      "hash": "243d6076475c75ffba77dc97218057500f318cb46bf514e61c0cf41a286ac682",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/change-agent/agent.md",
+      "kind": "file",
+      "hash": "0a0ea86ac5088b015b9b82096a6abe9fb4ff8e4f65ea0ab1e13a36bc263cfb74",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/compliance-auditor/agent.md",
+      "kind": "file",
+      "hash": "3a51b4818e986e0a0233839e0cd79220db123282d2705b9c149029dd2c0c7b80",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/database-administrator/agent.md",
+      "kind": "file",
+      "hash": "77afb696ab1eef5768563f80f417bc05b7b81efa4825b8fe23e24c930d44043b",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/documentation-writer/agent.md",
+      "kind": "file",
+      "hash": "31a0b6742ae4d22aa3bd56405aec45538bd2afe007207ceb124d1b2abde15aab",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/engineering-orchestrator/agent.md",
+      "kind": "file",
+      "hash": "97c46d54673d0de16205b967a9e1d983824238ce4d7016b2ab48dbaf6b6f9554",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/knowledge-agent/agent.md",
+      "kind": "file",
+      "hash": "3f529998f96df49766f7f4eba5b46dc756aafe865af1655bf9641f4ea1035a2d",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/performance-analyst/agent.md",
+      "kind": "file",
+      "hash": "3b7286286d7bdf17cf5835d0368bc843ce745763187e3e81ab571766f82d8a5e",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/product-analyst/agent.md",
+      "kind": "file",
+      "hash": "a3691e2a0b93eec2006af96df2018b59934d9bb6f5b04dcffc90fd2876553440",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/quality-agent/agent.md",
+      "kind": "file",
+      "hash": "34206ec6d868cb1164892e8a45d34ffbeb1219d2ac0e566e64f39aeeee72a199",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/release-engineer/agent.md",
+      "kind": "file",
+      "hash": "a3e025ab1bf2166e98767fccef731415bf8d63d7d867f5d2f4fdb664a3c0319c",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/security-officer/agent.md",
+      "kind": "file",
+      "hash": "397ba121e0d3563962e4387ebddd03e255fc169b52835aede664850ce1bb9e4e",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/site-reliability-engineer/agent.md",
+      "kind": "file",
+      "hash": "1484cb9a3d2a021d0edde4ff7454d971d6427b7a1969de561447b2499ae70b93",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/system-architect/agent.md",
+      "kind": "file",
+      "hash": "12aa3ee2f9a1574366b1a6e710d12917694822616ed06f5a5addac542609ccc8",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/agents/test-engineer/agent.md",
+      "kind": "file",
+      "hash": "d1f0e6aefe61dd88aa59d3e5c62e9dce1a98215627a2c2ef9d304603c76c3421",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/rules/graphward.md",
+      "kind": "file",
+      "hash": "0f319c3b505c943903ca1f52d380062a6ce6c8745ee28b81d3045b4dafa4b429",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/adr-compliance-checker/SKILL.md",
+      "kind": "file",
+      "hash": "f895943dc875505eb8e713c8ea79ca12a32ce52755272996d277a828634aeeec",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/aidlc-lifecycle-engine/SKILL.md",
+      "kind": "file",
+      "hash": "12de8fbc8eed150ea9f0d6813be17edfce83a2c00cad696274fe7421bf022790",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/analyze-impact/SKILL.md",
+      "kind": "file",
+      "hash": "1d14edd3bd6c27cc0bccb172bd61446e846e6234725c2818ca9b0c30ad75348e",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/api-backward-compatibility-engine/SKILL.md",
+      "kind": "file",
+      "hash": "d1400e38bb7d369cb020c4723d0ffa531795f58aaaea94f3009c217f5b329e02",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/architecture-review-engine/SKILL.md",
+      "kind": "file",
+      "hash": "f40f44bf3249a1eeec770fbf20be1e914363924cd3a7027bf7571676e70e692b",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/backlog-decomposition-engine/SKILL.md",
+      "kind": "file",
+      "hash": "dbfa492dff498d95f53a9fa84de81eb015359ff5fc725681b60b8a9b037f7c90",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/change-detection-engine/SKILL.md",
+      "kind": "file",
+      "hash": "af091810b5d4d3f7aba9f7d9f13340e92074fc2f7deea1370d0567129af88df8",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/change-history-engine/SKILL.md",
+      "kind": "file",
+      "hash": "b766866eca3840f8b0339db7094eca95c06788299bf6a287d737d205b0ac3da0",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/codebase-discovery-engine/SKILL.md",
+      "kind": "file",
+      "hash": "aaa2b2b720e4cd5a88550ccc11e30d0c984cee75b6af70fa0bb08b4155b588c7",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/context-budget-optimizer/SKILL.md",
+      "kind": "file",
+      "hash": "749e6c34cbe7687ba1fa0b69daed433f1cf54be4b1efc19249157591bf917594",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/contract-test-generator/SKILL.md",
+      "kind": "file",
+      "hash": "c35a6e3fca216dbc5bc1e7bfb9364da47f0d138ace34863d9e5f0fecf2efb398",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/convention-detector/SKILL.md",
+      "kind": "file",
+      "hash": "548a90ad601d55e39d10c3d0ed19745f00830fd8467de4d1f7b923acb2f483c5",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/create-project/SKILL.md",
+      "kind": "file",
+      "hash": "53fafa610d2155ecbceaa44a551a9f3b476f29dd93116f5d8115187b2ee67538",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/database-migration-safety-engine/SKILL.md",
+      "kind": "file",
+      "hash": "e0df42ec8877256cc65bb5064df5829a89cf82c6ac75408bc0e2b15e01380657",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/dead-code-detector/SKILL.md",
+      "kind": "file",
+      "hash": "04735d9b6053a9d4dc3d546d4f7a02848103715d8fffe4c7739084633955ee95",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/debugging-engine/SKILL.md",
+      "kind": "file",
+      "hash": "410d57d6d0787ed037fb0202e88fc3ff3842a2b2a0b6470c2409a433aa2fe150",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/decompose-backlog/SKILL.md",
+      "kind": "file",
+      "hash": "43285811372d469330c6831fad6643c1a3f1ea745c5fa771a39a8e3c2730aa4f",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/deep-project-knowledge-extractor/SKILL.md",
+      "kind": "file",
+      "hash": "d6ec33afc9765d64dd21b6faf01eb200f0c0cbe2a8e61cfde330380b339a2a8f",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/deliver-backlog/SKILL.md",
+      "kind": "file",
+      "hash": "2bd96fb878a13f7166d4cb04d49b77542f2725f811dc7ee44660f3b89d99fcfe",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/design-an-interface/SKILL.md",
+      "kind": "file",
+      "hash": "b4450d5e500138ac2bae731a7aab12611152066b8e02676726097b6e097c3032",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/discover-codebase/SKILL.md",
+      "kind": "file",
+      "hash": "67cb06a4d449b3aaf523280ff2f3e3617ba34ce652ddd423620ec416a0cc16ea",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/engineering-change-review/SKILL.md",
+      "kind": "file",
+      "hash": "b1a5438b75d85bbf68d5b887d7948ae12fa123f55a5f48c633755b6fd67973a1",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/graphward-skill/SKILL.md",
+      "kind": "file",
+      "hash": "1048b7e76bd1e775c284140eb7bb32d942c36f64dba0d17882f6c2f6fe8c9c05",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/graphward/SKILL.md",
+      "kind": "file",
+      "hash": "cc4aad595cc8c29480382876a350ca6a57a047872cd6522373a6894ffab42f9e",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/environment-variable-auditor/SKILL.md",
+      "kind": "file",
+      "hash": "af1a4ca709f174761710d83515c592f624483246fb12f7cef6e7b27d5b3cb06f",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/environmental-backpressure-engine/SKILL.md",
+      "kind": "file",
+      "hash": "f81be085ba3710fb794890fda3249b19f855f46a1d1134899913a0a19a1cda59",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/git-intelligence-engine/SKILL.md",
+      "kind": "file",
+      "hash": "caa708b51ccc442087a25e5accc5e82c07e67dc650527048d6a9d56633ef1691",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/graph-engine/SKILL.md",
+      "kind": "file",
+      "hash": "77c2e80621bdf63cfbb94129f1e8210930ca0c5626980a733bf9104543789f3b",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/graph-guided-autoresearch/SKILL.md",
+      "kind": "file",
+      "hash": "5a8825c06fdbb07615c4a89aca42524ceadd4ed86ecc3f169b96002cb65774d8",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/greenfield-architect/SKILL.md",
+      "kind": "file",
+      "hash": "52c5b022e0d88cef9cfa4a8f0ae57c01bece0ba9928fcc681a9a7cec3e215f33",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/grill-me/SKILL.md",
+      "kind": "file",
+      "hash": "df487c8449e2e57cad9073536c973caf022d22cfe48ac0c273bffc4e621de3a4",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/handoff/SKILL.md",
+      "kind": "file",
+      "hash": "728ba6bd3b8ea0ad42d237ea12fac298069b3de92015b73142a647ee5a2bccff",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/impact-analysis-engine/SKILL.md",
+      "kind": "file",
+      "hash": "d87df98f1752fda13dd5969ac39de57b3d4b4e8149ebe8e113a5c1311278162b",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/incremental-sync-engine/SKILL.md",
+      "kind": "file",
+      "hash": "8051724af3642ec7342fd18d59e2d8676c6a7d8b8b05a4bcfcf49063f69641ff",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/initialize-graphward/SKILL.md",
+      "kind": "file",
+      "hash": "7673c642b8dcc7433e8886ea7dfdf6674e3d8dcc70680e26bc535a9f4b0ee95c",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/initialize-intelligence-skill/SKILL.md",
+      "kind": "file",
+      "hash": "4a49ced71a5d7d48c8d4afc1a3d2954c906a000a8d5c1f85fca782bd2d2f1dc4",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/interface-design-explorer/SKILL.md",
+      "kind": "file",
+      "hash": "3dc45706ec535e95463630bc711798cc933e124d5cacfef3aa77902e2cbd7541",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/issue-tracker-sync-engine/SKILL.md",
+      "kind": "file",
+      "hash": "b6df6c8fbfd0b440b218d599ac8b7b23f7c692f01fbc9d04c31e2eda308eae9a",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/knowledge-base-validator/SKILL.md",
+      "kind": "file",
+      "hash": "d90a89f8da2b9afe58ab209548a0a12556777395e488c7bd70c81aa07e2d9b77",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/llm-prompt-injection-guard/SKILL.md",
+      "kind": "file",
+      "hash": "b6044e996c5ca8417d53acd46b47d021f5ad997bf8c58e54262b1ba399db08ce",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/map-architecture/SKILL.md",
+      "kind": "file",
+      "hash": "632c1ae5eac67e9a94119ef7977e5e71b0be9e3b14dd1fbd72d2475e91fa458b",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/mcp-security-governor/SKILL.md",
+      "kind": "file",
+      "hash": "1e20c5490653dd4d13fa1b1037c1f2c0a03d24850336808e88480b49656b23ab",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/nfr-adr-governor/SKILL.md",
+      "kind": "file",
+      "hash": "53d463f621abbf194ea8e8727b9e596dcd6d4cace3132f40e00ddd1771a14f90",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/ongoing-learning-engine/SKILL.md",
+      "kind": "file",
+      "hash": "7688c77910650be9509cdf87e8536dda13e8cf81e8fdf51051469cdd5403fc7d",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/operations-readiness-engine/SKILL.md",
+      "kind": "file",
+      "hash": "2cc325fbdbdd7412c6b8cd13dc9b3eef8e99c9737bbf0eb81612aa1d425902d2",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/performance-analysis-engine/SKILL.md",
+      "kind": "file",
+      "hash": "add3e8712e5c56f45e27e5e77afbe956f3bc9ddbf7bb0383e304f4172a87b5d7",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/pr-intelligence-engine/SKILL.md",
+      "kind": "file",
+      "hash": "c5b4f110ef24c3da26e35c8e2d20c3bbd1d7b1b01c63e0abaee4044558537511",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/question-file-engine/SKILL.md",
+      "kind": "file",
+      "hash": "c609079e9cd8dedcada1d7f9551e9d1f994f1d7e4ac03441289008deccae5516",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/refactoring-planner/SKILL.md",
+      "kind": "file",
+      "hash": "fca0f1173ccf0098115d44d6b3f831ad64da733d1c869177fe7365e7b33a3d7f",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/requirement-scoper/SKILL.md",
+      "kind": "file",
+      "hash": "c555fe0e5c703f57421e5c63f839a3eba3d3ef754b54c8a672d540de302f43b6",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/review-engineering-change/SKILL.md",
+      "kind": "file",
+      "hash": "a7e00899e17bd32cb6958f27b75350cb90fe73ba2e8a7b38f75ab2610e6d3be5",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/scope-requirement/SKILL.md",
+      "kind": "file",
+      "hash": "691690feee38b630bb15c579d99c7af6f9679807fd967edeca2450da4cebfb9a",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/security-audit-engine/SKILL.md",
+      "kind": "file",
+      "hash": "982bcfb5aededb8708deac8dccbba15f54881b8153b0ab3ed4d8836ee93cd434",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/session-handoff-engine/SKILL.md",
+      "kind": "file",
+      "hash": "00dceed92920cbfb26ab930cd77ff256e170750bd0abcbab0bea9dd3c6665a5c",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/socratic-clarification-gate/SKILL.md",
+      "kind": "file",
+      "hash": "fe728ea657d0778e160127650df4ebc5e3c2bf9a3d062a2eb30c8b19ca0519a8",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/socratic-stress-tester/SKILL.md",
+      "kind": "file",
+      "hash": "466ddfe4b907300ff31cd7071758f355694264ad58bc8b99b4b8f303ec6ec91b",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/staleness-detector/SKILL.md",
+      "kind": "file",
+      "hash": "69e38207a11f2abba03dff16db4fd87bb22d49521e6176e81263ee723d8256ab",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/sync-graphward/SKILL.md",
+      "kind": "file",
+      "hash": "47b49322e36db74bc8baec1dc020309c1ffa917cf35e606e25d3fbb847efc98b",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/tdd/SKILL.md",
+      "kind": "file",
+      "hash": "108d8782c575716bb6582e65d25a59e892d662b1d7d589b8a6a0b852f6b01b3f",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/testing-intelligence-engine/SKILL.md",
+      "kind": "file",
+      "hash": "be3ef5e14880ffed04015e0b3ad599885f932f354a586dc43d3425d9e6e6745d",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/type-safety-engine/SKILL.md",
+      "kind": "file",
+      "hash": "599b5e6512251d5915511ceff8cd231c82d9a406ddcbe32dcf1b9412afaaf1c2",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/user-intelligence-engine/SKILL.md",
+      "kind": "file",
+      "hash": "c04f8db50a44ae95f32693636cf5200eabaf499d8578b3e0b1df1027d6c46022",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/skills/vertical-tdd-engine/SKILL.md",
+      "kind": "file",
+      "hash": "201fbaeed2fa905b0b54722d4562409a42d930bafa9a94c4591e8a46283080df",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/analyze-impact.md",
+      "kind": "file",
+      "hash": "1d14edd3bd6c27cc0bccb172bd61446e846e6234725c2818ca9b0c30ad75348e",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/create-project.md",
+      "kind": "file",
+      "hash": "53fafa610d2155ecbceaa44a551a9f3b476f29dd93116f5d8115187b2ee67538",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/decompose-backlog.md",
+      "kind": "file",
+      "hash": "43285811372d469330c6831fad6643c1a3f1ea745c5fa771a39a8e3c2730aa4f",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/deliver-backlog.md",
+      "kind": "file",
+      "hash": "2bd96fb878a13f7166d4cb04d49b77542f2725f811dc7ee44660f3b89d99fcfe",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/design-an-interface.md",
+      "kind": "file",
+      "hash": "b4450d5e500138ac2bae731a7aab12611152066b8e02676726097b6e097c3032",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/discover-codebase.md",
+      "kind": "file",
+      "hash": "67cb06a4d449b3aaf523280ff2f3e3617ba34ce652ddd423620ec416a0cc16ea",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/graphward.md",
+      "kind": "file",
+      "hash": "cc4aad595cc8c29480382876a350ca6a57a047872cd6522373a6894ffab42f9e",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/grill-me.md",
+      "kind": "file",
+      "hash": "df487c8449e2e57cad9073536c973caf022d22cfe48ac0c273bffc4e621de3a4",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/handoff.md",
+      "kind": "file",
+      "hash": "728ba6bd3b8ea0ad42d237ea12fac298069b3de92015b73142a647ee5a2bccff",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/initialize-graphward.md",
+      "kind": "file",
+      "hash": "7673c642b8dcc7433e8886ea7dfdf6674e3d8dcc70680e26bc535a9f4b0ee95c",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/map-architecture.md",
+      "kind": "file",
+      "hash": "632c1ae5eac67e9a94119ef7977e5e71b0be9e3b14dd1fbd72d2475e91fa458b",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/review-engineering-change.md",
+      "kind": "file",
+      "hash": "a7e00899e17bd32cb6958f27b75350cb90fe73ba2e8a7b38f75ab2610e6d3be5",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/scope-requirement.md",
+      "kind": "file",
+      "hash": "691690feee38b630bb15c579d99c7af6f9679807fd967edeca2450da4cebfb9a",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/sync-graphward.md",
+      "kind": "file",
+      "hash": "47b49322e36db74bc8baec1dc020309c1ffa917cf35e606e25d3fbb847efc98b",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".agents/workflows/tdd.md",
+      "kind": "file",
+      "hash": "108d8782c575716bb6582e65d25a59e892d662b1d7d589b8a6a0b852f6b01b3f",
+      "owners": [
+        "antigravity"
+      ]
+    },
+    {
+      "path": ".claude/agents/adversary.md",
+      "kind": "file",
+      "hash": "6bc22b1ba0cb5372b2483632f5786052f9fb2e62dffd9594264218d9717a87d9",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/change-agent.md",
+      "kind": "file",
+      "hash": "eb7fdd6a320ca8122df5a6364970844ae68fc43c0255efbf0f2b84bac5c53284",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/compliance-auditor.md",
+      "kind": "file",
+      "hash": "11b0cd8a3e2ad61db5943b7cf581233b118fb329a93e0ab680b77c710335f55a",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/database-administrator.md",
+      "kind": "file",
+      "hash": "6701d81ed9b2c8cf11375c22cc8e91b51f39a3cf554eda478cabb3fec4827007",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/documentation-writer.md",
+      "kind": "file",
+      "hash": "395eadb2aae57f399a261d651e13a60a4a1b00499ed7737788f7371f5c0b8b64",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/engineering-orchestrator.md",
+      "kind": "file",
+      "hash": "854ef9843ef9edde5a2eafad4d1b05920bcf2e7af6bff0b5c2298593bf60f769",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/knowledge-agent.md",
+      "kind": "file",
+      "hash": "4c59de6ac58c8084b5daced4bca02997152713fba3b5f57c4bf3638d69da7730",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/performance-analyst.md",
+      "kind": "file",
+      "hash": "b4f25b4756f55b8db1951b9a3e2c5634ddba204bbedd028ef8b002e41c99dec6",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/product-analyst.md",
+      "kind": "file",
+      "hash": "5d04153471ace5d1fb430b7ed515fadffcaad910bf3e13456271eae58a0264de",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/quality-agent.md",
+      "kind": "file",
+      "hash": "0dc275105168a8b1b07bb40a17c60af256d6794e4b908554483bc43aabf3c6b7",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/release-engineer.md",
+      "kind": "file",
+      "hash": "724cfa4ef9885ec5f15c7982ec2552e87f94fd84b38af8fec0d27b8b4c678692",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/security-officer.md",
+      "kind": "file",
+      "hash": "c26dd2a4b281d4246c209db839e19620760c1ae4f83e3e287d943faa69925618",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/site-reliability-engineer.md",
+      "kind": "file",
+      "hash": "c1403fb8c20d70687f7bbd1969658263eefe453818e109bd6e4c5e79b9a0a985",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/system-architect.md",
+      "kind": "file",
+      "hash": "0f24b52ffb6cc30921f65e0655f54b9aeda30c0001a53efdb902b2d9a231567a",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/agents/test-engineer.md",
+      "kind": "file",
+      "hash": "090071c2654dbff041dee7f455f414cb07cdec0dbdb58590582dd1b2b5d4a5f6",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/analyze-impact.md",
+      "kind": "file",
+      "hash": "c7a20e07d781f22e6976a34e9b87f38e6dc464d799de93a7a210d4dd799f4736",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/create-project.md",
+      "kind": "file",
+      "hash": "2564c5cae8bc9bcb4640d591f333a90abd0f36af24d322b192065c0b2da0b6d9",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/decompose-backlog.md",
+      "kind": "file",
+      "hash": "85a0232ec8e202362355c42239d39d7b7980170b46b11a845a66de5038740290",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/deliver-backlog.md",
+      "kind": "file",
+      "hash": "a64889a04f5c8e067bc91c14ed86b58c37810d61e9e038a58ad17e0b25090533",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/design-an-interface.md",
+      "kind": "file",
+      "hash": "6585be6809a44a40213ebc7584307f62f97d2a967ebd313e3d83a3a86da5485a",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/discover-codebase.md",
+      "kind": "file",
+      "hash": "67cb06a4d449b3aaf523280ff2f3e3617ba34ce652ddd423620ec416a0cc16ea",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/graphward.md",
+      "kind": "file",
+      "hash": "418612ccc3eebc88f07c8915474116bb5a39851df9f95813099ccb0749f931ff",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/grill-me.md",
+      "kind": "file",
+      "hash": "a9aa8f7c2ae1ab1a6a7035192c0819cc129fe3cca4c2ced1e87a4216b9aaae5e",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/handoff.md",
+      "kind": "file",
+      "hash": "93142b20a9bebf65fb69b713c48db14594255beb5c01dff25067b30625b47e9a",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/initialize-graphward.md",
+      "kind": "file",
+      "hash": "7673c642b8dcc7433e8886ea7dfdf6674e3d8dcc70680e26bc535a9f4b0ee95c",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/map-architecture.md",
+      "kind": "file",
+      "hash": "632c1ae5eac67e9a94119ef7977e5e71b0be9e3b14dd1fbd72d2475e91fa458b",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/review-engineering-change.md",
+      "kind": "file",
+      "hash": "891b72b689c8a935ee5e50632fa07e47d0af63a0e587961e87ef46f08f66e201",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/scope-requirement.md",
+      "kind": "file",
+      "hash": "1ace0e122b0ea77b9bd04d6ba4f53716a4a1a1d16bec26dc1df26cc0bc3f9e7f",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/sync-graphward.md",
+      "kind": "file",
+      "hash": "9cc710bc6fc2a1ad8f5721f712c8fc35bc4d6f72d1087adecd87e3a082211a62",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/commands/tdd.md",
+      "kind": "file",
+      "hash": "b0940ebd594e9b192f3941a3a31ee1fd2673100a55420eae7f74baf66495aa21",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/settings.json",
+      "kind": "json-merge",
+      "hash": "4ff120687135c162ce0a15725dd14f719b9eddb1ef455e8a88df66700c90b098",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/adr-compliance-checker/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "d0757c17c4adf82f1a3c3405e85c3c21b3241dbafca0ee84d1528061a99fcf05",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/adr-compliance-checker/SKILL.md",
+      "kind": "file",
+      "hash": "f895943dc875505eb8e713c8ea79ca12a32ce52755272996d277a828634aeeec",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/aidlc-lifecycle-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "a8e2e216f4543b1a55045485647ce354e9f3843a792b127aa5491b2085fe7f73",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/aidlc-lifecycle-engine/SKILL.md",
+      "kind": "file",
+      "hash": "12de8fbc8eed150ea9f0d6813be17edfce83a2c00cad696274fe7421bf022790",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/analyze-impact/SKILL.md",
+      "kind": "file",
+      "hash": "1d14edd3bd6c27cc0bccb172bd61446e846e6234725c2818ca9b0c30ad75348e",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/api-backward-compatibility-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "6ccab89189d86377215e90909abf39a5d422cb2957586f8475a588369c7b1335",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/api-backward-compatibility-engine/SKILL.md",
+      "kind": "file",
+      "hash": "d1400e38bb7d369cb020c4723d0ffa531795f58aaaea94f3009c217f5b329e02",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/architecture-review-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "de01a6c13d9ecfbd91356da7c49b020526db4b402bfde3b02501c7e1b1a53978",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/architecture-review-engine/SKILL.md",
+      "kind": "file",
+      "hash": "f40f44bf3249a1eeec770fbf20be1e914363924cd3a7027bf7571676e70e692b",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/backlog-decomposition-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "1ff1824918c52016a20934bda8146b21274baa35e038cc4119560e69307aeaea",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/backlog-decomposition-engine/SKILL.md",
+      "kind": "file",
+      "hash": "dbfa492dff498d95f53a9fa84de81eb015359ff5fc725681b60b8a9b037f7c90",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/change-detection-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "92a32f44f365559136df2ffeae9ab2c5077f54a2e4101e6db7f829937d913117",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/change-detection-engine/SKILL.md",
+      "kind": "file",
+      "hash": "af091810b5d4d3f7aba9f7d9f13340e92074fc2f7deea1370d0567129af88df8",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/change-history-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "28dcfe0f3035c71ec31bb7107f4c4e076c04cbbe4cdc2799b21b60d0f3894986",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/change-history-engine/SKILL.md",
+      "kind": "file",
+      "hash": "b766866eca3840f8b0339db7094eca95c06788299bf6a287d737d205b0ac3da0",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/codebase-discovery-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "9193baad7bb6fb482745fcc285ce11a2112914ca2d3a69fdf86192371af34103",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/codebase-discovery-engine/SKILL.md",
+      "kind": "file",
+      "hash": "aaa2b2b720e4cd5a88550ccc11e30d0c984cee75b6af70fa0bb08b4155b588c7",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/context-budget-optimizer/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "24ad1d69f5c4e94cce3a13ba8a549838ec3554e699c2f0b0368644f5e939fa1b",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/context-budget-optimizer/SKILL.md",
+      "kind": "file",
+      "hash": "749e6c34cbe7687ba1fa0b69daed433f1cf54be4b1efc19249157591bf917594",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/contract-test-generator/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "6541e668bb3e4831b1ce9cec32c92c6fef33afdb1f01242d570d67b435d9ae63",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/contract-test-generator/SKILL.md",
+      "kind": "file",
+      "hash": "c35a6e3fca216dbc5bc1e7bfb9364da47f0d138ace34863d9e5f0fecf2efb398",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/convention-detector/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "3cd44c1e4ec9ea2bc4ec8f9b59ae27b10a436e7cbd0e28ce0753fe14f947ac02",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/convention-detector/SKILL.md",
+      "kind": "file",
+      "hash": "548a90ad601d55e39d10c3d0ed19745f00830fd8467de4d1f7b923acb2f483c5",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/create-project/SKILL.md",
+      "kind": "file",
+      "hash": "53fafa610d2155ecbceaa44a551a9f3b476f29dd93116f5d8115187b2ee67538",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/database-migration-safety-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "06bc09ec2178c8b1333be63046e3074d0dd22095af9021faa1d4e3a49c979cae",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/database-migration-safety-engine/SKILL.md",
+      "kind": "file",
+      "hash": "e0df42ec8877256cc65bb5064df5829a89cf82c6ac75408bc0e2b15e01380657",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/dead-code-detector/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "02cd8655717111aa9a0e9f4f885484babdff0eb9dbab7467f3ee1e250b053459",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/dead-code-detector/SKILL.md",
+      "kind": "file",
+      "hash": "04735d9b6053a9d4dc3d546d4f7a02848103715d8fffe4c7739084633955ee95",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/debugging-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "592b2a0d9dca9e8403f03e87e218dd574b633b1c4152391e26bc5137fd734c6b",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/debugging-engine/SKILL.md",
+      "kind": "file",
+      "hash": "410d57d6d0787ed037fb0202e88fc3ff3842a2b2a0b6470c2409a433aa2fe150",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/decompose-backlog/SKILL.md",
+      "kind": "file",
+      "hash": "43285811372d469330c6831fad6643c1a3f1ea745c5fa771a39a8e3c2730aa4f",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/deep-project-knowledge-extractor/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "31c206c949af55003f8dceb3f734d37934ae768a48c576dbbffb4900767de26c",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/deep-project-knowledge-extractor/SKILL.md",
+      "kind": "file",
+      "hash": "d6ec33afc9765d64dd21b6faf01eb200f0c0cbe2a8e61cfde330380b339a2a8f",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/deliver-backlog/SKILL.md",
+      "kind": "file",
+      "hash": "2bd96fb878a13f7166d4cb04d49b77542f2725f811dc7ee44660f3b89d99fcfe",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/design-an-interface/SKILL.md",
+      "kind": "file",
+      "hash": "b4450d5e500138ac2bae731a7aab12611152066b8e02676726097b6e097c3032",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/discover-codebase/SKILL.md",
+      "kind": "file",
+      "hash": "67cb06a4d449b3aaf523280ff2f3e3617ba34ce652ddd423620ec416a0cc16ea",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/engineering-change-review/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "21a9a7602e3983a5e68f14d58db82532bda4009828d9faf1e0843554e58371ec",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/engineering-change-review/SKILL.md",
+      "kind": "file",
+      "hash": "b1a5438b75d85bbf68d5b887d7948ae12fa123f55a5f48c633755b6fd67973a1",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/graphward-skill/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "e89cc38b0a536782fa55ab49349cf94c4801f570a94cafe55ff602f25f08c78f",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/graphward-skill/SKILL.md",
+      "kind": "file",
+      "hash": "1048b7e76bd1e775c284140eb7bb32d942c36f64dba0d17882f6c2f6fe8c9c05",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/graphward/SKILL.md",
+      "kind": "file",
+      "hash": "cc4aad595cc8c29480382876a350ca6a57a047872cd6522373a6894ffab42f9e",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/environment-variable-auditor/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "d7939d77277cee850f870e138c739e42ee7dd59b252b48646a1d6a9275e10f64",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/environment-variable-auditor/SKILL.md",
+      "kind": "file",
+      "hash": "af1a4ca709f174761710d83515c592f624483246fb12f7cef6e7b27d5b3cb06f",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/environmental-backpressure-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "c61c68bc8053fb591d6a2c8f8341f3cbbbab3fd3e07bd3ed497a5837b163c3a9",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/environmental-backpressure-engine/SKILL.md",
+      "kind": "file",
+      "hash": "f81be085ba3710fb794890fda3249b19f855f46a1d1134899913a0a19a1cda59",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/git-intelligence-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "6da5e082ecdb39e2655debc63e4898019eb3315eb9f817efd4fc96b72813d6b1",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/git-intelligence-engine/SKILL.md",
+      "kind": "file",
+      "hash": "caa708b51ccc442087a25e5accc5e82c07e67dc650527048d6a9d56633ef1691",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/graph-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "ec39cb32ec07c01281f63ee551564fd0a4a5bd7e79070263290b3325b1a84724",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/graph-engine/SKILL.md",
+      "kind": "file",
+      "hash": "77c2e80621bdf63cfbb94129f1e8210930ca0c5626980a733bf9104543789f3b",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/graph-guided-autoresearch/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "7b08756b459faa76a7020b11fa3cd4984e2df88a71c57b4a389b7d87ac745794",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/graph-guided-autoresearch/SKILL.md",
+      "kind": "file",
+      "hash": "5a8825c06fdbb07615c4a89aca42524ceadd4ed86ecc3f169b96002cb65774d8",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/greenfield-architect/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "3c66d82c15760c00e7ec99d1b2f935934c4a6543464987576e5afe643502cc77",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/greenfield-architect/SKILL.md",
+      "kind": "file",
+      "hash": "52c5b022e0d88cef9cfa4a8f0ae57c01bece0ba9928fcc681a9a7cec3e215f33",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/grill-me/SKILL.md",
+      "kind": "file",
+      "hash": "df487c8449e2e57cad9073536c973caf022d22cfe48ac0c273bffc4e621de3a4",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/handoff/SKILL.md",
+      "kind": "file",
+      "hash": "728ba6bd3b8ea0ad42d237ea12fac298069b3de92015b73142a647ee5a2bccff",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/impact-analysis-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "0868c0f4a6dfbe7705df6ae74e887168682b032548e99a18afd143efc468a2ca",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/impact-analysis-engine/SKILL.md",
+      "kind": "file",
+      "hash": "d87df98f1752fda13dd5969ac39de57b3d4b4e8149ebe8e113a5c1311278162b",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/incremental-sync-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "2615fc1c93a6beecb8e762d05299c1101270aa29b182be3394022697e3941f97",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/incremental-sync-engine/SKILL.md",
+      "kind": "file",
+      "hash": "8051724af3642ec7342fd18d59e2d8676c6a7d8b8b05a4bcfcf49063f69641ff",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/initialize-graphward/SKILL.md",
+      "kind": "file",
+      "hash": "7673c642b8dcc7433e8886ea7dfdf6674e3d8dcc70680e26bc535a9f4b0ee95c",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/initialize-intelligence-skill/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "be3cf18cbe76c6a41eed742dba3672b15c06062758fb485fa73aa45dc77b6bd4",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/initialize-intelligence-skill/SKILL.md",
+      "kind": "file",
+      "hash": "4a49ced71a5d7d48c8d4afc1a3d2954c906a000a8d5c1f85fca782bd2d2f1dc4",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/interface-design-explorer/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "02fa755a76e86686345d7e800b2f5644017db12b24790c7a1f3e99a2633f0337",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/interface-design-explorer/SKILL.md",
+      "kind": "file",
+      "hash": "3dc45706ec535e95463630bc711798cc933e124d5cacfef3aa77902e2cbd7541",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/issue-tracker-sync-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "691edbdb7a4d3a0071f40cdf4990333d9e116e969a9bf91c4fbb190bfb43e9c0",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/issue-tracker-sync-engine/SKILL.md",
+      "kind": "file",
+      "hash": "b6df6c8fbfd0b440b218d599ac8b7b23f7c692f01fbc9d04c31e2eda308eae9a",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/knowledge-base-validator/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "78bc997e391ddb9cb332a6eb02a630a139000cc446e2a38581175d4b09f8ed87",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/knowledge-base-validator/SKILL.md",
+      "kind": "file",
+      "hash": "d90a89f8da2b9afe58ab209548a0a12556777395e488c7bd70c81aa07e2d9b77",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/llm-prompt-injection-guard/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "4674dbb5dec46919f96a3963639cd40cf89542e219d958bc9027123d3a41534c",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/llm-prompt-injection-guard/SKILL.md",
+      "kind": "file",
+      "hash": "b6044e996c5ca8417d53acd46b47d021f5ad997bf8c58e54262b1ba399db08ce",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/map-architecture/SKILL.md",
+      "kind": "file",
+      "hash": "632c1ae5eac67e9a94119ef7977e5e71b0be9e3b14dd1fbd72d2475e91fa458b",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/mcp-security-governor/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "a9c0d226627fd753eb7083c9bd809d67668e23d9c1a99132aa9de38337472dd1",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/mcp-security-governor/SKILL.md",
+      "kind": "file",
+      "hash": "1e20c5490653dd4d13fa1b1037c1f2c0a03d24850336808e88480b49656b23ab",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/nfr-adr-governor/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "b239e4523155ce06514df1419cdf5e91f7f3243b591b9c21cf4e550b7b00db96",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/nfr-adr-governor/SKILL.md",
+      "kind": "file",
+      "hash": "53d463f621abbf194ea8e8727b9e596dcd6d4cace3132f40e00ddd1771a14f90",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/ongoing-learning-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "3c26d7e6a38f541fd76cda67f30e3b17e2539d024ab239e64fe368ab4929249f",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/ongoing-learning-engine/SKILL.md",
+      "kind": "file",
+      "hash": "7688c77910650be9509cdf87e8536dda13e8cf81e8fdf51051469cdd5403fc7d",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/operations-readiness-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "bc1f07b45976002995b934717667945c4cbeb8ceba8b6719649685e909857103",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/operations-readiness-engine/SKILL.md",
+      "kind": "file",
+      "hash": "2cc325fbdbdd7412c6b8cd13dc9b3eef8e99c9737bbf0eb81612aa1d425902d2",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/performance-analysis-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "1579271c41e736422bc3aa9924fa36dc6a41cb08bb0fae7d80abbbc076a5f35a",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/performance-analysis-engine/SKILL.md",
+      "kind": "file",
+      "hash": "add3e8712e5c56f45e27e5e77afbe956f3bc9ddbf7bb0383e304f4172a87b5d7",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/pr-intelligence-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "20daba9215e6652d0f34c04429836f5dfe9d7360a07390bb75c05e55eac771f9",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/pr-intelligence-engine/SKILL.md",
+      "kind": "file",
+      "hash": "c5b4f110ef24c3da26e35c8e2d20c3bbd1d7b1b01c63e0abaee4044558537511",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/question-file-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "08b229c99fa31634ec36da6a55cfcd089533468b52e32d8c4adcce84bbfa0c57",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/question-file-engine/SKILL.md",
+      "kind": "file",
+      "hash": "c609079e9cd8dedcada1d7f9551e9d1f994f1d7e4ac03441289008deccae5516",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/refactoring-planner/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "4876d7869032bb4d71b4fca25fe04df7df689d6aa0ae4c6254b68c49ed37cfdc",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/refactoring-planner/SKILL.md",
+      "kind": "file",
+      "hash": "fca0f1173ccf0098115d44d6b3f831ad64da733d1c869177fe7365e7b33a3d7f",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/requirement-scoper/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "4b5cca195ccac311d57f8bec29352a7209db0238d1099d60057455b2a465f7d1",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/requirement-scoper/SKILL.md",
+      "kind": "file",
+      "hash": "c555fe0e5c703f57421e5c63f839a3eba3d3ef754b54c8a672d540de302f43b6",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/review-engineering-change/SKILL.md",
+      "kind": "file",
+      "hash": "a7e00899e17bd32cb6958f27b75350cb90fe73ba2e8a7b38f75ab2610e6d3be5",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/scope-requirement/SKILL.md",
+      "kind": "file",
+      "hash": "691690feee38b630bb15c579d99c7af6f9679807fd967edeca2450da4cebfb9a",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/security-audit-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "eb6e3fbfd87cfb14434aa54116a8b05e8bfa74bb58110acffb27af5f6c41e065",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/security-audit-engine/SKILL.md",
+      "kind": "file",
+      "hash": "982bcfb5aededb8708deac8dccbba15f54881b8153b0ab3ed4d8836ee93cd434",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/session-handoff-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "b3f91c311c9c496cdefc6dad54ed390beddda5a787c042598fe0854fd8876e0e",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/session-handoff-engine/SKILL.md",
+      "kind": "file",
+      "hash": "00dceed92920cbfb26ab930cd77ff256e170750bd0abcbab0bea9dd3c6665a5c",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/socratic-clarification-gate/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "303315b19ca7040ea5b15a88d3ae8e6926d6ae178c6aee559b9d95785ce8b309",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/socratic-clarification-gate/SKILL.md",
+      "kind": "file",
+      "hash": "fe728ea657d0778e160127650df4ebc5e3c2bf9a3d062a2eb30c8b19ca0519a8",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/socratic-stress-tester/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "2eedac9e4ff77301f830e6991917aedac81cfd476deef1db3a3bf253968b0dde",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/socratic-stress-tester/SKILL.md",
+      "kind": "file",
+      "hash": "466ddfe4b907300ff31cd7071758f355694264ad58bc8b99b4b8f303ec6ec91b",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/staleness-detector/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "4520532304ef47717694a392c06a77c0de8e8b4d6727bfcf151a2c9aaad192d4",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/staleness-detector/SKILL.md",
+      "kind": "file",
+      "hash": "69e38207a11f2abba03dff16db4fd87bb22d49521e6176e81263ee723d8256ab",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/sync-graphward/SKILL.md",
+      "kind": "file",
+      "hash": "47b49322e36db74bc8baec1dc020309c1ffa917cf35e606e25d3fbb847efc98b",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/tdd/SKILL.md",
+      "kind": "file",
+      "hash": "108d8782c575716bb6582e65d25a59e892d662b1d7d589b8a6a0b852f6b01b3f",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/testing-intelligence-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "5f89477860741f5a0e401439e7e52629af4ba60dfe855a6e44417349ad4f4e65",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/testing-intelligence-engine/SKILL.md",
+      "kind": "file",
+      "hash": "be3ef5e14880ffed04015e0b3ad599885f932f354a586dc43d3425d9e6e6745d",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/type-safety-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "2f9932883dd2329b748233a1b334182c1b07b21ecf6e0a550c7191f9438b5f0a",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/type-safety-engine/SKILL.md",
+      "kind": "file",
+      "hash": "599b5e6512251d5915511ceff8cd231c82d9a406ddcbe32dcf1b9412afaaf1c2",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/user-intelligence-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "2dad8adcbc68ec24e5c9cc92b1214ee55210cc188e6230bccdf58e974afd3aed",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/user-intelligence-engine/SKILL.md",
+      "kind": "file",
+      "hash": "c04f8db50a44ae95f32693636cf5200eabaf499d8578b3e0b1df1027d6c46022",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/vertical-tdd-engine/SKILL-BRIEF.md",
+      "kind": "file",
+      "hash": "521a4f180cf472de0d9f9df93674a96db8abc68b8d9d09a7ecb62750cc2d2848",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".claude/skills/vertical-tdd-engine/SKILL.md",
+      "kind": "file",
+      "hash": "201fbaeed2fa905b0b54722d4562409a42d930bafa9a94c4591e8a46283080df",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": ".cursor/commands/analyze-impact.md",
+      "kind": "file",
+      "hash": "1d14edd3bd6c27cc0bccb172bd61446e846e6234725c2818ca9b0c30ad75348e",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/create-project.md",
+      "kind": "file",
+      "hash": "53fafa610d2155ecbceaa44a551a9f3b476f29dd93116f5d8115187b2ee67538",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/decompose-backlog.md",
+      "kind": "file",
+      "hash": "43285811372d469330c6831fad6643c1a3f1ea745c5fa771a39a8e3c2730aa4f",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/deliver-backlog.md",
+      "kind": "file",
+      "hash": "2bd96fb878a13f7166d4cb04d49b77542f2725f811dc7ee44660f3b89d99fcfe",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/design-an-interface.md",
+      "kind": "file",
+      "hash": "b4450d5e500138ac2bae731a7aab12611152066b8e02676726097b6e097c3032",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/discover-codebase.md",
+      "kind": "file",
+      "hash": "67cb06a4d449b3aaf523280ff2f3e3617ba34ce652ddd423620ec416a0cc16ea",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/graphward.md",
+      "kind": "file",
+      "hash": "cc4aad595cc8c29480382876a350ca6a57a047872cd6522373a6894ffab42f9e",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/grill-me.md",
+      "kind": "file",
+      "hash": "df487c8449e2e57cad9073536c973caf022d22cfe48ac0c273bffc4e621de3a4",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/handoff.md",
+      "kind": "file",
+      "hash": "728ba6bd3b8ea0ad42d237ea12fac298069b3de92015b73142a647ee5a2bccff",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/initialize-graphward.md",
+      "kind": "file",
+      "hash": "7673c642b8dcc7433e8886ea7dfdf6674e3d8dcc70680e26bc535a9f4b0ee95c",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/map-architecture.md",
+      "kind": "file",
+      "hash": "632c1ae5eac67e9a94119ef7977e5e71b0be9e3b14dd1fbd72d2475e91fa458b",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/review-engineering-change.md",
+      "kind": "file",
+      "hash": "a7e00899e17bd32cb6958f27b75350cb90fe73ba2e8a7b38f75ab2610e6d3be5",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/scope-requirement.md",
+      "kind": "file",
+      "hash": "691690feee38b630bb15c579d99c7af6f9679807fd967edeca2450da4cebfb9a",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/sync-graphward.md",
+      "kind": "file",
+      "hash": "47b49322e36db74bc8baec1dc020309c1ffa917cf35e606e25d3fbb847efc98b",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/commands/tdd.md",
+      "kind": "file",
+      "hash": "108d8782c575716bb6582e65d25a59e892d662b1d7d589b8a6a0b852f6b01b3f",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/hooks.json",
+      "kind": "json-merge",
+      "hash": "de8db1f3bb11565147b7acb1313f5eb1008a55268872cf39b858a2b300434f78",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/mcp.json",
+      "kind": "json-merge",
+      "hash": "cace6343178642a86db61625630b261c04bbd1033d66543c3a8c0d678e1a1393",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".cursor/rules/graphward.mdc",
+      "kind": "file",
+      "hash": "b7714c0584d38c1e19a0c16591e4dcb912cb13b53ad31bc69bb21603d3203ff6",
+      "owners": [
+        "cursor"
+      ]
+    },
+    {
+      "path": ".graphward/gw.config.json",
+      "kind": "seed",
+      "hash": "8299896e8385799a228ce2179cc96d36f7f48a0bc7d7ad03a4724abb2e30e8ba",
+      "owners": [
+        "claude-code",
+        "cursor"
+      ]
+    },
+    {
+      "path": ".mcp.json",
+      "kind": "json-merge",
+      "hash": "cace6343178642a86db61625630b261c04bbd1033d66543c3a8c0d678e1a1393",
+      "owners": [
+        "claude-code"
+      ]
+    },
+    {
+      "path": "CLAUDE.md",
+      "kind": "block",
+      "hash": "521e427bba41311cf72c851a092b6ecf1ca649343bd0c14d0abc7bd329380ada",
+      "blockId": "graphward",
+      "owners": [
+        "claude-code"
+      ]
+    }
+  ],
+  "installedAt": "2026-08-17T14:49:59.921Z",
+  "updatedAt": "2026-09-10T06:55:52.128Z"
+}

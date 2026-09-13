@@ -17,7 +17,7 @@ This capability does not modify product code.
 
 ## Outputs
 
-- `.engineering-intelligence/reports/DISCOVERY-report.md` — structured discovery findings with per-area confidence scores
+- `.graphward/reports/DISCOVERY-report.md` — structured discovery findings with per-area confidence scores
 - Feeds directly into `initialize-intelligence-skill` for knowledge base generation
 
 ---
@@ -272,7 +272,7 @@ After Phases 1 and 2, ask ONLY questions that cannot be answered from code evide
 
 ## Phase 4: Confidence Report
 
-Generate `.engineering-intelligence/reports/DISCOVERY-report.md` with this structure:
+Generate `.graphward/reports/DISCOVERY-report.md` with this structure:
 
 ```markdown
 # Codebase Discovery Report
@@ -411,7 +411,7 @@ Scope: <full repo | specific scope>
 - [ ] No findings are stated without evidence citations
 - [ ] Clarification questions number between 5 and 10
 - [ ] No question asks about something discoverable from code
-- [ ] DISCOVERY-report.md exists at `.engineering-intelligence/reports/DISCOVERY-report.md`
+- [ ] DISCOVERY-report.md exists at `.graphward/reports/DISCOVERY-report.md`
 - [ ] Per-area confidence summary covers all major areas
 - [ ] Git history analysis includes hotspots and change velocity
 - [ ] Monorepo detection was performed (even if result is "not a monorepo")
@@ -422,6 +422,6 @@ Scope: <full repo | specific scope>
 - Used by: `initialize-intelligence-skill`, `engineering-orchestrator`
 - Consumed by: all sync engines, `convention-detector`, `ongoing-learning-engine`
 - Depends on: git history access, file system read access
-- Feeds into: `.engineering-intelligence/knowledge-base/00-project-overview.md`, `.engineering-intelligence/memory/technology-decisions.md`
+- Feeds into: `.graphward/knowledge-base/00-project-overview.md`, `.graphward/memory/technology-decisions.md`
 
 This capability does not modify product code.

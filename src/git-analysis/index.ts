@@ -333,7 +333,7 @@ export async function runGitAnalysis(root: string, windowDays = 90): Promise<{ r
     velocity: analyzeVelocity(commits, windowDays),
   };
 
-  const reportsDir = path.join(root, ".engineering-intelligence", "reports");
+  const reportsDir = path.join(root, ".graphward", "reports");
   await mkdir(reportsDir, { recursive: true });
   const reportPath = path.join(reportsDir, "GIT-intelligence.md");
   await writeFile(reportPath, renderReport(analysis), "utf8");

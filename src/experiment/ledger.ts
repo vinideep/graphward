@@ -4,7 +4,7 @@ import path from "node:path";
 import type { ExperimentRecord } from "./types.js";
 
 function experimentsDir(root: string): string {
-  return path.join(root, ".engineering-intelligence", "experiments");
+  return path.join(root, ".graphward", "experiments");
 }
 
 function jsonlPath(root: string): string {
@@ -69,6 +69,36 @@ export async function loadExperiments(
   }
 
   return records;
+}
+
+export async function pruneExpired(
+  root: string,
+  ttlDays: number = 30,
+): Promise<{ pruned: number; remaining: number }> {
+  const file = jsonlPath(root);
+  if (!existsSync(file)) return { pruned: 0, remaining: 0 };
+
+  const raw = await readFile(file, "utf8");
+  const cutoff = new Date(Date.now() - ttlDays * 86_400_000).toISOString();
+  const lines = raw.split("\n").filter((l) => l.trim());
+  const kept: string[] = [];
+  let pruned = 0;
+
+  for (const line of lines) {
+    try {
+      const record = JSON.parse(line) as ExperimentRecord;
+      if (record.verdict === "REVERT" && record.closedAt && record.closedAt < cutoff) {
+        pruned++;
+      } else {
+        kept.push(line);
+      }
+    } catch {
+      kept.push(line); // preserve unparseable lines
+    }
+  }
+
+  await writeFile(file, kept.join("\n") + (kept.length ? "\n" : ""), "utf8");
+  return { pruned, remaining: kept.length };
 }
 
 export function renderExperimentHistory(records: ExperimentRecord[]): string {

@@ -123,7 +123,7 @@ function renderBootstrapKnowledge(evidence: InitializationEvidence): Record<stri
 async function ensureBootstrapKnowledge(root: string, evidence: InitializationEvidence): Promise<string[]> {
   const written: string[] = [];
   for (const [name, markdown] of Object.entries(renderBootstrapKnowledge(evidence))) {
-    const relative = path.join(".engineering-intelligence", "knowledge-base", name);
+    const relative = path.join(".graphward", "knowledge-base", name);
     try {
       await readFile(path.join(root, relative), "utf8");
     } catch {
@@ -145,7 +145,7 @@ async function buildInitializationEvidence(root: string, providers: PrepareProvi
   }
   const manifestNames = new Set(["package.json", "pyproject.toml", "requirements.txt", "go.mod", "Cargo.toml", "Gemfile", "pom.xml", "build.gradle", "build.gradle.kts"]);
   const manifests = allFiles.map((file) => path.relative(root, file).replace(/\\/g, "/")).filter((relative) => manifestNames.has(path.basename(relative)));
-  const graph = await loadExistingGraph(path.join(root, ".engineering-intelligence", "graph", "dependency-graph.json"));
+  const graph = await loadExistingGraph(path.join(root, ".graphward", "graph", "dependency-graph.json"));
   const incoming = new Map<string, number>();
   for (const edge of graph?.edges ?? []) incoming.set(edge.to, (incoming.get(edge.to) ?? 0) + 1);
   const topology = (graph?.nodes ?? []).filter((node) => node.kind === "module").map((node) => ({ id: node.id, path: node.path, dependents: incoming.get(node.id) ?? 0 })).sort((a, b) => b.dependents - a.dependents || a.id.localeCompare(b.id)).slice(0, 20);
@@ -241,8 +241,8 @@ export async function runInitialization(root: string, options: InitializeOptions
   const snapshot = await recordEvidenceHashes(root);
   log(`Recorded ${snapshot.hashes.length} hash-pinned knowledge citation(s).`);
   evidence = await buildInitializationEvidence(root, providers, graph, options.runner);
-  const evidencePath = ".engineering-intelligence/context/initialization-evidence.json";
-  const generationBriefPath = ".engineering-intelligence/context/KNOWLEDGE-GENERATION-BRIEF.md";
+  const evidencePath = ".graphward/context/initialization-evidence.json";
+  const generationBriefPath = ".graphward/context/KNOWLEDGE-GENERATION-BRIEF.md";
   await writeAtomic(path.join(root, evidencePath), `${JSON.stringify(evidence, null, 2)}\n`);
   await writeAtomic(path.join(root, generationBriefPath), renderGenerationBrief(evidence));
   log(`Initialization evidence: ${evidencePath}`);

@@ -11,7 +11,7 @@
 
 ## 0. Before you start (prep, not part of the talk)
 
-- Have a small sample repo cloned and ready (or use `engineering-intelligence-OS` itself).
+- Have a small sample repo cloned and ready (or use `graphward-OS` itself).
 - Pre-run `npm install` so nothing stalls live.
 - Have two terminal tabs: one clean, one already `cd`'d into the demo repo.
 - Have your AI IDE (Claude Code) open in a second window, ready to switch to.
@@ -29,7 +29,7 @@
 
 "That's not a model problem. That's a **memory** problem. Every session, your AI assistant wakes up with amnesia. It re-reads your code from scratch, has no idea what changed last week, skips the boring-but-critical stuff like impact analysis, and drifts further from your team's conventions every single day.
 
-So I built something to fix that. It's called **Engineering Intelligence OS** — and today I'm going to show you, live, how it turns any AI coding IDE from a smart-but-forgetful intern into something closer to a disciplined engineering team member."
+So I built something to fix that. It's called **GraphWard OS** — and today I'm going to show you, live, how it turns any AI coding IDE from a smart-but-forgetful intern into something closer to a disciplined engineering team member."
 
 ---
 
@@ -67,7 +67,7 @@ Six real problems. Let's see the fixes."
 "Let's install it into a real project. One command, run once, from the project root:"
 
 ```bash
-npx engineering-intelligence install . --ide claude-code --yes
+npx gw install . --ide claude-code --yes
 ```
 
 *While it installs, narrate:*
@@ -77,7 +77,7 @@ npx engineering-intelligence install . --ide claude-code --yes
 *(Optional flex, if time allows)* — show installing for two IDEs at once:
 
 ```bash
-npx engineering-intelligence install . --ide claude-code,cursor --yes
+npx gw install . --ide claude-code,cursor --yes
 ```
 
 "One canonical source, rendered natively into whatever tool each of your teammates prefers. Nobody has to switch IDEs to get this."
@@ -101,7 +101,7 @@ ls .claude/commands
 "Now we open the IDE and run one command — this is the only step where the AI actually does anything:"
 
 ```
-/initialize-engineering-intelligence
+/initialize-graphward
 ```
 
 *While it runs (this can take a minute — have this pre-run in a scratch repo as backup if live is slow):*
@@ -113,9 +113,9 @@ Here's the key part: **this persists.** Next session, next week, next month — 
 **[DEMO] Show what got generated:**
 
 ```bash
-ls .engineering-intelligence/knowledge-base/
-ls .engineering-intelligence/graph/
-cat .engineering-intelligence/graph/architecture-map.md | head -30
+ls .graphward/knowledge-base/
+ls .graphward/graph/
+cat .graphward/graph/architecture-map.md | head -30
 ```
 
 "That Mermaid diagram? Generated from evidence, not vibes. Every claim in the knowledge base traces back to an actual file."
@@ -129,7 +129,7 @@ cat .engineering-intelligence/graph/architecture-map.md | head -30
 "Now the fun part — actually building something. One command:"
 
 ```
-/engineering-intelligence Add rate limiting to the authentication endpoints
+/graphward Add rate limiting to the authentication endpoints
 ```
 
 "Watch what happens — and this is the whole pitch in one command. Internally it runs a full pipeline:
@@ -152,7 +152,7 @@ You didn't ask for any of that structure. You asked for rate limiting. It brough
 **[DEMO] Show a delivery mode:**
 
 ```
-/engineering-intelligence Harden checkout APIs using adversarial delivery mode
+/graphward Harden checkout APIs using adversarial delivery mode
 ```
 
 "Same command, one phrase added, and now it's actively trying to break its own implementation before you ship it — thinking like an attacker. There's also TDD mode, design-first mode for big architectural changes, and hypothesis-debugging mode for the 2am 'why is this randomly failing' bugs."
@@ -188,7 +188,7 @@ You didn't ask for any of that structure. You asked for rate limiting. It brough
 **Per-developer intelligence.** This one I'm proud of. Run:"
 
 ```bash
-npx engineering-intelligence user-profile .
+npx gw user-profile .
 ```
 
 "Zero LLM tokens spent — it reads your `git config` and your commit history and builds *your* personal profile: your test philosophy, your typical change size, your primary language. It's gitignored, so it never leaks into a teammate's checkout. And there's a **team-preferences.md** layer that's committed — shared consensus that still applies in CI even when there's no personal profile around."
@@ -205,7 +205,7 @@ npx engineering-intelligence user-profile .
 - It is **not** a replacement for code review. It makes the agent more thorough; you still own the final call.
 - That token reduction number is measured at the rendered-file level by a test harness — it's a strong directional number, not a per-session guarantee.
 
-If any of this feels like too much up front, my actual recommendation: install it, just use `/initialize-engineering-intelligence` and `/engineering-intelligence` for a week. Adopt the backlog and heavier safety gates once you've seen the basics earn their keep."
+If any of this feels like too much up front, my actual recommendation: install it, just use `/initialize-graphward` and `/graphward` for a week. Adopt the backlog and heavier safety gates once you've seen the basics earn their keep."
 
 ---
 
@@ -219,16 +219,16 @@ If any of this feels like too much up front, my actual recommendation: install i
 
 ```bash
 # 1. Install
-npx engineering-intelligence install . --ide claude-code --yes
+npx gw install . --ide claude-code --yes
 
 # 2. Check what got installed
-npx engineering-intelligence doctor .
+npx gw doctor .
 
 # 3. In your AI IDE:
-/initialize-engineering-intelligence
+/initialize-graphward
 
 # 4. Try a small real change on YOUR repo:
-/engineering-intelligence <describe one small thing you'd actually want fixed>
+/graphward <describe one small thing you'd actually want fixed>
 ```
 
 "Pick something small and real from your own codebase — a bug, a missing validation, anything. Watch what it does before it touches code. I'll walk around / stay on this call for questions."
@@ -236,7 +236,7 @@ npx engineering-intelligence doctor .
 *Circulate. Common questions to expect and pre-canned answers:*
 
 - **"Does this send my code anywhere?"** → No. It's local files + your existing AI IDE's model calls. The installer itself makes zero network/model calls.
-- **"What if I don't like a generated file?"** → Everything's just markdown/JSON in `.engineering-intelligence/` — edit or delete freely. `uninstall` removes only what it added.
+- **"What if I don't like a generated file?"** → Everything's just markdown/JSON in `.graphward/` — edit or delete freely. `uninstall` removes only what it added.
 - **"Can I use this with [tool X]?"** → Check the 9 supported IDEs; if not listed, the `generic` adapter covers any AI IDE via `AGENTS.md`.
 
 ---
@@ -245,7 +245,7 @@ npx engineering-intelligence doctor .
 
 "To wrap: this doesn't make your AI smarter. It makes it **accountable** — gives it a memory, a discipline, and a paper trail, so the tenth session with your codebase is better than the first, not a repeat of it.
 
-Repo's on GitHub, MIT licensed, `npx engineering-intelligence` — that's the whole install. Star it if it saves you the rate-limiting-endpoint conversation with your AI for the fifth time this month. Questions?"
+Repo's on GitHub, MIT licensed, `npx gw` — that's the whole install. Star it if it saves you the rate-limiting-endpoint conversation with your AI for the fifth time this month. Questions?"
 
 ---
 
@@ -253,23 +253,23 @@ Repo's on GitHub, MIT licensed, `npx engineering-intelligence` — that's the wh
 
 ```bash
 # Install
-npx engineering-intelligence install . --ide claude-code --yes
+npx gw install . --ide claude-code --yes
 
 # Health check / preview updates
-npx engineering-intelligence doctor .
-npx engineering-intelligence update . --dry-run
+npx gw doctor .
+npx gw update . --dry-run
 
 # Dashboard
-npx engineering-intelligence visualize . --open
+npx gw visualize . --open
 
 # Personal profile
-npx engineering-intelligence user-profile .
+npx gw user-profile .
 ```
 
 ```
-/initialize-engineering-intelligence
-/engineering-intelligence <request>
-/engineering-intelligence <request> using adversarial delivery mode
+/initialize-graphward
+/graphward <request>
+/graphward <request> using adversarial delivery mode
 /scope-requirement <requirement>
 /analyze-impact <proposed change>
 /decompose-backlog <epic-sized initiative>

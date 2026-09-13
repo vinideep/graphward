@@ -1,6 +1,6 @@
 # Launch posts
 
-Ready-to-paste copy for launching `engineering-intelligence`. This file is **not**
+Ready-to-paste copy for launching `graphward`. This file is **not**
 published to npm (the package only ships `dist`, `templates`, `README.md`, `LICENSE`).
 
 The through-line for every post: **your codebase's AI memory shouldn't be trapped in one
@@ -13,7 +13,7 @@ savings.
 ## 1. Hacker News — "Show HN"
 
 **Title:**
-> Show HN: Engineering Intelligence – a portable, computed codebase graph for AI IDEs
+> Show HN: GraphWard – a portable, computed codebase graph for AI IDEs
 
 **Body:**
 
@@ -22,13 +22,13 @@ meant re-explaining my codebase from scratch. Each tool keeps its understanding 
 inside itself, and most "AI project memory" is just markdown an LLM wrote and hopes to
 re-read later.
 
-So I built engineering-intelligence around a different idea: codebase intelligence should
+So I built graphward around a different idea: codebase intelligence should
 be a **repo artifact** (like tests or docs), computed by real code, and queryable by any
 AI tool.
 
 Two parts are actual deterministic code, not prompts:
 
-- `engineering-intelligence map .` builds a dependency + **function-level call graph**
+- `gw map .` builds a dependency + **function-level call graph**
   (package/import edges across JS/TS, Python, Go, Rust, Ruby, Java/Kotlin; symbol-level
   `defines`/`calls` edges for JS/TS). Every node/edge has `evidence` (file:line) and a
   `confidence` level, validated against a fixed JSON schema. No LLM involved.
@@ -45,8 +45,8 @@ call graph is heuristic (regex-based, JS/TS only so far) rather than full AST, a
 skills layer is structured instructions whose effectiveness depends on your IDE's model.
 I'd love feedback on the graph/impact model specifically.
 
-npm: `npx engineering-intelligence`
-Repo: https://github.com/vinideep/engineering-intelligence
+npm: `npx gw`
+Repo: https://github.com/vinideep/graphward
 
 ---
 
@@ -56,12 +56,12 @@ Repo: https://github.com/vinideep/engineering-intelligence
 > re-explain my codebase from scratch. The "memory" each tool builds is locked inside that
 > tool, and most of it is just markdown an LLM generated and hopes to re-read.
 >
-> So I built **Engineering Intelligence**: codebase understanding as a *repo artifact* —
+> So I built **GraphWard**: codebase understanding as a *repo artifact* —
 > computed by real code, portable across 9 AI IDEs.
 >
 > The part I'm most proud of isn't a prompt. It's deterministic:
 >
-> 🧮 `engineering-intelligence map .` builds a real dependency + **function-level call
+> 🧮 `gw map .` builds a real dependency + **function-level call
 > graph** — across JS/TS, Python, Go, Rust, Ruby and Java/Kotlin. Every edge cites
 > evidence (file:line) and a confidence level, validated against a schema. No LLM required.
 >
@@ -71,9 +71,9 @@ Repo: https://github.com/vinideep/engineering-intelligence
 > 🔌 A built-in MCP server turns all of it into tool calls any AI agent can invoke.
 >
 > Open source (MIT), one command to try:
-> `npx engineering-intelligence`
+> `npx gw`
 >
-> Repo + docs: https://github.com/vinideep/engineering-intelligence
+> Repo + docs: https://github.com/vinideep/graphward
 >
 > Would genuinely value feedback from anyone building with MCP or juggling multiple AI
 > coding tools. 🙏
@@ -93,7 +93,7 @@ IDEs — Claude Code, Cursor, Copilot, Gemini & more.
 The core isn't a prompt. It's a computed graph. 🧵
 
 **2/**
-`engineering-intelligence map .`
+`gw map .`
 
 → a real dependency + **function-level call graph**
 → JS/TS, Python, Go, Rust, Ruby, Java/Kotlin
@@ -120,9 +120,9 @@ reset every time. Make it a repo artifact — like tests or docs.
 **6/**
 Open source, MIT. One command:
 
-`npx engineering-intelligence`
+`npx gw`
 
-https://github.com/vinideep/engineering-intelligence
+https://github.com/vinideep/graphward
 
 Honest note: call graph is heuristic/JS-TS for now, full AST + more languages next.
 Feedback very welcome 🙏 (cc @AnthropicAI @cursor_ai)
@@ -131,13 +131,13 @@ Feedback very welcome 🙏 (cc @AnthropicAI @cursor_ai)
 
 ## 4. r/ClaudeAI — Megathread comment
 
-> **Engineering Intelligence — portable, computed codebase memory for AI IDEs**
+> **GraphWard — portable, computed codebase memory for AI IDEs**
 >
 > **Why I built it:** I bounce between Claude Code and other AI tools, and each one
 > re-learns my codebase from zero every session. I wanted the understanding to be a repo
 > artifact, not a per-tool cache.
 >
-> **How it works:** the core is a deterministic graph engine — `engineering-intelligence
+> **How it works:** the core is a deterministic graph engine — `graphward
 > map .` parses manifests + imports (6 languages) and builds a **function-level call
 > graph** for JS/TS (symbol nodes, `defines`/`calls` edges, evidence + confidence on
 > everything, schema-validated). A built-in MCP server then exposes `map_dependencies`,
@@ -149,8 +149,8 @@ Feedback very welcome 🙏 (cc @AnthropicAI @cursor_ai)
 > unambiguously, otherwise they're dropped rather than hallucinated.
 >
 > **Status:** graph engine + MCP server are real and tested; call graph is heuristic
-> (regex, JS/TS) for now, AST + more languages next. MIT, `npx engineering-intelligence`.
-> Repo: https://github.com/vinideep/engineering-intelligence — feedback welcome.
+> (regex, JS/TS) for now, AST + more languages next. MIT, `npx gw`.
+> Repo: https://github.com/vinideep/graphward — feedback welcome.
 
 ---
 

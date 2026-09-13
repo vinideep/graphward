@@ -337,7 +337,7 @@ test("T1.9: ContextPackV2 maintains healthy knowledge trust when citations are r
     await repo.write("src/service.ts", "export function serviceMethod() {\n  return 'ok';\n}\n");
     await graphMod.buildGraph(repo.dir);
     await repo.write(
-      ".engineering-intelligence/knowledge-base/overview.md",
+      ".graphward/knowledge-base/overview.md",
       "# Overview\n\nService method defined at `src/service.ts:1`.\n",
     );
     await evidMod.recordEvidenceHashes(repo.dir);
@@ -375,7 +375,7 @@ test("T1.10: checkEvidenceHashes reports status 'relocated' with updated line in
   const repo = await createIsolatedRepo();
   try {
     await repo.write("src/calc.ts", "export function add(a: number, b: number) { return a + b; }\n");
-    await repo.write(".engineering-intelligence/knowledge-base/doc.md", "Check `src/calc.ts:1`.\n");
+    await repo.write(".graphward/knowledge-base/doc.md", "Check `src/calc.ts:1`.\n");
     await mod.recordEvidenceHashes(repo.dir);
 
     // Shift line down by 5 lines
@@ -639,8 +639,8 @@ test("T1.21: createSessionHandoff serializes handoff packet to disk", async (t) 
     assert.equal(handoff.targetIde, "claude-code");
     assert.equal(handoff.note, "Refactoring payment gateway");
 
-    // Verify written to .engineering-intelligence/flight/session-handoff.json
-    const raw = await readFile(path.join(repo.dir, ".engineering-intelligence", "flight", "session-handoff.json"), "utf8");
+    // Verify written to .graphward/flight/session-handoff.json
+    const raw = await readFile(path.join(repo.dir, ".graphward", "flight", "session-handoff.json"), "utf8");
     const parsed = JSON.parse(raw);
     assert.equal(parsed.sessionId, "session-cursor-001");
   } finally {
@@ -780,7 +780,7 @@ test("T1.26: recordLearnedPattern records convention pattern to coding-patterns.
     });
 
     assert.ok(result.saved, "pattern must be saved");
-    const content = await readFile(path.join(repo.dir, ".engineering-intelligence", "memory", "coding-patterns.md"), "utf8");
+    const content = await readFile(path.join(repo.dir, ".graphward", "memory", "coding-patterns.md"), "utf8");
     assert.ok(content.includes("Use ESM Import Extensions"), "title must be in memory file");
     assert.ok(content.includes("Imports of local modules must end with .js"), "rule must be in memory file");
   } finally {
@@ -802,7 +802,7 @@ test("T1.27: recordLearnedPattern records regression pattern to regression-patte
     });
 
     assert.ok(result.saved);
-    const content = await readFile(path.join(repo.dir, ".engineering-intelligence", "memory", "regression-patterns.md"), "utf8");
+    const content = await readFile(path.join(repo.dir, ".graphward", "memory", "regression-patterns.md"), "utf8");
     assert.ok(content.includes("Negative Amount in Payment Charge"));
   } finally {
     await repo.cleanup();
@@ -823,7 +823,7 @@ test("T1.28: recordLearnedPattern records constraint to project-constraints.md",
     });
 
     assert.ok(result.saved);
-    const content = await readFile(path.join(repo.dir, ".engineering-intelligence", "memory", "project-constraints.md"), "utf8");
+    const content = await readFile(path.join(repo.dir, ".graphward", "memory", "project-constraints.md"), "utf8");
     assert.ok(content.includes("No Direct DB Access in Adapters"));
   } finally {
     await repo.cleanup();
@@ -1312,7 +1312,7 @@ test("T2.24: getSessionHandoff handles corrupted JSON file gracefully", async (t
 
   const repo = await createIsolatedRepo();
   try {
-    const flightDir = path.join(repo.dir, ".engineering-intelligence", "flight");
+    const flightDir = path.join(repo.dir, ".graphward", "flight");
     await mkdir(flightDir, { recursive: true });
     await writeFile(path.join(flightDir, "session-handoff.json"), "{ corrupted json content");
 
@@ -1326,13 +1326,13 @@ test("T2.24: getSessionHandoff handles corrupted JSON file gracefully", async (t
   }
 });
 
-test("T2.25: createSessionHandoff auto-creates .engineering-intelligence/flight directory", async (t) => {
+test("T2.25: createSessionHandoff auto-creates .graphward/flight directory", async (t) => {
   const mod = await getFlightModule();
   if (!mod?.createSessionHandoff) return t.skip("createSessionHandoff not exported");
 
   const repo = await createIsolatedRepo();
   try {
-    // No .engineering-intelligence directory exists yet
+    // No .graphward directory exists yet
     const handoff = await mod.createSessionHandoff(repo.dir, { sessionId: "fresh-workspace" });
     assert.ok(handoff);
   } finally {
@@ -1359,7 +1359,7 @@ test("T2.26: recordLearnedPattern avoids unbounded duplicate identical patterns"
     await mod.recordLearnedPattern(repo.dir, pat);
     await mod.recordLearnedPattern(repo.dir, pat);
 
-    const file = await readFile(path.join(repo.dir, ".engineering-intelligence", "memory", "coding-patterns.md"), "utf8");
+    const file = await readFile(path.join(repo.dir, ".graphward", "memory", "coding-patterns.md"), "utf8");
     const count = (file.match(/Idempotent Title/g) || []).length;
     assert.ok(count <= 2, "must not multiply uncontrollably");
   } finally {
@@ -1414,7 +1414,7 @@ test("T2.29: recordLearnedPattern escapes markdown special characters and code b
       rule: "Pattern: /[a-z]+/i and `foo !== null`",
     });
     assert.ok(result.saved);
-    const content = await readFile(path.join(repo.dir, ".engineering-intelligence", "memory", "coding-patterns.md"), "utf8");
+    const content = await readFile(path.join(repo.dir, ".graphward", "memory", "coding-patterns.md"), "utf8");
     assert.ok(content.includes("eval()"));
   } finally {
     await repo.cleanup();

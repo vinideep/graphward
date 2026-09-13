@@ -76,7 +76,7 @@ test("MCP server: initialize, list tools, call get_graph and analyze_impact", as
     });
     const initResponse = await readResponse(proc, 1);
     assert.ok(!initResponse.error, `initialize failed: ${JSON.stringify(initResponse.error)}`);
-    assert.equal(initResponse.result?.serverInfo?.name, "engineering-intelligence");
+    assert.equal(initResponse.result?.serverInfo?.name, "graphward");
     assert.equal(initResponse.result?.serverInfo?.version, await packageVersion());
 
     // Notify initialized

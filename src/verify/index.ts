@@ -25,7 +25,7 @@ import path from "node:path";
 import { runProcess } from "../process/index.js";
 
 export const RECEIPT_SCHEMA_VERSION = 1;
-const RECEIPT_DIR = ".engineering-intelligence/.verify";
+const RECEIPT_DIR = ".graphward/.verify";
 const RECEIPT_FILE = "receipts.json";
 const MAX_RECEIPTS = 20;
 const DEFAULT_TIMEOUT_MS = 15 * 60 * 1000;
@@ -112,7 +112,7 @@ export async function changedFiles(root: string): Promise<string[]> {
       try { p = JSON.parse(p) as string; } catch { /* keep raw */ }
     }
     // Never record our own state in a receipt — it would invalidate itself.
-    if (p.startsWith(".engineering-intelligence/")) continue;
+    if (p.startsWith(".graphward/")) continue;
     files.push(p);
   }
   return files;
@@ -171,7 +171,7 @@ export async function readReceipts(root: string): Promise<Receipt[]> {
 }
 
 async function ensureGitignored(root: string): Promise<void> {
-  const gitignorePath = path.join(root, ".engineering-intelligence", ".gitignore");
+  const gitignorePath = path.join(root, ".graphward", ".gitignore");
   let existing = "";
   try { existing = await readFile(gitignorePath, "utf8"); } catch { /* new file */ }
   if (!existing.includes(".verify/")) {
@@ -317,7 +317,7 @@ export interface KnowledgeVerificationReport {
 }
 
 export async function verifyKnowledge(root: string): Promise<KnowledgeVerificationReport> {
-  const kb = path.join(root, ".engineering-intelligence", "knowledge-base");
+  const kb = path.join(root, ".graphward", "knowledge-base");
   let files: string[] = [];
   try {
     const entries = await readdir(kb);

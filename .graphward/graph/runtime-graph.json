@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "graphType": "runtime",
+  "generatedAt": "2026-07-13T00:00:00.000Z",
+  "scope": "graphward-OS",
+  "nodes": [
+    { "id": "entrypoint:cli-main", "kind": "entrypoint", "label": "cli/index.ts main()", "path": "src/cli/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/cli/index.ts:273-276"] },
+    { "id": "entrypoint:mcp-cli", "kind": "entrypoint", "label": "mcp/cli.ts", "path": "src/mcp/cli.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/mcp/cli.ts:1-10"] },
+    { "id": "middleware:parse-args", "kind": "middleware", "label": "parseArgs()", "path": "src/cli/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/cli/index.ts:81-232"] },
+    { "id": "handler:hook-command", "kind": "handler", "label": "hook command branch (fast-path)", "path": "src/cli/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/cli/index.ts:276-292"] },
+    { "id": "handler:install-command", "kind": "handler", "label": "install/create/update/uninstall branches", "path": "src/cli/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/cli/index.ts:496-537"] },
+    { "id": "handler:map-command", "kind": "handler", "label": "map command branch", "path": "src/cli/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/cli/index.ts:450-461"] },
+    { "id": "handler:mcp-tool-dispatch", "kind": "handler", "label": "CallToolRequestSchema handler", "path": "src/mcp/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/mcp/index.ts:123-246"] },
+    { "id": "service-layer:hooks-engine", "kind": "service-layer", "label": "runHook() dispatch", "path": "src/hooks/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/hooks/index.ts:512-527"], "hotness": "high" },
+    { "id": "service-layer:graph-builder", "kind": "service-layer", "label": "buildDependencyGraph()", "path": "src/graph/builders/dependency.ts", "confidence": "verified", "metadata": { "hotness": "high" }, "evidence": ["src/graph/builders/dependency.ts:77-133"] },
+    { "id": "service-layer:impact-analysis", "kind": "service-layer", "label": "analyzeImpact()", "path": "src/graph/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/graph/index.ts:69-127"] },
+    { "id": "service-layer:context-assembly", "kind": "service-layer", "label": "getContext()", "path": "src/context/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/context/index.ts:58-171"] },
+    { "id": "service-layer:claims-verify", "kind": "service-layer", "label": "verifyClaims()", "path": "src/claims/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/claims/index.ts:163-189"] },
+    { "id": "service-layer:gate-dispatch", "kind": "service-layer", "label": "runGate()", "path": "src/gates/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/gates/index.ts:146-154"] },
+    { "id": "service-layer:freshness-scoring", "kind": "service-layer", "label": "computeFreshness()", "path": "src/freshness/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/freshness/index.ts:296-307"] },
+    { "id": "service-layer:installer", "kind": "service-layer", "label": "install()/applyRendered()", "path": "src/installer/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/installer/index.ts:156-213"] },
+    { "id": "function:extract-imports", "kind": "function", "label": "extractImports() per-language dispatch", "path": "src/graph/parsers/imports.ts", "confidence": "verified", "metadata": { "hotness": "high — invoked once per source file, batched 50 at a time" }, "evidence": ["src/graph/parsers/imports.ts:372-393"] },
+    { "id": "function:validate-graph", "kind": "function", "label": "validateGraph()", "path": "src/graph/schema.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/graph/schema.ts:87-109"] },
+    { "id": "background:telemetry-record", "kind": "background", "label": "recordFromTranscript() (best-effort, fire-and-forget on Stop hook)", "path": "src/telemetry/index.ts", "confidence": "verified", "metadata": {}, "evidence": ["src/telemetry/index.ts:69-78", "src/hooks/index.ts:424-430"] }
+  ],
+  "edges": [
+    { "from": "entrypoint:cli-main", "to": "middleware:parse-args", "relation": "calls", "confidence": "verified", "metadata": {}, "evidence": ["src/cli/index.ts:274"] },
+    { "from": "entrypoint:cli-main", "to": "handler:hook-command", "relation": "delegates", "confidence": "verified", "metadata": { "note": "fast-path, before version/readline setup" }, "evidence": ["src/cli/index.ts:276-292"] },
+    { "from": "handler:hook-command", "to": "service-layer:hooks-engine", "relation": "calls", "confidence": "verified", "metadata": {}, "evidence": ["src/cli/index.ts:277,288"] },
+    { "from": "service-layer:hooks-engine", "to": "service-layer:freshness-scoring", "relation": "calls", "confidence": "verified", "metadata": {}, "evidence": ["src/hooks/index.ts:20,342,371"] },
+    { "from": "service-layer:hooks-engine", "to": "background:telemetry-record", "relation": "delegates", "confidence": "verified", "metadata": { "note": "dynamic import, best-effort" }, "evidence": ["src/hooks/index.ts:427"] },
+    { "from": "entrypoint:cli-main", "to": "handler:install-command", "relation": "delegates", "confidence": "verified", "metadata": {}, "evidence": ["src/cli/index.ts:496-537"] },
+    { "from": "handler:install-command", "to": "service-layer:installer", "relation": "calls", "confidence": "verified", "metadata": {}, "evidence": ["src/cli/index.ts:497,504,513,527"] },
+    { "from": "entrypoint:cli-main", "to": "handler:map-command", "relation": "delegates", "confidence": "verified", "metadata": {}, "evidence": ["src/cli/index.ts:450-461"] },
+    { "from": "handler:map-command", "to": "service-layer:graph-builder", "relation": "calls", "confidence": "verified", "metadata": {}, "evidence": ["src/cli/index.ts:451-455", "src/graph/index.ts:23-59"] },
+    { "from": "service-layer:graph-builder", "to": "function:extract-imports", "relation": "calls", "confidence": "verified", "metadata": { "hotness": "high" }, "evidence": ["src/graph/builders/dependency.ts:93"] },
+    { "from": "service-layer:graph-builder", "to": "function:validate-graph", "relation": "returns", "confidence": "verified", "metadata": { "note": "validation happens after build, before write" }, "evidence": ["src/graph/index.ts:45"] },
+    { "from": "entrypoint:mcp-cli", "to": "handler:mcp-tool-dispatch", "relation": "wraps", "confidence": "verified", "metadata": {}, "evidence": ["src/mcp/cli.ts:6", "src/mcp/index.ts:123"] },
+    { "from": "handler:mcp-tool-dispatch", "to": "service-layer:graph-builder", "relation": "calls", "confidence": "verified", "metadata": { "tool": "map_dependencies" }, "evidence": ["src/mcp/index.ts:131"] },
+    { "from": "handler:mcp-tool-dispatch", "to": "service-layer:impact-analysis", "relation": "calls", "confidence": "verified", "metadata": { "tool": "analyze_impact" }, "evidence": ["src/mcp/index.ts:175"] },
+    { "from": "handler:mcp-tool-dispatch", "to": "service-layer:context-assembly", "relation": "calls", "confidence": "verified", "metadata": { "tool": "get_context" }, "evidence": ["src/mcp/index.ts:201"] },
+    { "from": "handler:mcp-tool-dispatch", "to": "service-layer:claims-verify", "relation": "calls", "confidence": "verified", "metadata": { "tool": "verify_claims" }, "evidence": ["src/mcp/index.ts:207"] },
+    { "from": "handler:mcp-tool-dispatch", "to": "service-layer:gate-dispatch", "relation": "calls", "confidence": "verified", "metadata": { "tool": "run_gate" }, "evidence": ["src/mcp/index.ts:189"] },
+    { "from": "service-layer:context-assembly", "to": "service-layer:impact-analysis", "relation": "calls", "confidence": "verified", "metadata": {}, "evidence": ["src/context/index.ts:68"] },
+    { "from": "service-layer:context-assembly", "to": "service-layer:claims-verify", "relation": "calls", "confidence": "verified", "metadata": {}, "evidence": ["src/context/index.ts:80"] }
+  ],
+  "unknowns": [
+    "No function-level call graph exists below the module-boundary level shown here (e.g. individual helper calls within gates/*.ts) — this graph stops at the service-layer/function granularity that was directly traced from source reads this session."
+  ]
+}

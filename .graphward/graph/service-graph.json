@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "graphType": "service",
+  "generatedAt": "2026-07-13T00:00:00.000Z",
+  "scope": "graphward-OS",
+  "nodes": [
+    {
+      "id": "service:cli",
+      "kind": "service",
+      "label": "graphward CLI",
+      "path": "src/cli/index.ts",
+      "confidence": "verified",
+      "metadata": { "processModel": "one-shot, exits after each command" },
+      "evidence": ["src/cli/index.ts:1-15", "package.json:13"]
+    },
+    {
+      "id": "service:mcp-server",
+      "kind": "service",
+      "label": "ei-mcp (MCP tool server)",
+      "path": "src/mcp/index.ts",
+      "confidence": "verified",
+      "metadata": { "processModel": "long-lived, stdio transport, no network listener" },
+      "evidence": ["src/mcp/index.ts:115-250", "package.json:14"]
+    },
+    {
+      "id": "database:ei-filesystem-store",
+      "kind": "database",
+      "label": ".graphward/ (JSON/Markdown file store)",
+      "path": ".graphward/",
+      "confidence": "inferred",
+      "metadata": { "note": "Not a real database — flat JSON/JSONL/Markdown files on the local filesystem, modeled here as the shared data store both processes read/write.", "stores": ["install-manifest.json", "graph/*.json", "claims/claims.json", "reports/*.md", "telemetry/sessions.jsonl", ".hooks-state/*.json"] },
+      "evidence": ["src/manifest/index.ts:6", "src/graph/index.ts:24-25", "src/claims/index.ts:40", "src/hooks/index.ts:237"]
+    },
+    {
+      "id": "external-api:git",
+      "kind": "external-api",
+      "label": "local git binary (shelled subprocess)",
+      "confidence": "verified",
+      "metadata": { "transport": "child_process (execSync / execFile)" },
+      "evidence": ["src/freshness/index.ts:40-51", "src/gates/index.ts:18-23,109-140", "src/git-analysis/index.ts:52-63", "src/user-profile/index.ts:52-63"]
+    },
+    {
+      "id": "external-api:mcp-client-host",
+      "kind": "external-api",
+      "label": "Host AI IDE (MCP client, e.g. Claude Code)",
+      "confidence": "verified",
+      "metadata": { "transport": "stdio JSON-RPC" },
+      "evidence": ["src/mcp/index.ts:248-249"]
+    },
+    {
+      "id": "external-api:host-lifecycle-hooks",
+      "kind": "external-api",
+      "label": "Host lifecycle hook system (Claude Code settings.json / Cursor hooks.json)",
+      "confidence": "verified",
+      "metadata": { "hosts": ["claude-code", "cursor"] },
+      "evidence": ["src/hooks/index.ts:100-154"]
+    }
+  ],
+  "edges": [
+    { "from": "service:cli", "to": "database:ei-filesystem-store", "relation": "writes", "confidence": "verified", "metadata": {}, "evidence": ["src/manifest/index.ts:26-28", "src/installer/index.ts:208-211"] },
+    { "from": "service:cli", "to": "database:ei-filesystem-store", "relation": "reads", "confidence": "verified", "metadata": {}, "evidence": ["src/manifest/index.ts:13-24"] },
+    { "from": "service:mcp-server", "to": "database:ei-filesystem-store", "relation": "reads", "confidence": "verified", "metadata": {}, "evidence": ["src/mcp/index.ts:154-165", "src/mcp/index.ts:211-233"] },
+    { "from": "service:mcp-server", "to": "database:ei-filesystem-store", "relation": "writes", "confidence": "verified", "metadata": {}, "evidence": ["src/mcp/index.ts:128-152 (map_dependencies writes dependency-graph.json)"] },
+    { "from": "service:cli", "to": "external-api:git", "relation": "http", "confidence": "inferred", "metadata": { "note": "not HTTP — local subprocess call; relation reused for 'external process communication' per schema's closest fit" }, "evidence": ["src/freshness/index.ts:40-51"] },
+    { "from": "external-api:mcp-client-host", "to": "service:mcp-server", "relation": "grpc", "confidence": "inferred", "metadata": { "note": "not gRPC — stdio JSON-RPC (MCP protocol); relation reused as closest schema fit for a client-initiated RPC-style call" }, "evidence": ["src/mcp/index.ts:248-249"] },
+    { "from": "external-api:host-lifecycle-hooks", "to": "service:cli", "relation": "http", "confidence": "verified", "metadata": { "note": "host invokes `npx gw hook <event>` as a subprocess per lifecycle event" }, "evidence": ["src/hooks/index.ts:100-105", "src/cli/index.ts:276-292"] }
+  ],
+  "unknowns": [
+    "No formal service mesh exists; 'service' nodes here represent two local process types, not deployed services. Edge relations 'http'/'grpc' are reused loosely as the closest schema-defined relation for subprocess/stdio-RPC communication — see each edge's metadata.note for the actual transport."
+  ]
+}

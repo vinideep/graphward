@@ -1,19 +1,20 @@
 {
-  "name": "engineering-intelligence",
+  "name": "graphward",
   "version": "5.1.0",
   "description": "Graph-backed engineering intelligence for AI coding IDEs. Real dependency graphs, MCP server, and installable skills/agents/workflows for 9 IDEs.",
   "type": "module",
-  "homepage": "https://github.com/vinideep/engineering-intelligence#readme",
+  "homepage": "https://github.com/vinideep/graphward#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vinideep/engineering-intelligence.git"
+    "url": "git+https://github.com/vinideep/graphward.git"
   },
   "bugs": {
-    "url": "https://github.com/vinideep/engineering-intelligence/issues"
+    "url": "https://github.com/vinideep/graphward/issues"
   },
   "bin": {
-    "engineering-intelligence": "./dist/cli/index.js",
-    "ei-mcp": "./dist/mcp/cli.js"
+    "graphward": "./dist/cli/index.js",
+    "ei-mcp": "./dist/mcp/cli.js",
+    "gw": "./dist/cli/index.js"
   },
   "files": [
     "dist",

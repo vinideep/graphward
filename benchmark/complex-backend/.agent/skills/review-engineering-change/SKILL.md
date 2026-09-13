@@ -21,7 +21,7 @@ Use `change-detection-engine` and `engineering-change-review`.
 | Graph consistency | New/changed nodes and edges reflected |
 | Documentation sync | Knowledge, memory, context accuracy |
 
-4. **Write report** — Generate `.engineering-intelligence/reports/REV-XXX-<slug>.md` with:
+4. **Write report** — Generate `.graphward/reports/REV-XXX-<slug>.md` with:
    - Severity-ordered findings (🔴 Blocker → 🟢 Positive)
    - Evidence paths for each finding
    - Test gaps and coverage concerns

@@ -1,0 +1,8 @@
+{
+  "hooks": {
+    "freshnessThreshold": 60,
+    "blockStaleEdits": false,
+    "requireValidationOnStop": false,
+    "verifyCommands": []
+  }
+}

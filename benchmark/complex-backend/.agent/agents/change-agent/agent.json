@@ -5,13 +5,13 @@
     "instructions": "./prompt.md",
     "memory": true,
     "context": [
-        ".engineering-intelligence/knowledge-base",
-        ".engineering-intelligence/aidlc",
-        ".engineering-intelligence/context",
-        ".engineering-intelligence/changes"
+        ".graphward/knowledge-base",
+        ".graphward/aidlc",
+        ".graphward/context",
+        ".graphward/changes"
     ],
     "skills": [
-        "engineering-intelligence-skill",
+        "graphward-skill",
         "context-budget-optimizer",
         "aidlc-lifecycle-engine",
         "impact-analysis-engine",

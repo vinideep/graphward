@@ -5,18 +5,18 @@ description: Validates project knowledge documentation against source and config
 
 # Knowledge Base Validator
 
-Systematically audit every significant claim in `.engineering-intelligence/knowledge-base/*.md` against actual repository evidence. Produce a structured validation report that identifies exactly what is supported, what is stale, and what needs human review.
+Systematically audit every significant claim in `.graphward/knowledge-base/*.md` against actual repository evidence. Produce a structured validation report that identifies exactly what is supported, what is stale, and what needs human review.
 
-**Run the deterministic claim check first:** `npx engineering-intelligence claims verify --json`. Derived claims are re-computed from source, so `verified` means the statement itself still holds and `refuted` means it no longer does. Asserted claims are free text: their evidence is hash-checked (`stale` / `missing`), but the sentence is never machine-checked, so they report `unverified` and must not be treated as confirmed. Work the refuted/stale/missing list first, then audit the `unverified` assertions by hand — those are exactly the statements nothing else can vouch for.
+**Run the deterministic claim check first:** `npx gw claims verify --json`. Derived claims are re-computed from source, so `verified` means the statement itself still holds and `refuted` means it no longer does. Asserted claims are free text: their evidence is hash-checked (`stale` / `missing`), but the sentence is never machine-checked, so they report `unverified` and must not be treated as confirmed. Work the refuted/stale/missing list first, then audit the `unverified` assertions by hand — those are exactly the statements nothing else can vouch for.
 
 ## Inputs
 
-- Repository root path with `.engineering-intelligence/knowledge-base/` present
+- Repository root path with `.graphward/knowledge-base/` present
 - Optional: specific documents to validate (defaults to all)
 
 ## Procedure
 
-1. **Enumerate Claims** — Read each `.engineering-intelligence/knowledge-base/*.md` document. Extract every material claim about architecture, APIs, schemas, dependencies, configurations, flows, and behavior.
+1. **Enumerate Claims** — Read each `.graphward/knowledge-base/*.md` document. Extract every material claim about architecture, APIs, schemas, dependencies, configurations, flows, and behavior.
 
 2. **Verify Against Evidence** — For each claim, check:
    - Does the referenced file/path still exist?
@@ -43,7 +43,7 @@ Systematically audit every significant claim in `.engineering-intelligence/knowl
 
 6. **Auto-Heal Unsupported Claims** — During explicit synchronization workflows only, re-extract the smallest affected section for unsupported or stale claims, update that section with fresh evidence citations, and record the heal. Escalate claims requiring product judgment instead of guessing.
 
-7. **Write Report** — Generate `.engineering-intelligence/knowledge-base/15-validation-report.md`
+7. **Write Report** — Generate `.graphward/knowledge-base/15-validation-report.md`
 
 ## Output Format
 

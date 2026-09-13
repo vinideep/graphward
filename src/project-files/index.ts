@@ -29,7 +29,7 @@ export interface CollectProjectFilesOptions {
 // indexing them as application source causes provider output to outrank the
 // repository it is meant to describe.
 const SAFETY_EXCLUDES = [
-  "node_modules/", ".git/", ".engineering-intelligence/", "dist/", "build/", "coverage/",
+  "node_modules/", ".git/", ".graphward/", "dist/", "build/", "coverage/",
   "__pycache__/", ".venv/", "venv/", "vendor/", "target/", ".gradle/", ".next/", ".cache/",
   ".agent/", ".agents/", ".claude/", ".cursor/", ".codex/", ".gemini/", ".commandcode/",
   ".github/skills/", ".github/agents/", ".github/prompts/",

@@ -160,7 +160,9 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
       },
     },
     handler: async (args) => {
-      return assessPromptClarity(args.prompt as string);
+      const root = rootOf(args, projectRoot);
+      const config = await loadEiConfig(root);
+      return assessPromptClarity(args.prompt as string, config);
     },
   });
 
@@ -188,7 +190,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
 
   registry.register({
     name: "freeze_clarified_requirements",
-    description: "AI-DLC Requirement Freeze: Commits user-selected multiple-choice decisions into .engineering-intelligence/aidlc/inception/requirements.md before construction starts.",
+    description: "AI-DLC Requirement Freeze: Commits user-selected multiple-choice decisions into .graphward/aidlc/inception/requirements.md before construction starts.",
     inputSchema: {
       type: "object",
       required: ["topic", "decisions"],

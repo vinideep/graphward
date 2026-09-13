@@ -27,8 +27,8 @@ test("project policy applies safety > explicit > .eiignore > .gitignore > defaul
   const root = await fixture();
   await writeFile(path.join(root, ".gitignore"), "src/kept.ts\ndist/\n");
   await writeFile(path.join(root, ".eiignore"), "benchmark/\n!src/kept.ts\n");
-  await mkdir(path.join(root, ".engineering-intelligence"), { recursive: true });
-  await writeFile(path.join(root, ".engineering-intelligence", "ei.config.json"), JSON.stringify({
+  await mkdir(path.join(root, ".graphward"), { recursive: true });
+  await writeFile(path.join(root, ".graphward", "gw.config.json"), JSON.stringify({
     schemaVersion: 2,
     projectFiles: { include: ["src/forced.ts"], exclude: ["src/kept.ts"] },
   }));
@@ -49,8 +49,8 @@ test("project policy applies safety > explicit > .eiignore > .gitignore > defaul
 test("always-on safety exclusions cannot be overridden by project includes or ignore negation", async () => {
   const root = await fixture();
   await writeFile(path.join(root, ".gitignore"), "!dist/generated.js\n!.agent/skills/generated.ts\n");
-  await mkdir(path.join(root, ".engineering-intelligence"), { recursive: true });
-  await writeFile(path.join(root, ".engineering-intelligence", "ei.config.json"), JSON.stringify({
+  await mkdir(path.join(root, ".graphward"), { recursive: true });
+  await writeFile(path.join(root, ".graphward", "gw.config.json"), JSON.stringify({
     schemaVersion: 2,
     projectFiles: { include: ["dist/**", ".agent/**"] },
   }));
@@ -80,7 +80,7 @@ test("graph excludes ignored source and represents imports to generated output a
   await writeFile(path.join(root, ".eiignore"), "benchmark/\n");
   await writeFile(path.join(root, "src", "consumer.ts"), "import { generated } from '../dist/generated.js';\nvoid generated;\n");
   await buildGraph(root);
-  const graph = JSON.parse(await readFile(path.join(root, ".engineering-intelligence", "graph", "dependency-graph.json"), "utf8"));
+  const graph = JSON.parse(await readFile(path.join(root, ".graphward", "graph", "dependency-graph.json"), "utf8"));
   assert.ok(!graph.nodes.some((node) => node.path?.startsWith("dist/")));
   assert.ok(!graph.nodes.some((node) => node.path?.startsWith("benchmark/")));
   const external = graph.nodes.find((node) => node.id === "external:dist/generated.js");
@@ -88,15 +88,15 @@ test("graph excludes ignored source and represents imports to generated output a
   assert.equal(external.metadata.excludedPath, "dist/generated.js");
 });
 
-test("legacy token budgets are read and migrated atomically into ei.config.json", async () => {
+test("legacy token budgets are read and migrated atomically into gw.config.json", async () => {
   const root = await fixture();
-  await mkdir(path.join(root, ".engineering-intelligence"), { recursive: true });
-  await writeFile(path.join(root, ".engineering-intelligence", "config.json"), JSON.stringify({ tokenBudgets: { get_graph: 3210 } }));
+  await mkdir(path.join(root, ".graphward"), { recursive: true });
+  await writeFile(path.join(root, ".graphward", "config.json"), JSON.stringify({ tokenBudgets: { get_graph: 3210 } }));
   const before = await loadEiConfig(root);
   assert.equal(before.tokenBudgets.get_graph, 3210);
   const migration = await migrateEiConfig(root);
   assert.equal(migration.changed, true);
-  const persisted = JSON.parse(await readFile(path.join(root, ".engineering-intelligence", "ei.config.json"), "utf8"));
+  const persisted = JSON.parse(await readFile(path.join(root, ".graphward", "gw.config.json"), "utf8"));
   assert.equal(persisted.schemaVersion, 2);
   assert.equal(persisted.tokenBudgets.get_graph, 3210);
   assert.equal((await migrateEiConfig(root)).changed, false);

@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "freshnessThreshold": 60,
+    "blockStaleEdits": false,
+    "requireValidationOnStop": false
+  },
+  "schemaVersion": 2,
+  "tokenBudgets": {},
+  "projectFiles": {},
+  "providers": {
+    "policy": "auto",
+    "offline": false,
+    "requireProviders": false,
+    "exposeRawMcp": false
+  }
+}

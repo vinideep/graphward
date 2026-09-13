@@ -11,8 +11,8 @@ Systematically diagnose issues through evidence-driven root cause analysis, leve
 
 - Bug report or error description (symptoms, error messages, stack traces)
 - Repository root path
-- Graph intelligence from `.engineering-intelligence/graph/` (when available)
-- Project intelligence from `.engineering-intelligence/knowledge-base/` and `.engineering-intelligence/`
+- Graph intelligence from `.graphward/graph/` (when available)
+- Project intelligence from `.graphward/knowledge-base/` and `.graphward/`
 - Optional: log output, reproduction steps from reporter, environment details
 
 ## Procedure
@@ -99,11 +99,11 @@ Systematically diagnose issues through evidence-driven root cause analysis, leve
 
    When applicable, invoke `impact-analysis-engine` on the proposed fix to assess its blast radius.
 
-7. **Generate Debug Report** — Write `.engineering-intelligence/reports/DEBUG-XXX-<slug>.md`.
+7. **Generate Debug Report** — Write `.graphward/reports/DEBUG-XXX-<slug>.md`.
 
 ## Output Format
 
-Write `.engineering-intelligence/reports/DEBUG-XXX-<slug>.md`:
+Write `.graphward/reports/DEBUG-XXX-<slug>.md`:
 
 ```markdown
 # DEBUG-XXX: <descriptive title>
@@ -182,7 +182,7 @@ Write `.engineering-intelligence/reports/DEBUG-XXX-<slug>.md`:
 ## Cross-References
 
 - Depends on: `graph-engine` (error propagation tracing), `impact-analysis-engine` (fix impact assessment)
-- Used by: `engineering-intelligence-skill`
+- Used by: `graphward-skill`
 - Consumed by: `engineering-change-review` (when fix is implemented as a change)
 
 This capability is analytical only. It must not modify product code.

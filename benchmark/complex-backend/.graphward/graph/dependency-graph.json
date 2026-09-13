@@ -1,0 +1,1099 @@
+{
+  "schemaVersion": 1,
+  "graphType": "dependency",
+  "generatedAt": "2026-08-18T17:37:47.835Z",
+  "scope": "complex-backend",
+  "nodes": [
+    {
+      "id": "pkg:typescript",
+      "kind": "package",
+      "label": "typescript",
+      "confidence": "verified",
+      "metadata": {
+        "dev": true
+      },
+      "evidence": [
+        "package.json"
+      ]
+    },
+    {
+      "id": "module:src/auth/jwt",
+      "kind": "module",
+      "label": "jwt",
+      "path": "src/auth/jwt.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/auth/jwt.ts"
+      ]
+    },
+    {
+      "id": "module:src/db/client",
+      "kind": "module",
+      "label": "client",
+      "path": "src/db/client.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts",
+        "src/inventory/stock.ts:1",
+        "src/orders/service.ts:1",
+        "src/payments/gateway.ts:1"
+      ]
+    },
+    {
+      "id": "module:src/db/schema",
+      "kind": "module",
+      "label": "schema",
+      "path": "src/db/schema.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:1",
+        "src/db/schema.ts",
+        "src/orders/service.ts:6",
+        "src/payments/gateway.ts:4"
+      ]
+    },
+    {
+      "id": "module:src/events/bus",
+      "kind": "module",
+      "label": "bus",
+      "path": "src/events/bus.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/events/bus.ts",
+        "src/inventory/stock.ts:2",
+        "src/orders/service.ts:2",
+        "src/payments/gateway.ts:2"
+      ]
+    },
+    {
+      "id": "module:src/inventory/stock",
+      "kind": "module",
+      "label": "stock",
+      "path": "src/inventory/stock.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/inventory/stock.ts",
+        "src/orders/service.ts:3"
+      ]
+    },
+    {
+      "id": "module:src/orders/service",
+      "kind": "module",
+      "label": "service",
+      "path": "src/orders/service.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orders/service.ts"
+      ]
+    },
+    {
+      "id": "module:src/payments/gateway",
+      "kind": "module",
+      "label": "gateway",
+      "path": "src/payments/gateway.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orders/service.ts:4",
+        "src/payments/gateway.ts"
+      ]
+    },
+    {
+      "id": "module:test/orders.test",
+      "kind": "module",
+      "label": "orders.test",
+      "path": "test/orders.test.mjs",
+      "confidence": "verified",
+      "metadata": {
+        "isTest": true
+      },
+      "evidence": [
+        "test/orders.test.mjs"
+      ]
+    },
+    {
+      "id": "module:dist/db/client",
+      "kind": "module",
+      "label": "client",
+      "path": "dist/db/client.js",
+      "confidence": "verified",
+      "metadata": {
+        "isTest": true
+      },
+      "evidence": [
+        "test/orders.test.mjs:3"
+      ]
+    },
+    {
+      "id": "module:dist/orders/service",
+      "kind": "module",
+      "label": "service",
+      "path": "dist/orders/service.js",
+      "confidence": "verified",
+      "metadata": {
+        "isTest": true
+      },
+      "evidence": [
+        "test/orders.test.mjs:4"
+      ]
+    },
+    {
+      "id": "module:dist/events/bus",
+      "kind": "module",
+      "label": "bus",
+      "path": "dist/events/bus.js",
+      "confidence": "verified",
+      "metadata": {
+        "isTest": true
+      },
+      "evidence": [
+        "test/orders.test.mjs:5",
+        "test/payments.test.mjs:4"
+      ]
+    },
+    {
+      "id": "module:test/payments.test",
+      "kind": "module",
+      "label": "payments.test",
+      "path": "test/payments.test.mjs",
+      "confidence": "verified",
+      "metadata": {
+        "isTest": true
+      },
+      "evidence": [
+        "test/payments.test.mjs"
+      ]
+    },
+    {
+      "id": "module:dist/payments/gateway",
+      "kind": "module",
+      "label": "gateway",
+      "path": "dist/payments/gateway.js",
+      "confidence": "verified",
+      "metadata": {
+        "isTest": true
+      },
+      "evidence": [
+        "test/payments.test.mjs:3"
+      ]
+    },
+    {
+      "id": "symbol:src/auth/jwt#signSessionToken",
+      "kind": "symbol",
+      "label": "signSessionToken",
+      "path": "src/auth/jwt",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 12
+      },
+      "evidence": [
+        "src/auth/jwt.ts:12"
+      ]
+    },
+    {
+      "id": "symbol:src/auth/jwt#verifySessionToken",
+      "kind": "symbol",
+      "label": "verifySessionToken",
+      "path": "src/auth/jwt",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 25
+      },
+      "evidence": [
+        "src/auth/jwt.ts:25"
+      ]
+    },
+    {
+      "id": "symbol:src/db/client#InMemoryTenantDatabase",
+      "kind": "symbol",
+      "label": "InMemoryTenantDatabase",
+      "path": "src/db/client",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "class",
+        "line": 2
+      },
+      "evidence": [
+        "src/db/client.ts:2"
+      ]
+    },
+    {
+      "id": "symbol:src/db/client#InMemoryTenantDatabase.saveTenant",
+      "kind": "symbol",
+      "label": "InMemoryTenantDatabase.saveTenant",
+      "path": "src/db/client",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 10
+      },
+      "evidence": [
+        "src/db/client.ts:10"
+      ]
+    },
+    {
+      "id": "symbol:src/db/client#InMemoryTenantDatabase.getTenant",
+      "kind": "symbol",
+      "label": "InMemoryTenantDatabase.getTenant",
+      "path": "src/db/client",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 14
+      },
+      "evidence": [
+        "src/db/client.ts:14"
+      ]
+    },
+    {
+      "id": "symbol:src/db/client#InMemoryTenantDatabase.saveInventory",
+      "kind": "symbol",
+      "label": "InMemoryTenantDatabase.saveInventory",
+      "path": "src/db/client",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 18
+      },
+      "evidence": [
+        "src/db/client.ts:18"
+      ]
+    },
+    {
+      "id": "symbol:src/db/client#InMemoryTenantDatabase.getInventory",
+      "kind": "symbol",
+      "label": "InMemoryTenantDatabase.getInventory",
+      "path": "src/db/client",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 23
+      },
+      "evidence": [
+        "src/db/client.ts:23"
+      ]
+    },
+    {
+      "id": "symbol:src/db/client#InMemoryTenantDatabase.saveOrder",
+      "kind": "symbol",
+      "label": "InMemoryTenantDatabase.saveOrder",
+      "path": "src/db/client",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 27
+      },
+      "evidence": [
+        "src/db/client.ts:27"
+      ]
+    },
+    {
+      "id": "symbol:src/db/client#InMemoryTenantDatabase.getOrder",
+      "kind": "symbol",
+      "label": "InMemoryTenantDatabase.getOrder",
+      "path": "src/db/client",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 31
+      },
+      "evidence": [
+        "src/db/client.ts:31"
+      ]
+    },
+    {
+      "id": "symbol:src/db/client#InMemoryTenantDatabase.savePayment",
+      "kind": "symbol",
+      "label": "InMemoryTenantDatabase.savePayment",
+      "path": "src/db/client",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 35
+      },
+      "evidence": [
+        "src/db/client.ts:35"
+      ]
+    },
+    {
+      "id": "symbol:src/db/client#InMemoryTenantDatabase.getPaymentByIdempotency",
+      "kind": "symbol",
+      "label": "InMemoryTenantDatabase.getPaymentByIdempotency",
+      "path": "src/db/client",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 39
+      },
+      "evidence": [
+        "src/db/client.ts:39"
+      ]
+    },
+    {
+      "id": "symbol:src/db/client#InMemoryTenantDatabase.registerIdempotencyKey",
+      "kind": "symbol",
+      "label": "InMemoryTenantDatabase.registerIdempotencyKey",
+      "path": "src/db/client",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 46
+      },
+      "evidence": [
+        "src/db/client.ts:46"
+      ]
+    },
+    {
+      "id": "symbol:src/db/client#InMemoryTenantDatabase.clear",
+      "kind": "symbol",
+      "label": "InMemoryTenantDatabase.clear",
+      "path": "src/db/client",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 50
+      },
+      "evidence": [
+        "src/db/client.ts:50"
+      ]
+    },
+    {
+      "id": "symbol:src/db/client#InMemoryTenantDatabase.reset",
+      "kind": "symbol",
+      "label": "InMemoryTenantDatabase.reset",
+      "path": "src/db/client",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 58
+      },
+      "evidence": [
+        "src/db/client.ts:58"
+      ]
+    },
+    {
+      "id": "symbol:src/events/bus#EventBus",
+      "kind": "symbol",
+      "label": "EventBus",
+      "path": "src/events/bus",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "class",
+        "line": 10
+      },
+      "evidence": [
+        "src/events/bus.ts:10"
+      ]
+    },
+    {
+      "id": "symbol:src/events/bus#EventBus.clear",
+      "kind": "symbol",
+      "label": "EventBus.clear",
+      "path": "src/events/bus",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 33
+      },
+      "evidence": [
+        "src/events/bus.ts:33"
+      ]
+    },
+    {
+      "id": "symbol:src/events/bus#EventBus.events",
+      "kind": "symbol",
+      "label": "EventBus.events",
+      "path": "src/events/bus",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 38
+      },
+      "evidence": [
+        "src/events/bus.ts:38"
+      ]
+    },
+    {
+      "id": "symbol:src/events/bus#EventBus.history",
+      "kind": "symbol",
+      "label": "EventBus.history",
+      "path": "src/events/bus",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "method",
+        "line": 42
+      },
+      "evidence": [
+        "src/events/bus.ts:42"
+      ]
+    },
+    {
+      "id": "symbol:src/inventory/stock#reserveStock",
+      "kind": "symbol",
+      "label": "reserveStock",
+      "path": "src/inventory/stock",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 10
+      },
+      "evidence": [
+        "src/inventory/stock.ts:10"
+      ]
+    },
+    {
+      "id": "symbol:src/inventory/stock#releaseStock",
+      "kind": "symbol",
+      "label": "releaseStock",
+      "path": "src/inventory/stock",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 37
+      },
+      "evidence": [
+        "src/inventory/stock.ts:37"
+      ]
+    },
+    {
+      "id": "symbol:src/orders/service#createAndProcessOrder",
+      "kind": "symbol",
+      "label": "createAndProcessOrder",
+      "path": "src/orders/service",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 14
+      },
+      "evidence": [
+        "src/orders/service.ts:14"
+      ]
+    },
+    {
+      "id": "symbol:src/payments/gateway#processPayment",
+      "kind": "symbol",
+      "label": "processPayment",
+      "path": "src/payments/gateway",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 18
+      },
+      "evidence": [
+        "src/payments/gateway.ts:18"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "module:src/db/client",
+      "to": "module:src/db/schema",
+      "relation": "imports-type",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:1"
+      ]
+    },
+    {
+      "from": "module:src/inventory/stock",
+      "to": "module:src/db/client",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/inventory/stock.ts:1"
+      ]
+    },
+    {
+      "from": "module:src/inventory/stock",
+      "to": "module:src/events/bus",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/inventory/stock.ts:2"
+      ]
+    },
+    {
+      "from": "module:src/orders/service",
+      "to": "module:src/db/client",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orders/service.ts:1"
+      ]
+    },
+    {
+      "from": "module:src/orders/service",
+      "to": "module:src/events/bus",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orders/service.ts:2"
+      ]
+    },
+    {
+      "from": "module:src/orders/service",
+      "to": "module:src/inventory/stock",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orders/service.ts:3"
+      ]
+    },
+    {
+      "from": "module:src/orders/service",
+      "to": "module:src/payments/gateway",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orders/service.ts:4"
+      ]
+    },
+    {
+      "from": "module:src/orders/service",
+      "to": "module:src/db/schema",
+      "relation": "imports-type",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orders/service.ts:6"
+      ]
+    },
+    {
+      "from": "module:src/payments/gateway",
+      "to": "module:src/db/client",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/payments/gateway.ts:1"
+      ]
+    },
+    {
+      "from": "module:src/payments/gateway",
+      "to": "module:src/events/bus",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/payments/gateway.ts:2"
+      ]
+    },
+    {
+      "from": "module:src/payments/gateway",
+      "to": "module:src/db/schema",
+      "relation": "imports-type",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/payments/gateway.ts:4"
+      ]
+    },
+    {
+      "from": "module:test/orders.test",
+      "to": "module:dist/db/client",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "test/orders.test.mjs:3"
+      ]
+    },
+    {
+      "from": "module:test/orders.test",
+      "to": "module:dist/orders/service",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "test/orders.test.mjs:4"
+      ]
+    },
+    {
+      "from": "module:test/orders.test",
+      "to": "module:dist/events/bus",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "test/orders.test.mjs:5"
+      ]
+    },
+    {
+      "from": "module:test/payments.test",
+      "to": "module:dist/payments/gateway",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "test/payments.test.mjs:3"
+      ]
+    },
+    {
+      "from": "module:test/payments.test",
+      "to": "module:dist/events/bus",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "test/payments.test.mjs:4"
+      ]
+    },
+    {
+      "from": "module:src/auth/jwt",
+      "to": "symbol:src/auth/jwt#signSessionToken",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/auth/jwt.ts:12"
+      ]
+    },
+    {
+      "from": "module:src/auth/jwt",
+      "to": "symbol:src/auth/jwt#verifySessionToken",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/auth/jwt.ts:25"
+      ]
+    },
+    {
+      "from": "module:src/db/client",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:2"
+      ]
+    },
+    {
+      "from": "module:src/db/client",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.saveTenant",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:10"
+      ]
+    },
+    {
+      "from": "module:src/db/client",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.getTenant",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:14"
+      ]
+    },
+    {
+      "from": "module:src/db/client",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.saveInventory",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:18"
+      ]
+    },
+    {
+      "from": "module:src/db/client",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.getInventory",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:23"
+      ]
+    },
+    {
+      "from": "module:src/db/client",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.saveOrder",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:27"
+      ]
+    },
+    {
+      "from": "module:src/db/client",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.getOrder",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:31"
+      ]
+    },
+    {
+      "from": "module:src/db/client",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.savePayment",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:35"
+      ]
+    },
+    {
+      "from": "module:src/db/client",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.getPaymentByIdempotency",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:39"
+      ]
+    },
+    {
+      "from": "module:src/db/client",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.registerIdempotencyKey",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:46"
+      ]
+    },
+    {
+      "from": "module:src/db/client",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.clear",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:50"
+      ]
+    },
+    {
+      "from": "module:src/db/client",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.reset",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:58"
+      ]
+    },
+    {
+      "from": "symbol:src/db/client#InMemoryTenantDatabase",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.saveTenant",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:10"
+      ]
+    },
+    {
+      "from": "symbol:src/db/client#InMemoryTenantDatabase",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.getTenant",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:14"
+      ]
+    },
+    {
+      "from": "symbol:src/db/client#InMemoryTenantDatabase",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.saveInventory",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:18"
+      ]
+    },
+    {
+      "from": "symbol:src/db/client#InMemoryTenantDatabase",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.getInventory",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:23"
+      ]
+    },
+    {
+      "from": "symbol:src/db/client#InMemoryTenantDatabase",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.saveOrder",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:27"
+      ]
+    },
+    {
+      "from": "symbol:src/db/client#InMemoryTenantDatabase",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.getOrder",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:31"
+      ]
+    },
+    {
+      "from": "symbol:src/db/client#InMemoryTenantDatabase",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.savePayment",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:35"
+      ]
+    },
+    {
+      "from": "symbol:src/db/client#InMemoryTenantDatabase",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.getPaymentByIdempotency",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:39"
+      ]
+    },
+    {
+      "from": "symbol:src/db/client#InMemoryTenantDatabase",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.registerIdempotencyKey",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:46"
+      ]
+    },
+    {
+      "from": "symbol:src/db/client#InMemoryTenantDatabase",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.clear",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:50"
+      ]
+    },
+    {
+      "from": "symbol:src/db/client#InMemoryTenantDatabase",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.reset",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:58"
+      ]
+    },
+    {
+      "from": "symbol:src/db/client#InMemoryTenantDatabase.reset",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.clear",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/db/client.ts:59"
+      ]
+    },
+    {
+      "from": "module:src/events/bus",
+      "to": "symbol:src/events/bus#EventBus",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/events/bus.ts:10"
+      ]
+    },
+    {
+      "from": "module:src/events/bus",
+      "to": "symbol:src/events/bus#EventBus.clear",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/events/bus.ts:33"
+      ]
+    },
+    {
+      "from": "module:src/events/bus",
+      "to": "symbol:src/events/bus#EventBus.events",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/events/bus.ts:38"
+      ]
+    },
+    {
+      "from": "module:src/events/bus",
+      "to": "symbol:src/events/bus#EventBus.history",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/events/bus.ts:42"
+      ]
+    },
+    {
+      "from": "symbol:src/events/bus#EventBus",
+      "to": "symbol:src/events/bus#EventBus.clear",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/events/bus.ts:33"
+      ]
+    },
+    {
+      "from": "symbol:src/events/bus#EventBus",
+      "to": "symbol:src/events/bus#EventBus.events",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/events/bus.ts:38"
+      ]
+    },
+    {
+      "from": "symbol:src/events/bus#EventBus",
+      "to": "symbol:src/events/bus#EventBus.history",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/events/bus.ts:42"
+      ]
+    },
+    {
+      "from": "module:src/inventory/stock",
+      "to": "symbol:src/inventory/stock#reserveStock",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/inventory/stock.ts:10"
+      ]
+    },
+    {
+      "from": "module:src/inventory/stock",
+      "to": "symbol:src/inventory/stock#releaseStock",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/inventory/stock.ts:37"
+      ]
+    },
+    {
+      "from": "module:src/orders/service",
+      "to": "symbol:src/orders/service#createAndProcessOrder",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orders/service.ts:14"
+      ]
+    },
+    {
+      "from": "module:src/payments/gateway",
+      "to": "symbol:src/payments/gateway#processPayment",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/payments/gateway.ts:18"
+      ]
+    },
+    {
+      "from": "symbol:src/inventory/stock#reserveStock",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.getInventory",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/inventory/stock.ts:12"
+      ]
+    },
+    {
+      "from": "symbol:src/inventory/stock#reserveStock",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.saveInventory",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/inventory/stock.ts:24"
+      ]
+    },
+    {
+      "from": "symbol:src/inventory/stock#releaseStock",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.getInventory",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/inventory/stock.ts:39"
+      ]
+    },
+    {
+      "from": "symbol:src/inventory/stock#releaseStock",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.saveInventory",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/inventory/stock.ts:43"
+      ]
+    },
+    {
+      "from": "symbol:src/payments/gateway#processPayment",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.getPaymentByIdempotency",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/payments/gateway.ts:20"
+      ]
+    },
+    {
+      "from": "symbol:src/payments/gateway#processPayment",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.savePayment",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/payments/gateway.ts:40"
+      ]
+    },
+    {
+      "from": "symbol:src/payments/gateway#processPayment",
+      "to": "symbol:src/db/client#InMemoryTenantDatabase.registerIdempotencyKey",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/payments/gateway.ts:41"
+      ]
+    }
+  ],
+  "unknowns": [],
+  "commit": "0d1997e1710a744257246f5b3335242c61202e73"
+}

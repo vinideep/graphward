@@ -81,11 +81,11 @@ const TOOL_BACKED = {
   "dead-code-detector": /gate dead-exports/,
   "api-backward-compatibility-engine": /gate api-diff/,
   "database-migration-safety-engine": /gate migration-lint/,
-  "environmental-backpressure-engine": /engineering-intelligence verify/,
-  "staleness-detector": /engineering-intelligence freshness/,
-  "git-intelligence-engine": /engineering-intelligence git-analysis/,
-  "graph-engine": /engineering-intelligence map/,
-  "user-intelligence-engine": /engineering-intelligence user-profile/,
+  "environmental-backpressure-engine": /gw verify/,
+  "staleness-detector": /gw freshness/,
+  "git-intelligence-engine": /gw git-analysis/,
+  "graph-engine": /gw map/,
+  "user-intelligence-engine": /gw user-profile/,
 };
 
 test("every tool-backed skill names its backing command in its opening lines", async () => {

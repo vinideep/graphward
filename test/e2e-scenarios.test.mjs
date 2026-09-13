@@ -188,9 +188,9 @@ test("T3.3: Continuous Self-Learning + Evidence Citation Healing (F2 + F6)", asy
     });
 
     // 2. Cite the memory file in knowledge base
-    const memFile = ".engineering-intelligence/memory/regression-patterns.md";
+    const memFile = ".graphward/memory/regression-patterns.md";
     await repo.write(
-      ".engineering-intelligence/knowledge-base/rules.md",
+      ".graphward/knowledge-base/rules.md",
       `Refer to \`${memFile}:1\` for rate limiter precautions.\n`,
     );
     await evidMod.recordEvidenceHashes(repo.dir);
@@ -362,7 +362,7 @@ test("T3.8: Self-Healing Citations + ContextPackV2 Knowledge Stability (F2 + Con
   try {
     await repo.write("src/billing.ts", "export function invoice() { return 100; }\n");
     await repo.write(
-      ".engineering-intelligence/knowledge-base/billing.md",
+      ".graphward/knowledge-base/billing.md",
       "# Billing\n\nInvoice function is in `src/billing.ts:1`.\n",
     );
     await graphMod.buildGraph(repo.dir);
@@ -411,7 +411,7 @@ test("T4.1: Scenario 1 — End-to-End API Refactoring Pipeline", async (t) => {
     await repo.write("src/authRepo.ts", "import { runQuery } from './db.js';\nexport function getUser(id: string) { return runQuery('SELECT ' + id); }\n");
     await repo.write("src/authService.ts", "import { getUser } from './authRepo.js';\nexport function authenticate(id: string) { return getUser(id); }\n");
     await repo.write("src/authRouter.ts", "import { authenticate } from './authService.js';\nexport function handleAuth(req: any) { return authenticate(req.id); }\n");
-    await repo.write(".engineering-intelligence/knowledge-base/auth.md", "Authentication entry is at `src/authRouter.ts:2`.\n");
+    await repo.write(".graphward/knowledge-base/auth.md", "Authentication entry is at `src/authRouter.ts:2`.\n");
     repo.git("add -A");
     repo.git("commit -m initial");
 
@@ -624,7 +624,7 @@ test("T4.5: Scenario 5 — Repository-Wide Formatting and Citation Auto-Healing"
     await repo.write("src/mod3.ts", "export const v3 = 'three';\n");
 
     await repo.write(
-      ".engineering-intelligence/knowledge-base/arch.md",
+      ".graphward/knowledge-base/arch.md",
       "# Architecture\n\n- Mod 1: `src/mod1.ts:1`\n- Mod 2: `src/mod2.ts:1`\n- Mod 3: `src/mod3.ts:1`\n",
     );
 

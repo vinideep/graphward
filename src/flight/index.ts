@@ -53,7 +53,7 @@ export interface FlightRecord {
 const SOURCE_EXT_RE = /\.(ts|tsx|js|mjs|cjs|py|go|rs|rb|java|kt)$/;
 
 function flightDir(root: string): string {
-  return path.join(root, ".engineering-intelligence", "flight");
+  return path.join(root, ".graphward", "flight");
 }
 
 function git(root: string, args: string[]): string | null {
@@ -366,7 +366,7 @@ export async function createSessionHandoff(
 
   let validationSummary: { receiptCount: number; lastVerdict?: string } | undefined;
   try {
-    const receiptsPath = path.join(root, ".engineering-intelligence", ".verify", "receipts.json");
+    const receiptsPath = path.join(root, ".graphward", ".verify", "receipts.json");
     if (existsSync(receiptsPath)) {
       const receiptsContent = await readFile(receiptsPath, "utf8");
       const receipts = JSON.parse(receiptsContent);
@@ -383,7 +383,7 @@ export async function createSessionHandoff(
 
   let aidlcSummary: { phase?: string; stage?: string } | undefined;
   try {
-    const aidlcStatePath = path.join(root, ".engineering-intelligence", "aidlc", "aidlc-state.json");
+    const aidlcStatePath = path.join(root, ".graphward", "aidlc", "aidlc-state.json");
     if (existsSync(aidlcStatePath)) {
       const aidlcContent = await readFile(aidlcStatePath, "utf8");
       const aidlc = JSON.parse(aidlcContent);

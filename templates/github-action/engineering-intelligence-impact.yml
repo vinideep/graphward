@@ -1,4 +1,4 @@
-# Engineering Intelligence — PR impact comment
+# GraphWard — PR impact comment
 #
 # Computes the blast radius of a pull request from a real dependency + call
 # graph and posts (or updates) a sticky comment: which modules/functions the
@@ -7,7 +7,7 @@
 # Copy this file to .github/workflows/ in your repository. No secrets beyond the
 # default GITHUB_TOKEN are required.
 
-name: Engineering Intelligence Impact
+name: GraphWard Impact
 
 on:
   pull_request:
@@ -32,7 +32,7 @@ jobs:
           node-version: 20
 
       - name: Build dependency graph
-        run: npx --yes engineering-intelligence map .
+        run: npx --yes gw map .
 
       - name: Compute changed files and impact
         id: impact
@@ -44,7 +44,7 @@ jobs:
           if [ -z "$CHANGED" ]; then
             echo '{"direct":[],"indirect":[],"testsToRun":[],"riskNotes":[]}' > impact.json
           else
-            npx --yes engineering-intelligence impact $CHANGED --json > impact.json || echo '{"direct":[],"indirect":[],"testsToRun":[],"riskNotes":[]}' > impact.json
+            npx --yes graphward impact $CHANGED --json > impact.json || echo '{"direct":[],"indirect":[],"testsToRun":[],"riskNotes":[]}' > impact.json
           fi
           cat impact.json
 
@@ -54,7 +54,7 @@ jobs:
           script: |
             const fs = require('fs');
             const impact = JSON.parse(fs.readFileSync('impact.json', 'utf8'));
-            const marker = '<!-- engineering-intelligence-impact -->';
+            const marker = '<!-- graphward-impact -->';
             const direct = impact.direct || [];
             const indirect = impact.indirect || [];
             const tests = impact.testsToRun || [];
@@ -62,7 +62,7 @@ jobs:
             const list = (arr, n) => arr.length ? arr.slice(0, n).map(x => `\`${x}\``).join(', ') + (arr.length > n ? ` … (+${arr.length - n})` : '') : '_none_';
             const body = [
               marker,
-              '### 🧮 Engineering Intelligence — Impact',
+              '### 🧮 GraphWard — Impact',
               '',
               `**Direct dependents (${direct.length}):** ${list(direct, 15)}`,
               `**Indirect dependents (${indirect.length}):** ${list(indirect, 15)}`,
