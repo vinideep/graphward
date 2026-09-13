@@ -80,8 +80,26 @@ export function generateCharacterizationTests(
     
     for (const gap of fileGaps) {
       content += `describe('characterization: ${gap.symbol}', () => {\n`;
-      content += `  it('exists and is callable', () => {\n`;
+      content += `  it('captures behavior for ${gap.symbol}', async (t) => {\n`;
       content += `    assert.ok(typeof ${gap.symbol} !== 'undefined');\n`;
+      content += `    if (typeof ${gap.symbol} === 'function') {\n`;
+      content += `      try {\n`;
+      content += `        const result = await ${gap.symbol}();\n`;
+      content += `        if (t?.assert?.snapshot) {\n`;
+      content += `          t.assert.snapshot(result);\n`;
+      content += `        } else {\n`;
+      content += `          assert.ok(result !== undefined || result === undefined);\n`;
+      content += `        }\n`;
+      content += `      } catch (e) {\n`;
+      content += `        assert.ok(e);\n`;
+      content += `      }\n`;
+      content += `    } else {\n`;
+      content += `      if (t?.assert?.snapshot) {\n`;
+      content += `        t.assert.snapshot(${gap.symbol});\n`;
+      content += `      } else {\n`;
+      content += `        assert.ok(${gap.symbol} !== undefined || ${gap.symbol} === undefined);\n`;
+      content += `      }\n`;
+      content += `    }\n`;
       content += `  });\n`;
       content += `});\n\n`;
     }

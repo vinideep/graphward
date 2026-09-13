@@ -510,7 +510,7 @@ export async function extractImports(filePath: string, root: string): Promise<Im
   }
 
   const tsResult = await parseWithTreeSitter(filePath, content);
-  if (tsResult) {
+  if (tsResult && tsResult.imports.length > 0) {
     // Basic mapping from tree-sitter imports back to graph edges
     const relWithExt = path.relative(root, filePath).replace(/\\/g, "/");
     const idPath = relWithExt.replace(/\.(tsx?|jsx?|mjs|cjs|mts|cts|py|go|rs|rb|java|kt)$/, "");

@@ -422,6 +422,37 @@ export async function runVerification(root: string, options: VerifyOptions = {})
     head
   }));
 
+  let verdict: "pass" | "fail" = (originalCommandsLength > 0 && runs.every((r) => r.exitCode === 0)) ? "pass" : "fail";
+
+  if (verdict === "pass" && (options.provenance === "agent" || options.provenance == null)) {
+    const currentFiles = Object.keys(files);
+    if (currentFiles.length > 0) {
+      let isAgentOnly = true;
+      const records = await readRecords(root);
+      for (const other of records) {
+        if (other.verdict === "pass" && other.provenance === "human") {
+          let otherMissing = false;
+          for (const [f, h] of Object.entries(files)) {
+            const fData = other.files[f];
+            const hData = typeof fData === 'string' ? fData : fData?.hash;
+            if (hData !== h) {
+              otherMissing = true;
+              break;
+            }
+          }
+          if (!otherMissing) {
+            isAgentOnly = false;
+            break;
+          }
+        }
+      }
+      if (isAgentOnly) {
+        verdict = "fail";
+        runs.push({ command: "agent-provenance", exitCode: 1, durationMs: 0, outputTail: "GraphWard: The verification record was generated solely by an agent (agentOnly). Agent-generated checks require human review/verification before proceeding." });
+      }
+    }
+  }
+
   const record: VerificationRecord = {
     schemaVersion: RECEIPT_SCHEMA_VERSION,
     createdAt: new Date().toISOString(),
@@ -429,7 +460,7 @@ export async function runVerification(root: string, options: VerifyOptions = {})
     commands: runs,
     files,
     gitAvailable: inGitRepo,
-    verdict: (originalCommandsLength > 0 && runs.every((r) => r.exitCode === 0)) ? "pass" : "fail",
+    verdict,
     verificationHash,
     provenance: options.provenance ?? "agent"
   };

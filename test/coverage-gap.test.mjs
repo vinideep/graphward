@@ -39,4 +39,5 @@ test("generateCharacterizationTests generates test files for gaps", () => {
   assert.ok(tests[0].content.includes("import { describe, it } from 'node:test'"));
   assert.ok(tests[0].content.includes("import { bar } from './a.js'"));
   assert.ok(tests[0].content.includes("typeof bar !== 'undefined'"));
+  assert.ok(tests[0].content.includes("t?.assert?.snapshot"));
 });

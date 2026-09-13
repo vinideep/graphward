@@ -58,7 +58,7 @@ test("a passing run produces a pass record bound to the changed bytes", async ()
   const root = await repo();
   await writeFile(path.join(root, "src/a.ts"), "export const a = 1;\n", "utf8");
 
-  const { record } = await runVerification(root);
+  const { record } = await runVerification(root, { provenance: "human" });
   assert.equal(record.verdict, "pass");
   assert.equal(record.commands.length, 1);
   assert.equal(record.commands[0].exitCode, 0);
@@ -72,7 +72,7 @@ test("a failing command can never produce a passing record", async () => {
   const root = await repo({ test: 'node -e "process.exit(3)"' });
   await writeFile(path.join(root, "src/a.ts"), "export const a = 1;\n", "utf8");
 
-  const { record } = await runVerification(root);
+  const { record } = await runVerification(root, { provenance: "human" });
   assert.equal(record.verdict, "fail");
   assert.equal(record.commands[0].exitCode, 3);
   assert.equal((await coverageFor(root, ["src/a.ts"])).covered, false);
@@ -82,7 +82,7 @@ test("a record stops covering a file the moment its bytes change", async () => {
   const root = await repo();
   const file = path.join(root, "src/a.ts");
   await writeFile(file, "export const a = 1;\n", "utf8");
-  await runVerification(root);
+  await runVerification(root, { provenance: "human" });
   assert.equal((await coverageFor(root, ["src/a.ts"])).covered, true);
 
   await writeFile(file, "export const a = 2;\n", "utf8");
@@ -93,7 +93,7 @@ test("a record stops covering a file the moment its bytes change", async () => {
 
 test("no detectable check command yields a fail verdict, never a free pass", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "ei-verify-bare-"));
-  const { record, noCommands } = await runVerification(root);
+  const { record, noCommands } = await runVerification(root, { provenance: "human" });
   assert.equal(noCommands, true);
   assert.equal(record.verdict, "fail", "nothing ran, so nothing is proven");
 });

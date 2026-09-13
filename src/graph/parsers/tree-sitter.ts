@@ -108,6 +108,9 @@ export async function parseWithTreeSitter(
       }
     }
     traverse(tree.rootNode);
+    if (lang !== 'typescript' || (result.imports.length === 0 && result.exports.length === 0)) {
+      return null;
+    }
     return result;
   } catch (e) {
     return null;
