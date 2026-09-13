@@ -1,5 +1,36 @@
 # Changelog
 
+## 1.0.4 - Hardening & Verification Release
+- **Coverage-gap detector**: Automatically generates preflight characterization tests for un-tested code paths.
+- **Clarification gate**: Deterministic graph-based boundary and consumer checks instead of LLM self-assessment.
+- **Test-impact analysis**: `graphward verify` defaults to impact-filtered tests via BFS over reverse dependency edges (`--full` bypasses).
+- **Secrets scan**: Embedded credentials detection on all `.graphward/` writes via `writeProtectedFile` with default gitignoring.
+- **Provenance gate**: Explicitly blocks verification if approval is based solely on `agentOnly` (agent-generated) tests.
+- **File locking**: Concurrent process safety for `.graphward/` via atomic hardlinks and stale-lock recovery.
+- **Tree-sitter parser**: Safe `null` fallback logic to regex extractors for Python, Go, and Rust.
+- **Benchmark harness**: 25-task evaluation suite with A/B comparison mode and published README metrics.
+- **Records**: Verification records renamed from receipts, utilizing stable cryptographic hashes.
+- **Schemas**: Published open JSON schemas for configuration elements.
+- **README**: Divided into structured Quick Mode and Team Mode guides.
+
+## 1.0.3
+- Tree-sitter integration bug fixes and initial multi-language AST prep.
+
+## 1.0.2
+- Bug fixes and verification improvements.
+
+## 1.0.1
+- Minor patches for GraphWard initialization logic.
+
+## 1.0.0 - Welcome to GraphWard
+- Renamed project from `engineering-intelligence` to `GraphWard`.
+- Foundational restructure for standalone agent tooling.
+
+---
+
+# Pre-rename History (engineering-intelligence)
+
+
 ## 4.1.0 — Antigravity custom agents
 
 - Antigravity and Antigravity CLI now install native Markdown custom agents at

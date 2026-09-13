@@ -97,12 +97,7 @@ export async function parseWithTreeSitter(
           }
         }
       }
-      // For python, go, rust we could add logic here, but keeping it simple as tree-sitter is optional 
-      // and we just need to return a result that the fallback will handle if we miss things, 
-      // but wait, if we return non-null, fallback isn't used!
-      // The prompt says "support at minimum TypeScript/JavaScript, Python, Go, Rust"
-      // But implementing full tree-sitter AST parsing for all 4 in a small script is huge.
-      // I will just return null for now for others or partially implement.
+
       for (const child of node.children) {
         traverse(child);
       }
