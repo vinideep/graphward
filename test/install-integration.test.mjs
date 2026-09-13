@@ -216,7 +216,7 @@ test("editing gw.config.json does not conflict or warn", async () => {
   assert.equal(after.hooks.requireValidationOnStop, true, "the user's setting must survive update");
 });
 
-test("hook CLI enforces the Stop gate with real verification receipts", async () => {
+test("hook CLI enforces the Stop gate with real verification records", async () => {
   const root = await tmpProject();
   cli(["install", root, "--ide", "claude-code", "--yes"]);
   // Opt into the hard gate and give the project a real, passing check command.
@@ -237,11 +237,11 @@ test("hook CLI enforces the Stop gate with real verification receipts", async ()
   const stillBlocked = cli(["hook", "stop", root], root, sid);
   assert.match(stillBlocked.stdout, /"decision":"block"/, "a test-shaped shell command must not satisfy the gate");
 
-  // A real verification run produces a receipt, and then Stop allows.
+  // A real verification run produces a record, and then Stop allows.
   const verified = cli(["verify", root], root);
   assert.equal(verified.status, 0, `verify should pass:\n${verified.stdout}${verified.stderr}`);
   const allowed = cli(["hook", "stop", root], root, sid);
-  assert.equal(allowed.stdout.trim(), "", `Stop should allow after a passing receipt:\n${allowed.stdout}`);
+  assert.equal(allowed.stdout.trim(), "", `Stop should allow after a passing record:\n${allowed.stdout}`);
 });
 
 test("second run (update) is idempotent — zero conflicts and zero changes", async () => {

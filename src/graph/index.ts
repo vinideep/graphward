@@ -85,8 +85,8 @@ export async function buildGraph(root: string, options: BuildGraphOptions = {}):
   validateGraph(result.graph);
 
   if (options.write !== false) {
-    await mkdir(graphDir, { recursive: true });
-    await writeFile(graphPath, `${JSON.stringify(result.graph, null, 2)}\n`, "utf8");
+    const { writeProtectedFile } = await import("../manifest/lock.js");
+    await writeProtectedFile(root, graphPath, `${JSON.stringify(result.graph, null, 2)}\n`);
     // Regenerate the orientation brief so it never drifts from the graph.
     try {
       const { generateBrief } = await import("../brief/index.js");

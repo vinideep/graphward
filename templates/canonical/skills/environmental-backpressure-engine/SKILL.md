@@ -11,9 +11,9 @@ Use this skill whenever code is generated or modified. The environment, not subj
 > [!IMPORTANT]
 > This engine runs the project's configured check commands locally in the working directory. It does **not** provide container-level or VM-level isolation. Side effects from tests (API calls, database writes, webhook triggers) are not sandboxed or reversible. "Rollback" means reverting file changes only.
 
-**Run the deterministic verifier:** `npx gw verify .` executes the project's own check commands, records their real exit codes, and writes a **receipt** binding the result to a sha256 of every changed file. Exit 1 means the tree is not verified.
+**Run the deterministic verifier:** `npx gw verify .` executes the project's own check commands, records their real exit codes, and writes a **record** binding the result to a sha256 of every changed file. Exit 1 means the tree is not verified.
 
-This is what "validated" means here — a receipt this tool produced, not a command that looked test-shaped. When the Stop gate is enabled it accepts nothing else, and a receipt stops counting the moment any covered file changes, so re-verify after every edit. Use the steps below to decide what to fix when the verifier reports failures.
+This is what "validated" means here — a record this tool produced, not a command that looked test-shaped. When the Stop gate is enabled it accepts nothing else, and a record stops counting the moment any covered file changes, so re-verify after every edit. Use the steps below to decide what to fix when the verifier reports failures.
 
 **If verify reports "No check commands detected"**, its own auto-detection only recognizes `package.json` scripts named `check`/`ci`/`typecheck`/`lint`/`test` and a handful of marker files. Do not leave this unresolved and do not proceed unverified:
 1. Inspect `package.json` scripts, CI config (`.github/workflows/`, `.gitlab-ci.yml`, etc.), build files, and the README for the command(s) this project actually uses to check itself.

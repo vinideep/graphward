@@ -8,6 +8,7 @@ export interface LearnedPatternInput {
   description: string;
   rule: string;
   targetFiles?: string[];
+  provenance?: 'human' | 'agent' | 'unknown';
 }
 
 export interface UncertaintyEventInput {
@@ -61,14 +62,18 @@ export async function recordLearnedPattern(
     ? ` (evidence: ${pattern.targetFiles.join(", ")})`
     : "";
 
-  const entry = `- **${pattern.title}:** ${pattern.rule} (${pattern.description})${evidenceStr}\n`;
+  const provStr = pattern.provenance ? ` [provenance: ${pattern.provenance}]` : "";
 
+  const entry = `- **${pattern.title}:** ${pattern.rule} (${pattern.description})${evidenceStr}${provStr}\n`;
+
+  const { writeProtectedFile } = await import("../manifest/lock.js");
   if (!existsSync(filePath)) {
     const today = new Date().toISOString().split("T")[0];
     const initialContent = `${info.heading}\n<!-- freshness: last_checked=${today} -->\n\n${entry}`;
-    await appendFile(filePath, initialContent, "utf8");
+    await writeProtectedFile(root, filePath, initialContent);
   } else {
-    await appendFile(filePath, entry, "utf8");
+    const existing = await readFile(filePath, "utf8");
+    await writeProtectedFile(root, filePath, existing + entry);
   }
 
   return {

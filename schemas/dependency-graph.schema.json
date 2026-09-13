@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GraphWard Dependency Graph",
+  "type": "object",
+  "properties": {
+    "version": { "type": "number", "const": 1 },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "kind": { "type": "string", "enum": ["module", "package", "symbol", "api", "external"] },
+          "label": { "type": "string" },
+          "path": { "type": "string" },
+          "confidence": { "type": "string", "enum": ["verified", "inferred", "unknown"] },
+          "metadata": { "type": "object" },
+          "evidence": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["id", "kind", "label", "confidence", "metadata", "evidence"]
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "relation": { "type": "string", "enum": ["imports", "imports-type", "defines", "calls", "implements", "extends", "consumes"] },
+          "confidence": { "type": "string", "enum": ["verified", "inferred", "unknown"] },
+          "metadata": { "type": "object" },
+          "evidence": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["from", "to", "relation", "confidence", "metadata", "evidence"]
+      }
+    }
+  },
+  "required": ["version", "nodes", "edges"]
+}

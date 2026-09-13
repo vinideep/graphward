@@ -76,7 +76,7 @@ export interface HookConfig {
   freshnessThreshold: number;
   /** When true, PreToolUse denies edits while any intelligence doc scores < 50. */
   blockStaleEdits: boolean;
-  /** When true, Stop blocks completion unless a passing receipt covers the changes. */
+  /** When true, Stop blocks completion unless a passing record covers the changes. */
   requireValidationOnStop: boolean;
   /** Explicit verification commands; empty means auto-detect from the project. */
   verifyCommands: string[];
@@ -197,7 +197,7 @@ export function isSourceFile(relPath: string): boolean {
 
 /**
  * Whether a shell command *looks* like a check. Retained only as a UX hint: when
- * the agent runs something test-shaped we remind it that a receipt is what the
+ * the agent runs something test-shaped we remind it that a record is what the
  * gate accepts. It is deliberately NOT the gate — see src/verify. The previous
  * gate used exactly this pattern and was satisfied by `rm -rf build`.
  */
@@ -427,23 +427,27 @@ async function onStop(root: string, input: HookInput, config: HookConfig): Promi
   if (candidates.length === 0) return ALLOW; // no source changed
 
   const coverage = await coverageFor(root, candidates);
-  if (coverage.covered) return ALLOW; // a passing receipt vouches for these exact bytes
-
-  const receipts = await (await import("../verify/index.js")).readReceipts(root);
-  const lastFailed = receipts.find((r) => r.verdict === "fail");
+  if (coverage.covered) {
+    if (coverage.agentOnly) {
+       return block("GraphWard: The verification record was generated solely by an agent (agentOnly). Agent-generated checks require human review/verification before proceeding.");
+    }
+    return ALLOW; // a passing record vouches for these exact bytes
+  }
+  const records = await (await import("../verify/index.js")).readRecords(root);
+  const lastFailed = records.find((r) => r.verdict === "fail");
   const checks = config.verifyCommands.length > 0
     ? config.verifyCommands
     : await detectCheckCommands(root);
 
   const reason: string[] = [
-    "GraphWard: these source changes have no passing verification receipt.",
+    "GraphWard: these source changes have no passing verification record.",
     "Validation must be a fact this tool produced, not a command that looked test-shaped.",
     "Unverified files:",
     ...coverage.uncovered.slice(0, 8).map((f) => `  - ${f}`),
   ];
   if (coverage.uncovered.length > 8) reason.push(`  …and ${coverage.uncovered.length - 8} more`);
 
-  if (lastFailed && receipts[0] === lastFailed) {
+  if (lastFailed && records[0] === lastFailed) {
     const failing = lastFailed.commands.find((c) => c.exitCode !== 0);
     if (failing) {
       reason.push(`The last run FAILED: \`${failing.command}\` exited ${failing.exitCode}.`);

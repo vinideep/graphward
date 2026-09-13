@@ -98,3 +98,71 @@ test("checkDiscoveryExit and checkInceptionExit enforce required artifacts and o
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+import { assessGraphClarity, shouldClarify } from "../dist/aidlc/index.js";
+
+test("assessGraphClarity detects downstream consumers, boundary crossing, and negative constraints", () => {
+  const graph = {
+    schemaVersion: 1,
+    graphType: "dependency",
+    generatedAt: "",
+    scope: "",
+    unknowns: [],
+    nodes: [
+      { id: "src/a.ts", kind: "file", label: "", confidence: "verified", evidence: [], metadata: {}, path: "src/a.ts" },
+      { id: "src/b.ts", kind: "file", label: "", confidence: "verified", evidence: [], metadata: {}, path: "src/b.ts" },
+      { id: "lib/c.ts", kind: "file", label: "", confidence: "verified", evidence: [], metadata: {}, path: "lib/c.ts" }
+    ],
+    edges: [
+      { from: "src/b.ts", to: "src/a.ts", relation: "imports", confidence: "verified", evidence: [], metadata: {} },
+      { from: "lib/c.ts", to: "src/a.ts", relation: "imports", confidence: "verified", evidence: [], metadata: {} }
+    ]
+  };
+
+  const memory = {
+    constraints: ["do not touch lib/c.ts"],
+    conventions: [],
+    regressions: []
+  };
+
+  // 1. Consumers test (max 1)
+  const res1 = assessGraphClarity(["src/a.ts"], graph, memory, { maxDownstreamConsumers: 1 });
+  assert.equal(res1.mustClarify, true);
+  assert.ok(res1.reasons.some(r => r.rule === "downstream-consumers"));
+
+  // 2. Boundary crossing
+  const res2 = assessGraphClarity(["src/a.ts", "lib/c.ts"], graph, memory);
+  assert.equal(res2.mustClarify, true);
+  assert.ok(res2.reasons.some(r => r.rule === "boundary-crossing"));
+
+  // 3. Negative constraint
+  const res3 = assessGraphClarity(["lib/c.ts"], graph, memory);
+  assert.equal(res3.mustClarify, true);
+  assert.ok(res3.reasons.some(r => r.rule === "negative-constraint"));
+
+  // 4. No clarification needed
+  const res4 = assessGraphClarity(["src/b.ts"], graph, { constraints: [], conventions: [], regressions: [] });
+  assert.equal(res4.mustClarify, false);
+});
+
+test("shouldClarify combines prompt and graph assessment", () => {
+  const graph = {
+    schemaVersion: 1,
+    graphType: "dependency",
+    generatedAt: "",
+    scope: "",
+    unknowns: [],
+    nodes: [{ id: "src/a.ts", kind: "file", label: "", confidence: "verified", evidence: [], metadata: {}, path: "src/a.ts" }],
+    edges: []
+  };
+
+  const res1 = shouldClarify("Update src/a.ts to fix a minor typo", ["src/a.ts"], graph, { constraints: [], conventions: [], regressions: [] });
+  assert.equal(res1.mustClarify, false);
+
+  const res2 = shouldClarify("fix it", ["src/a.ts"], graph, { constraints: [], conventions: [], regressions: [] });
+  assert.equal(res2.mustClarify, true);
+
+  const res3 = shouldClarify("Update src/a.ts to fix a minor typo", ["src/a.ts"], graph, { constraints: ["src/a.ts"], conventions: [], regressions: [] });
+  assert.equal(res3.mustClarify, true);
+});
+

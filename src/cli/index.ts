@@ -64,6 +64,7 @@ interface Options {
   trigger?: string;
   area?: string;
   ttlDays: number;
+  share: boolean;
 }
 
 function usage(all = false): string {
@@ -172,6 +173,7 @@ function parseArgs(args: string[]): Options {
   let trigger: string | undefined;
   let area: string | undefined;
   let ttlDays = 30;
+  let share = false;
 
   for (let index = 0; index < remaining.length; index += 1) {
     const arg = remaining[index];
@@ -206,6 +208,8 @@ function parseArgs(args: string[]): Options {
       offline = true;
     } else if (arg === "--require-providers") {
       requireProviders = true;
+    } else if (arg === "--share") {
+      share = true;
     } else if (arg === "--expert") {
       expertMode = true;
     } else if (arg === "--json") {
@@ -397,6 +401,7 @@ function parseArgs(args: string[]): Options {
     trigger,
     area,
     ttlDays,
+    share,
   };
 }
 
@@ -689,28 +694,31 @@ async function main(): Promise<void> {
   }
 
   if (options.command === "verify") {
-    const { runVerification } = await import("../verify/index.js");
+    const { runVerification, changedFiles } = await import("../verify/index.js");
     const { loadHookConfig } = await import("../hooks/index.js");
     const config = await loadHookConfig(options.root);
-    const { receipt, noCommands } = await runVerification(options.root, {
+    const cf = await changedFiles(options.root);
+    const { record, noCommands } = await runVerification(options.root, {
       commands: config.verifyCommands.length > 0 ? config.verifyCommands : undefined,
+      impactOnly: !options.full,
+      changedFiles: cf,
     });
     if (options.json) {
-      output.write(`${JSON.stringify(receipt, null, 2)}\n`);
+      output.write(`${JSON.stringify(record, null, 2)}\n`);
     } else if (noCommands) {
       output.write("No check commands detected. Set hooks.verifyCommands in .graphward/gw.config.json.\n");
     } else {
-      for (const run of receipt.commands) {
+      for (const run of record.commands) {
         output.write(`${run.exitCode === 0 ? "PASS" : "FAIL"}  ${run.command}  (${run.durationMs}ms)\n`);
       }
-      const covered = Object.keys(receipt.files).length;
-      output.write(`Verdict: ${receipt.verdict.toUpperCase()} — receipt covers ${covered} changed file(s).\n`);
-      if (receipt.verdict === "fail") {
-        const failing = receipt.commands.find((r) => r.exitCode !== 0);
+      const covered = Object.keys(record.files).length;
+      output.write(`Verdict: ${record.verdict.toUpperCase()} — record covers ${covered} changed file(s).\n`);
+      if (record.verdict === "fail") {
+        const failing = record.commands.find((r) => r.exitCode !== 0);
         if (failing?.outputTail) output.write(`${failing.outputTail.trimEnd()}\n`);
       }
     }
-    process.exitCode = receipt.verdict === "pass" ? 0 : 1;
+    process.exitCode = record.verdict === "pass" ? 0 : 1;
     if (readline) readline.close();
     return;
   }
@@ -1150,16 +1158,32 @@ async function main(): Promise<void> {
       const promptText = options.positionals.join(" ").trim();
       const { loadEiConfig } = await import("../config/index.js");
       const config = await loadEiConfig(options.root);
-      const result = assessPromptClarity(promptText, config);
+      const { shouldClarify } = await import("../aidlc/clarification.js");
+      const { queryProjectMemory } = await import("../learning/index.js");
+      const { readFile } = await import("node:fs/promises");
+      let graph: any = { nodes: [], edges: [], schemaVersion: "1.0", graphType: "dependency", generatedAt: new Date().toISOString(), scope: "project", unknowns: [] };
+      try {
+        const graphData = await readFile(path.join(options.root, ".graphward", "graph", "dependency-graph.json"), "utf8");
+        graph = JSON.parse(graphData);
+      } catch {}
+      const memory = await queryProjectMemory(options.root, {});
+      
+      const { mustClarify, promptAssessment: result, graphAssessment } = shouldClarify(promptText, options.files || [], graph, memory, config);
       if (options.json) {
-        output.write(`${JSON.stringify(result, null, 2)}\n`);
+        output.write(`${JSON.stringify({ mustClarify, promptAssessment: result, graphAssessment }, null, 2)}\n`);
       } else {
-        output.write(`Prompt Clarity: ${result.clarityScore}/100 [${result.isClear ? "CLEAR" : "NEEDS CLARIFICATION"}]\n\n`);
+        output.write(`Prompt Clarity: ${result.clarityScore}/100 [${mustClarify ? "NEEDS CLARIFICATION" : "CLEAR"}]\n\n`);
         if (result.ambiguities.length > 0) {
           output.write("Detected Ambiguities:\n");
           for (const a of result.ambiguities) {
             output.write(`  • [${a.category}] ${a.description}\n`);
             output.write(`    Why it matters: ${a.whyItMatters}\n`);
+          }
+        }
+        if (graphAssessment.mustClarify) {
+          output.write("Graph Topology Issues:\n");
+          for (const r of graphAssessment.reasons) {
+            output.write(`  • [${r.rule}] ${r.detail}\n`);
           }
         }
         if (result.questions.length > 0) {

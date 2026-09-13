@@ -59,12 +59,13 @@ export async function saveAidlcState(root: string, state: AidlcState): Promise<v
 
   // 1. Write JSON machine-readable source of truth
   const jsonPath = path.join(dir, "aidlc-state.json");
-  await writeFile(jsonPath, `${JSON.stringify(state, null, 2)}\n`, "utf8");
+  const { writeProtectedFile } = await import("../manifest/lock.js");
+  await writeProtectedFile(root, jsonPath, `${JSON.stringify(state, null, 2)}\n`);
 
   // 2. Project to Markdown
   const mdPath = path.join(dir, "aidlc-state.md");
   const mdContent = renderAidlcStateMarkdown(state);
-  await writeFile(mdPath, mdContent, "utf8");
+  await writeProtectedFile(root, mdPath, mdContent);
 }
 
 export function renderAidlcStateMarkdown(state: AidlcState): string {
@@ -194,12 +195,13 @@ export async function saveOpenQuestions(root: string, questions: OpenQuestionIte
 
   // 1. Write JSON
   const jsonPath = path.join(dir, "open-questions.json");
-  await writeFile(jsonPath, `${JSON.stringify(questions, null, 2)}\n`, "utf8");
+  const { writeProtectedFile } = await import("../manifest/lock.js");
+  await writeProtectedFile(root, jsonPath, `${JSON.stringify(questions, null, 2)}\n`);
 
   // 2. Project to Markdown
   const mdPath = path.join(dir, "open-questions.md");
   const mdContent = renderOpenQuestionsMarkdown(questions);
-  await writeFile(mdPath, mdContent, "utf8");
+  await writeProtectedFile(root, mdPath, mdContent);
 }
 
 export function renderOpenQuestionsMarkdown(questions: OpenQuestionItem[]): string {
@@ -312,12 +314,13 @@ export async function saveRequirements(root: string, reqs: FrozenRequirements): 
 
   // 1. Save JSON
   const jsonPath = path.join(dir, "requirements.json");
-  await writeFile(jsonPath, `${JSON.stringify(reqs, null, 2)}\n`, "utf8");
+  const { writeProtectedFile } = await import("../manifest/lock.js");
+  await writeProtectedFile(root, jsonPath, `${JSON.stringify(reqs, null, 2)}\n`);
 
   // 2. Project to Markdown
   const mdPath = path.join(dir, "requirements.md");
   const mdContent = renderRequirementsMarkdown(reqs);
-  await writeFile(mdPath, mdContent, "utf8");
+  await writeProtectedFile(root, mdPath, mdContent);
 }
 
 export function renderRequirementsMarkdown(reqs: FrozenRequirements): string {

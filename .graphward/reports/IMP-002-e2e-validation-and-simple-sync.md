@@ -60,7 +60,7 @@
 - `npm run build` passed.
 - `npm test` passed sequentially with `219/219` tests; `npm run test:integration` passed `14/14` tests.
 - Full provider smoke passed on local macOS arm64: Graphify and CCE were active, the 30-query corpus reached Recall@10 `0.90`, and strict provider health passed.
-- `health . --strict`, `claims verify . --strict`, and the current `verify` receipt passed with `277/277` derived claims verified, zero knowledge drift, and zero stale evidence citations.
+- `health . --strict`, `claims verify . --strict`, and the current `verify` record passed with `277/277` derived claims verified, zero knowledge drift, and zero stale evidence citations.
 - `api-diff` and `migration-lint` passed. `env-vars` remains advisory because no `.env.example` exists; `dead-exports` remains advisory with conservative warnings.
 - The affected source scope was synchronized incrementally. Canonical prose was not rewritten; the Shiplogic test verifies that source edits raise the model-synchronization handoff.
 - The final incremental graph matched a subsequent full rebuild at `754` nodes and `1,879` edges, proving that provider-only evidence and cross-file calls do not accumulate or disappear across updates.

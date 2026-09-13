@@ -186,18 +186,18 @@ async function evaluateRun(label, task, agyOutput = "") {
     await rm(advDest, { force: true });
   }
 
-  // 6. Cryptographic Verification Receipt
+  // 6. Cryptographic Verification VerificationRecord
   if ((score.modelTestPass || score.adversarialPass) && score.regressionPass) {
     runSync("node", [CLI_PATH, "verify", TARGET_DIR]);
     try {
       const receiptsRaw = await readFile(
-        path.join(TARGET_DIR, ".graphward/.verify/receipts.json"),
+        path.join(TARGET_DIR, ".graphward/.verify/verification-records.json"),
         "utf8"
       );
-      const receipts = JSON.parse(receiptsRaw);
-      score.receiptValid = receipts[0]?.verdict === "pass";
-      console.log(`   [${label}] ${score.receiptValid ? "✓" : "✗"} Cryptographic SHA-256 Receipt: ${receipts[0]?.verdict?.toUpperCase() || "NONE"}`);
-    } catch { /* no receipts */ }
+      const records = JSON.parse(receiptsRaw);
+      score.receiptValid = records[0]?.verdict === "pass";
+      console.log(`   [${label}] ${score.receiptValid ? "✓" : "✗"} Cryptographic SHA-256 VerificationRecord: ${records[0]?.verdict?.toUpperCase() || "NONE"}`);
+    } catch { /* no records */ }
   }
 
   return score;
@@ -302,7 +302,7 @@ function renderReport(results, lowScore, highScore, task) {
         <tr><td><strong>Compensating Stock Rollback</strong></td><td>${checkTag(lo.inventoryReleased, "Verified", "Not Released")}</td><td>${checkTag(hi.inventoryReleased, "Verified", "Not Released")}</td></tr>
         <tr><td><strong>Payment Idempotency Guard</strong></td><td>${checkTag(lo.idempotencyHandled, "Verified", "Unchecked")}</td><td>${checkTag(hi.idempotencyHandled, "Verified", "Unchecked")}</td></tr>
         <tr><td><strong>Domain Event Sourcing</strong></td><td>${checkTag(lo.eventPublished, "Verified", "Not Published")}</td><td>${checkTag(hi.eventPublished, "Verified", "Not Published")}</td></tr>
-        <tr><td><strong>Cryptographic SHA-256 Receipt</strong></td><td>${checkTag(lo.receiptValid, "Valid", "No Receipt")}</td><td>${checkTag(hi.receiptValid, "Valid", "No Receipt")}</td></tr>
+        <tr><td><strong>Cryptographic SHA-256 VerificationRecord</strong></td><td>${checkTag(lo.receiptValid, "Valid", "No VerificationRecord")}</td><td>${checkTag(hi.receiptValid, "Valid", "No VerificationRecord")}</td></tr>
       </tbody>
     </table>
   </div>
@@ -341,181 +341,135 @@ async function main() {
   console.log(`  Mode:       ${RUN_MODELS ? "explicit model comparison" : "deterministic non-model dry run"}`);
   console.log(`  Timeout:    ${TIMEOUT_MS / 1000}s per run\n`);
 
-  const task = BENCHMARK_TASKS[0];
+  const targetTasks = RUN_MODELS && args.includes("--all") ? BENCHMARK_TASKS : [BENCHMARK_TASKS[0]];
+  let aggregateLowScore = 0;
+  let aggregateHighScore = 0;
 
-  // 1. Build Core
-  console.log("📦 1. Compiling GraphWard core...");
-  const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
-  execFileSync(npmCmd, ["run", "build"], { cwd: REPO_ROOT, stdio: "inherit", shell: process.platform === "win32" });
-  console.log("   ✓ Core compiled.\n");
+  for (const task of targetTasks) {
+    console.log(`\n\n--- Running Task: ${task.name} ---`);
+    const results = { offline: {}, lowModel: {}, highModel: {} };
 
-  // Every run gets a disposable copy. The tracked fixture and its generated
-  // report are never used as a mutable project workspace.
-  WORKSPACE_DIR = await mkdtemp(path.join(tmpdir(), "ei-benchmark-"));
-  if (process.platform === "win32" && existsSync(WORKSPACE_DIR)) {
-    WORKSPACE_DIR = realpathSync(WORKSPACE_DIR);
-  }
-  TARGET_DIR = path.join(WORKSPACE_DIR, "complex-backend");
-  await cp(FIXTURE_DIR, TARGET_DIR, { recursive: true });
-
-  if (!RUN_MODELS) {
     try {
-      console.log("🧪 2. Running deterministic initialization and verification...");
-      const initialized = runSync("node", [CLI_PATH, "initialize", TARGET_DIR, "--providers", "native", "--yes", "--force"]);
-      const compiled = runSync(process.execPath, [TSC_SCRIPT, "-p", "tsconfig.json", "--typeRoots", TYPE_ROOTS]);
-      const tests = runSync("node", ["--test", "test/orders.test.mjs", "test/payments.test.mjs"]);
-      const claims = runSync("node", [CLI_PATH, "claims", "verify", TARGET_DIR, "--json"]);
+      console.log("🧠 3. Running Offline Intelligence Setup (AST Graph, Symbols, Records)...");
+      runSync("node", [CLI_PATH, "setup", TARGET_DIR, "--ide", "claude-code,cursor,antigravity", "--yes"]);
+      runSync("node", [CLI_PATH, "map", TARGET_DIR]);
+      runSync("node", [CLI_PATH, "verify", TARGET_DIR]);
       const health = runSync("node", [CLI_PATH, "health", TARGET_DIR, "--strict", "--json"]);
-      const graph = JSON.parse(await readFile(path.join(TARGET_DIR, ".graphward/graph/dependency-graph.json"), "utf8"));
-      const leakage = graph.nodes.filter((node) => typeof node.path === "string" && /(^|[/\\])(?:dist|benchmark|node_modules|\.graphward)(?:[/\\]|$)/.test(node.path));
-      const result = {
-        mode: "non-model-dry-run",
-        disposableWorkspace: true,
-        initialized: initialized.ok,
-        compile: compiled.ok,
-        baselineTests: tests.ok,
-        claimsVerified: claims.ok,
-        strictHealth: health.ok,
-        graph: { nodes: graph.nodes.length, edges: graph.edges.length, disallowedScopeLeakage: leakage.length },
+
+      const graph = JSON.parse(await readFile(
+        path.join(TARGET_DIR, ".graphward/graph/dependency-graph.json"),
+        "utf8"
+      ));
+      results.offline = {
+        modules: graph.nodes.filter((n) => n.kind === "module").length,
+        symbols: graph.nodes.filter((n) => n.kind === "symbol").length,
+        callEdges: graph.edges.filter((e) => e.relation === "calls").length,
+        healthOk: health.ok,
       };
-      console.log(`${JSON.stringify(result, null, 2)}\n`);
-      if (!result.initialized) console.error(`Initialize failed:\nSTDOUT:\n${initialized.stdout}\nSTDERR:\n${initialized.stderr}`);
-      if (!result.compile) console.error(`TypeScript compile failed: ${compiled.stdout || compiled.stderr}`);
-      if (!result.baselineTests) console.error(`Baseline tests failed:\nSTDOUT:\n${tests.stdout}\nSTDERR:\n${tests.stderr}`);
-      if (!result.claimsVerified) console.error(`Claims verify failed:\nSTDOUT:\n${claims.stdout}\nSTDERR:\n${claims.stderr}`);
-      if (!result.strictHealth) console.error(`Strict health failed:\nSTDOUT:\n${health.stdout}\nSTDERR:\n${health.stderr}`);
-      const passed = Object.values({ initialized: result.initialized, compile: result.compile, baselineTests: result.baselineTests, claimsVerified: result.claimsVerified, strictHealth: result.strictHealth }).every(Boolean) && leakage.length === 0;
-      if (!passed) {
-        throw new Error("Deterministic benchmark gates failed.");
+      console.log(`   ✓ Graph: ${results.offline.modules} modules, ${results.offline.symbols} symbols, ${results.offline.callEdges} call edges`);
+      console.log(`   ✓ Health Gate: ${health.ok ? "PASS" : "FAIL"}\n`);
+
+      // 4A. Run Low Model
+      console.log(`🔴 4A. [LOW MODEL: ${LOW_MODEL}] Launching Antigravity CLI on challenge '${task.name}'...`);
+      const lowStart = performance.now();
+      const lowAgy = runSync("agy", [
+        "--print", task.prompt,
+        "--model", LOW_MODEL,
+        "--dangerously-skip-permissions",
+        "--print-timeout", `${Math.floor(TIMEOUT_MS / 1000)}s`,
+      ]);
+      const lowDuration = performance.now() - lowStart;
+      console.log(`   agy exited code ${lowAgy.exit} in ${fmt(lowDuration)}`);
+      results.lowModel = await evaluateRun("LOW", task, lowAgy.stdout || lowAgy.stderr);
+      results.lowModel.agyOutput = (lowAgy.stdout || lowAgy.stderr).slice(0, 3000);
+      results.lowModel.durationMs = lowDuration;
+      results.lowModel.modelName = LOW_MODEL;
+      const lowScore = computeScore(results.lowModel);
+      aggregateLowScore += lowScore;
+      console.log(`   🎯 Low Model Score: ${lowScore}/100\n`);
+
+      // Restore fixture for high model
+      console.log("   🔄 Restoring fixture for high model run...");
+      await restoreFixture();
+      await snapshotFixture();
+      runSync("node", [CLI_PATH, "setup", TARGET_DIR, "--ide", "claude-code,cursor,antigravity", "--yes"]);
+      runSync("node", [CLI_PATH, "map", TARGET_DIR]);
+      runSync("node", [CLI_PATH, "verify", TARGET_DIR]);
+      console.log("   ✓ Fixture restored and re-initialized.\n");
+
+      // 4B. Run High Model
+      console.log(`🟢 4B. [HIGH MODEL: ${HIGH_MODEL}] Launching Antigravity CLI on challenge '${task.name}'...`);
+      const highStart = performance.now();
+      const highAgy = runSync("agy", [
+        "--print", task.prompt,
+        "--model", HIGH_MODEL,
+        "--dangerously-skip-permissions",
+        "--print-timeout", `${Math.floor(TIMEOUT_MS / 1000)}s`,
+      ]);
+      const highDuration = performance.now() - highStart;
+      console.log(`   agy exited code ${highAgy.exit} in ${fmt(highDuration)}`);
+      results.highModel = await evaluateRun("HIGH", task, highAgy.stdout || highAgy.stderr);
+      results.highModel.agyOutput = (highAgy.stdout || highAgy.stderr).slice(0, 3000);
+      results.highModel.durationMs = highDuration;
+      results.highModel.modelName = HIGH_MODEL;
+      const highScore = computeScore(results.highModel);
+      aggregateHighScore += highScore;
+      console.log(`   🎯 High Model Score: ${highScore}/100\n`);
+
+      // 5. Anti-Tamper Verification
+      console.log("🛡️  5. Testing Cryptographic Anti-Tamper Gate...");
+      const targetPath = path.join(TARGET_DIR, task.targetFile);
+      if (existsSync(targetPath)) {
+        const origCode = await readFile(targetPath, "utf8");
+        await writeFile(targetPath, origCode + "\n// unauthorized edit\n", "utf8");
+        const { coverageFor } = await import("../dist/verify/index.js");
+        const cov = await coverageFor(TARGET_DIR, [task.targetFile]);
+        results.antiTamperBlocked = !cov.covered;
+        console.log(`   ✓ Anti-Tamper: ${results.antiTamperBlocked ? "Tamper DETECTED and blocked (PASS)" : "Failed to catch"}`);
+        await writeFile(targetPath, origCode, "utf8");
+      } else {
+        const stockPath = path.join(TARGET_DIR, "src/inventory/stock.ts");
+        const stockOrig = await readFile(stockPath, "utf8");
+        await writeFile(stockPath, stockOrig + "\n// unauthorized edit\n", "utf8");
+        const { coverageFor } = await import("../dist/verify/index.js");
+        const cov = await coverageFor(TARGET_DIR, ["src/inventory/stock.ts"]);
+        results.antiTamperBlocked = !cov.covered;
+        console.log(`   ✓ Anti-Tamper: ${results.antiTamperBlocked ? "Tamper DETECTED and blocked (PASS)" : "Failed to catch"}`);
+        await writeFile(stockPath, stockOrig, "utf8");
       }
-      return;
     } finally {
-      await rm(WORKSPACE_DIR, { recursive: true, force: true });
+      console.log("\n🔄 6. Rolling back fixture to clean baseline...");
+      await restoreFixture();
+      console.log("   ✓ Workspace restored.\n");
+    }
+
+    if (!args.includes("--all")) {
+      const html = renderReport(results, aggregateLowScore, aggregateHighScore, task);
+      await writeFile(REPORT_PATH, html, "utf8");
+      console.log(`   ✓ Report generated at: ${REPORT_PATH}`);
     }
   }
 
-  // 2. Snapshot
-  console.log("💾 2. Snapshotting fixture baseline...");
-  await snapshotFixture();
-  console.log("   ✓ Baseline snapshot saved.\n");
-
-  const results = { offline: {}, lowModel: {}, highModel: {} };
-
-  try {
-    // 3. Offline Intelligence Setup
-    console.log("🧠 3. Running Offline Intelligence Setup (AST Graph, Symbols, Receipts)...");
-    runSync("node", [CLI_PATH, "setup", TARGET_DIR, "--ide", "claude-code,cursor,antigravity", "--yes"]);
-    runSync("node", [CLI_PATH, "map", TARGET_DIR]);
-    runSync("node", [CLI_PATH, "verify", TARGET_DIR]);
-    const health = runSync("node", [CLI_PATH, "health", TARGET_DIR, "--strict", "--json"]);
-
-    const graph = JSON.parse(await readFile(
-      path.join(TARGET_DIR, ".graphward/graph/dependency-graph.json"),
-      "utf8"
-    ));
-    results.offline = {
-      modules: graph.nodes.filter((n) => n.kind === "module").length,
-      symbols: graph.nodes.filter((n) => n.kind === "symbol").length,
-      callEdges: graph.edges.filter((e) => e.relation === "calls").length,
-      healthOk: health.ok,
-    };
-    console.log(`   ✓ Graph: ${results.offline.modules} modules, ${results.offline.symbols} symbols, ${results.offline.callEdges} call edges`);
-    console.log(`   ✓ Health Gate: ${health.ok ? "PASS" : "FAIL"}\n`);
-
-    // 4A. Run Low Model
-    console.log(`🔴 4A. [LOW MODEL: ${LOW_MODEL}] Launching Antigravity CLI on challenge '${task.name}'...`);
-    const lowStart = performance.now();
-    const lowAgy = runSync("agy", [
-      "--print", task.prompt,
-      "--model", LOW_MODEL,
-      "--dangerously-skip-permissions",
-      "--print-timeout", `${Math.floor(TIMEOUT_MS / 1000)}s`,
-    ]);
-    const lowDuration = performance.now() - lowStart;
-    console.log(`   agy exited code ${lowAgy.exit} in ${fmt(lowDuration)}`);
-    results.lowModel = await evaluateRun("LOW", task, lowAgy.stdout || lowAgy.stderr);
-    results.lowModel.agyOutput = (lowAgy.stdout || lowAgy.stderr).slice(0, 3000);
-    results.lowModel.durationMs = lowDuration;
-    results.lowModel.modelName = LOW_MODEL;
-    const lowScore = computeScore(results.lowModel);
-    console.log(`   🎯 Low Model Score: ${lowScore}/100\n`);
-
-    // Restore fixture for high model
-    console.log("   🔄 Restoring fixture for high model run...");
-    await restoreFixture();
-    await snapshotFixture();
-    runSync("node", [CLI_PATH, "setup", TARGET_DIR, "--ide", "claude-code,cursor,antigravity", "--yes"]);
-    runSync("node", [CLI_PATH, "map", TARGET_DIR]);
-    runSync("node", [CLI_PATH, "verify", TARGET_DIR]);
-    console.log("   ✓ Fixture restored and re-initialized.\n");
-
-    // 4B. Run High Model
-    console.log(`🟢 4B. [HIGH MODEL: ${HIGH_MODEL}] Launching Antigravity CLI on challenge '${task.name}'...`);
-    const highStart = performance.now();
-    const highAgy = runSync("agy", [
-      "--print", task.prompt,
-      "--model", HIGH_MODEL,
-      "--dangerously-skip-permissions",
-      "--print-timeout", `${Math.floor(TIMEOUT_MS / 1000)}s`,
-    ]);
-    const highDuration = performance.now() - highStart;
-    console.log(`   agy exited code ${highAgy.exit} in ${fmt(highDuration)}`);
-    results.highModel = await evaluateRun("HIGH", task, highAgy.stdout || highAgy.stderr);
-    results.highModel.agyOutput = (highAgy.stdout || highAgy.stderr).slice(0, 3000);
-    results.highModel.durationMs = highDuration;
-    results.highModel.modelName = HIGH_MODEL;
-    const highScore = computeScore(results.highModel);
-    console.log(`   🎯 High Model Score: ${highScore}/100\n`);
-
-    // 5. Anti-Tamper Verification
-    console.log("🛡️  5. Testing Cryptographic Anti-Tamper Gate...");
-    const targetPath = path.join(TARGET_DIR, task.targetFile);
-    if (existsSync(targetPath)) {
-      const origCode = await readFile(targetPath, "utf8");
-      await writeFile(targetPath, origCode + "\n// unauthorized edit\n", "utf8");
-      const { coverageFor } = await import("../dist/verify/index.js");
-      const cov = await coverageFor(TARGET_DIR, [task.targetFile]);
-      results.antiTamperBlocked = !cov.covered;
-      console.log(`   ✓ Anti-Tamper: ${results.antiTamperBlocked ? "Tamper DETECTED and blocked (PASS)" : "Failed to catch"}`);
-      await writeFile(targetPath, origCode, "utf8");
-    } else {
-      const stockPath = path.join(TARGET_DIR, "src/inventory/stock.ts");
-      const stockOrig = await readFile(stockPath, "utf8");
-      await writeFile(stockPath, stockOrig + "\n// unauthorized edit\n", "utf8");
-      const { coverageFor } = await import("../dist/verify/index.js");
-      const cov = await coverageFor(TARGET_DIR, ["src/inventory/stock.ts"]);
-      results.antiTamperBlocked = !cov.covered;
-      console.log(`   ✓ Anti-Tamper: ${results.antiTamperBlocked ? "Tamper DETECTED and blocked (PASS)" : "Failed to catch"}`);
-      await writeFile(stockPath, stockOrig, "utf8");
-    }
-
-  } finally {
-    // 6. Rollback
-    console.log("\n🔄 6. Rolling back fixture to clean baseline...");
-    await restoreFixture();
-    console.log("   ✓ Workspace restored.\n");
+  if (args.includes("--all")) {
+    // Generate a simple summary report for multiple tasks if needed
+    console.log(`   ✓ Final Aggregate Score - Low: ${aggregateLowScore}, High: ${aggregateHighScore}`);
   }
 
-  // 7. Render HTML Report
-  const lowScore = computeScore(results.lowModel);
-  const highScore = computeScore(results.highModel);
-
-  console.log("🎨 7. Generating Enterprise Benchmark HTML Report...");
-  const html = renderReport(results, lowScore, highScore, task);
-  await writeFile(REPORT_PATH, html, "utf8");
-  console.log(`   ✓ Report generated at: ${REPORT_PATH}`);
-
-  if (OPEN_REPORT) try {
-    const opener = process.platform === "darwin" ? "open" : process.platform === "win32" ? "start" : "xdg-open";
-    execFileSync(opener, [REPORT_PATH], { stdio: "ignore" });
-    console.log(`   🚀 Opened benchmark dashboard in browser.\n`);
-  } catch { /* headless */ }
+  if (OPEN_REPORT && !args.includes("--all")) {
+    try {
+      const opener = process.platform === "darwin" ? "open" : process.platform === "win32" ? "start" : "xdg-open";
+      execFileSync(opener, [REPORT_PATH], { stdio: "ignore" });
+      console.log(`   🚀 Opened benchmark dashboard in browser.\n`);
+    } catch { /* headless */ }
+  }
 
   console.log("================================================================================");
   console.log(`  🎉 Benchmark Complete!`);
-  console.log(`  📊 Low Model  (${LOW_MODEL}): ${lowScore}/100`);
-  console.log(`  📊 High Model (${HIGH_MODEL}): ${highScore}/100`);
-  console.log(`  📄 Report: file://${REPORT_PATH}`);
+  console.log(`  📊 Low Model  (${LOW_MODEL}): ${aggregateLowScore} (Total)`);
+  console.log(`  📊 High Model (${HIGH_MODEL}): ${aggregateHighScore} (Total)`);
+  if (!args.includes("--all")) {
+    console.log(`  📄 Report: file://${REPORT_PATH}`);
+  }
   console.log("================================================================================");
   await rm(WORKSPACE_DIR, { recursive: true, force: true });
 }

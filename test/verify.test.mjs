@@ -1,5 +1,5 @@
 /**
- * Verification receipt tests — the evidence layer that replaced word-matching
+ * Verification record tests — the evidence layer that replaced word-matching
  * the agent's shell history.
  */
 
@@ -15,7 +15,7 @@ import {
   coverageFor,
   changedFiles,
   detectCheckCommands,
-  readReceipts,
+  readRecords,
   hashContent,
 } from "../dist/verify/index.js";
 
@@ -42,7 +42,7 @@ test("changedFiles expands untracked directories and excludes our own state", as
   // Without -uall git reports the untracked dir as `src/`, hiding the new file
   // and letting an unverified change slip past the gate.
   assert.ok(files.includes("src/new.ts"), `expected src/new.ts in ${JSON.stringify(files)}`);
-  assert.ok(!files.some((f) => f.startsWith(".graphward/")), "own state must never enter a receipt");
+  assert.ok(!files.some((f) => f.startsWith(".graphward/")), "own state must never enter a record");
 });
 
 test("detectCheckCommands prefers an aggregate check, else typecheck/lint/test", async () => {
@@ -54,31 +54,31 @@ test("detectCheckCommands prefers an aggregate check, else typecheck/lint/test",
   assert.deepEqual(await detectCheckCommands(py), ["pytest"]);
 });
 
-test("a passing run produces a pass receipt bound to the changed bytes", async () => {
+test("a passing run produces a pass record bound to the changed bytes", async () => {
   const root = await repo();
   await writeFile(path.join(root, "src/a.ts"), "export const a = 1;\n", "utf8");
 
-  const { receipt } = await runVerification(root);
-  assert.equal(receipt.verdict, "pass");
-  assert.equal(receipt.commands.length, 1);
-  assert.equal(receipt.commands[0].exitCode, 0);
-  assert.equal(receipt.files["src/a.ts"], hashContent("export const a = 1;\n"));
-  assert.ok(receipt.head, "receipt records the git HEAD it was taken at");
+  const { record } = await runVerification(root);
+  assert.equal(record.verdict, "pass");
+  assert.equal(record.commands.length, 1);
+  assert.equal(record.commands[0].exitCode, 0);
+  assert.equal(record.files["src/a.ts"], hashContent("export const a = 1;\n"));
+  assert.ok(record.head, "record records the git HEAD it was taken at");
 
   assert.equal((await coverageFor(root, ["src/a.ts"])).covered, true);
 });
 
-test("a failing command can never produce a passing receipt", async () => {
+test("a failing command can never produce a passing record", async () => {
   const root = await repo({ test: 'node -e "process.exit(3)"' });
   await writeFile(path.join(root, "src/a.ts"), "export const a = 1;\n", "utf8");
 
-  const { receipt } = await runVerification(root);
-  assert.equal(receipt.verdict, "fail");
-  assert.equal(receipt.commands[0].exitCode, 3);
+  const { record } = await runVerification(root);
+  assert.equal(record.verdict, "fail");
+  assert.equal(record.commands[0].exitCode, 3);
   assert.equal((await coverageFor(root, ["src/a.ts"])).covered, false);
 });
 
-test("a receipt stops covering a file the moment its bytes change", async () => {
+test("a record stops covering a file the moment its bytes change", async () => {
   const root = await repo();
   const file = path.join(root, "src/a.ts");
   await writeFile(file, "export const a = 1;\n", "utf8");
@@ -87,40 +87,40 @@ test("a receipt stops covering a file the moment its bytes change", async () => 
 
   await writeFile(file, "export const a = 2;\n", "utf8");
   const after = await coverageFor(root, ["src/a.ts"]);
-  assert.equal(after.covered, false, "a receipt must not vouch for bytes it never saw");
+  assert.equal(after.covered, false, "a record must not vouch for bytes it never saw");
   assert.deepEqual(after.uncovered, ["src/a.ts"]);
 });
 
 test("no detectable check command yields a fail verdict, never a free pass", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "ei-verify-bare-"));
-  const { receipt, noCommands } = await runVerification(root);
+  const { record, noCommands } = await runVerification(root);
   assert.equal(noCommands, true);
-  assert.equal(receipt.verdict, "fail", "nothing ran, so nothing is proven");
+  assert.equal(record.verdict, "fail", "nothing ran, so nothing is proven");
 });
 
 test("explicit commands override detection and all must pass", async () => {
   const root = await repo();
   const ok = await runVerification(root, { commands: ['node -e "0"', 'node -e "0"'] });
-  assert.equal(ok.receipt.verdict, "pass");
-  assert.equal(ok.receipt.commands.length, 2);
+  assert.equal(ok.record.verdict, "pass");
+  assert.equal(ok.record.commands.length, 2);
 
   const bad = await runVerification(root, { commands: ['node -e "0"', 'node -e "process.exit(1)"', 'node -e "0"'] });
-  assert.equal(bad.receipt.verdict, "fail");
-  assert.equal(bad.receipt.commands.length, 2, "stops at the first failure — the tree is not verified");
+  assert.equal(bad.record.verdict, "fail");
+  assert.equal(bad.record.commands.length, 2, "stops at the first failure — the tree is not verified");
 });
 
-test("receipts accumulate newest-first and are capped", async () => {
+test("records accumulate newest-first and are capped", async () => {
   const root = await repo();
   await runVerification(root);
   await runVerification(root);
-  const receipts = await readReceipts(root);
-  assert.ok(receipts.length >= 2);
-  assert.ok(receipts[0].createdAt >= receipts[1].createdAt, "newest first");
-  assert.ok(receipts.length <= 20, "history is capped");
+  const records = await readRecords(root);
+  assert.ok(records.length >= 2);
+  assert.ok(records[0].createdAt >= records[1].createdAt, "newest first");
+  assert.ok(records.length <= 20, "history is capped");
 });
 
 test("outside a git repo, coverage degrades to mtime and still expires on edit", async () => {
-  // Without git we cannot enumerate the change set, so a receipt cannot bind to
+  // Without git we cannot enumerate the change set, so a record cannot bind to
   // bytes. It must still be usable (or non-git projects would block forever) and
   // must still stop covering a file that is written afterwards.
   const root = await mkdtemp(path.join(tmpdir(), "ei-verify-nogit-"));
@@ -129,14 +129,14 @@ test("outside a git repo, coverage degrades to mtime and still expires on edit",
   const file = path.join(root, "src/a.ts");
   await writeFile(file, "export const a = 1;\n", "utf8");
 
-  const { receipt } = await runVerification(root);
-  assert.equal(receipt.gitAvailable, false, "degraded mode must be recorded honestly, not hidden");
-  assert.equal(receipt.verdict, "pass");
+  const { record } = await runVerification(root);
+  assert.equal(record.gitAvailable, false, "degraded mode must be recorded honestly, not hidden");
+  assert.equal(record.verdict, "pass");
   assert.equal((await coverageFor(root, ["src/a.ts"])).covered, true);
 
   await new Promise((r) => setTimeout(r, 12));
   await writeFile(file, "export const a = 2;\n", "utf8");
-  assert.equal((await coverageFor(root, ["src/a.ts"])).covered, false, "editing after verification must expire the receipt");
+  assert.equal((await coverageFor(root, ["src/a.ts"])).covered, false, "editing after verification must expire the record");
 
   await rm(root, { recursive: true, force: true });
 });

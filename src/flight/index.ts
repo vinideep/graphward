@@ -116,6 +116,27 @@ export async function preflight(root: string, options: PreflightOptions): Promis
       if (f) files.add(f);
     }
     predicted.files = [...files];
+    
+    try {
+      const graphData = await readFile(path.join(root, ".graphward", "graph", "dependency-graph.json"), "utf8");
+      const graph = JSON.parse(graphData);
+      const { detectCoverageGaps, generateCharacterizationTests } = await import("../coverage-gap/index.js");
+      const gaps = detectCoverageGaps(declaredFiles, graph);
+      if (gaps.length > 0) {
+        // We log or output them
+        console.warn(`[Coverage Gap] Found ${gaps.length} uncovered exported symbols in declared files.`);
+        const tests = generateCharacterizationTests(gaps, root);
+        for (const test of tests) {
+          if (!existsSync(path.join(root, test.testFile))) {
+             const { writeProtectedFile } = await import("../manifest/lock.js");
+             await writeProtectedFile(root, path.join(root, test.testFile), test.content);
+             console.warn(`[Coverage Gap] Generated characterization test: ${test.testFile}`);
+          }
+        }
+      }
+    } catch {
+      // ignore
+    }
   }
 
   const baselineDirtyList = dirtyFiles(root);
@@ -150,8 +171,8 @@ export async function preflight(root: string, options: PreflightOptions): Promis
   };
 
   const dir = flightDir(root);
-  await mkdir(dir, { recursive: true });
-  await writeFile(path.join(dir, `${id}.json`), `${JSON.stringify(record, null, 2)}\n`, "utf8");
+  const { writeProtectedFile } = await import("../manifest/lock.js");
+  await writeProtectedFile(root, path.join(dir, `${id}.json`), `${JSON.stringify(record, null, 2)}\n`);
   return record;
 }
 
@@ -366,14 +387,14 @@ export async function createSessionHandoff(
 
   let validationSummary: { receiptCount: number; lastVerdict?: string } | undefined;
   try {
-    const receiptsPath = path.join(root, ".graphward", ".verify", "receipts.json");
+    const receiptsPath = path.join(root, ".graphward", ".verify", "verification-records.json");
     if (existsSync(receiptsPath)) {
       const receiptsContent = await readFile(receiptsPath, "utf8");
-      const receipts = JSON.parse(receiptsContent);
-      if (Array.isArray(receipts) && receipts.length > 0) {
+      const records = JSON.parse(receiptsContent);
+      if (Array.isArray(records) && records.length > 0) {
         validationSummary = {
-          receiptCount: receipts.length,
-          lastVerdict: receipts[receipts.length - 1]?.verdict,
+          receiptCount: records.length,
+          lastVerdict: records[records.length - 1]?.verdict,
         };
       }
     }

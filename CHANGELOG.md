@@ -23,7 +23,7 @@ real or labelled honestly. Every claim below was reproduced before and after.
 | `claims.json` gains `kind` (`derived` \| `asserted`) | Only re-computable statements may be called facts. | None — claims written before this are read as `asserted`, never promoted. |
 | `.claude/settings.json` / `.cursor/hooks.json` are **merged**, not owned | A pre-existing settings file used to conflict, silently skipping the whole enforcement layer. | None. Your `permissions`, `model`, `env` and your own hooks are preserved; `uninstall` removes only our entries. |
 | `gw.config.json` is seeded, not managed | Editing it — the documented way to enable enforcement — caused a permanent doctor warning and update conflicts. | None. It is yours after first write. |
-| Stop hook requires a verification **receipt** | The old gate matched shell history, so `rm -rf build` satisfied it. | Run `gw verify .` (or let the agent). |
+| Stop hook requires a verification **record** | The old gate matched shell history, so `rm -rf build` satisfied it. | Run `gw verify .` (or let the agent). |
 | API: `isValidationCommand` → `looksLikeValidationCommand`; `statusFromFindings(findings, failOn?)` | The old name implied it gated something. | Only affects direct library consumers. |
 
 ### Fixed
@@ -52,7 +52,7 @@ real or labelled honestly. Every claim below was reproduced before and after.
 ### Added
 
 - `gw verify` — runs the project's own checks and writes a
-  receipt binding the result to a sha256 of every changed file.
+  record binding the result to a sha256 of every changed file.
 - `gw claims derive` — computes module imports, package
   dependencies and HTTP routes from source as **derived** (re-computable) claims.
 - `gw gate <name> --fail-on error|warning`.

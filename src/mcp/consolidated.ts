@@ -157,12 +157,22 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
       additionalProperties: false,
       properties: {
         prompt: { type: "string", description: "The user's prompt or requirement statement." },
+        changedFiles: filesProperty,
       },
     },
     handler: async (args) => {
       const root = rootOf(args, projectRoot);
       const config = await loadEiConfig(root);
-      return assessPromptClarity(args.prompt as string, config);
+      const { shouldClarify } = await import("../aidlc/clarification.js");
+      
+      let graph: any = { nodes: [], edges: [], schemaVersion: "1.0", graphType: "dependency", generatedAt: new Date().toISOString(), scope: "project", unknowns: [] };
+      try {
+        const graphData = await readFile(path.join(root, ".graphward", "graph", "dependency-graph.json"), "utf8");
+        graph = JSON.parse(graphData);
+      } catch {}
+      const memory = await queryProjectMemory(root, {});
+      
+      return shouldClarify(args.prompt as string, (args.changedFiles as string[] || []), graph, memory, config);
     },
   });
 
@@ -321,7 +331,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
 
   registry.register({
     name: "create_session_handoff",
-    description: "Package active flight predictions, uncommitted dirty files, test receipts, and AI-DLC state for cross-IDE session handoff.",
+    description: "Package active flight predictions, uncommitted dirty files, test records, and AI-DLC state for cross-IDE session handoff.",
     inputSchema: {
       type: "object",
       additionalProperties: false,

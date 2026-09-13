@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GraphWard Project Config",
+  "type": "object",
+  "properties": {
+    "schemaVersion": { "type": "number", "const": 1 },
+    "gates": {
+      "type": "object",
+      "properties": {
+        "strictMode": { "type": "boolean" },
+        "preflight": {
+          "type": "object",
+          "properties": {
+            "requireFreshGraph": { "type": "boolean" },
+            "requireTests": { "type": "boolean" }
+          },
+          "required": ["requireFreshGraph", "requireTests"]
+        }
+      },
+      "required": ["strictMode", "preflight"]
+    },
+    "providers": {
+      "type": "object",
+      "properties": {
+        "policy": { "type": "string", "enum": ["auto", "full", "native"] },
+        "requireProviders": { "type": "boolean" },
+        "expertMode": { "type": "boolean" }
+      },
+      "required": ["policy", "requireProviders", "expertMode"]
+    },
+    "hooks": {
+      "type": "object",
+      "properties": {
+        "verifyCommands": { "type": "array", "items": { "type": "string" } },
+        "syncOnCommit": { "type": "boolean" }
+      },
+      "required": ["verifyCommands", "syncOnCommit"]
+    }
+  },
+  "required": ["schemaVersion", "gates", "providers", "hooks"]
+}

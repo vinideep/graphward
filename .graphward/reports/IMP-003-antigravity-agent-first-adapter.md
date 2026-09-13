@@ -33,7 +33,7 @@
 - `.graphward/graph/dependency-graph.json` — adapter rendering edges and template consumers may change.
 - `.graphward/context/module-map.md` and `repo-brief.md` — adapter output behavior changes.
 - `.graphward/knowledge-base/01-repository-structure.md` and `10-integrations.md` — modern Antigravity paths and compatibility behavior.
-- `.graphward/changes/` — implementation and validation receipt.
+- `.graphward/changes/` — implementation and validation record.
 
 ## Evidence
 - `src/adapters/index.ts` currently renders Antigravity GUI agents as JSON plus prompt files and renders workflows separately.

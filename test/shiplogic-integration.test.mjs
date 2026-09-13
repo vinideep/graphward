@@ -75,9 +75,9 @@ test("Shiplogic-style onboarding and incremental sync work through the real CLI"
   const health = cli(["health", root, "--strict", "--json"], root);
   assert.equal(health.status, 0, `${health.stdout}\n${health.stderr}`);
   assert.equal(JSON.parse(health.stdout).providers.policy, "native");
-  const receipt = cli(["verify", root, "--json"], root);
-  assert.equal(receipt.status, 0, receipt.stdout);
-  assert.equal(JSON.parse(receipt.stdout).verdict, "pass");
+  const record = cli(["verify", root, "--json"], root);
+  assert.equal(record.status, 0, record.stdout);
+  assert.equal(JSON.parse(record.stdout).verdict, "pass");
 
   const context = cli(["context", "route plan", root, "--files", "src/routes/route-plan.ts", "--json"], root);
   assert.equal(context.status, 0, context.stdout);

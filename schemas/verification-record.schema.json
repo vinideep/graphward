@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GraphWard Verification Record",
+  "type": "object",
+  "properties": {
+    "version": { "type": "number", "const": 1 },
+    "verdict": { "type": "string", "enum": ["pass", "fail", "incomplete"] },
+    "files": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "command": { "type": "string" },
+          "exitCode": { "type": ["number", "null"] },
+          "durationMs": { "type": "number" },
+          "outputTail": { "type": "string" }
+        },
+        "required": ["command", "exitCode", "durationMs"]
+      }
+    },
+    "timestamp": { "type": "string", "format": "date-time" }
+  },
+  "required": ["version", "verdict", "files", "commands", "timestamp"]
+}

@@ -29,7 +29,7 @@ Serialize active conversation state, in-flight task progress, verified facts, an
 3. **Generate Handoff Packet**:
    Write `.graphward/handoffs/HO-<date>-<task-slug>.md` with the following structure:
    - **Task Context**: Objective and current status.
-   - **Verified Ground Truth**: Direct repository facts and passing test receipts.
+   - **Verified Ground Truth**: Direct repository facts and passing test records.
    - **Working Tree Diff Summary**: Modified paths and pending edits.
    - **Next Immediate Actions**: Exact commands and files for the next agent/session to run.
 

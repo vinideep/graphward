@@ -48,14 +48,13 @@ All GraphWard artifacts are plain markdown and JSON files in `.graphward/`. You 
 
 You control exactly which commands GraphWard is allowed to execute via `verifyCommands`. If this array is empty or the config file doesn't exist, GraphWard auto-detects commands from `package.json` scripts.
 
-## Reporting Vulnerabilities
+## Reporting a Vulnerability
 
-If you discover a security vulnerability, please report it responsibly:
+Please report security issues via GitHub Security Advisories or by emailing security@graphward.dev. We will respond within 48 hours.
 
-1. **Do not** open a public issue
-2. Email: [security contact — add your email here]
-3. Include: description, reproduction steps, and potential impact
-4. Expected response time: 48 hours
+## .graphward/ Commit Policy
+
+By default, `.graphward/` content-derived artifacts are gitignored. Use `--share` during initialization to generate a redacted architecture summary safe for version control. A secrets scan runs before any file is written to `.graphward/`.
 
 ## Security Badges & Audits
 

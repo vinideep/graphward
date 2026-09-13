@@ -44,7 +44,7 @@ async function tmpRoot(config) {
 }
 
 /** A real git repo with a committed baseline and a passing `npm test`, so the
- *  receipt-based Stop gate has genuine change detection to work against. */
+ *  record-based Stop gate has genuine change detection to work against. */
 async function gitRoot(config) {
   const root = await tmpRoot(config);
   const git = (...args) => execFileSync("git", args, { cwd: root, stdio: "pipe" });
@@ -84,7 +84,7 @@ test("looksLikeValidationCommand is a UX hint only, and no longer gates anything
   assert.equal(looksLikeValidationCommand("ls -la"), false);
   assert.equal(looksLikeValidationCommand("git status"), false);
   // These defeated the OLD gate. They may still look test-shaped to a human, but
-  // nothing about this function can satisfy the Stop gate any more — only a receipt can.
+  // nothing about this function can satisfy the Stop gate any more — only a record can.
   assert.equal(looksLikeValidationCommand("rm -rf build"), false);
   assert.equal(looksLikeValidationCommand("echo check"), false);
   assert.equal(looksLikeValidationCommand("git commit -m 'add tests'"), false);
@@ -124,7 +124,7 @@ test("Stop is a no-op unless requireValidationOnStop is enabled", async () => {
   assert.equal(result.stdout, undefined, "gate off → never blocks");
 });
 
-test("Stop requires a passing receipt covering the current bytes", async () => {
+test("Stop requires a passing record covering the current bytes", async () => {
   const root = await gitRoot({ requireValidationOnStop: true });
   const sid = "gate";
   const stop = async (extra = {}) => runHook("stop", root, { session_id: sid, ...extra });
@@ -149,14 +149,14 @@ test("Stop requires a passing receipt covering the current bytes", async () => {
   // The stop_hook_active guard still prevents an infinite block loop.
   assert.equal((await stop({ stop_hook_active: true })).stdout, undefined);
 
-  // A real verification run produces a receipt → allow.
-  const { receipt } = await runVerification(root);
-  assert.equal(receipt.verdict, "pass");
-  assert.equal((await stop()).stdout, undefined, "passing receipt → allow");
+  // A real verification run produces a record → allow.
+  const { record } = await runVerification(root, { provenance: "human" });
+  assert.equal(record.verdict, "pass");
+  assert.equal((await stop()).stdout, undefined, "passing record → allow");
 
-  // Editing after verification invalidates the receipt → block again.
+  // Editing after verification invalidates the record → block again.
   await writeFile(path.join(root, "src/a.ts"), "export const a = 2;\n", "utf8");
-  assert.ok((await stop()).stdout, "receipt must not vouch for bytes it never saw");
+  assert.ok((await stop()).stdout, "record must not vouch for bytes it never saw");
 });
 
 test("Stop stays blocked when verification actually fails", async () => {
@@ -165,8 +165,8 @@ test("Stop stays blocked when verification actually fails", async () => {
   await writeFile(path.join(root, "package.json"), JSON.stringify({ scripts: { test: "node -e \"process.exit(1)\"" } }), "utf8");
   await writeFile(path.join(root, "src/a.ts"), "export const a = 1;\n", "utf8");
 
-  const { receipt } = await runVerification(root);
-  assert.equal(receipt.verdict, "fail", "a failing command must never produce a passing receipt");
+  const { record } = await runVerification(root, { provenance: "human" });
+  assert.equal(record.verdict, "fail", "a failing command must never produce a passing record");
 
   const blocked = await runHook("stop", root, { session_id: "failing" });
   assert.ok(blocked.stdout, "failed verification must still block");
@@ -266,7 +266,7 @@ test("runHook formats output in Cursor's contract (agent_message / followup_mess
   assert.ok(!("hookSpecificOutput" in startOut));
 
   // Record a source change (Cursor afterFileEdit → Edit), then stop must block via followup_message.
-  // The file must really exist: the gate binds receipts to bytes on disk, so it
+  // The file must really exist: the gate binds records to bytes on disk, so it
   // cannot (and must not) block on a path that was only mentioned.
   await mkdir(path.join(root, "src"), { recursive: true });
   await writeFile(path.join(root, "src/a.ts"), "export const a = 1;\n", "utf8");

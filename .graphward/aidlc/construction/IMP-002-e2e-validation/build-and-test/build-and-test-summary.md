@@ -15,7 +15,7 @@ available to existing EI-enabled projects.
 - Source changes report that canonical prose needs an evidence-aware follow-up;
   deterministic sync never rewrites canonical knowledge prose.
 - Added real CLI coverage for Shiplogic-style onboarding, IDE auto-detection,
-  user settings preservation, ContextPackV2, verification receipts, strict
+  user settings preservation, ContextPackV2, verification records, strict
   health, and incremental sync.
 - Corrected incremental graph merging so provider-only evidence is replaced,
   unchanged import targets are retained, and changed-file call edges resolve
@@ -36,7 +36,7 @@ available to existing EI-enabled projects.
 | `npm run test:provider-smoke -- --quick` | ✅ Passed; Graphify and CCE active; strict health passed |
 | `npm run test:provider-smoke` | ✅ Passed; 30 queries, Recall@10 0.90, 135 current scoped spans |
 | CLI `health . --strict` | ✅ Healthy; 277/277 claims verified, 10/10 evidence citations current |
-| CLI `verify . --json` | ✅ Pass receipt at current HEAD |
+| CLI `verify . --json` | ✅ Pass record at current HEAD |
 | CLI `claims verify . --strict` | ✅ Passed |
 | `gate api-diff` | ✅ Passed; no breaking endpoint changes |
 | `gate migration-lint` | ✅ Passed; no migration files |
@@ -53,7 +53,7 @@ unknowns; they were not promoted into claims, and strict health still passed.
 
 Earlier concurrent validation recorded a transient 215/216 result because
 stateful graph tests raced. With serialized scripts, isolated suites pass
-219/219 and two consecutive verification receipts pass with no failing
+219/219 and two consecutive verification records pass with no failing
 subtest.
 
 ## Shiplogic Journey Proven
@@ -63,7 +63,7 @@ module plus an existing `.claude/settings.json`. The test proves:
 
 1. auto-detection chooses `claude-code`;
 2. project-owned permissions and model settings survive installation;
-3. graph, claims, ContextPackV2, receipt, and strict health are created;
+3. graph, claims, ContextPackV2, record, and strict health are created;
 4. adding a domain module and changing route planning updates the graph and
    claims incrementally;
 5. the existing canonical overview remains byte-for-byte unchanged; and

@@ -244,6 +244,8 @@ function pyBody(lines: string[], lineStarts: number[], headerLine: number, heade
 // Shared symbol/edge assembly
 // ---------------------------------------------------------------------------
 
+import { parseWithTreeSitter } from "./tree-sitter.js";
+
 function stripExt(relPath: string): string {
   return relPath.replace(/\.(ts|tsx|js|mjs|cjs|py)$/, "");
 }
@@ -264,6 +266,35 @@ export async function extractSymbols(filePath: string, root: string): Promise<Sy
   const relFile = path.relative(root, filePath).replace(/\\/g, "/");
   const rel = stripExt(relFile);
   const moduleId = `module:${rel}`;
+  
+  const tsResult = await parseWithTreeSitter(filePath, content);
+  if (tsResult && tsResult.exports.length > 0) {
+    const nodes: GraphNode[] = [];
+    const edges: GraphEdge[] = [];
+    for (const exp of tsResult.exports) {
+      const id = `symbol:${rel}#${exp.name}`;
+      nodes.push({
+        id,
+        kind: "symbol",
+        label: exp.name,
+        path: rel,
+        confidence: "verified",
+        metadata: { symbolKind: exp.kind },
+        evidence: [`${relFile}`],
+      });
+      edges.push({
+        from: moduleId,
+        to: id,
+        relation: "defines",
+        confidence: "verified",
+        metadata: {},
+        evidence: [`${relFile}`],
+      });
+    }
+    // Tree-sitter basic implementation doesn't extract calls yet
+    return { nodes, edges, pendingCalls: [] };
+  }
+
   const lineStarts = buildLineIndex(content);
   const ignored = isPy ? PY_IGNORED_CALLEES : JS_IGNORED_CALLEES;
 

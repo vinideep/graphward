@@ -50,7 +50,7 @@ Omit `--id` to close the most recent open flight.
 loop itself: declare intent → edit → self-audit, and report the verdict back to
 you.
 
-## Memory with receipts (self-invalidating knowledge)
+## Memory with records (self-invalidating knowledge)
 
 Prose-based AI memory rots silently. Here, every `file:line` citation in the
 knowledge base is hashed against the line it points at.

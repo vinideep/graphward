@@ -7,6 +7,18 @@ import type {
   ClarificationQuestion,
   UserDecision,
 } from "./types.js";
+import type { DependencyGraph } from "../graph/schema.js";
+import type { MemoryQueryResult } from "../learning/index.js";
+
+export interface GraphClarityConfig {
+  maxDownstreamConsumers?: number; // default 5
+}
+
+export interface GraphClarityAssessment {
+  mustClarify: boolean;
+  reasons: Array<{ rule: string; detail: string }>;
+}
+
 
 const ARCHITECTURAL_PATTERNS = [
   {
@@ -179,4 +191,73 @@ export async function freezeRequirements(
 
   await saveRequirements(root, reqs);
   return path.join(root, ".graphward", "aidlc", "inception", "requirements.md");
+}
+
+export function assessGraphClarity(
+  changedFiles: string[],
+  graph: DependencyGraph,
+  memory: MemoryQueryResult,
+  config?: GraphClarityConfig
+): GraphClarityAssessment {
+  const maxDownstream = config?.maxDownstreamConsumers ?? 5;
+  const reasons: Array<{ rule: string; detail: string }> = [];
+  let mustClarify = false;
+
+  // 1. Count downstream consumers
+  for (const file of changedFiles) {
+    const nodes = graph.nodes.filter(n => n.path === file || n.id === file);
+    let totalConsumers = 0;
+    for (const node of nodes) {
+      const consumers = graph.edges.filter(e => e.to === node.id);
+      totalConsumers += consumers.length;
+    }
+    if (totalConsumers > maxDownstream) {
+      mustClarify = true;
+      reasons.push({ rule: "downstream-consumers", detail: `File ${file} has ${totalConsumers} downstream consumers, exceeding max of ${maxDownstream}` });
+    }
+  }
+
+  // 2. Check architectural boundary crossing
+  const directories = new Set<string>();
+  for (const file of changedFiles) {
+    // extract first path segment
+    const parts = file.split(/[/\\]/);
+    if (parts.length > 0 && parts[0]) {
+      // Handle cases where the first segment is '.' or similar if paths are weird, but assume normalized
+      directories.add(parts[0]);
+    }
+  }
+  if (directories.size > 1) {
+    mustClarify = true;
+    reasons.push({ rule: "boundary-crossing", detail: `Changes span multiple top-level directories: ${Array.from(directories).join(", ")}` });
+  }
+
+  // 3. Check negative constraints
+  for (const file of changedFiles) {
+    for (const constraint of memory.constraints) {
+      if (constraint.includes(file)) {
+        mustClarify = true;
+        reasons.push({ rule: "negative-constraint", detail: `File ${file} matches negative constraint: ${constraint}` });
+      }
+    }
+  }
+
+  return { mustClarify, reasons };
+}
+
+export function shouldClarify(
+  prompt: string,
+  changedFiles: string[],
+  graph: DependencyGraph,
+  memory: MemoryQueryResult,
+  config?: { clarityThreshold?: number; maxDownstreamConsumers?: number }
+): { mustClarify: boolean; promptAssessment: ClarityAssessment; graphAssessment: GraphClarityAssessment } {
+  const promptAssessment = assessPromptClarity(prompt, { clarityThreshold: config?.clarityThreshold });
+  const graphAssessment = assessGraphClarity(changedFiles, graph, memory, { maxDownstreamConsumers: config?.maxDownstreamConsumers });
+
+  return {
+    mustClarify: !promptAssessment.isClear || graphAssessment.mustClarify,
+    promptAssessment,
+    graphAssessment
+  };
 }

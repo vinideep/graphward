@@ -20,7 +20,7 @@ Use the `graphward-skill` capability for the user's accompanying request. For no
 9. **Implement** — Make requested changes. When in TDD mode or implementing critical business logic/state machines, execute strict Red-Green-Refactor slices via `vertical-tdd-engine`.
 10. **Test** — Add/update tests proportional to risk; execute and record results
 11. **Safety Gates** — Run freshness, type safety, API compatibility, API snapshot replay, migration safety, convention, acceptance-mapping, dependency-risk, env-var, ADR compliance, LLM prompt-injection, and rollback gates when applicable
-12. **Validate** — Re-run `npx gw verify .` (via `environmental-backpressure-engine`) against the finished change. This is the receipt the Stop gate and CI both check — it must pass, or the failure must be recorded as a residual risk, not silently dropped.
+12. **Validate** — Re-run `npx gw verify .` (via `environmental-backpressure-engine`) against the finished change. This is the record the Stop gate and CI both check — it must pass, or the failure must be recorded as a residual risk, not silently dropped.
 13. **Sync Intelligence & Session Continuity** — Call `sync_engineering_knowledge`, incrementally update only affected canonical knowledge/memory/context/event/graph artifacts and AI-DLC artifacts it flags, then call `validate_change`. Record provider health and native fallback. If the session is paused or context bounds approach, serialize state via `session-handoff-engine`.
 14. **Record Change** — Write `.graphward/changes/CHG-XXX-<summary>.md` referencing related reports and acceptance verification
 15. **Review Gate** — For high-risk changes, run engineering-change review before completion
