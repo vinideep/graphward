@@ -25,7 +25,20 @@ You do not need to be an engineer to use this. Here is the step-by-step guide:
 Open your terminal in your project folder and run:
 
 ```bash
-npx gw install . --ide <your-editor> --yes
+npx graphward initialize . --providers auto
+```
+
+This auto-detects your AI IDEs (Antigravity, Cursor, Claude Code, GitHub Copilot, etc.), configures providers, maps dependencies, and bootstraps `.graphward/`.
+
+> **Upgrading from an earlier setup?**
+> If you have existing configuration files, the CLI will prompt on conflicts:
+> `Conflict: <file> has been modified locally. Overwrite? (y/N/a/s) [a=all, s=skip all]:`
+> Enter `a` to **Accept all** remaining updates at once, or run with `--force` to overwrite automatically without prompting.
+
+You can also target specific AI IDEs directly:
+
+```bash
+npx graphward install . --ide <your-editor> --yes
 ```
 
 Replace `<your-editor>` with your AI IDE:
@@ -45,11 +58,10 @@ Replace `<your-editor>` with your AI IDE:
 
 Multiple editors? Pass `--ide` more than once:
 ```bash
-npx gw install . --ide cursor --ide claude-code --yes
+npx graphward install . --ide cursor --ide claude-code --yes
 ```
 
 If you skip `--ide`, GraphWard defaults to generic adapter mode.
-
 
 This creates a hidden `.graphward/` folder that holds the blueprint, memory, and dependency graphs of your application.
 
@@ -63,36 +75,39 @@ Open your project in any supported AI editor:
 - **Claude Code**
 - **GitHub Copilot**
 - **Gemini CLI**
-
-In your AI chat window, select or mention the single main coordinator:
-```text
-@engineering-orchestrator
-```
-**For most tasks, just describe what you need — the orchestrator routes to the right workflow automatically.**
-
-Power users can also invoke specific workflows directly for granular control:
-
-| Shortcut | What it does |
-|----------|-------------|
-| `/scope-requirement` | Scope & clarify before implementing |
-| `/graphward` | Full implement → test → sync pipeline |
-| `/map-architecture` | Rebuild architecture graph |
-| `/sync-graphward` | Refresh intelligence after manual edits |
-
-**Typical flow:** scope → implement → review → sync. The orchestrator handles this sequence automatically when you describe what you need.
+- **Command Code** / **Cline** / **Roo Code** / **Codex**
 
 ---
 
-### Step 3: Describe What You Need
+### Step 3: Run with `/graphward`
 
-Type your request in plain English. For example:
+In your AI chat window, invoke the `/graphward` workflow shortcut followed by your request in plain English:
 
 - **To fix a problem:**
-  > "The checkout submit button isn't giving any feedback or loading spinner when clicked."
+  ```text
+  /graphward The checkout submit button isn't giving any feedback or loading spinner when clicked.
+  ```
 - **To add a feature:**
-  > "Add an export-to-PDF button on the customer invoice page."
-- **To speed up or improve logic:**
-  > "Optimize the order total calculation to handle large baskets faster."
+  ```text
+  /graphward Add an export-to-PDF button on the customer invoice page.
+  ```
+- **To optimize or refactor:**
+  ```text
+  /graphward Optimize the order total calculation to handle large baskets faster.
+  ```
+
+> **How it works:** Calling `/graphward <prompt>` triggers the full engineering pipeline. The `engineering-orchestrator` automatically coordinates the next steps — clarifying requirements, checking dependencies, generating impact reports, executing changes with specialist agents, verifying tests, and syncing the living blueprint. In editors supporting agent mentions (like Antigravity or Claude Code), you can also tag `@engineering-orchestrator /graphward <prompt>`.
+
+#### Available Workflows
+
+| Shortcut | What it does | When to use |
+|----------|--------------|-------------|
+| `/graphward <prompt>` | Full implement → test → sync pipeline | **Default choice for any feature, bugfix, or refactor** |
+| `/scope-requirement <prompt>` | Scope & clarify before implementing | For ambiguous features needing product analysis first |
+| `/decompose-backlog <prompt>` | Break initiatives into Epics & Tickets | For multi-day projects before writing code |
+| `/deliver-backlog` | Implement decomposed backlog feature-by-feature | Enforces human approval per feature before execution |
+| `/map-architecture` | Rebuild architecture & dependency graph | After major structural refactors |
+| `/sync-graphward` | Refresh intelligence after manual edits | When you made manual edits outside AI workflows |
 
 ---
 
@@ -100,22 +115,25 @@ Type your request in plain English. For example:
 
 ```mermaid
 flowchart TD
-    User["Your Plain English Prompt"] --> Orchestrator["engineering-orchestrator"]
+    User["Your Prompt: /graphward <request>"] --> Orchestrator["engineering-orchestrator"]
     Orchestrator --> Clarity{"Is the prompt clear?"}
-    Clarity -->|Vague / Missing Details| Gate["Socratic Gate: Asks you 2-3 friendly multiple-choice questions"]
-    Gate --> Freezing["Freezes your decisions in requirements"]
+    Clarity -->|Vague / Missing Details| Gate["Socratic Gate: Asks 2-3 multiple-choice questions"]
+    Gate --> Freezing["Freezes decisions in requirements"]
     Clarity -->|Clear| Blueprint["Reads Dependency Graph & Negative Constraints"]
     Freezing --> Blueprint
-    Blueprint --> Verify["Runs Project Tests & Checks"]
-    Verify --> Verification{"Did all tests pass?"}
-    Verification -->|Yes| Keep["Keeps change & updates living blueprint"]
+    Blueprint --> Impact["Writes Impact Report (IMP-XXX)"]
+    Impact --> Implement["Implements with Specialist Agents"]
+    Implement --> Verify["Runs Project Tests & Verification Receipts"]
+    Verify --> Verification{"Did all checks pass?"}
+    Verification -->|Yes| Sync["Updates living blueprint (.graphward/) & Change History"]
     Verification -->|No| Revert["Reverts failed change for review"]
 ```
 
-1. **Clarification Gate**: If your prompt is missing details (e.g., "fix the button"), the AI pauses and presents 2–3 multiple-choice options (which screen? visual ripple or loading spinner?). It will never blindly change code on an assumption.
+1. **Clarification Gate**: If your prompt is missing details (e.g., "fix the button"), the AI pauses and presents 2–3 multiple-choice options. It will never blindly change code on an assumption.
 2. **Context Retrieval**: Pulls in only the exact code needed, plus "Negative Constraints" (patterns that previously failed).
-3. **Safe Execution**: Makes the change and tests it. If anything breaks, it rolls back cleanly.
-4. **Blueprint Synchronization**: Updates the internal memory and documentation so your project blueprint stays fresh.
+3. **Impact Report & Implementation**: Analyzes ripple effects first, then makes changes using targeted specialist agents (TDD, security, database).
+4. **Safe Execution**: Executes project test suites and compiles verification receipts. If anything breaks, it rolls back cleanly.
+5. **Blueprint Synchronization**: Updates `.graphward/` documentation, dependency graphs, and change records so project intelligence stays fresh.
 
 
 ---
@@ -138,13 +156,13 @@ For full details, see [SECURITY.md](SECURITY.md).
 
 ## Keeping Intelligence Fresh
 
-When changes go through the GraphWard pipeline (via `@engineering-orchestrator` or `/graphward`), intelligence syncs automatically.
+When changes go through the GraphWard pipeline (via `/graphward`), intelligence syncs automatically.
 
 For edits made outside GraphWard — direct IDE edits, git merges, or other tools — you have two options:
 
 1. **Git hooks (recommended):** Install automatic sync hooks during setup:
    ```bash
-   npx gw install . --ide <your-editor> --hooks --yes
+   npx graphward install . --ide <your-editor> --hooks --yes
    ```
    This adds `post-commit` and `post-merge` hooks that incrementally sync affected intelligence artifacts.
 
@@ -163,24 +181,27 @@ GraphWard includes staleness detection — it scores artifact freshness and warn
 
 | Command | Best For |
 |---|---|
-| `npx gw initialize . --yes` | Default recommended setup with auto-detected providers |
-| `npx gw initialize . --providers native --yes` | Offline, zero-download deterministic setup using built-in parser |
-| `npx gw initialize . --ide cursor --yes` | Explicitly targets a specific editor adapter |
+| `npx graphward initialize . --providers auto` | Default recommended setup with auto-detected providers |
+| `npx graphward initialize . --providers native --yes` | Offline, zero-download deterministic setup using built-in parser |
+| `npx graphward initialize . --ide cursor --yes` | Explicitly targets a specific editor adapter |
+| `npx graphward initialize . --force` | Overwrites existing template files without prompting |
 
 ### Health & Diagnostic Commands
 
+> You can use `npx graphward <cmd>` anywhere, or install globally (`npm i -g graphward`) to use the shorter `gw <cmd>`.
+
 ```bash
 # Check if your project intelligence is healthy and up-to-date
-npx gw health . --strict
+npx graphward health . --strict
 
 # Diagnose installation and tool dependencies
-npx gw doctor .
+npx graphward doctor .
 
 # Run test receipts and verify code safety gates
-npx gw verify .
+npx graphward verify .
 
 # Fast update of the dependency graph after manual file edits
-npx gw sync . --files src/index.ts
+npx graphward sync . --files src/index.ts
 ```
 
 ### What GraphWard Stores in Your Repository

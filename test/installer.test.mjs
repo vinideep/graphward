@@ -8,6 +8,7 @@ import { renderAdapters } from "../dist/adapters/index.js";
 import { install, uninstall, update } from "../dist/installer/index.js";
 import { SKILL_NAMES, WORKFLOW_NAMES } from "../dist/templates.js";
 import { doctor } from "../dist/validation/index.js";
+import { createPromptOverwrite } from "../dist/cli/index.js";
 
 const options = { packageVersion: "3.5.0" };
 
@@ -295,3 +296,77 @@ test("update prompts to overwrite and respects user choice on conflict", async (
   assert.equal(resultOverwrite.conflicts, 0);
   assert.notEqual(await readable(root, relative), "locally modified skill content\n");
 });
+
+test("createPromptOverwrite correctly handles yes, no, accept all, and skip all", async () => {
+  // Test undefined when readline is null/undefined
+  assert.equal(createPromptOverwrite(null), undefined);
+  assert.equal(createPromptOverwrite(undefined), undefined);
+
+  // Test individual yes and no
+  let callCount = 0;
+  const answers = ["y", "n"];
+  const mockReadline = {
+    question: async () => answers[callCount++],
+  };
+  const prompt = createPromptOverwrite(mockReadline);
+  assert.equal(await prompt("file1.txt"), true);
+  assert.equal(await prompt("file2.txt"), false);
+  assert.equal(callCount, 2);
+
+  // Test accept all ('a'): prompts once, then auto-approves all subsequent calls
+  let allCallCount = 0;
+  const mockAllReadline = {
+    question: async () => {
+      allCallCount++;
+      return "a";
+    },
+  };
+  const promptAll = createPromptOverwrite(mockAllReadline);
+  assert.equal(await promptAll("file1.txt"), true);
+  assert.equal(await promptAll("file2.txt"), true);
+  assert.equal(await promptAll("file3.txt"), true);
+  assert.equal(allCallCount, 1);
+
+  // Test skip all ('s'): prompts once, then auto-skips all subsequent calls
+  let skipCallCount = 0;
+  const mockSkipReadline = {
+    question: async () => {
+      skipCallCount++;
+      return "s";
+    },
+  };
+  const promptSkip = createPromptOverwrite(mockSkipReadline);
+  assert.equal(await promptSkip("file1.txt"), false);
+  assert.equal(await promptSkip("file2.txt"), false);
+  assert.equal(await promptSkip("file3.txt"), false);
+  assert.equal(skipCallCount, 1);
+});
+
+test("update with createPromptOverwrite resolves multiple conflicts with Accept all ('a')", async () => {
+  const root = await project();
+  await install(root, ["generic"], options);
+
+  const file1 = ".agents/skills/graph-engine/SKILL.md";
+  const file2 = ".agents/skills/change-detection-engine/SKILL.md";
+  await writeFile(path.join(root, file1), "local edit 1\n");
+  await writeFile(path.join(root, file2), "local edit 2\n");
+
+  let promptCalls = 0;
+  const mockReadline = {
+    question: async () => {
+      promptCalls++;
+      return "a"; // Accept all on first conflict
+    },
+  };
+
+  const result = await update(root, {
+    ...options,
+    promptOverwrite: createPromptOverwrite(mockReadline),
+  });
+
+  assert.equal(result.conflicts, 0);
+  assert.equal(promptCalls, 1); // Prompted only once
+  assert.notEqual(await readable(root, file1), "local edit 1\n");
+  assert.notEqual(await readable(root, file2), "local edit 2\n");
+});
+

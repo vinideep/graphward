@@ -9,23 +9,23 @@ This guide explains how to install and use GraphWard in a new or existing projec
 Install the toolkit from the project root you want to enhance:
 
 ```bash
-npx gw install . --ide codex --yes
+npx graphward install . --ide codex --yes
 ```
 
 Common adapters:
 
 ```bash
-npx gw install . --ide commandcode --yes
-npx gw install . --ide cursor --yes
-npx gw install . --ide claude-code --yes
-npx gw install . --ide gemini-cli --yes
-npx gw install . --ide generic --yes
+npx graphward install . --ide commandcode --yes
+npx graphward install . --ide cursor --yes
+npx graphward install . --ide claude-code --yes
+npx graphward install . --ide gemini-cli --yes
+npx graphward install . --ide generic --yes
 ```
 
 Multiple adapters can be installed together:
 
 ```bash
-npx gw install . --ide codex --ide commandcode --ide cursor --yes
+npx graphward install . --ide codex --ide commandcode --ide cursor --yes
 ```
 
 ## 2. Existing Project Setup
@@ -35,7 +35,7 @@ Use this flow for a brownfield repository.
 1. Install the adapter:
 
    ```bash
-   npx gw install . --ide commandcode --yes
+   npx graphward install . --ide commandcode --yes
    ```
 
 2. Open the project in your AI coding environment.
@@ -91,7 +91,7 @@ Use this flow for a greenfield project.
 2. Install the toolkit:
 
    ```bash
-   npx gw install . --ide commandcode --yes
+   npx graphward install . --ide commandcode --yes
    ```
 
 3. Start project creation:
@@ -157,7 +157,7 @@ For each feature or bugfix:
    derived claims without rewriting canonical knowledge prose:
 
    ```bash
-   npx gw sync . --files src/routes/route-plan.ts,src/providers/carrier.ts
+   npx graphward sync . --files src/routes/route-plan.ts,src/providers/carrier.ts
    ```
 
    A source change reports that model-assisted knowledge synchronization is
@@ -223,31 +223,31 @@ Usually, you do not need to call them manually. `/graphward` invokes them when t
 Check installation health:
 
 ```bash
-npx gw doctor .
+npx graphward doctor .
 ```
 
 Update managed templates:
 
 ```bash
-npx gw update .
+npx graphward update .
 ```
 
 Preview an update:
 
 ```bash
-npx gw update . --dry-run
+npx graphward update . --dry-run
 ```
 
 Generate a local dashboard:
 
 ```bash
-npx gw visualize .
+npx graphward visualize .
 ```
 
 Uninstall managed templates while preserving generated runtime intelligence:
 
 ```bash
-npx gw uninstall .
+npx graphward uninstall .
 ```
 
 ## 9. CommandCode Notes
@@ -255,7 +255,7 @@ npx gw uninstall .
 For CommandCode terminal:
 
 ```bash
-npx gw install . --ide commandcode --yes
+npx graphward install . --ide commandcode --yes
 ```
 
 This writes:

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { readFile, writeFile, mkdir } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { existsSync, realpathSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { createInterface } from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
@@ -72,7 +73,7 @@ Core commands:
 
 Usage:
   graphward install [path] [--ide <id>...] [--yes] [--dry-run] [--force]
-  graphward initialize [path] [--providers auto|full|native] [--offline] [--require-providers] [--yes] [--dry-run]
+  graphward initialize [path] [--providers auto|full|native] [--offline] [--require-providers] [--yes] [--dry-run] [--force]
   graphward providers status|install|repair|upgrade|expose|hide|purge [graphify|cce] [path]
   graphward create [path] [--ide <id>...] [--yes]
   graphward update [path] [--dry-run] [--force]
@@ -440,6 +441,38 @@ async function readStdin(): Promise<string> {
   return Buffer.concat(chunks).toString("utf8");
 }
 
+export function createPromptOverwrite(
+  readline: { question(msg: string): Promise<string> } | null | undefined
+): ((filePath: string) => Promise<boolean>) | undefined {
+  if (!readline) return undefined;
+  let overwriteAll = false;
+  let skipAll = false;
+  return async (filePath: string): Promise<boolean> => {
+    if (overwriteAll) return true;
+    if (skipAll) return false;
+    const answer = await readline.question(
+      `Conflict: ${filePath} has been modified locally. Overwrite? (y/N/a/s) [y=yes, N=no, a=all, s=skip all]: `
+    );
+    const normalized = answer.trim().toLowerCase();
+    if (normalized === "a" || normalized === "all" || normalized === "yes all" || normalized === "ya") {
+      overwriteAll = true;
+      return true;
+    }
+    if (
+      normalized === "s" ||
+      normalized === "skip" ||
+      normalized === "skip all" ||
+      normalized === "q" ||
+      normalized === "quit" ||
+      normalized === "none"
+    ) {
+      skipAll = true;
+      return false;
+    }
+    return normalized === "y" || normalized === "yes";
+  };
+}
+
 async function main(): Promise<void> {
   const options = parseArgs(process.argv.slice(2));
 
@@ -468,12 +501,7 @@ async function main(): Promise<void> {
     readline = createInterface({ input, output });
   }
 
-  const promptOverwrite = readline
-    ? async (filePath: string) => {
-        const answer = await readline.question(`Conflict: ${filePath} has been modified locally. Overwrite? (y/N): `);
-        return answer.trim().toLowerCase() === "y";
-      }
-    : undefined;
+  const promptOverwrite = createPromptOverwrite(readline);
 
   if (options.command === "providers") {
     const { PROVIDER_NAMES, providerStatus, installProvider, inspectProjectProviderRuns, prepareProviders, purgeProjectProviderCache } = await import("../providers/index.js");
@@ -1300,8 +1328,20 @@ async function main(): Promise<void> {
   if (readline) readline.close();
 }
 
-main().catch((error: unknown) => {
-  const message = error instanceof Error ? error.message : String(error);
-  process.stderr.write(`Error: ${message}\n`);
-  process.exitCode = 1;
-});
+function isEntrypoint(): boolean {
+  if (!process.argv[1]) return false;
+  try {
+    return realpathSync(process.argv[1]) === fileURLToPath(import.meta.url);
+  } catch {
+    return false;
+  }
+}
+
+if (isEntrypoint()) {
+  main().catch((error: unknown) => {
+    const message = error instanceof Error ? error.message : String(error);
+    process.stderr.write(`Error: ${message}\n`);
+    process.exitCode = 1;
+  });
+}
+
