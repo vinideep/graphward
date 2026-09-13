@@ -11,7 +11,7 @@ This capability does not modify product code.
 
 ## Context source and scope
 
-Prefer EI's persisted, verified intelligence over re-exploration. If initialization evidence exists, read `.graphward/context/initialization-evidence.json` and request `get_engineering_context` before scanning files. Apply the shared GraphWard project file policy to every discovery pass; record why a root/path was included or excluded. Graphify may corroborate structural hypotheses, and CCE may retrieve exact spans inside the EI-approved neighborhood, but neither provider owns canonical conclusions.
+Prefer GraphWard's persisted, verified intelligence over re-exploration. If initialization evidence exists, read `.graphward/context/initialization-evidence.json` and request `get_engineering_context` before scanning files. Apply the shared GraphWard project file policy to every discovery pass; record why a root/path was included or excluded. Graphify may corroborate structural hypotheses, and CCE may retrieve exact spans inside the GraphWard-approved neighborhood, but neither provider owns canonical conclusions.
 
 If provider health is degraded, continue with native GraphWard extraction and report the fallback. Exclude stale, contested, unverifiable, secret-bearing, generated, vendored, provider-cache, and escaped-symlink evidence from high-confidence findings. Raw provider access is reserved for explicit expert mode.
 

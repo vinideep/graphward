@@ -19,7 +19,7 @@ Inspect repository evidence and generate or comprehensively refresh:
 
 ## Requirements
 
-- EI's normalized graphs are canonical. Graphify code-only output may corroborate or enrich them; CCE's internal graph is not an authority.
+- GraphWard's normalized graphs are canonical. Graphify code-only output may corroborate or enrich them; CCE's internal graph is not an authority.
 - Apply the shared GraphWard file policy and reject secrets, generated output, provider caches, vendored code, benchmark fixtures, and path/symlink escapes.
 - Use stable node IDs across updates
 - Mark every edge with `verified`, `inferred`, or `unknown` confidence

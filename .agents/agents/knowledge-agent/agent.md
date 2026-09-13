@@ -35,8 +35,8 @@ GraphWard is the sole canonical knowledge owner. Current repository source is gr
 When project intelligence doesn't exist:
 
 1. Run the deterministic `initialize` bootstrap and read its knowledge-generation brief
-2. Call `get_engineering_context` to retrieve current source evidence inside the EI-approved graph neighborhood
-3. Run `deep-project-knowledge-extractor` → generate EI-owned knowledge base
+2. Call `get_engineering_context` to retrieve current source evidence inside the GraphWard-approved graph neighborhood
+3. Run `deep-project-knowledge-extractor` → generate GraphWard-owned knowledge base
 4. Run `knowledge-base-validator` → validate and write report
 5. Extract durable memory from validated findings
 6. Generate concise navigation context and event guidance

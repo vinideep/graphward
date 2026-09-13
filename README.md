@@ -1,4 +1,4 @@
-# GraphWard (EI)
+# GraphWard
 
 GraphWard gives AI coding assistants a living blueprint of your codebase so they stop guessing, hallucinating, and breaking working code.
 

@@ -7,14 +7,14 @@ description: Initializes project engineering intelligence by analyzing repositor
 
 Create a trustworthy, evidence-backed project intelligence baseline. Analyze only artifacts present in source code, configuration, tests, infrastructure, and existing documentation. Mark unknowns and uncertainties explicitly — never invent architecture, APIs, schemas, or business rules.
 
-## EI-owned initialization protocol
+## GraphWard-owned initialization protocol
 
-Start with `npx gw initialize . --providers auto --yes`. This deterministic bootstrap applies the shared project file policy, verifies or installs EI's pinned local providers, runs Graphify in code-only mode against an isolated mirror, reconciles that evidence with EI's native graph, indexes the approved source universe in CCE, derives claims, and writes `.graphward/context/KNOWLEDGE-GENERATION-BRIEF.md`.
+Start with `npx gw initialize . --providers auto --yes`. This deterministic bootstrap applies the shared project file policy, verifies or installs GraphWard's pinned local providers, runs Graphify in code-only mode against an isolated mirror, reconciles that evidence with GraphWard's native graph, indexes the approved source universe in CCE, derives claims, and writes `.graphward/context/KNOWLEDGE-GENERATION-BRIEF.md`.
 
 Authority never transfers to a provider:
 
 1. Current repository source, tests, manifests, and Git are ground truth.
-2. EI's knowledge base, claims, ADRs, memory, and normalized graph are canonical engineering intelligence.
+2. GraphWard's knowledge base, claims, ADRs, memory, and normalized graph are canonical engineering intelligence.
 3. Graphify supplies structural extraction evidence only.
 4. CCE supplies current code spans only.
 5. Model synthesis must preserve provenance, confidence, freshness, conflicts, and unknowns.

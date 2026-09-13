@@ -14,7 +14,7 @@ Update only the intelligence affected by a specific change; never regenerate unr
 
 ## Deterministic first steps (run the tools, don't hand-simulate)
 
-1. **Run consolidated synchronization**: call `sync_engineering_knowledge` with the changed files. It refreshes Graphify evidence when healthy, rebuilds/reconciles EI's canonical graph, reindexes CCE's isolated approved source mirror, falls back natively when required, derives claims, and returns knowledge/evidence drift that still needs model synthesis.
+1. **Run consolidated synchronization**: call `sync_engineering_knowledge` with the changed files. It refreshes Graphify evidence when healthy, rebuilds/reconciles GraphWard's canonical graph, reindexes CCE's isolated approved source mirror, falls back natively when required, derives claims, and returns knowledge/evidence drift that still needs model synthesis.
 2. **Re-check evidence** the knowledge base already committed to: `npx gw claims verify --json` — derived claims are re-computed (`verified` / `refuted`), asserted claims are hash-checked (`unverified` / `stale` / `missing`). Refuted, stale and missing claims are your precise worklist.
 3. **Score document freshness**: `npx gw freshness . --json` — flags which knowledge/memory/context docs lag their cited source.
 4. **Update canonical prose narrowly**, then call `validate_change` and re-run strict claims/evidence/health checks. Never refresh citation hashes merely to hide drift.

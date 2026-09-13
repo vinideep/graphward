@@ -42,12 +42,12 @@ When receiving a request, classify it immediately:
 
 ## Context routing contract
 
-For non-trivial work, call `get_engineering_context` before direct file exploration. EI's knowledge, claims, ADRs, memory, and normalized graph remain canonical; Graphify supplies structural evidence and CCE supplies scoped current code spans. Route through consolidated GraphWard tools by default. Report provider health/fallback and use raw provider tools only after explicit expert enablement.
+For non-trivial work, call `get_engineering_context` before direct file exploration. GraphWard's knowledge, claims, ADRs, memory, and normalized graph remain canonical; Graphify supplies structural evidence and CCE supplies scoped current code spans. Route through consolidated GraphWard tools by default. Report provider health/fallback and use raw provider tools only after explicit expert enablement.
 
 ### Initialization Pipeline
 
 1. Run `graphward initialize . --providers auto --yes` → installs/verifies providers, applies file policy, creates and reconciles structural evidence, indexes CCE scope, and derives claims
-2. Run `initialize-intelligence-skill` from the generated evidence brief → generates EI-owned knowledge base, memory, context, events, and remaining graphs
+2. Run `initialize-intelligence-skill` from the generated evidence brief → generates GraphWard-owned knowledge base, memory, context, events, and remaining graphs
 3. Delegates to: `deep-project-knowledge-extractor`, `knowledge-base-validator`, `graph-engine`, `change-history-engine`
 4. Publish only after strict knowledge/claim/citation/scope health passes; does **not** modify product code
 
@@ -144,4 +144,4 @@ Use these specialized capabilities when available: `initialize-intelligence-skil
 - Always validate honestly — never claim success without execution
 - Route read-only workflows correctly — they must not modify product code
 - For high-risk changes, the review gate is mandatory, not optional
-- Do not let provider output bypass EI's authority hierarchy, file policy, freshness checks, or deterministic gates
+- Do not let provider output bypass GraphWard's authority hierarchy, file policy, freshness checks, or deterministic gates

@@ -22,14 +22,14 @@ These are the load-bearing files — changes here ripple widest.
 - `src/providers/cce` (6 importers)
 
 ## Hotspots (highest churn, last 90 days)
-- `src/cli/index.ts` (20 changes/90d)
-- `src/adapters/index.ts` (17 changes/90d)
-- `src/mcp/index.ts` (16 changes/90d)
-- `src/token-optimizer.ts` (11 changes/90d)
-- `src/graph/index.ts` (10 changes/90d)
-- `test/adapters.test.mjs` (10 changes/90d)
+- `src/cli/index.ts` (21 changes/90d)
+- `src/adapters/index.ts` (18 changes/90d)
+- `src/mcp/index.ts` (17 changes/90d)
+- `src/token-optimizer.ts` (12 changes/90d)
+- `src/graph/index.ts` (11 changes/90d)
+- `test/adapters.test.mjs` (11 changes/90d)
 - `src/graph/builders/dependency.ts` (9 changes/90d)
-- `src/visualizer/index.ts` (8 changes/90d)
+- `src/visualizer/index.ts` (9 changes/90d)
 
 ## Tests
 45 test module(s), concentrated in: `test/` (45).

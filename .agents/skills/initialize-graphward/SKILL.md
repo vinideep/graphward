@@ -25,9 +25,9 @@ Analyzes this repository thoroughly without changing product code. Produces a co
 
 ## Execution Steps
 
-1. **Bootstrap deterministically** — Run `graphward initialize . --providers auto --yes`. This installs/verifies pinned local providers, applies the shared file policy, creates Graphify structural evidence, reconciles EI's canonical graph, indexes the approved CCE scope, derives claims, and writes the knowledge-generation brief. Report degraded native fallback honestly; use `--require-providers` only when requested.
+1. **Bootstrap deterministically** — Run `graphward initialize . --providers auto --yes`. This installs/verifies pinned local providers, applies the shared file policy, creates Graphify structural evidence, reconciles GraphWard's canonical graph, indexes the approved CCE scope, derives claims, and writes the knowledge-generation brief. Report degraded native fallback honestly; use `--require-providers` only when requested.
 2. **Discover** — Read `initialization-evidence.json` and `KNOWLEDGE-GENERATION-BRIEF.md`, then call `get_engineering_context` before direct source exploration. Scan only unresolved packages, runtimes, build systems, APIs, databases, auth, CI, and tests.
-3. **Extract** — Generate EI-owned knowledge-base documents with source citations. Graphify and CCE are evidence providers, never canonical authors.
+3. **Extract** — Generate GraphWard-owned knowledge-base documents with source citations. Graphify and CCE are evidence providers, never canonical authors.
 4. **Validate** — Audit claims against current source; write validation report; quarantine stale, contested, unverifiable, and out-of-scope evidence
 5. **Generate Memory** — Extract durable decisions and patterns
 6. **Generate Context** — Create concise AI navigation maps
