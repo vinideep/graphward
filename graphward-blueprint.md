@@ -249,7 +249,7 @@ Select IDE Select Provider Select Modules
 
 Generate:
 
-.agents knowledge-base .changes engineering.config.json
+.agents knowledge-base .changes .graphward/gw.config.json
 
 ------------------------------------------------------------------------
 

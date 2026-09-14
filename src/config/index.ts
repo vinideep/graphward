@@ -20,7 +20,7 @@ export interface ProvidersConfig {
   exposeRawMcp?: boolean;
 }
 
-export interface EiConfig {
+export interface GwConfig {
   schemaVersion: number;
   hooks?: Record<string, unknown>;
   tokenBudgets: Record<string, number>;
@@ -31,7 +31,9 @@ export interface EiConfig {
   [key: string]: unknown;
 }
 
-const DEFAULT_CONFIG: EiConfig = {
+export type EiConfig = GwConfig;
+
+const DEFAULT_CONFIG: GwConfig = {
   schemaVersion: GW_CONFIG_SCHEMA_VERSION,
   hooks: {},
   tokenBudgets: {},
@@ -106,24 +108,26 @@ function normalizeConfig(raw: Record<string, unknown>, legacy: Record<string, un
   };
 }
 
-export async function loadEiConfig(root: string): Promise<EiConfig> {
+export async function loadGwConfig(root: string): Promise<GwConfig> {
   const [raw, legacy] = await Promise.all([
     readJson(path.join(root, GW_CONFIG_PATH)),
     readJson(path.join(root, LEGACY_CONFIG_PATH)),
   ]);
   return normalizeConfig(raw ?? DEFAULT_CONFIG, legacy);
 }
+export const loadEiConfig = loadGwConfig;
 
-export function defaultEiConfig(overrides: Record<string, unknown> = {}): EiConfig {
+export function defaultGwConfig(overrides: Record<string, unknown> = {}): GwConfig {
   return normalizeConfig({ ...DEFAULT_CONFIG, ...overrides });
 }
+export const defaultEiConfig = defaultGwConfig;
 
 /**
  * Consolidate the legacy token-budget file into gw.config.json. The write is
  * atomic and unknown user keys are preserved. The legacy file is deliberately
  * not deleted: removing user-owned configuration needs an explicit cleanup.
  */
-export async function migrateEiConfig(root: string): Promise<{ changed: boolean; path: string; config: EiConfig }> {
+export async function migrateGwConfig(root: string): Promise<{ changed: boolean; path: string; config: GwConfig }> {
   const configPath = path.join(root, GW_CONFIG_PATH);
   const [raw, legacy] = await Promise.all([readJson(configPath), readJson(path.join(root, LEGACY_CONFIG_PATH))]);
   const config = normalizeConfig(raw ?? DEFAULT_CONFIG, legacy);
@@ -136,14 +140,15 @@ export async function migrateEiConfig(root: string): Promise<{ changed: boolean;
   await rename(temporary, configPath);
   return { changed: true, path: GW_CONFIG_PATH, config };
 }
+export const migrateEiConfig = migrateGwConfig;
 
-export async function setProviderExpertMode(root: string, enabled: boolean): Promise<EiConfig> {
+export async function setProviderExpertMode(root: string, enabled: boolean): Promise<GwConfig> {
   return updateProviderConfig(root, { exposeRawMcp: enabled });
 }
 
-export async function updateProviderConfig(root: string, patch: Partial<ProvidersConfig>): Promise<EiConfig> {
-  const config = await loadEiConfig(root);
-  const updated: EiConfig = { ...config, providers: { ...config.providers, ...patch } };
+export async function updateProviderConfig(root: string, patch: Partial<ProvidersConfig>): Promise<GwConfig> {
+  const config = await loadGwConfig(root);
+  const updated: GwConfig = { ...config, providers: { ...config.providers, ...patch } };
   const configPath = path.join(root, GW_CONFIG_PATH);
   const temporary = `${configPath}.tmp-${process.pid}`;
   await mkdir(path.dirname(configPath), { recursive: true });

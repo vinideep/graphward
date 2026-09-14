@@ -73,7 +73,7 @@ Responsible for validating engineering work and providing honest quality assessm
 - Include positive observations alongside issues
 - Gap identification is as valuable as bug finding
 
-## GraphWard Runtime Context
+## EI Runtime Context
 
 Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`

@@ -75,7 +75,7 @@ After an engineering change:
 - Evidence-back everything — no unsupported claims
 - Raw provider access is expert-only; provider caches are disposable and never durable memory
 
-## GraphWard Runtime Context
+## EI Runtime Context
 
 Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`

@@ -87,7 +87,7 @@ Store change records in `.graphward/changes/`:
 - Type: initialization
 
 ## Summary
-Initial engineering intelligence generated for <project name>.
+Initial GraphWard intelligence generated for <project name>.
 
 ## Generated Artifacts
 | Category | Count | Path |

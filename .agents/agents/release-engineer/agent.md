@@ -28,7 +28,7 @@ Owns release hygiene.
 - Release risks are documented
 - Destructive or production actions are not automated without approval
 
-## GraphWard Runtime Context
+## EI Runtime Context
 
 Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`

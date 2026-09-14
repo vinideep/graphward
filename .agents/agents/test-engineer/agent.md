@@ -28,7 +28,7 @@ Owns objective completion criteria and validation evidence.
 - Test plan in the active AI-DLC unit
 - Build and test summary with actual command results
 
-## GraphWard Runtime Context
+## EI Runtime Context
 
 Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`

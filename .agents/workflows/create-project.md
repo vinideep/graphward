@@ -5,7 +5,7 @@ description: Create a new project from scratch with full AIDLC — from architec
 
 # Create Project
 
-Chain `greenfield-architect` → scaffold → `initialize-intelligence-skill` → `convention-detector` to produce a fully instrumented project with engineering intelligence from day one.
+Chain `greenfield-architect` → scaffold → `initialize-intelligence-skill` → `convention-detector` to produce a fully instrumented project with GraphWard intelligence from day one.
 
 ## Input
 

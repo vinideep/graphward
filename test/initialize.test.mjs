@@ -57,8 +57,8 @@ test("one initialization pipeline produces EI-owned graph, claims, CCE index met
   assert.match(await readFile(path.join(root, ".graphward", "providers", "graphify", "GRAPH_REPORT.md"), "utf8"), /Raw Graphify report/);
   const claims = JSON.parse(await readFile(path.join(root, ".graphward", "claims", "claims.json"), "utf8"));
   assert.ok(claims.claims.length > 0);
-  assert.match(await readFile(path.join(root, ".graphward", "context", "KNOWLEDGE-GENERATION-BRIEF.md"), "utf8"), /EI owns the canonical knowledge base/);
-  assert.match(await readFile(path.join(root, ".graphward", "knowledge-base", "00-project-overview.md"), "utf8"), /EI owns canonical knowledge/);
+  assert.match(await readFile(path.join(root, ".graphward", "context", "KNOWLEDGE-GENERATION-BRIEF.md"), "utf8"), /GraphWard owns the canonical knowledge base/);
+  assert.match(await readFile(path.join(root, ".graphward", "knowledge-base", "00-project-overview.md"), "utf8"), /GraphWard owns canonical knowledge/);
   const evidenceHashes = JSON.parse(await readFile(path.join(root, ".graphward", "knowledge-base", ".evidence-hashes.json"), "utf8"));
   assert.ok(evidenceHashes.hashes.length > 0);
   assert.match(await readFile(path.join(root, ".graphward", ".gitignore"), "utf8"), /^providers\/$/m);

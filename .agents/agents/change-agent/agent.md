@@ -80,7 +80,7 @@ Prepare this handoff for the Quality Agent and Knowledge Agent:
 - Record honest results — failures are valuable information
 - Return concrete change evidence, not vague summaries
 
-## GraphWard Runtime Context
+## EI Runtime Context
 
 Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`

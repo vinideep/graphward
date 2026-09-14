@@ -3,3 +3,8 @@ memory/users/
 telemetry/
 providers/
 .verify/
+knowledge-base/
+graph/
+claims/
+context/
+reports/

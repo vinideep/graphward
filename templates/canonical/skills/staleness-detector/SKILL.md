@@ -6,7 +6,7 @@ version: 3.0.0
 
 # Staleness Detector
 
-Monitor the freshness of all engineering intelligence documents by comparing their last-updated timestamps against the modification times of the source files they describe. Produce a freshness report and trigger incremental sync for stale documents.
+Monitor the freshness of all GraphWard intelligence documents by comparing their last-updated timestamps against the modification times of the source files they describe. Produce a freshness report and trigger incremental sync for stale documents.
 
 **Run the deterministic scorer first:** `npx gw freshness . [--threshold 60] [--json]` computes each document's 0-100 freshness from its cited evidence paths and their git history, and writes the report. Documents with no citations are reported `unverifiable` rather than fresh. Use the steps below to act on that output, not to recompute it by hand.
 

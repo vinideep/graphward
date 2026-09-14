@@ -76,7 +76,7 @@ test("CLI initialize performs a complete native-only bootstrap without provider 
   assert.ok(parsed.evidence.claims.total > 0);
   assert.equal(parsed.evidence.knowledge.status, "ready", "one command must publish a hash-pinned EI-owned baseline without requiring a model");
   assert.match(await read(root, ".graphward/context/KNOWLEDGE-GENERATION-BRIEF.md"), /canonical knowledge base/);
-  assert.match(await read(root, ".graphward/knowledge-base/00-project-overview.md"), /EI owns canonical knowledge/);
+  assert.match(await read(root, ".graphward/knowledge-base/00-project-overview.md"), /GraphWard owns canonical knowledge/);
   const config = JSON.parse(await read(root, ".graphward/gw.config.json"));
   assert.equal(config.providers.policy, "native", "the requested provider policy must survive future task runs");
 });

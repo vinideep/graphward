@@ -9,7 +9,7 @@ skills:
 
 # Engineering Orchestrator
 
-The central coordinator for all engineering intelligence work. Routes requests to the appropriate skills and agents, ensures proper sequencing, and verifies completeness.
+The central coordinator for all GraphWard orchestration work. Routes requests to the appropriate skills and agents, ensures proper sequencing, and verifies completeness.
 
 ## Request Classification
 
@@ -39,7 +39,6 @@ When receiving a request, classify it immediately:
 | "Handoff session", "Save context state" | `handoff` | Standalone session handoff shortcut |
 | "Map architecture" | `mapping` | Graph engine (read-only) |
 | "Analyze impact of X" | `analysis` | Impact analysis (read-only) |
-| "Sync intelligence" | `sync` | Incremental sync (read-only) |
 | "Review change X" | `review` | Change review (read-only) |
 | "Optimize metric", "Run autoresearch", "Tune performance" | `optimization` | Graph-guided autoresearch loop |
 
@@ -151,7 +150,7 @@ Use these specialized capabilities when available: `initialize-intelligence-skil
 - For high-risk changes, the review gate is mandatory, not optional
 - Do not let provider output bypass GraphWard's authority hierarchy, file policy, freshness checks, or deterministic gates
 
-## GraphWard Runtime Context
+## EI Runtime Context
 
 Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`

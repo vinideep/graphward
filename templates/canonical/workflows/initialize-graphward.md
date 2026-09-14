@@ -1,6 +1,6 @@
 ---
 name: initialize-graphward
-description: Initialize evidence-based engineering intelligence for the current project.
+description: Initialize evidence-based GraphWard intelligence for the current project.
 ---
 
 # Initialize GraphWard

@@ -2,7 +2,7 @@ import { lstat, readdir, readFile, realpath } from "node:fs/promises";
 import path from "node:path";
 import { loadEiConfig, type ProjectFilesConfig } from "../config/index.js";
 
-export type PolicySource = "explicit-include" | "explicit-exclude" | "eiignore" | "gitignore" | "built-in" | "default" | "safety";
+export type PolicySource = "explicit-include" | "explicit-exclude" | "gwignore" | "eiignore" | "gitignore" | "built-in" | "default" | "safety";
 
 export interface FileDecision {
   path: string;
@@ -13,7 +13,7 @@ export interface FileDecision {
 }
 
 interface IgnoreRule {
-  source: "eiignore" | "gitignore";
+  source: "gwignore" | "eiignore" | "gitignore";
   pattern: string;
   include: boolean;
   regex: RegExp;
@@ -29,7 +29,7 @@ export interface CollectProjectFilesOptions {
 // indexing them as application source causes provider output to outrank the
 // repository it is meant to describe.
 const SAFETY_EXCLUDES = [
-  "node_modules/", ".git/", ".graphward/", "dist/", "build/", "coverage/",
+  "node_modules/", ".git/", ".graphward/", ".engineering-intelligence/", "dist/", "build/", "coverage/",
   "__pycache__/", ".venv/", "venv/", "vendor/", "target/", ".gradle/", ".next/", ".cache/",
   ".agent/", ".agents/", ".claude/", ".cursor/", ".codex/", ".gemini/", ".commandcode/",
   ".github/skills/", ".github/agents/", ".github/prompts/",
@@ -126,13 +126,15 @@ export class ProjectFilePolicy {
 
   static async load(root: string): Promise<ProjectFilePolicy> {
     const resolved = path.resolve(root);
-    const [realRoot, config, eiRules, gitRules] = await Promise.all([
+    const [realRoot, config, gwRules, eiRules, gitRules] = await Promise.all([
       realpath(resolved).catch(() => resolved),
       loadEiConfig(resolved),
+      readRules(resolved, ".gwignore", "gwignore"),
       readRules(resolved, ".eiignore", "eiignore"),
       readRules(resolved, ".gitignore", "gitignore"),
     ]);
-    return new ProjectFilePolicy(resolved, realRoot, config.projectFiles, eiRules, gitRules);
+    const ignoreRules = gwRules.length > 0 ? gwRules : eiRules;
+    return new ProjectFilePolicy(resolved, realRoot, config.projectFiles, ignoreRules, gitRules);
   }
 
   explain(inputPath: string, options: { directory?: boolean; realPath?: string } = {}): FileDecision {
@@ -157,7 +159,7 @@ export class ProjectFilePolicy {
     const pathForRules = options.directory && !relative.endsWith("/") ? `${relative}/` : relative;
     const safetyExclusion = SAFETY_EXCLUDES.find((pattern) => matches(pattern, pathForRules));
     if (safetyExclusion) {
-      return { path: relative, included: false, source: "safety", pattern: safetyExclusion, reason: "generated, vendored, cache, or EI provider path" };
+      return { path: relative, included: false, source: "safety", pattern: safetyExclusion, reason: "generated, vendored, cache, or GraphWard provider path" };
     }
     const explicitInclude = [...(this.config.include ?? [])].reverse().find((pattern) => matches(pattern, pathForRules));
     if (explicitInclude) {
@@ -168,9 +170,9 @@ export class ProjectFilePolicy {
       return { path: relative, included: false, source: "explicit-exclude", pattern: explicitExclude, reason: "matched projectFiles.exclude" };
     }
 
-    const ei = lastRule(this.eiRules, pathForRules);
-    if (ei) {
-      return { path: relative, included: ei.include, source: "eiignore", pattern: ei.pattern, reason: ei.include ? "re-included by .eiignore" : "excluded by .eiignore" };
+    const gw = lastRule(this.eiRules, pathForRules);
+    if (gw) {
+      return { path: relative, included: gw.include, source: gw.source, pattern: gw.pattern, reason: gw.include ? `re-included by .${gw.source}` : `excluded by .${gw.source}` };
     }
     const git = lastRule(this.gitRules, pathForRules);
     if (git) {

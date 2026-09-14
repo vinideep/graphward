@@ -36,7 +36,7 @@ Owns architecture during AI-DLC Inception and Construction.
 - High-risk alternatives are captured in ADRs
 - API and data boundaries are explicit before code generation
 
-## GraphWard Runtime Context
+## EI Runtime Context
 
 Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`

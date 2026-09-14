@@ -424,7 +424,7 @@ export async function runVerification(root: string, options: VerifyOptions = {})
 
   let verdict: "pass" | "fail" = (originalCommandsLength > 0 && runs.every((r) => r.exitCode === 0)) ? "pass" : "fail";
 
-  if (verdict === "pass" && (options.provenance === "agent" || options.provenance == null)) {
+  if (verdict === "pass" && options.provenance === "agent") {
     const currentFiles = Object.keys(files);
     if (currentFiles.length > 0) {
       let isAgentOnly = true;
@@ -462,7 +462,7 @@ export async function runVerification(root: string, options: VerifyOptions = {})
     gitAvailable: inGitRepo,
     verdict,
     verificationHash,
-    provenance: options.provenance ?? "agent"
+    provenance: options.provenance ?? "human"
   };
 
   await writeRecord(root, record);

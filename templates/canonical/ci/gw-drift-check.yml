@@ -5,11 +5,11 @@
 # This is the CI-side counterpart to the local Stop/PreToolUse enforcement hooks:
 # it stops stale documentation from merging even when contributors skip the hooks.
 #
-# Adopt it by copying this file to `.github/workflows/ei-drift-check.yml`.
+# Adopt it by copying this file to `.github/workflows/gw-drift-check.yml`.
 # It is intentionally NOT installed automatically — a merge-blocking gate should
 # be a deliberate choice. Fail-safe: repos with no committed intelligence pass.
 
-name: EI Drift Check
+name: GraphWard Drift Check
 
 on:
   pull_request:
@@ -31,7 +31,7 @@ jobs:
 
       - name: Evaluate intelligence freshness
         run: |
-          npx --yes gw freshness . --threshold "${EI_FRESHNESS_THRESHOLD:-60}" --json > freshness.json
+          npx --yes gw freshness . --threshold "${GW_FRESHNESS_THRESHOLD:-${EI_FRESHNESS_THRESHOLD:-60}}" --json > freshness.json
           node -e '
             const r = JSON.parse(require("node:fs").readFileSync("freshness.json", "utf8"));
             if (!r.scores || r.scores.length === 0) {
@@ -50,4 +50,4 @@ jobs:
             }
           '
         env:
-          EI_FRESHNESS_THRESHOLD: "60"
+          GW_FRESHNESS_THRESHOLD: "60"

@@ -11,6 +11,10 @@ such as `/graphward` and `/sync-graphward`. They
 are not removed during an update, so existing projects can adopt agents
 incrementally.
 
+## Agent Reasoning
+
+- **Think First:** Before making any tool calls, you must use a `<think>...</think>` block to state your reasoning, formulate hypotheses, and assess risks.
+
 ## Pre-Edit Requirements
 
 When `.graphward/knowledge-base/` exists, consult relevant slices of the documents, `.graphward/context/`, and `.graphward/graph/` before non-trivial project edits. Do not load entire intelligence directories by default.

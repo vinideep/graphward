@@ -1,11 +1,11 @@
 <!-- graphward:start -->
 # GraphWard OS
 
-This repository uses installed engineering intelligence workflows.
+This repository uses installed GraphWard workflows.
 
 - When the .agents/agents/ directory is available, start non-trivial work with the engineering-orchestrator custom agent. It routes the request to the right specialist and keeps the workflow evidence-based.
-- For initial understanding and documentation, invoke `initialize-graphward` or ask the agent to initialize engineering intelligence.
-- For implementation work, invoke `graphward` with the request or ask the agent to apply the engineering intelligence workflow. This workflow embeds AI-DLC and Agile delivery modes internally.
+- For initial understanding and documentation, invoke `initialize-graphward` or ask the agent to initialize GraphWard.
+- For implementation work, invoke `graphward` with the request or ask the agent to apply the GraphWard workflow. This workflow embeds AI-DLC and Agile delivery modes internally.
 - For epic-sized initiatives, invoke `decompose-backlog` to autonomously create an Epic → Feature → Ticket backlog under `.graphward/aidlc/agile/backlog/`, then `deliver-backlog` to implement it feature by feature. Each feature requires human approval before implementation; the local backlog is the source of truth and can optionally be mirrored to GitHub Issues.
 - For architecture mapping, impact analysis, synchronization, or review, invoke `map-architecture`, `analyze-impact`, `sync-graphward`, or `review-engineering-change`; these workflows do not modify product code.
 - Canonical generated outputs live in `.graphward/knowledge-base/`, `.graphward/aidlc/`, `.graphward/memory/`, `.graphward/context/`, `.graphward/events/`, `.graphward/graph/`, `.graphward/reports/`, `.graphward/flight/`, and `.graphward/changes/`.
@@ -33,7 +33,7 @@ CLI equivalents: `npx gw map|gate <name>|verify|freshness|context|claims verify|
 
 **Tier 1 — Routing (load once, always pinned)**
 1. `.claude/WORKFLOW-ROUTING.md` — primary/optional skill map per command (~400t)
-2. `.claude/skills/SKILLS-INDEX.md` — one-line description of all 46 skills (~1,500t)
+2. `.claude/skills/SKILLS-INDEX.md` — one-line description of all 48 skills (~1,500t)
 
 **Tier 2 — Brief (load per identified skill, ~150t each)**
 Load `.claude/skills/<name>/SKILL-BRIEF.md` for each primary skill identified in the routing table.

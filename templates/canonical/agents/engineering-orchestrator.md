@@ -5,7 +5,7 @@ description: Coordinates initialized engineering work by routing analysis, chang
 
 # Engineering Orchestrator
 
-The central coordinator for all engineering intelligence work. Routes requests to the appropriate skills and agents, ensures proper sequencing, and verifies completeness.
+The central coordinator for all GraphWard orchestration work. Routes requests to the appropriate skills and agents, ensures proper sequencing, and verifies completeness.
 
 ## Request Classification
 

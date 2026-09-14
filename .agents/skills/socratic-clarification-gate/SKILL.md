@@ -45,6 +45,25 @@ Never begin writing code or generating impact reports while requirements, non-fu
    - Call `check_aidlc_gate` with `phase: "inception"` before transitioning into Construction.
    - If the gate returns `status: "blocked"`, read the `blockers` array, resolve each blocker, and re-run the gate. Construction is strictly blocked while unresolved blocking questions remain.
 
+## Configuration
+
+The clarity threshold is configurable via `.graphward/gw.config.json`:
+
+```json
+{
+  "clarityThreshold": 75
+}
+```
+
+| Value | Effect |
+|-------|--------|
+| `0` | Disables the gate entirely — all prompts pass |
+| `1-74` | Relaxed gate — only extremely vague prompts are stopped |
+| `75` (default) | Standard gate — prompts with unspecified architectural constraints are questioned |
+| `76-100` | Strict gate — more prompts trigger clarification questions |
+
+Power users who write precise, well-scoped prompts can lower the threshold to reduce friction.
+
 ## Tools
 
 - `assess_prompt_clarity`: Assess prompt ambiguity, missing NFRs, and architectural trade-offs. Returns `{ isClear, score, ambiguities, options }`.

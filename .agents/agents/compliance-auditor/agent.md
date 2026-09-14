@@ -25,7 +25,7 @@ Owns compliance and audit evidence.
 - Sensitive data handling is documented
 - Approval records exist for controlled actions
 
-## GraphWard Runtime Context
+## EI Runtime Context
 
 Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`

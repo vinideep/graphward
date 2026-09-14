@@ -169,7 +169,7 @@ const TOOLS = [
   {
     name: "get_context",
     description:
-      "Compatibility alias for get_engineering_context. Returns the ContextPackV2 Markdown summary built from verified EI knowledge, EI's normalized graph, current scoped source evidence, and explicit provider fallback.",
+      "Compatibility alias for get_engineering_context. Returns the ContextPackV2 Markdown summary built from verified GraphWard knowledge, GraphWard's normalized graph, current scoped source evidence, and explicit provider fallback.",
     inputSchema: {
       type: "object" as const,
       required: ["task"],
@@ -219,7 +219,7 @@ const TOOLS = [
 
 /** Tool names and one-line purposes, for the installed instructions. */
 export const MCP_TOOL_SUMMARY: ReadonlyArray<readonly [string, string]> = [
-  ["get_engineering_context", "build ContextPackV2 from verified EI knowledge, canonical structure, and current scoped code"],
+  ["get_engineering_context", "build ContextPackV2 from verified GraphWard knowledge, canonical structure, and current scoped code"],
   ["analyze_change_impact", "compute direct and indirect impact, affected tests, risks, and unknowns"],
   ["validate_change", "run impact, safety gates, claims, knowledge, and citation validation"],
   ["sync_engineering_knowledge", "refresh affected graph, provider indexes, claims, and knowledge health after edits"],

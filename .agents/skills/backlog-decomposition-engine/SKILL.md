@@ -145,7 +145,7 @@ Implementation of this feature's tickets must not begin until a human records
 - Estimate: S | M | L
 - Risk: low | medium | high
 - Depends On: TKT-XXX (or none)
-<!-- Use proposed: prefix for entities not yet in the graph; use pkg: for external packages -->
+
 - Target Graph Nodes:
   - module:<repo-relative-path>
   - symbol:<repo-relative-path>#<symbolName>
@@ -204,4 +204,3 @@ Implementation of this feature's tickets must not begin until a human records
 - Triggers: `deliver-backlog` (per-feature approval + implementation), `issue-tracker-sync-engine` (optional tracker sync)
 - Pre-flight: `socratic-clarification-gate` (when initiative has 3+ ambiguities before decomposition)
 - Used by: `graphward-skill` (when epic-sized work is detected)
-

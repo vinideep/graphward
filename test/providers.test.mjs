@@ -121,7 +121,7 @@ test("managed provider activation rejects path escape and executable fingerprint
   await writeFile(currentPath, JSON.stringify({ executable: "/tmp/not-owned-by-ei", fingerprint: "bad" }));
   let status = await providerStatus("graphify", { providerHome: home, runner: fail });
   assert.equal(status.health, "error");
-  assert.match(status.message, /outside EI/);
+  assert.match(status.message, /outside GraphWard/);
 
   const executable = path.join(home, "graphify", "0.9.29", "darwin-arm64", "releases", "abc", "bin", "graphify");
   await mkdir(path.dirname(executable), { recursive: true });

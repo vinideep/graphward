@@ -1,6 +1,6 @@
 ---
 name: initialize-intelligence-skill
-description: Initializes project engineering intelligence by analyzing repository evidence and generating knowledge, context, memory, event guidance, architecture graphs, and an initialization change record. Invoke when onboarding a repository or when asked to initialize engineering intelligence.
+description: Initializes GraphWard project intelligence by analyzing repository evidence and generating knowledge, context, memory, event guidance, architecture graphs, and an initialization change record. Invoke when onboarding a repository or when asked to initialize GraphWard.
 ---
 
 # Initialize GraphWard
@@ -14,7 +14,7 @@ Start with `npx gw initialize . --providers auto --yes`. This deterministic boot
 Authority never transfers to a provider:
 
 1. Current repository source, tests, manifests, and Git are ground truth.
-2. GraphWard's knowledge base, claims, ADRs, memory, and normalized graph are canonical engineering intelligence.
+2. GraphWard's knowledge base, claims, ADRs, memory, and normalized graph are canonical project intelligence.
 3. Graphify supplies structural extraction evidence only.
 4. CCE supplies current code spans only.
 5. Model synthesis must preserve provenance, confidence, freshness, conflicts, and unknowns.

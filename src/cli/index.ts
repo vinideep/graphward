@@ -65,6 +65,7 @@ interface Options {
   area?: string;
   ttlDays: number;
   share: boolean;
+  provenance?: "human" | "agent" | "unknown";
 }
 
 function usage(all = false): string {
@@ -174,6 +175,7 @@ function parseArgs(args: string[]): Options {
   let area: string | undefined;
   let ttlDays = 30;
   let share = false;
+  let provenance: "human" | "agent" | "unknown" | undefined;
 
   for (let index = 0; index < remaining.length; index += 1) {
     const arg = remaining[index];
@@ -330,6 +332,12 @@ function parseArgs(args: string[]): Options {
       area = remaining[++index];
     } else if (arg.startsWith("--area=")) {
       area = arg.slice("--area=".length);
+    } else if (arg === "--provenance") {
+      const val = remaining[++index];
+      if (val === "human" || val === "agent" || val === "unknown") provenance = val;
+    } else if (arg.startsWith("--provenance=")) {
+      const val = arg.slice("--provenance=".length);
+      if (val === "human" || val === "agent" || val === "unknown") provenance = val as any;
     } else if (arg.startsWith("-")) {
       throw new Error(`Unknown option "${arg}".`);
     } else if (command === "hook" && hookEvent === undefined) {
@@ -402,6 +410,7 @@ function parseArgs(args: string[]): Options {
     area,
     ttlDays,
     share,
+    provenance,
   };
 }
 
@@ -578,7 +587,7 @@ async function main(): Promise<void> {
     });
     if (options.json) output.write(`${JSON.stringify(result, null, 2)}\n`);
     else if (!options.dryRun && result.generationBriefPath) {
-      output.write(`Initialization evidence is ready. Run the installed initialize-graphward workflow to synthesize and validate EI-owned knowledge from ${result.generationBriefPath}.\n`);
+      output.write(`Initialization evidence is ready. Run the installed initialize-graphward workflow to synthesize and validate GraphWard-owned knowledge from ${result.generationBriefPath}.\n`);
     }
     process.exitCode = result.ok ? 0 : 1;
     if (readline) readline.close();
@@ -702,6 +711,7 @@ async function main(): Promise<void> {
       commands: config.verifyCommands.length > 0 ? config.verifyCommands : undefined,
       impactOnly: !options.full,
       changedFiles: cf,
+      provenance: options.provenance ?? "human",
     });
     if (options.json) {
       output.write(`${JSON.stringify(record, null, 2)}\n`);

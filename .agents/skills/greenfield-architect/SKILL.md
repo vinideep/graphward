@@ -5,7 +5,7 @@ description: Interview-based skill for new greenfield projects. Conducts a struc
 
 # Greenfield Architect
 
-Guide a developer from zero to a fully scaffolded, opinionated project with engineering intelligence pre-configured. This skill operates in three phases: requirements interview, architecture generation, and scaffold output.
+Guide a developer from zero to a fully scaffolded, opinionated project with GraphWard intelligence pre-configured. This skill operates in three phases: requirements interview, architecture generation, and scaffold output.
 
 ## Inputs
 
@@ -108,14 +108,14 @@ project-root/
 │   └── e2e/
 ├── .github/
 │   └── workflows/
-├── .graphward/knowledge-base/             # Pre-filled engineering intelligence
+├── .graphward/knowledge-base/             # Pre-filled GraphWard intelligence
 ├── .graphward/
+│   ├── gw.config.json
 │   ├── memory/
 │   ├── context/
 │   ├── events/
 │   ├── graph/
 │   └── reports/
-├── engineering.config.json
 ├── .env.example
 └── ...config files
 ```
@@ -181,7 +181,7 @@ Generate all files for the new project.
 
 | File | Content |
 |---|---|
-| `engineering.config.json` | Project metadata, tech stack, conventions, sync settings |
+| `.graphward/gw.config.json` | Project metadata, tech stack, conventions, sync settings |
 | `.env.example` | All required environment variables with placeholder values and comments |
 | `tsconfig.json` / `pyproject.toml` / etc. | Language-appropriate config with strict settings |
 | `.eslintrc` / `ruff.toml` / etc. | Linter config matching conventions |
@@ -259,7 +259,7 @@ Generate starter event guidance files with generic templates appropriate for the
 11. **Generate memory** — Pre-fill memory with decisions and constraints.
 12. **Generate context** — Pre-fill context with planned module structure.
 13. **Generate event guidance** — Create starter event guidance templates.
-14. **Write engineering.config.json** — Create the project configuration file.
+14. **Write .graphward/gw.config.json** — Create the project configuration file.
 15. **Create .env.example** — List all required environment variables.
 16. **Report** — Summarize everything generated and list next steps for the developer.
 
@@ -274,7 +274,7 @@ Generate starter event guidance files with generic templates appropriate for the
 - [ ] `.env.example` lists all required environment variables with descriptions
 - [ ] Knowledge base documents (00–16) are pre-filled with scaffolded content
 - [ ] Memory files contain only durable decisions (not transient implementation details)
-- [ ] `engineering.config.json` exists with complete project metadata
+- [ ] `.graphward/gw.config.json` exists with complete project metadata
 - [ ] Testing strategy is defined with tool selection and coverage targets
 - [ ] All generated files use evidence citations pointing to other generated files
 

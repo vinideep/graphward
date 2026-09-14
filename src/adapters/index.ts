@@ -49,11 +49,11 @@ const WORKFLOW_ARGUMENT_HINTS: Partial<Record<(typeof WORKFLOW_NAMES)[number], s
 
 const sharedInstructions = `# GraphWard OS
 
-This repository uses installed engineering intelligence workflows.
+This repository uses installed GraphWard workflows.
 
 - When the .agents/agents/ directory is available, start non-trivial work with the engineering-orchestrator custom agent. It routes the request to the right specialist and keeps the workflow evidence-based.
-- For initial understanding and documentation, invoke \`initialize-graphward\` or ask the agent to initialize engineering intelligence.
-- For implementation work, invoke \`graphward\` with the request or ask the agent to apply the engineering intelligence workflow. This workflow embeds AI-DLC and Agile delivery modes internally.
+- For initial understanding and documentation, invoke \`initialize-graphward\` or ask the agent to initialize GraphWard.
+- For implementation work, invoke \`graphward\` with the request or ask the agent to apply the GraphWard workflow. This workflow embeds AI-DLC and Agile delivery modes internally.
 - For epic-sized initiatives, invoke \`decompose-backlog\` to autonomously create an Epic → Feature → Ticket backlog under \`.graphward/aidlc/agile/backlog/\`, then \`deliver-backlog\` to implement it feature by feature. Each feature requires human approval before implementation; the local backlog is the source of truth and can optionally be mirrored to GitHub Issues.
 - For architecture mapping, impact analysis, synchronization, or review, invoke \`map-architecture\`, \`analyze-impact\`, \`sync-graphward\`, or \`review-engineering-change\`; these workflows do not modify product code.
 - Canonical generated outputs live in \`.graphward/knowledge-base/\`, \`.graphward/aidlc/\`, \`.graphward/memory/\`, \`.graphward/context/\`, \`.graphward/events/\`, \`.graphward/graph/\`, \`.graphward/reports/\`, \`.graphward/flight/\`, and \`.graphward/changes/\`.
@@ -521,8 +521,8 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
     }
     case "gemini-cli": {
       const workflowDescriptions: Record<(typeof WORKFLOW_NAMES)[number], string> = {
-        "initialize-graphward": "Initialize engineering intelligence for this project.",
-        "graphward": "Implement a request using engineering intelligence.",
+        "initialize-graphward": "Initialize GraphWard for this project.",
+        "graphward": "Implement a request using GraphWard.",
         "map-architecture": "Build or refresh evidence-backed architecture graph intelligence.",
         "analyze-impact": "Analyze an intended change or existing diff without modifying product code.",
         "sync-graphward": "Synchronize affected project intelligence without modifying product code.",

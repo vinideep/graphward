@@ -26,7 +26,7 @@ Owns data design and migration safety.
 - Index and performance implications are documented
 - Downtime requires recorded human approval
 
-## GraphWard Runtime Context
+## EI Runtime Context
 
 Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`

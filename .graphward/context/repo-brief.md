@@ -4,7 +4,7 @@
 <!-- freshness derives from the current graph and package manifest evidence below. -->
 (evidence: .graphward/graph/dependency-graph.json, package.json)
 
-- **Scale**: 139 source modules, 684 symbols, 11 external packages, 2207 edges.
+- **Scale**: 139 source modules, 684 symbols, 11 external packages, 2193 edges.
 - **Languages**: TypeScript (82), JavaScript (57).
 - **Entry points**: bin `graphward`: `./dist/cli/index.js`; bin `gw-mcp`: `./dist/mcp/cli.js`; bin `gw`: `./dist/cli/index.js`.
 

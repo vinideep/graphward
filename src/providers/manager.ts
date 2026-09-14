@@ -16,8 +16,9 @@ function platformKey(): string {
 }
 
 export function defaultProviderHome(): string {
-  return process.env.EI_PROVIDER_HOME
-    ? path.resolve(process.env.EI_PROVIDER_HOME)
+  const custom = process.env.GW_PROVIDER_HOME || process.env.EI_PROVIDER_HOME;
+  return custom
+    ? path.resolve(custom)
     : path.join(os.homedir(), ".graphward", "providers");
 }
 
@@ -84,7 +85,7 @@ async function probeExecutable(name: ProviderName, executable: string, source: "
     executable,
     source,
     fingerprint: source === "managed" ? await fingerprint(executable) : undefined,
-    message: compatible ? `${provider.displayName} ${detectedVersion} is ready.` : `${provider.displayName} version ${detectedVersion ?? "unknown"} does not match EI's tested ${provider.version}.`,
+    message: compatible ? `${provider.displayName} ${detectedVersion} is ready.` : `${provider.displayName} version ${detectedVersion ?? "unknown"} does not match GraphWard's tested ${provider.version}.`,
     remediation: compatible ? undefined : [`Run graphward providers install ${name} to install the tested managed version.`],
     checkedAt: new Date().toISOString(),
   };
@@ -99,7 +100,7 @@ export async function providerStatus(name: ProviderName, options: { providerHome
   const providerHome = options.providerHome ?? defaultProviderHome();
   const current = await currentProviderRelease(name, providerHome);
   if (current && !current.executable) {
-    return { name, displayName: provider.displayName, purpose: provider.purpose, health: "error", requiredVersion: provider.version, message: "The managed provider activation record points outside EI's provider directory and was rejected.", remediation: [`Run graphward providers repair ${name}.`], checkedAt: new Date().toISOString() };
+    return { name, displayName: provider.displayName, purpose: provider.purpose, health: "error", requiredVersion: provider.version, message: "The managed provider activation record points outside GraphWard's provider directory and was rejected.", remediation: [`Run graphward providers repair ${name}.`], checkedAt: new Date().toISOString() };
   }
   if (current?.executable) {
     const actualFingerprint = await fingerprint(current.executable);
@@ -169,7 +170,7 @@ async function withLock<T>(providerHome: string, work: () => Promise<T>, timeout
       break;
     } catch {
       if (Date.now() - startTime > timeoutMs) {
-        throw new Error(`Another EI provider operation holds ${lockPath}. Retry after it finishes.`);
+        throw new Error(`Another GraphWard provider operation holds ${lockPath}. Retry after it finishes.`);
       }
       await new Promise((resolve) => setTimeout(resolve, 200));
     }

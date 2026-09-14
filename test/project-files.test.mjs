@@ -52,11 +52,21 @@ test("always-on safety exclusions cannot be overridden by project includes or ig
   await mkdir(path.join(root, ".graphward"), { recursive: true });
   await writeFile(path.join(root, ".graphward", "gw.config.json"), JSON.stringify({
     schemaVersion: 2,
-    projectFiles: { include: ["dist/**", ".agent/**"] },
+    projectFiles: { include: ["dist/**", ".agent/**", ".engineering-intelligence/**"] },
   }));
   const policy = await ProjectFilePolicy.load(root);
   assert.equal(policy.explain("dist/generated.js").source, "safety");
   assert.equal(policy.explain(".agent/skills/generated.ts").source, "safety");
+  assert.equal(policy.explain(".engineering-intelligence/old.ts").source, "safety");
+});
+
+test(".gwignore takes precedence over .eiignore", async () => {
+  const root = await fixture();
+  await writeFile(path.join(root, ".gwignore"), "src/forced.ts\n");
+  await writeFile(path.join(root, ".eiignore"), "benchmark/\n");
+  const policy = await ProjectFilePolicy.load(root);
+  assert.equal(policy.explain("src/forced.ts").source, "gwignore");
+  assert.equal(policy.explain("benchmark/noise.ts").included, true);
 });
 
 test("project policy rejects symlinks whose target escapes the repository", async (t) => {

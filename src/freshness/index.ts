@@ -204,12 +204,12 @@ async function listMarkdownFiles(dir: string): Promise<string[]> {
 }
 
 async function discoverDocuments(root: string): Promise<string[]> {
-  const eiDir = path.join(root, ".graphward");
+  const gwDir = path.join(root, ".graphward");
   const dirs = [
-    path.join(eiDir, "knowledge-base"),
-    path.join(eiDir, "memory"),
-    path.join(eiDir, "context"),
-    path.join(eiDir, "graph"),
+    path.join(gwDir, "knowledge-base"),
+    path.join(gwDir, "memory"),
+    path.join(gwDir, "context"),
+    path.join(gwDir, "graph"),
   ];
   const all: string[] = [];
   for (const d of dirs) {

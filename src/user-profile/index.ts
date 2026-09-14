@@ -315,14 +315,14 @@ ${signalRows}
 // Public API
 // ---------------------------------------------------------------------------
 
-const EI_GITIGNORE_ENTRY = "memory/users/\n";
+const GW_GITIGNORE_ENTRY = "memory/users/\n";
 
-async function ensureEiGitignore(eiDir: string): Promise<void> {
-  const gitignorePath = path.join(eiDir, ".gitignore");
+async function ensureGwGitignore(gwDir: string): Promise<void> {
+  const gitignorePath = path.join(gwDir, ".gitignore");
   let existing = "";
   try { existing = await readFile(gitignorePath, "utf8"); } catch { /* new file */ }
   if (!existing.includes("memory/users/")) {
-    await writeFile(gitignorePath, existing + (existing.endsWith("\n") || !existing ? "" : "\n") + EI_GITIGNORE_ENTRY, "utf8");
+    await writeFile(gitignorePath, existing + (existing.endsWith("\n") || !existing ? "" : "\n") + GW_GITIGNORE_ENTRY, "utf8");
   }
 }
 
@@ -337,13 +337,13 @@ export async function runUserProfile(root: string): Promise<{ profile: UserProfi
     };
   }
 
-  const eiDir = path.join(root, ".graphward");
-  const userDir = path.join(eiDir, "memory", "users", identity.slug);
+  const gwDir = path.join(root, ".graphward");
+  const userDir = path.join(gwDir, "memory", "users", identity.slug);
   const profilePath = path.join(userDir, "user-intelligence.md");
 
   // Ensure .graphward/.gitignore ignores users/
-  await mkdir(eiDir, { recursive: true });
-  await ensureEiGitignore(eiDir);
+  await mkdir(gwDir, { recursive: true });
+  await ensureGwGitignore(gwDir);
 
   // Load existing profile if present, otherwise seed fresh from git
   let existing: Partial<UserProfile> = {};
