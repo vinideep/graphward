@@ -42,7 +42,7 @@ async function indexedFixture() {
   return { root, provider, content };
 }
 
-test("CCE retrieval overfetches but returns only current EI-approved source spans", async () => {
+test("CCE retrieval overfetches but returns only current GraphWard-approved source spans", async () => {
   const fx = await indexedFixture();
   const calls = [];
   const runner = async (request) => {
@@ -90,7 +90,7 @@ test("CCE initialization occurs only in the provider sandbox, never in the sourc
   const result = await runCceIndex(root, { runner, providerHome: path.join(root, "provider-home") });
   assert.equal(result.ok, true);
   const index = calls.find((call) => call.args?.[0] === "index");
-  assert.equal(calls.some((call) => call.args?.[0] === "init"), false, "EI must not let CCE install competing hooks/MCP instructions");
+  assert.equal(calls.some((call) => call.args?.[0] === "init"), false, "GraphWard must not let CCE install competing hooks/MCP instructions");
   assert.notEqual(path.resolve(index.cwd), path.resolve(root));
   assert.match(index.cwd, /\.graphward[\\/]providers[\\/]cce[\\/]project$/);
   assert.equal(index.env.CCE_EMBED_BACKEND, "fastembed");

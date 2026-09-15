@@ -58,7 +58,7 @@ test("deriveFacts computes imports, dependencies and routes from source", async 
   await rm(root, { recursive: true, force: true });
 });
 
-test("provider-only structural evidence cannot be promoted into a derived EI claim", async () => {
+test("provider-only structural evidence cannot be promoted into a derived GraphWard claim", async () => {
   const root = await project(SAMPLE);
   await buildGraph(root); // writes the canonical graph fixture
   const graphPath = path.join(root, ".graphward/graph/dependency-graph.json");
@@ -89,6 +89,10 @@ test("provider-only structural evidence cannot be promoted into a derived EI cla
 test("a derived statement is generated from its descriptor, not authored", () => {
   const fact = { type: "http-route", method: "GET", route: "/users", file: "src/routes.ts", evidence: "src/routes.ts" };
   assert.equal(renderFact(fact), "HTTP route `GET /users` is defined in `src/routes.ts`.");
+
+  const sourceFact = { type: "source-file", path: "src/main.js", evidence: "src/main.js" };
+  assert.equal(renderFact(sourceFact), "Source module `src/main.js` is in GraphWard's approved project scope.");
+  assert.doesNotMatch(renderFact(sourceFact), /\bEI\b/);
 });
 
 test("derived claims verify by RE-DERIVATION, and are refuted when no longer true", async () => {

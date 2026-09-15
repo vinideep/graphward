@@ -76,8 +76,8 @@ export async function runSetup(root: string, options: SetupOptions): Promise<Set
   let installOp: OperationResult;
   let wasUpdate = false;
   if (!options.dryRun) {
-    const { migrateEiConfig } = await import("../config/index.js");
-    const migration = await migrateEiConfig(root);
+    const { migrateGwConfig } = await import("../config/index.js");
+    const migration = await migrateGwConfig(root);
     if (migration.changed) log(`Migrated configuration to schema ${migration.config.schemaVersion}.`);
   }
   if (alreadyInstalled) {
@@ -154,9 +154,9 @@ export async function runSetup(root: string, options: SetupOptions): Promise<Set
 export function mcpRegistrationHint(root: string, ides: IdeId[]): string {
   const lines = ["", "Next steps:"];
   if (ides.includes("claude-code")) {
-    lines.push(`  • Register the MCP server:  claude mcp add graphward -- ei-mcp ${root}`);
+    lines.push(`  • Register the MCP server:  claude mcp add graphward -- gw-mcp ${root}`);
   } else {
-    lines.push(`  • Start the MCP server for your IDE:  ei-mcp ${root}`);
+    lines.push(`  • Start the MCP server for your IDE:  gw-mcp ${root}`);
   }
   lines.push("  • In your IDE, run: /initialize-graphward");
   lines.push("  • Ask the codebase anything:  graphward ask \"who calls <fn>\"");

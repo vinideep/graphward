@@ -42,7 +42,7 @@ async function fixture() {
   return { root, workspace, graphify, a, b };
 }
 
-test("Graphify agreement corroborates the EI-native relationship", async () => {
+test("Graphify agreement corroborates the GraphWard-native relationship", async () => {
   const fx = await fixture();
   await writeFile(path.join(fx.graphify, "graph.json"), JSON.stringify({
     nodes: [
@@ -76,7 +76,7 @@ test("stale Graphify evidence is excluded instead of presented as current", asyn
   const result = await reconcileGraphifyEvidence(fx.root, native.graph);
   assert.ok(result.staleEvidence > 0);
   const edge = result.graph.edges.find((candidate) => candidate.from === "module:src/a" && candidate.to === "module:src/b" && candidate.relation === "imports");
-  assert.ok(edge, "native EI edge remains available");
+  assert.ok(edge, "native GraphWard edge remains available");
   assert.equal(edge.metadata.corroborated, undefined, "stale provider evidence must not decorate the native edge");
   assert.ok(result.graph.unknowns.some((item) => item.includes("excluded as stale")));
 });

@@ -74,11 +74,46 @@ test("CLI initialize performs a complete native-only bootstrap without provider 
   assert.ok(parsed.providers.statuses.every((status) => status.health === "disabled"));
   assert.ok(parsed.evidence.graph.nodes > 0);
   assert.ok(parsed.evidence.claims.total > 0);
-  assert.equal(parsed.evidence.knowledge.status, "ready", "one command must publish a hash-pinned EI-owned baseline without requiring a model");
+  assert.equal(parsed.evidence.knowledge.status, "ready", "one command must publish a hash-pinned GraphWard-owned baseline without requiring a model");
   assert.match(await read(root, ".graphward/context/KNOWLEDGE-GENERATION-BRIEF.md"), /canonical knowledge base/);
   assert.match(await read(root, ".graphward/knowledge-base/00-project-overview.md"), /GraphWard owns canonical knowledge/);
   const config = JSON.parse(await read(root, ".graphward/gw.config.json"));
   assert.equal(config.providers.policy, "native", "the requested provider policy must survive future task runs");
+});
+
+test("CLI initialize and setup output, generated claims, and knowledge docs contain zero legacy EI branding", async () => {
+  const root = await tmpProject();
+  await mkdir(path.join(root, "src"), { recursive: true });
+  await writeFile(path.join(root, "src", "main.ts"), "export const main = true;\n");
+
+  // Run non-JSON initialize (the exact user-facing interactive / terminal command)
+  const initResult = cli(["initialize", root, "--ide", "generic", "--providers", "native", "--yes"]);
+  assert.equal(initResult.status, 0, `initialize exited ${initResult.status}:\n${initResult.stdout}\n${initResult.stderr}`);
+
+  // 1. Verify terminal stdout
+  assert.doesNotMatch(initResult.stdout, /\bEI\b|\bEI's\b|\$EI/, "initialize stdout must not contain legacy EI or $EI references");
+  assert.match(initResult.stdout, /Canonical GraphWard graph built/);
+  assert.match(initResult.stdout, /deterministic GraphWard knowledge document/);
+
+  // 2. Verify claims.json
+  const claimsRaw = await read(root, ".graphward/claims/claims.json");
+  assert.doesNotMatch(claimsRaw, /\bEI\b|\bEI's\b|\$EI/, "claims.json must not contain legacy EI or $EI references");
+  assert.match(claimsRaw, /in GraphWard's approved project scope\./);
+
+  // 3. Verify all bootstrap knowledge documents
+  const docs = ["00-project-overview.md", "01-repository-structure.md", "02-architecture.md", "03-runtime-flow.md", "15-validation-report.md"];
+  for (const doc of docs) {
+    const docContent = await read(root, `.graphward/knowledge-base/${doc}`);
+    assert.doesNotMatch(docContent, /\bEI\b|\bEI's\b|\$EI/, `${doc} must not contain legacy EI or $EI references`);
+    assert.match(docContent, /GraphWard/);
+  }
+
+  // 4. Verify setup registration hint references gw-mcp, not ei-mcp
+  const setupRoot = await tmpProject();
+  const setupResult = cli(["setup", setupRoot, "--ide", "claude-code", "--yes"]);
+  assert.equal(setupResult.status, 0, `setup exited ${setupResult.status}:\n${setupResult.stdout}\n${setupResult.stderr}`);
+  assert.doesNotMatch(setupResult.stdout, /ei-mcp|\bEI\b|\bEI's\b/, "setup stdout must reference gw-mcp and not ei-mcp");
+  assert.match(setupResult.stdout, /gw-mcp/);
 });
 
 test("CLI requires explicit expert acknowledgement before exposing raw provider tools", async () => {

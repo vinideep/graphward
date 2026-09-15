@@ -1,6 +1,6 @@
 import { lstat, readdir, readFile, realpath } from "node:fs/promises";
 import path from "node:path";
-import { loadEiConfig, type ProjectFilesConfig } from "../config/index.js";
+import { loadGwConfig, type ProjectFilesConfig } from "../config/index.js";
 
 export type PolicySource = "explicit-include" | "explicit-exclude" | "gwignore" | "eiignore" | "gitignore" | "built-in" | "default" | "safety";
 
@@ -112,15 +112,15 @@ function lastRule(rules: IgnoreRule[], relativePath: string): IgnoreRule | undef
 export class ProjectFilePolicy {
   readonly root: string;
   readonly config: ProjectFilesConfig;
-  private readonly eiRules: IgnoreRule[];
+  private readonly gwRules: IgnoreRule[];
   private readonly gitRules: IgnoreRule[];
   private readonly realRoot: string;
 
-  private constructor(root: string, realRoot: string, config: ProjectFilesConfig, eiRules: IgnoreRule[], gitRules: IgnoreRule[]) {
+  private constructor(root: string, realRoot: string, config: ProjectFilesConfig, gwRules: IgnoreRule[], gitRules: IgnoreRule[]) {
     this.root = root;
     this.realRoot = realRoot;
     this.config = config;
-    this.eiRules = eiRules;
+    this.gwRules = gwRules;
     this.gitRules = gitRules;
   }
 
@@ -128,7 +128,7 @@ export class ProjectFilePolicy {
     const resolved = path.resolve(root);
     const [realRoot, config, gwRules, eiRules, gitRules] = await Promise.all([
       realpath(resolved).catch(() => resolved),
-      loadEiConfig(resolved),
+      loadGwConfig(resolved),
       readRules(resolved, ".gwignore", "gwignore"),
       readRules(resolved, ".eiignore", "eiignore"),
       readRules(resolved, ".gitignore", "gitignore"),
@@ -170,7 +170,7 @@ export class ProjectFilePolicy {
       return { path: relative, included: false, source: "explicit-exclude", pattern: explicitExclude, reason: "matched projectFiles.exclude" };
     }
 
-    const gw = lastRule(this.eiRules, pathForRules);
+    const gw = lastRule(this.gwRules, pathForRules);
     if (gw) {
       return { path: relative, included: gw.include, source: gw.source, pattern: gw.pattern, reason: gw.include ? `re-included by .${gw.source}` : `excluded by .${gw.source}` };
     }

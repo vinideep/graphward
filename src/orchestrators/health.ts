@@ -6,7 +6,7 @@ import { verifyKnowledge } from "../verify/index.js";
 import { checkEvidenceHashes } from "../evidence/index.js";
 import { verifyClaims } from "../claims/index.js";
 import { computeFreshness } from "../freshness/index.js";
-import { loadEiConfig } from "../config/index.js";
+import { loadGwConfig } from "../config/index.js";
 import { ProjectFilePolicy } from "../project-files/index.js";
 import { providerStatus } from "../providers/manager.js";
 import { PROVIDER_NAMES } from "../providers/types.js";
@@ -150,7 +150,7 @@ export async function runHealth(root: string): Promise<HealthResult> {
   // 7. Live provider handshake. Missing optional providers are an explicit
   // degraded state with native fallback; they become a hard failure only when
   // the project requires providers.
-  const config = await loadEiConfig(root);
+  const config = await loadGwConfig(root);
   const providersDisabled = config.providers.policy === "native";
   const [statuses, projectRuns] = await Promise.all([
     Promise.all(PROVIDER_NAMES.map((name) => providerStatus(name, { disabled: providersDisabled }))),

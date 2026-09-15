@@ -14,7 +14,7 @@ async function fixture() {
   return root;
 }
 
-test("one initialization pipeline produces EI-owned graph, claims, CCE index metadata, and synthesis brief", async () => {
+test("one initialization pipeline produces GraphWard-owned graph, claims, CCE index metadata, and synthesis brief", async () => {
   const root = await fixture();
   const calls = [];
   const runner = async (request) => {

@@ -2,7 +2,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { mkdir, open, readFile, rename, rm, stat, unlink, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { loadEiConfig, type ProviderPolicy } from "../config/index.js";
+import { loadGwConfig, type ProviderPolicy } from "../config/index.js";
 import { runProcess, type ProcessRunner } from "../process/index.js";
 import { PROVIDER_COMPATIBILITY } from "./compatibility.js";
 import { ensureProviderCacheIgnored, PROVIDER_DIR } from "./workspace.js";
@@ -255,7 +255,7 @@ export async function installProvider(name: ProviderName, options: InstallProvid
         purpose: provider.purpose,
         health: "unsupported",
         requiredVersion: provider.version,
-        message: "uv is required and was not found; EI requires uv to manage Graphify and CCE tools.",
+        message: "uv is required and was not found; GraphWard requires uv to manage Graphify and CCE tools.",
         remediation: [
           "Install uv with: curl -LsSf https://astral.sh/uv/install.sh | sh (macOS/Linux) or brew install uv",
           `Then run: graphward providers install ${name}`,
@@ -339,7 +339,7 @@ export async function readProviderManifest(root: string): Promise<ProjectProvide
 
 export async function prepareProviders(root: string, options: PrepareProvidersOptions & { runner?: ProcessRunner } = {}): Promise<PrepareProvidersResult> {
   if (!options.dryRun) await ensureProviderCacheIgnored(root);
-  const config = await loadEiConfig(root);
+  const config = await loadGwConfig(root);
   const policy: ProviderPolicy = options.policy ?? config.providers.policy ?? "auto";
   const offline = options.offline ?? config.providers.offline ?? false;
   const requireProviders = options.requireProviders ?? config.providers.requireProviders ?? false;

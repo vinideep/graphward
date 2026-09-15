@@ -71,7 +71,7 @@ try {
   assert.equal(initialized.degraded, false, "provider initialization must not be degraded");
   assert.equal(initialized.graphify.ok, true, "Graphify extraction must succeed");
   assert.equal(initialized.cce.ok, true, "CCE indexing must succeed");
-  assert.equal(initialized.evidence.knowledge.status, "ready", "EI-owned knowledge must pass publication trust");
+  assert.equal(initialized.evidence.knowledge.status, "ready", "GraphWard-owned knowledge must pass publication trust");
   assert.ok(initialized.evidence.claims.total > 0, "non-empty source must derive claims");
 
   const context = await getEngineeringContext(projectRoot, {

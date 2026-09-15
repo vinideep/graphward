@@ -98,7 +98,7 @@ export interface ProviderWorkspaceResult {
 }
 
 /**
- * Mirror only policy-approved text/code files into an EI-owned provider scope.
+ * Mirror only policy-approved text/code files into a GraphWard-owned provider scope.
  * Third-party tools can mutate this mirror without touching the user's source,
  * hooks, MCP configuration, or agent instructions.
  */
@@ -107,10 +107,10 @@ export async function syncProviderWorkspace(root: string, workspaceRelative = PR
   await ensureProviderCacheIgnored(canonicalRoot);
   const normalizedRelative = workspaceRelative.replace(/\\/g, "/").replace(/^\.\//, "");
   if (normalizedRelative !== PROVIDER_DIR && !normalizedRelative.startsWith(`${PROVIDER_DIR}/`)) {
-    throw new Error("Provider workspaces must remain inside EI's ignored provider directory.");
+    throw new Error("Provider workspaces must remain inside GraphWard's ignored provider directory.");
   }
   const workspace = toCanonicalPath(path.join(canonicalRoot, normalizedRelative));
-  const manifestPath = path.join(workspace, ".ei-source-manifest.json");
+  const manifestPath = path.join(workspace, ".gw-source-manifest.json");
   const prior = await readManifest(manifestPath);
   const snapshot = await computeProviderSourceSnapshot(canonicalRoot);
   const entries = snapshot.files;

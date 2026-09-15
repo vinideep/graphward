@@ -18,7 +18,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { computeFreshness } from "../freshness/index.js";
-import { defaultEiConfig, loadEiConfig } from "../config/index.js";
+import { defaultGwConfig, loadGwConfig } from "../config/index.js";
 
 export type HookEvent = "session-start" | "pre-tool-use" | "post-tool-use" | "stop";
 
@@ -93,7 +93,7 @@ const CONFIG_PATH = ".graphward/gw.config.json";
 
 export async function loadHookConfig(root: string): Promise<HookConfig> {
   try {
-    const config = await loadEiConfig(root);
+    const config = await loadGwConfig(root);
     return { ...DEFAULT_HOOK_CONFIG, ...(config.hooks ?? {}) } as HookConfig;
   } catch {
     return { ...DEFAULT_HOOK_CONFIG };
@@ -158,7 +158,7 @@ export function cursorHookSettings(): string {
 
 /** The default config file the installer seeds. Exported so the adapter renders it. */
 export function defaultConfigFile(): string {
-  return JSON.stringify(defaultEiConfig({
+  return JSON.stringify(defaultGwConfig({
     hooks: {
         freshnessThreshold: DEFAULT_HOOK_CONFIG.freshnessThreshold,
         blockStaleEdits: DEFAULT_HOOK_CONFIG.blockStaleEdits,

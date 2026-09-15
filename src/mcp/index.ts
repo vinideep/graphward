@@ -8,7 +8,7 @@ import { buildGraph, analyzeImpact, loadExistingGraph, ensureFreshGraph, findSym
 import { preflight, postflight } from "../flight/index.js";
 import { generateBrief, readBrief } from "../brief/index.js";
 import { shape, terseNode, terseEdge, packRows } from "./shaper.js";
-import { loadEiConfig } from "../config/index.js";
+import { loadGwConfig } from "../config/index.js";
 import { packageVersion } from "../version.js";
 import { createConsolidatedRegistry } from "./consolidated.js";
 
@@ -25,7 +25,7 @@ function budgetOf(args: Record<string, unknown>, config: Record<string, number>,
 // Optional per-project budget overrides: .graphward/config.json
 // { "tokenBudgets": { "analyze_impact": 3000, ... } }
 async function loadBudgetConfig(root: string): Promise<Record<string, number>> {
-  try { return (await loadEiConfig(root)).tokenBudgets; } catch { return {}; }
+  try { return (await loadGwConfig(root)).tokenBudgets; } catch { return {}; }
 }
 
 const budgetProp = { budget: { type: "number", description: "Optional token budget for the response. Exploration fields are capped to fit (answer fields are never truncated); pass 0 for unlimited." } };
@@ -263,10 +263,10 @@ export async function startMcpServer(projectRoot: string): Promise<void> {
     { capabilities: { tools: {} } },
   );
 
-  // Advertise only the cohesive EI control-plane surface. The legacy tools
+  // Advertise only the cohesive GraphWard control-plane surface. The legacy tools
   // remain callable below as compatibility wrappers for existing clients, but
   // are intentionally absent from discovery so the model does not have to
-  // orchestrate EI, Graphify, and CCE primitives itself.
+  // orchestrate GraphWard, Graphify, and CCE primitives itself.
   server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: consolidated.list() }));
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {

@@ -218,11 +218,21 @@ test("every rendered file that has frontmatter starts with it at byte 0", async 
 test("rendered files contain no path-alias tokens", async () => {
   // Aliases expanded into glued identifiers ($EIknowledge-base/, $EIreports/IMP-XXX-)
   // that a model cannot reliably expand — 240 occurrences before removal.
-  const files = await renderAdapters(["claude-code", "commandcode", "github-copilot", "antigravity"]);
+  const ides = ["antigravity", "antigravity-cli", "codex", "claude-code", "cursor", "github-copilot", "gemini-cli", "commandcode", "generic", "roo-code", "cline"];
+  const files = await renderAdapters(ides);
   const offenders = files
     .filter((item) => /\$EI\b|\$EI[A-Za-z]|\$AIDLC/.test(item.content))
     .map((item) => item.path);
   assert.deepEqual(offenders, [], `no rendered file may contain $EI/$AIDLC aliases: ${offenders.join(", ")}`);
+});
+
+test("rendered files contain no legacy EI branding in front of user or model", async () => {
+  const ides = ["antigravity", "antigravity-cli", "codex", "claude-code", "cursor", "github-copilot", "gemini-cli", "commandcode", "generic", "roo-code", "cline"];
+  const files = await renderAdapters(ides);
+  const offenders = files
+    .filter((item) => /\bEI\b|\bEI's\b/.test(item.content))
+    .map((item) => item.path);
+  assert.deepEqual(offenders, [], `no rendered file may contain EI references: ${offenders.join(", ")}`);
 });
 
 test("Claude Code commands keep argument-hint inside frontmatter", async () => {

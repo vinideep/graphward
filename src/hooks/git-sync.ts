@@ -59,7 +59,7 @@ export async function uninstallGitHooks(root: string): Promise<void> {
     const content = await rf(hookPath, "utf8");
     if (!content.includes("graphward")) continue;
 
-    // Remove EI lines
+    // Remove GraphWard lines
     const lines = content.split("\n");
     const filtered = lines.filter(
       (line) => !line.includes("graphward") && !line.includes("GraphWard")

@@ -4,7 +4,7 @@
  *
  * Validates that:
  *  - The server initializes and responds to the initialize handshake
- *  - tools/list returns only the consolidated EI control-plane surface
+ *  - tools/list returns only the consolidated GraphWard control-plane surface
  *  - hidden legacy wrappers remain callable for compatibility
  */
 

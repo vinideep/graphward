@@ -28,7 +28,7 @@ export async function createIsolatedWorktree(
   root: string,
   options: IsolatedWorktreeOptions = {},
 ): Promise<WorktreeSession> {
-  const prefix = options.id ? `ei-wt-${options.id}-` : "ei-wt-";
+  const prefix = options.id ? `gw-wt-${options.id}-` : "gw-wt-";
   const parentDir = await mkdtemp(path.join(os.tmpdir(), prefix));
   const worktreeDir = path.join(parentDir, "worktree");
 

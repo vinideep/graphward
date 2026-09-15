@@ -72,7 +72,7 @@ export async function buildGraph(root: string, options: BuildGraphOptions = {}):
   if (head) result.graph.commit = head;
   result.graph.workspaceHash = await graphWorkspaceHash(root);
 
-  // EI remains canonical. Fresh Graphify output can corroborate or enrich the
+  // GraphWard remains canonical. Fresh Graphify output can corroborate or enrich the
   // native graph, while stale/out-of-scope provider evidence is rejected.
   if (options.providerEvidence !== false) {
     const reconciliation = await reconcileGraphifyEvidence(root, result.graph);

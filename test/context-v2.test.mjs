@@ -47,7 +47,7 @@ test("ContextPackV2 is knowledge-first, graph-scoped, hash-pinned, and fallback-
   assert.ok(pack.tokenAllocation.used <= pack.tokenAllocation.budget);
 });
 
-test("ContextPackV2 does not promote drifted EI prose as verified knowledge", async () => {
+test("ContextPackV2 does not promote drifted GraphWard prose as verified knowledge", async () => {
   const root = await fixture();
   await write(root, "src/pay.ts", "export function chargePayment(amount: number) {\n  return amount >= 0;\n}\n");
   const pack = await getEngineeringContext(root, { task: "fix charge", files: ["src/pay.ts"], budget: 2500 }, { runner: missingProvider, providerHome: path.join(root, "missing-providers") });

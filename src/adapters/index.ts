@@ -246,7 +246,6 @@ function routingInstructions(routingPath: string, indexPath: string): string {
 2. \`${indexPath}\` — one-line description of all skills (~1,500t)
 
 Load **optional** skills only when the request explicitly requires that capability.
-Path aliases in skill files: \`$AIDLC\`=\`.graphward/aidlc/\`, \`$EI\`=\`.graphward/\`. Expand before writing file paths.
 `;
 }
 
@@ -364,7 +363,7 @@ async function agentsAsMarkdownAt(directory: string, owner: IdeId): Promise<Rend
       "---",
     ].join("\n");
     const runtimeContext = [
-      "## EI Runtime Context",
+      "## GraphWard Runtime Context",
       "",
       "Read the following project-owned context before making non-trivial decisions:",
       ...extra.context.map((location) => "- `" + location + "`"),

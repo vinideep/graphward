@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { deriveClaims, verifyClaims } from "../claims/index.js";
-import { loadEiConfig, migrateEiConfig, updateProviderConfig, type ProviderPolicy } from "../config/index.js";
+import { loadGwConfig, migrateGwConfig, updateProviderConfig, type ProviderPolicy } from "../config/index.js";
 import { checkEvidenceHashes, recordEvidenceHashes } from "../evidence/index.js";
 import { buildGraph, loadExistingGraph } from "../graph/index.js";
 import { collectProjectFiles, ProjectFilePolicy } from "../project-files/index.js";
@@ -189,7 +189,7 @@ export async function runInitialization(root: string, options: InitializeOptions
   const setup = await runSetup(root, { ides: options.ides, packageVersion: options.packageVersion, dryRun: options.dryRun, force: options.force, promptOverwrite: options.promptOverwrite, deferIntelligenceBuild: true });
   for (const line of setup.logs) log(line);
   if (!options.dryRun) {
-    const migration = await migrateEiConfig(root);
+    const migration = await migrateGwConfig(root);
     log(migration.changed ? `Configuration migrated to schema ${migration.config.schemaVersion}.` : `Configuration schema ${migration.config.schemaVersion} is current.`);
     const providerPatch = {
       ...(options.policy ? { policy: options.policy } : {}),
@@ -248,7 +248,7 @@ export async function runInitialization(root: string, options: InitializeOptions
   log(`Initialization evidence: ${evidencePath}`);
   log(`Knowledge generation brief: ${generationBriefPath}`);
   const degraded = providers.degraded || graphify.degraded || cce.degraded || evidence.knowledge.status === "degraded";
-  const config = await loadEiConfig(root);
+  const config = await loadGwConfig(root);
   const requiredProviderRunFailed = providers.policy !== "native"
     && providers.ok
     && config.providers.requireProviders === true

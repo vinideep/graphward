@@ -528,7 +528,7 @@ async function main(): Promise<void> {
         process.exitCode = 2;
       } else {
         await setProviderExpertMode(options.root, action === "expose");
-        output.write(action === "expose" ? "Expert provider tools enabled for the EI MCP server.\n" : "Expert provider tools hidden; consolidated EI tools remain available.\n");
+        output.write(action === "expose" ? "Expert provider tools enabled for the GraphWard MCP server.\n" : "Expert provider tools hidden; consolidated GraphWard tools remain available.\n");
       }
       if (readline) readline.close();
       return;
@@ -550,8 +550,8 @@ async function main(): Promise<void> {
       if (readline) readline.close();
       return;
     }
-    const { loadEiConfig } = await import("../config/index.js");
-    const providerConfig = await loadEiConfig(options.root);
+    const { loadGwConfig } = await import("../config/index.js");
+    const providerConfig = await loadGwConfig(options.root);
     const disabled = providerConfig.providers.policy === "native";
     const [statuses, projectRuns] = await Promise.all([
       Promise.all(names.map((name) => providerStatus(name, { disabled }))),
@@ -1166,8 +1166,8 @@ async function main(): Promise<void> {
       if (options.strict && result.status === "blocked") process.exitCode = 1;
     } else if (subAction === "clarify") {
       const promptText = options.positionals.join(" ").trim();
-      const { loadEiConfig } = await import("../config/index.js");
-      const config = await loadEiConfig(options.root);
+      const { loadGwConfig } = await import("../config/index.js");
+      const config = await loadGwConfig(options.root);
       const { shouldClarify } = await import("../aidlc/clarification.js");
       const { queryProjectMemory } = await import("../learning/index.js");
       const { readFile } = await import("node:fs/promises");
@@ -1292,13 +1292,13 @@ async function main(): Promise<void> {
     return;
   }
   if (options.command === "update") {
-    const { migrateEiConfig } = await import("../config/index.js");
+    const { migrateGwConfig } = await import("../config/index.js");
     let ides: IdeId[] | undefined = options.ides.length > 0 ? options.ides : undefined;
     if (!ides && readline && !options.yes) {
       ides = await selectIdes(options, readline);
     }
     if (!options.dryRun) {
-      const migration = await migrateEiConfig(options.root);
+      const migration = await migrateGwConfig(options.root);
       if (migration.changed) output.write(`Configuration migrated to schema ${migration.config.schemaVersion}.\n`);
     }
     const result = ides && ides.length > 0
@@ -1317,7 +1317,7 @@ async function main(): Promise<void> {
       output.write(`${JSON.stringify(result, null, 2)}\n`);
     } else {
       const scope = result.changedFiles.length > 0 ? result.changedFiles.join(", ") : "the working tree";
-      output.write(`Synchronized EI evidence for ${scope}.\n`);
+      output.write(`Synchronized GraphWard evidence for ${scope}.\n`);
       output.write(`  Graph: ${result.graph.nodeCount} nodes, ${result.graph.edgeCount} edges (${result.graph.fileCount} files)\n`);
       output.write(`  Claims: ${result.claims.verified}/${result.claims.total} verified\n`);
       output.write(`  Providers: ${result.providers.policy}${result.providers.degraded ? " with native fallback" : ""}\n`);

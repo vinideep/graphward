@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "graphType": "dependency",
-  "generatedAt": "2026-09-14T14:47:09.357Z",
+  "generatedAt": "2026-09-14T21:51:10.350Z",
   "scope": "engineering-intelligence-OS",
   "nodes": [
     {
@@ -216,7 +216,7 @@
       "path": "src/adapters/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 18
+        "churn": 19
       },
       "evidence": [
         "src/adapters/index.ts",
@@ -283,7 +283,7 @@
       "path": "src/mcp/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 17
+        "churn": 18
       },
       "evidence": [
         "src/adapters/index.ts:11",
@@ -621,7 +621,7 @@
       "path": "src/cli/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 24
+        "churn": 25
       },
       "evidence": [
         "src/cli/index.ts"
@@ -718,7 +718,7 @@
       "path": "src/config/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 4
+        "churn": 5
       },
       "evidence": [
         "src/cli/index.ts:15",
@@ -772,7 +772,7 @@
       "path": "src/orchestrators/initialize.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 4
+        "churn": 5
       },
       "evidence": [
         "src/cli/index.ts:574",
@@ -833,7 +833,7 @@
       "path": "src/freshness/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 5
+        "churn": 6
       },
       "evidence": [
         "src/cli/index.ts:687",
@@ -849,7 +849,7 @@
       "path": "src/verify/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 8
+        "churn": 9
       },
       "evidence": [
         "src/cli/index.ts:706",
@@ -916,7 +916,7 @@
       "path": "src/user-profile/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 4
+        "churn": 5
       },
       "evidence": [
         "src/cli/index.ts:854",
@@ -1021,7 +1021,7 @@
       "path": "src/project-files/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "src/context/orchestrator.ts:8",
@@ -1043,7 +1043,7 @@
       "path": "src/providers/manager.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 6
+        "churn": 7
       },
       "evidence": [
         "src/context/orchestrator.ts:9",
@@ -1750,10 +1750,10 @@
       "confidence": "verified",
       "metadata": {
         "symbolKind": "function",
-        "line": 252
+        "line": 251
       },
       "evidence": [
-        "src/adapters/index.ts:252"
+        "src/adapters/index.ts:251"
       ]
     },
     {
@@ -1764,10 +1764,10 @@
       "confidence": "verified",
       "metadata": {
         "symbolKind": "function",
-        "line": 335
+        "line": 334
       },
       "evidence": [
-        "src/adapters/index.ts:335"
+        "src/adapters/index.ts:334"
       ]
     },
     {
@@ -1778,10 +1778,10 @@
       "confidence": "verified",
       "metadata": {
         "symbolKind": "function",
-        "line": 347
+        "line": 346
       },
       "evidence": [
-        "src/adapters/index.ts:347"
+        "src/adapters/index.ts:346"
       ]
     },
     {
@@ -1792,10 +1792,10 @@
       "confidence": "verified",
       "metadata": {
         "symbolKind": "function",
-        "line": 394
+        "line": 393
       },
       "evidence": [
-        "src/adapters/index.ts:394"
+        "src/adapters/index.ts:393"
       ]
     },
     {
@@ -1806,10 +1806,10 @@
       "confidence": "verified",
       "metadata": {
         "symbolKind": "function",
-        "line": 624
+        "line": 623
       },
       "evidence": [
-        "src/adapters/index.ts:624"
+        "src/adapters/index.ts:623"
       ]
     },
     {
@@ -1820,10 +1820,10 @@
       "confidence": "verified",
       "metadata": {
         "symbolKind": "function",
-        "line": 633
+        "line": 632
       },
       "evidence": [
-        "src/adapters/index.ts:633"
+        "src/adapters/index.ts:632"
       ]
     },
     {
@@ -1834,10 +1834,10 @@
       "confidence": "verified",
       "metadata": {
         "symbolKind": "function",
-        "line": 636
+        "line": 635
       },
       "evidence": [
-        "src/adapters/index.ts:636"
+        "src/adapters/index.ts:635"
       ]
     },
     {
@@ -1848,10 +1848,10 @@
       "confidence": "verified",
       "metadata": {
         "symbolKind": "function",
-        "line": 661
+        "line": 660
       },
       "evidence": [
-        "src/adapters/index.ts:661"
+        "src/adapters/index.ts:660"
       ]
     },
     {
@@ -1862,10 +1862,10 @@
       "confidence": "verified",
       "metadata": {
         "symbolKind": "function",
-        "line": 665
+        "line": 664
       },
       "evidence": [
-        "src/adapters/index.ts:665"
+        "src/adapters/index.ts:664"
       ]
     },
     {
@@ -8486,10 +8486,10 @@
       "confidence": "verified",
       "metadata": {
         "symbolKind": "function",
-        "line": 157
+        "line": 158
       },
       "evidence": [
-        "src/providers/graphify.ts:157"
+        "src/providers/graphify.ts:158"
       ]
     },
     {
@@ -9382,10 +9382,10 @@
       "confidence": "verified",
       "metadata": {
         "symbolKind": "function",
-        "line": 43
+        "line": 40
       },
       "evidence": [
-        "src/validation/index.ts:43"
+        "src/validation/index.ts:40"
       ]
     },
     {
@@ -11165,7 +11165,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 3
+        "churn": 4
       },
       "evidence": [
         "test/initialize.test.mjs"
@@ -11196,7 +11196,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 8
+        "churn": 9
       },
       "evidence": [
         "test/install-integration.test.mjs"
@@ -11522,7 +11522,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "test/project-files.test.mjs"
@@ -11567,7 +11567,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "test/providers.test.mjs"
@@ -15111,7 +15111,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:252"
+        "src/adapters/index.ts:251"
       ]
     },
     {
@@ -15121,7 +15121,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:335"
+        "src/adapters/index.ts:334"
       ]
     },
     {
@@ -15131,7 +15131,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:347"
+        "src/adapters/index.ts:346"
       ]
     },
     {
@@ -15141,7 +15141,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:394"
+        "src/adapters/index.ts:393"
       ]
     },
     {
@@ -15151,7 +15151,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:624"
+        "src/adapters/index.ts:623"
       ]
     },
     {
@@ -15161,7 +15161,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:633"
+        "src/adapters/index.ts:632"
       ]
     },
     {
@@ -15171,7 +15171,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:636"
+        "src/adapters/index.ts:635"
       ]
     },
     {
@@ -15181,7 +15181,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:661"
+        "src/adapters/index.ts:660"
       ]
     },
     {
@@ -15191,7 +15191,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:665"
+        "src/adapters/index.ts:664"
       ]
     },
     {
@@ -15311,7 +15311,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:351"
+        "src/adapters/index.ts:350"
       ]
     },
     {
@@ -15321,7 +15321,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:358"
+        "src/adapters/index.ts:357"
       ]
     },
     {
@@ -15331,7 +15331,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:385"
+        "src/adapters/index.ts:384"
       ]
     },
     {
@@ -15341,7 +15341,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:400"
+        "src/adapters/index.ts:399"
       ]
     },
     {
@@ -15351,7 +15351,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:409"
+        "src/adapters/index.ts:408"
       ]
     },
     {
@@ -15361,7 +15361,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:410"
+        "src/adapters/index.ts:409"
       ]
     },
     {
@@ -15371,7 +15371,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:416"
+        "src/adapters/index.ts:415"
       ]
     },
     {
@@ -15381,7 +15381,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:434"
+        "src/adapters/index.ts:433"
       ]
     },
     {
@@ -15391,7 +15391,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:472"
+        "src/adapters/index.ts:471"
       ]
     },
     {
@@ -15401,7 +15401,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:473"
+        "src/adapters/index.ts:472"
       ]
     },
     {
@@ -15411,7 +15411,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:479"
+        "src/adapters/index.ts:478"
       ]
     },
     {
@@ -15421,7 +15421,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:481"
+        "src/adapters/index.ts:480"
       ]
     },
     {
@@ -15431,7 +15431,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:553"
+        "src/adapters/index.ts:552"
       ]
     },
     {
@@ -15441,7 +15441,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:589"
+        "src/adapters/index.ts:588"
       ]
     },
     {
@@ -15451,7 +15451,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:655"
+        "src/adapters/index.ts:654"
       ]
     },
     {
@@ -15461,7 +15461,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:669"
+        "src/adapters/index.ts:668"
       ]
     },
     {
@@ -25039,7 +25039,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/providers/graphify.ts:157"
+        "src/providers/graphify.ts:158"
       ]
     },
     {
@@ -25969,7 +25969,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/validation/index.ts:43"
+        "src/validation/index.ts:40"
       ]
     },
     {
@@ -25979,7 +25979,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/validation/index.ts:58"
+        "src/validation/index.ts:55"
       ]
     },
     {
@@ -30791,7 +30791,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:350"
+        "src/adapters/index.ts:349"
       ]
     },
     {
@@ -30801,7 +30801,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:398"
+        "src/adapters/index.ts:397"
       ]
     },
     {
@@ -30811,7 +30811,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:398"
+        "src/adapters/index.ts:397"
       ]
     },
     {
@@ -30821,7 +30821,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:479"
+        "src/adapters/index.ts:478"
       ]
     },
     {
@@ -30831,7 +30831,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:480"
+        "src/adapters/index.ts:479"
       ]
     },
     {
@@ -30841,7 +30841,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:481"
+        "src/adapters/index.ts:480"
       ]
     },
     {
@@ -30851,7 +30851,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:491"
+        "src/adapters/index.ts:490"
       ]
     },
     {
@@ -30861,7 +30861,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:550"
+        "src/adapters/index.ts:549"
       ]
     },
     {
@@ -31182,6 +31182,16 @@
       "metadata": {},
       "evidence": [
         "src/cli/index.ts:546"
+      ]
+    },
+    {
+      "from": "symbol:src/cli/index#main",
+      "to": "symbol:src/config/index#loadGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/cli/index.ts:554"
       ]
     },
     {
@@ -31692,6 +31702,16 @@
       "metadata": {},
       "evidence": [
         "src/cli/index.ts:1288"
+      ]
+    },
+    {
+      "from": "symbol:src/cli/index#main",
+      "to": "symbol:src/config/index#migrateGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/cli/index.ts:1301"
       ]
     },
     {
@@ -32865,6 +32885,26 @@
       ]
     },
     {
+      "from": "symbol:src/hooks/index#loadHookConfig",
+      "to": "symbol:src/config/index#loadGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/hooks/index.ts:96"
+      ]
+    },
+    {
+      "from": "symbol:src/hooks/index#defaultConfigFile",
+      "to": "symbol:src/config/index#defaultGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/hooks/index.ts:161"
+      ]
+    },
+    {
       "from": "symbol:src/hooks/index#isSourceFile",
       "to": "symbol:src/mcp/registry#McpToolRegistry.has",
       "relation": "calls",
@@ -33166,6 +33206,16 @@
     },
     {
       "from": "symbol:src/mcp/consolidated#createConsolidatedRegistry",
+      "to": "symbol:src/config/index#loadGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/mcp/consolidated.ts:62"
+      ]
+    },
+    {
+      "from": "symbol:src/mcp/consolidated#createConsolidatedRegistry",
       "to": "symbol:src/providers/manager#providerStatus",
       "relation": "calls",
       "confidence": "inferred",
@@ -33352,6 +33402,16 @@
       "metadata": {},
       "evidence": [
         "src/mcp/consolidated.ts:462"
+      ]
+    },
+    {
+      "from": "symbol:src/mcp/index#loadBudgetConfig",
+      "to": "symbol:src/config/index#loadGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/mcp/index.ts:28"
       ]
     },
     {
@@ -33906,6 +33966,16 @@
     },
     {
       "from": "symbol:src/orchestrators/health#runHealth",
+      "to": "symbol:src/config/index#loadGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/health.ts:153"
+      ]
+    },
+    {
+      "from": "symbol:src/orchestrators/health#runHealth",
       "to": "symbol:src/providers/manager#providerStatus",
       "relation": "calls",
       "confidence": "inferred",
@@ -34026,6 +34096,16 @@
     },
     {
       "from": "symbol:src/orchestrators/initialize#renderBootstrapKnowledge",
+      "to": "symbol:src/config/index#migrateGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/initialize.ts:192"
+      ]
+    },
+    {
+      "from": "symbol:src/orchestrators/initialize#renderBootstrapKnowledge",
       "to": "symbol:src/config/index#updateProviderConfig",
       "relation": "calls",
       "confidence": "inferred",
@@ -34092,6 +34172,16 @@
       "metadata": {},
       "evidence": [
         "src/orchestrators/initialize.ts:241"
+      ]
+    },
+    {
+      "from": "symbol:src/orchestrators/initialize#renderBootstrapKnowledge",
+      "to": "symbol:src/config/index#loadGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/initialize.ts:251"
       ]
     },
     {
@@ -34186,6 +34276,16 @@
     },
     {
       "from": "symbol:src/orchestrators/initialize#runInitialization",
+      "to": "symbol:src/config/index#migrateGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/initialize.ts:192"
+      ]
+    },
+    {
+      "from": "symbol:src/orchestrators/initialize#runInitialization",
       "to": "symbol:src/config/index#updateProviderConfig",
       "relation": "calls",
       "confidence": "inferred",
@@ -34255,6 +34355,16 @@
       ]
     },
     {
+      "from": "symbol:src/orchestrators/initialize#runInitialization",
+      "to": "symbol:src/config/index#loadGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/initialize.ts:251"
+      ]
+    },
+    {
       "from": "symbol:src/orchestrators/setup#runSetup",
       "to": "symbol:src/orchestrators/initialize#log",
       "relation": "calls",
@@ -34262,6 +34372,16 @@
       "metadata": {},
       "evidence": [
         "src/orchestrators/setup.ts:70"
+      ]
+    },
+    {
+      "from": "symbol:src/orchestrators/setup#runSetup",
+      "to": "symbol:src/config/index#migrateGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/setup.ts:80"
       ]
     },
     {
@@ -34355,6 +34475,26 @@
       ]
     },
     {
+      "from": "symbol:src/project-files/index#ProjectFilePolicy",
+      "to": "symbol:src/config/index#loadGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/project-files/index.ts:131"
+      ]
+    },
+    {
+      "from": "symbol:src/project-files/index#ProjectFilePolicy.load",
+      "to": "symbol:src/config/index#loadGwConfig",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/project-files/index.ts:131"
+      ]
+    },
+    {
       "from": "symbol:src/providers/cce#sha256",
       "to": "symbol:src/installer/index#update",
       "relation": "calls",
@@ -34411,7 +34551,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/providers/graphify.ts:159"
+        "src/providers/graphify.ts:160"
       ]
     },
     {
@@ -34561,7 +34701,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/validation/index.ts:46"
+        "src/validation/index.ts:43"
       ]
     },
     {
@@ -34571,7 +34711,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/validation/index.ts:51"
+        "src/validation/index.ts:48"
       ]
     },
     {
@@ -34581,7 +34721,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/validation/index.ts:61"
+        "src/validation/index.ts:58"
       ]
     },
     {
@@ -34591,7 +34731,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/validation/index.ts:65"
+        "src/validation/index.ts:62"
       ]
     },
     {
@@ -34601,7 +34741,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/validation/index.ts:77"
+        "src/validation/index.ts:74"
       ]
     },
     {
@@ -34611,7 +34751,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/validation/index.ts:102"
+        "src/validation/index.ts:99"
       ]
     },
     {
@@ -34621,7 +34761,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/validation/index.ts:117"
+        "src/validation/index.ts:114"
       ]
     },
     {
@@ -34631,7 +34771,7 @@
       "confidence": "inferred",
       "metadata": {},
       "evidence": [
-        "src/validation/index.ts:121"
+        "src/validation/index.ts:118"
       ]
     },
     {
@@ -35388,6 +35528,6 @@
   "unknowns": [
     "Graphify evidence excluded as stale: 114 item(s)."
   ],
-  "commit": "b2a24e605fee16f4c1ab4ac948e7456e864583a1",
-  "workspaceHash": "ed2b5a54435f3935ecedeec4f5df0f3130c499df052436cc42ba1dce083f43df"
+  "commit": "9bf9df773cdda847b9f0b21dbab54dab01f3dec6",
+  "workspaceHash": "595ea778683f4ec1a57c04fe3a5022b71764dbd6823a42d82156a23f087f5268"
 }

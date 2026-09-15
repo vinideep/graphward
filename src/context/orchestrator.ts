@@ -40,7 +40,7 @@ export interface TaskClassification {
   risk: RiskLevel;
   domains: string[];
   modes: string[];
-  route: Array<"ei-knowledge" | "ei-graph" | "cce" | "native-retrieval" | "security-gates" | "api-gates" | "migration-gates" | "design-first">;
+  route: Array<"graphward-knowledge" | "graphward-graph" | "cce" | "native-retrieval" | "security-gates" | "api-gates" | "migration-gates" | "design-first">;
 }
 
 export interface KnowledgeContextItem {
@@ -127,7 +127,7 @@ function classify(task: string, files: string[]): TaskClassification {
   const domains = [security && "security", database && "database", api && "api", architecture && "architecture"].filter((value): value is string => Boolean(value));
   if (domains.length === 0) domains.push("application");
   const modes = ["standard", security && "adversarial", architecture && "design-first"].filter((value): value is string => Boolean(value));
-  const route: TaskClassification["route"] = ["ei-knowledge", "ei-graph", "cce", "native-retrieval"];
+  const route: TaskClassification["route"] = ["graphward-knowledge", "graphward-graph", "cce", "native-retrieval"];
   if (security) route.push("security-gates");
   if (api) route.push("api-gates");
   if (database) route.push("migration-gates");
@@ -357,9 +357,9 @@ function trimArchitecture(
 }
 
 function renderMarkdown(pack: Omit<ContextPackV2, "markdown">): string {
-  const lines = [`# Engineering context: ${pack.task}`, "", `Route: ${pack.classification.kind}; risk ${pack.classification.risk}; confidence ${pack.overallConfidence.toFixed(2)}.`, `Knowledge trust: ${pack.knowledge.trust}. Retrieval: ${pack.providers.cce.fallback ? "EI native fallback" : "CCE"}.`, ""];
+  const lines = [`# Engineering context: ${pack.task}`, "", `Route: ${pack.classification.kind}; risk ${pack.classification.risk}; confidence ${pack.overallConfidence.toFixed(2)}.`, `Knowledge trust: ${pack.knowledge.trust}. Retrieval: ${pack.providers.cce.fallback ? "GraphWard native fallback" : "CCE"}.`, ""];
   if (pack.knowledge.documents.length > 0) {
-    lines.push("## Verified EI knowledge");
+    lines.push("## Verified GraphWard knowledge");
     for (const item of pack.knowledge.documents) lines.push(`- ${item.title} (${item.path})`);
     lines.push("");
   }
@@ -501,8 +501,8 @@ export async function getEngineeringContext(
   ];
   const graphUnknowns = architecture.graph?.unknowns ?? [];
   const unknowns = [
-    ...(knowledge.trust === "degraded" ? [`EI knowledge has ${knowledge.citationDrift} missing reference(s) and ${knowledge.staleEvidence} stale citation(s); affected prose was not loaded.`] : []),
-    ...(knowledge.trust === "unverifiable" ? ["EI knowledge has no recorded citation snapshot; prose was not promoted as verified context."] : []),
+    ...(knowledge.trust === "degraded" ? [`GraphWard knowledge has ${knowledge.citationDrift} missing reference(s) and ${knowledge.staleEvidence} stale citation(s); affected prose was not loaded.`] : []),
+    ...(knowledge.trust === "unverifiable" ? ["GraphWard knowledge has no recorded citation snapshot; prose was not promoted as verified context."] : []),
     ...graphUnknowns.slice(0, 20),
     ...(retrieval.staleRejected > 0 ? [`CCE returned ${retrieval.staleRejected} stale span(s), which were rejected.`] : []),
     ...(retrieval.scopeRejected > 0 ? [`CCE returned ${retrieval.scopeRejected} out-of-scope span(s), which were rejected.`] : []),

@@ -253,7 +253,7 @@ export async function reconcileGraphifyEvidence(root: string, nativeGraph: Depen
     const existing = edgeByKey.get(key);
     if (existing) {
       existing.evidence = unique([...existing.evidence, ...evidence]);
-      // Only agreement with an EI-native edge is corroboration. A duplicate
+      // Only agreement with a GraphWard-native edge is corroboration. A duplicate
       // Graphify row must never upgrade its own contested/unverifiable edge.
       if (nativeEdgeKeys.has(key)) {
         existing.metadata = mergeProviderMetadata(existing.metadata, metadata);

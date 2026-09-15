@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { loadEiConfig } from "../config/index.js";
+import { loadGwConfig } from "../config/index.js";
 import { getEngineeringContext } from "../context/orchestrator.js";
 import { analyzeImpact, ensureFreshGraph, findSymbol, whoCalls } from "../graph/index.js";
 import { validateChange, syncEngineeringKnowledge } from "../orchestrators/change.js";
@@ -27,13 +27,13 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
   const registry = new McpToolRegistry();
   registry.register({
     name: "get_engineering_context",
-    description: "Build ContextPackV2 from verified EI knowledge, the canonical normalized graph, and current scoped code evidence. Use this before direct file exploration.",
+    description: "Build ContextPackV2 from verified GraphWard knowledge, the canonical normalized graph, and current scoped code evidence. Use this before direct file exploration.",
     inputSchema: { type: "object", required: ["task"], additionalProperties: false, properties: { root: rootProperty, task: { type: "string" }, files: filesProperty, budget: { type: "number", minimum: 1 } } },
     handler: async (args) => getEngineeringContext(rootOf(args, projectRoot), { task: args.task as string, files: args.files as string[] | undefined, budget: args.budget as number | undefined }),
   });
   registry.register({
     name: "analyze_change_impact",
-    description: "Refresh EI's canonical graph and deterministically analyze direct/indirect impact, tests, risks, and unknowns for changed files.",
+    description: "Refresh GraphWard's canonical graph and deterministically analyze direct/indirect impact, tests, risks, and unknowns for changed files.",
     inputSchema: { type: "object", required: ["changedFiles"], additionalProperties: false, properties: { root: rootProperty, changedFiles: filesProperty } },
     handler: async (args) => {
       const root = rootOf(args, projectRoot);
@@ -49,7 +49,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
   });
   registry.register({
     name: "sync_engineering_knowledge",
-    description: "Post-edit synchronization for EI's graph, provider indexes, derived claims, and knowledge health. Canonical prose is flagged for model synthesis rather than silently rewritten.",
+    description: "Post-edit synchronization for GraphWard's graph, provider indexes, derived claims, and knowledge health. Canonical prose is flagged for model synthesis rather than silently rewritten.",
     inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, files: filesProperty } },
     handler: async (args) => syncEngineeringKnowledge(rootOf(args, projectRoot), args.files as string[] | undefined),
   });
@@ -59,7 +59,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
     inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty } },
     handler: async (args) => {
       const root = rootOf(args, projectRoot);
-      const providerConfig = await loadEiConfig(root);
+      const providerConfig = await loadGwConfig(root);
       const disabled = providerConfig.providers.policy === "native";
       const [binaries, projectRuns] = await Promise.all([
         Promise.all(PROVIDER_NAMES.map((name) => providerStatus(name, { disabled }))),
@@ -162,7 +162,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
     },
     handler: async (args) => {
       const root = rootOf(args, projectRoot);
-      const config = await loadEiConfig(root);
+      const config = await loadGwConfig(root);
       const { shouldClarify } = await import("../aidlc/clarification.js");
       
       let graph: any = { nodes: [], edges: [], schemaVersion: "1.0", graphType: "dependency", generatedAt: new Date().toISOString(), scope: "project", unknowns: [] };
@@ -442,11 +442,11 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
     },
   });
 
-  const config = await loadEiConfig(projectRoot);
+  const config = await loadGwConfig(projectRoot);
   if (config.providers.exposeRawMcp === true) {
     registry.register({
       name: "provider_graphify_evidence",
-      description: "Expert mode: inspect capped raw Graphify provider evidence. EI does not treat this output as canonical knowledge.",
+      description: "Expert mode: inspect capped raw Graphify provider evidence. GraphWard does not treat this output as canonical knowledge.",
       inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, limit: { type: "number", minimum: 1 } } },
       handler: async (args) => {
         const root = rootOf(args, projectRoot);
@@ -457,7 +457,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
     });
     registry.register({
       name: "provider_cce_retrieval",
-      description: "Expert mode: request CCE-backed retrieval through EI's mandatory scope and freshness filters.",
+      description: "Expert mode: request CCE-backed retrieval through GraphWard's mandatory scope and freshness filters.",
       inputSchema: { type: "object", required: ["query"], additionalProperties: false, properties: { root: rootProperty, query: { type: "string" }, scope: filesProperty, topK: { type: "number", minimum: 1 } } },
       handler: async (args) => searchCodeContext(rootOf(args, projectRoot), args.query as string, args.scope as string[] | undefined ?? [], { topK: args.topK as number | undefined }),
     });

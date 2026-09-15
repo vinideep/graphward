@@ -26,15 +26,12 @@ export async function validateRender(ides: IdeId[]): Promise<string[]> {
     }
   }
   const allContent = rendered.map((item) => item.content).join("\n");
-  // After universal path aliasing, `.graphward/` becomes `$EI` in all skill files,
-  // so `.graphward/graph/` becomes `$EIgraph/` and `.graphward/reports/`
-  // becomes `$EIreports/`. The alias preamble preserves `.graphward/aidlc/` literally.
-  for (const [requiredPath, alias] of [
-    [".graphward/aidlc/", "$AIDLC"],
-    [".graphward/graph/", "$EIgraph/"],
-    [".graphward/reports/", "$EIreports/"],
-  ] as [string, string][]) {
-    if (!allContent.includes(requiredPath) && !allContent.includes(alias)) {
+  for (const requiredPath of [
+    ".graphward/aidlc/",
+    ".graphward/graph/",
+    ".graphward/reports/",
+  ]) {
+    if (!allContent.includes(requiredPath)) {
       errors.push(`Rendered templates do not describe required runtime path: ${requiredPath}`);
     }
   }
