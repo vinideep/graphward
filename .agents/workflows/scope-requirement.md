@@ -11,9 +11,9 @@ Use the `requirement-scoper` capability to interactively scope and document a us
 
 1. **Read Context** — Read `.graphward/knowledge-base/`, `.graphward/aidlc/`, `.graphward/memory/`, and `.graphward/graph/` mapping files.
 2. **Draft Questions** — Assess clarity level:
-   - **Vague or Incomplete** (3+ ambiguities, unclear scope, or missing critical info): Use `question-file-engine` to write a structured MCQ clarification file at `.graphward/aidlc/open-questions/`. Stop and wait for the user to fill answers and signal "questions answered, continue" before proceeding.
+   - **Vague or Incomplete** (3+ ambiguities, unclear scope, or missing critical info): Use `question-file-engine` to prompt structured MCQ questions interactively in the IDE chat via the `ask_question` tool (which renders an interactive modal with selectable options). Wait for user responses before proceeding.
    - **Clear** (0–2 minor gaps): Ask 3–5 targeted questions inline and iterate.
-3. **Iterate** — Wait for user responses (from question file or inline). Adjust assumptions based on answers.
+3. **Iterate** — Wait for user responses (from interactive prompts or inline). Adjust assumptions based on answers.
 4. **Document Scoping** — Create or update `.graphward/knowledge-base/19-requirements.md` and `.graphward/aidlc/agile/` artifacts with goals, user stories, acceptance criteria, edge cases, dependencies, and the Q&A log.
 5. **Finalize Prompt** — Output the exact `/graphward` command required to build the ready story.
 

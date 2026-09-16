@@ -209,7 +209,7 @@ AI-DLC: <phase> -> <stage> -> <status>
 
 ## Cross-References
 
-- Pre-flight: `socratic-clarification-gate` (clarity assessment), `question-file-engine` (3+ ambiguities)
+- Pre-flight: `socratic-clarification-gate` (clarity assessment), `question-file-engine` (3+ ambiguities, prompts via `ask_question`)
 - Inception: `backlog-decomposition-engine` (Epic → Feature → Ticket), `requirement-scoper` (detailed scoping)
 - Construction: `graphward-skill` (implementation), `vertical-tdd-engine` (TDD mode)
 - Operations: `operations-readiness-engine` (deployment, observability, rollback)

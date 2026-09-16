@@ -1,11 +1,11 @@
 ---
 name: question-file-engine
-description: Writes structured MCQ clarification files to .graphward/aidlc/open-questions/ instead of asking questions inline. Creates durable decision artifacts and enables context reset between question creation and answer processing. Use when a request has 3+ ambiguities or scope is unclear.
+description: Prompts structured MCQ clarification questions interactively in the IDE chat using the ask_question tool. Creates durable decision artifacts after user responds. Use when a request has 3+ ambiguities or scope is unclear.
 ---
 
 # Question File Engine
 
-Write structured clarification question files rather than asking questions inline in chat. This pattern creates durable decision artifacts, lets users answer thoughtfully with full context visible, and enables a context reset between question creation and answer processing — so each phase starts with a fresh focused context.
+Prompt structured clarification questions interactively in the IDE chat using the `ask_question` tool. This pattern lets users answer immediately with selectable options in the IDE, eliminates the need to open separate files, and still produces durable decision artifacts for AI-DLC state.
 
 ## When to Use
 
@@ -24,7 +24,7 @@ Write structured clarification question files rather than asking questions inlin
 
 ### 1. Identify Ambiguities
 
-Group unknowns into categories before writing:
+Group unknowns into categories before prompting:
 
 | Category | Examples |
 |---|---|
@@ -33,89 +33,80 @@ Group unknowns into categories before writing:
 | Risk | Tolerance for breaking changes, migration complexity |
 | Priority | Ship now vs. defer, dependency ordering |
 
-Cap at 8 questions per file. Write a second file for additional batches.
+Cap at 8 questions per prompt. If more are needed, prompt in batches (Multiple rounds are acceptable).
 
-### 2. Write the Question File
+### 2. Prompt Questions Interactively
 
-Save to `.graphward/aidlc/open-questions/YYYYMMDD-{slug}.md`:
+Use the `ask_question` tool to present questions directly in the IDE chat. The tool renders an interactive modal with selectable options and a write-in field.
 
-```markdown
-# Clarification Questions: {topic}
+**Format each question for `ask_question`:**
 
-**Instructions:** Check boxes to select answers. Multiple selections are fine. Write a custom answer after "Custom:" when no option fits.
-Return to chat and say **"questions answered, continue"** when done.
-
----
-
-## Q1: {Question?}
-
-**Context:** {1–2 sentences explaining why this matters for the implementation.}
-
-- [ ] A) {Option A}
-- [ ] B) {Option B}
-- [ ] C) {Option C}
-- [ ] D) Custom: _______________
-
----
-
-## Q2: {Question?}
-
-**Context:** {why this matters}
-
-- [ ] A) {Option A}
-- [ ] B) {Option B}
-- [ ] C) Custom: _______________
-
----
-
-_Created: {ISO date} | Topic: {original request summary}_
+```
+ask_question({
+  questions: [
+    {
+      question: "{Question text}. Context: {1–2 sentences explaining why this matters.}",
+      options: [
+        "{Option A description}",
+        "{Option B description}",
+        "{Option C description}"
+      ],
+      is_multi_select: false
+    },
+    {
+      question: "{Second question}. Context: {why this matters}",
+      options: [
+        "{Option A description}",
+        "{Option B description}"
+      ],
+      is_multi_select: false
+    }
+  ]
+})
 ```
 
 Guidelines for good questions:
 - Every question must have a concrete impact on the implementation plan
-- Include 2–4 options with brief descriptions; always include a "Custom" option
+- Include 2–4 options with brief descriptions; the tool automatically provides a write-in "Other" option
 - Order questions: scope first, then strategy, then risk
-- State the default assumption in option A if the user skips the question
+- State the default assumption in the first option if the user skips the question
+- Include the context (why this matters) directly in the question text
 
-### 3. Stop and Signal
+### 3. Stop and Process Responses
 
-After writing the file, output exactly this and nothing else:
+The `ask_question` tool blocks execution until the user responds — you do not need to tell the user to signal readiness. Once responses arrive:
 
-> Questions written to `.graphward/aidlc/open-questions/{filename}`.
->
-> **Next step:** Open the file, check boxes to select your answers (you may select multiple), then return here and say **"questions answered, continue"**.
+1. Re-read and map selected options to decision records. Never rely on stale in-context memory; always use the fresh response from `ask_question`.
+2. If any critical question was skipped or unclear, ask a single follow-up inline.
+3. Extract confirmed decisions and carry them forward.
 
-**Stop. Do not proceed. Do not guess answers. Wait for explicit user signal.**
+### 4. Persist Decisions
 
-### 4. Resume Protocol
+After processing responses:
 
-When user signals answers are ready:
-
-1. **Re-read the question file from disk.** Never rely on in-context memory of the questions — always use the Read tool to load the current file content.
-2. Validate every question has at least one checked box or a "Custom:" response.
-3. If any critical question is unanswered, ask inline (one concise message, not another file).
-4. Extract confirmed decisions and carry them forward. Reference the question file path in all generated artifacts and the QA log.
+1. Call `freeze_clarified_requirements` with `topic` (the initiative slug) and `decisions` array (`[{ questionId: "Q1", selectedOptionId: "A", customText?: "..." }]`). This writes to `.graphward/aidlc/inception/requirements.md` where `check_aidlc_gate("inception")` expects them.
+2. Mirror resolved question status in `.graphward/aidlc/open-questions.md` by marking items `status: resolved` so `check_aidlc_gate` no longer treats them as blockers.
 
 ## Output
 
-- `.graphward/aidlc/open-questions/YYYYMMDD-{slug}.md` — question file (before resume)
-- On resume: confirmed decision set, referenced by path in the calling skill's output
+- Interactive IDE prompts via `ask_question` (during execution)
+- On completion: confirmed decision set persisted via `freeze_clarified_requirements`
 
 ## Rules
 
-- Never ask 3+ questions inline — always write a question file.
+- Never write question files to `.graphward/aidlc/open-questions/` — always use the `ask_question` tool for interactive prompting.
 - Never guess or assume answers to unresolved questions.
-- Always re-read the file from disk on resume; never trust in-memory question content.
-- Log confirmed decisions by calling `freeze_clarified_requirements` with `topic` (the question file slug) and `decisions` array (`[{ questionId: "Q1", selectedOptionId: "A", customText?: "..." }]`). This writes to `.graphward/aidlc/inception/requirements.md` where `check_aidlc_gate("inception")` expects them.
+- Always use `ask_question` with selectable options rather than asking free-form questions in chat.
+- Log confirmed decisions by calling `freeze_clarified_requirements` with `topic` and `decisions` array.
 - Mirror resolved question status in `.graphward/aidlc/open-questions.md` by marking items `status: resolved` so `check_aidlc_gate` no longer treats them as blockers.
 
 ## Tools
 
-- `freeze_clarified_requirements`: Persist confirmed decisions to `inception/requirements.md` on resume.
+- `ask_question`: Present interactive multiple-choice questions in the IDE chat with selectable options.
+- `freeze_clarified_requirements`: Persist confirmed decisions to `inception/requirements.md` after user responds.
 - `update_aidlc_state`: Transition lifecycle after requirements are frozen.
 
 ## Cross-References
 
 - Used by: `socratic-clarification-gate` (delegates here for 3+ ambiguities), `requirement-scoper`, `backlog-decomposition-engine`
 - Related: `aidlc-lifecycle-engine` (phase model and gate definitions)
-

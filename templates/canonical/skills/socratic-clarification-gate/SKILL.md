@@ -22,7 +22,7 @@ Never begin writing code or generating impact reports while requirements, non-fu
 4. **Present Concrete Trade-offs**:
    - Present 2–4 targeted multiple-choice options highlighting trade-offs (e.g. Option A: JWT vs Option B: Server-side cookies).
    - If 1–2 ambiguities exist: pose them inline in the response.
-   - If 3+ ambiguities exist: write a question file to `.graphward/aidlc/open-questions/YYYYMMDD-<slug>.md` using `question-file-engine`.
+   - If 3+ ambiguities exist: use `question-file-engine` to prompt all questions interactively in the IDE chat via the `ask_question` tool (which renders an interactive modal with selectable options). Do NOT write question files to disk.
 
 5. **Freeze Requirements in AI-DLC**:
    - When the user answers with an option letter (A/B/C/D), map it to `selectedOptionId`.
@@ -73,7 +73,7 @@ Power users who write precise, well-scoped prompts can lower the threshold to re
 
 ## Cross-References
 
-- Depends on: `question-file-engine` (for 3+ ambiguities)
+- Depends on: `question-file-engine` (for 3+ ambiguities, prompts interactively via `ask_question`)
 - Deeper analysis: `socratic-stress-tester` (for high-risk architectural stress-testing after clarity is established)
 - Used by: `graphward` (Step 3), `graphward-skill` (Step 2), `engineering-orchestrator` (Pre-flight)
 - Related: `aidlc-lifecycle-engine` (phase model and gate definitions)

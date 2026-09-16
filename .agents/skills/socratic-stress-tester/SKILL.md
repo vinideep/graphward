@@ -48,4 +48,4 @@ Interactively stress-test technical proposals, PRDs, or architecture plans using
 
 - Depends on: `socratic-clarification-gate` (lightweight gate; this skill is the deep interrogation)
 - Used by: `graphward-skill` (Step 2 Pre-Flight), `graphward` (Step 4)
-- Related: `question-file-engine` (for 3+ ambiguities, write a question file instead of inline)
+- Related: `question-file-engine` (for 3+ ambiguities, prompts interactively via `ask_question` in the IDE chat)

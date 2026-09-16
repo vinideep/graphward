@@ -377,12 +377,12 @@ test("question-file-engine skill ships for Claude Code with correct content and 
   assert.ok(paths.has(".claude/skills/question-file-engine/SKILL.md"), "question-file-engine SKILL.md must ship");
   assert.ok(paths.has(".claude/skills/question-file-engine/SKILL-BRIEF.md"), "question-file-engine SKILL-BRIEF.md must ship");
 
-  // Skill content defines the question file pattern.
+  // Skill content defines the interactive question pattern.
   const skill = files.find((item) => item.path === ".claude/skills/question-file-engine/SKILL.md").content;
   assert.match(skill, /open-questions/, "skill must reference open-questions path");
-  assert.match(skill, /questions answered.*continue/i, "skill must define resume trigger phrase");
-  assert.match(skill, /Re-read.*disk|disk.*re-read/i, "skill must enforce disk re-read on resume");
-  assert.match(skill, /Do not proceed/, "skill must instruct AI to stop and wait");
+  assert.match(skill, /ask_question/, "skill must use interactive ask_question tool");
+  assert.match(skill, /options/i, "skill must present options to user");
+  assert.match(skill, /Stop/i, "skill must define stop and process protocol");
 
   // Skill is in the routing table for scope-requirement and decompose-backlog.
   const routing = files.find((item) => item.path === ".claude/WORKFLOW-ROUTING.md").content;

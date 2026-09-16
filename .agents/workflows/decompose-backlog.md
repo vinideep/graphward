@@ -13,7 +13,7 @@ Analyze the user-supplied initiative: a product brief, epic-sized request, or la
 
 ## Pipeline
 
-1. **Clarify Scope** — If the initiative description is vague or missing key decisions (target users, excluded scope, phasing, integration boundaries), use `question-file-engine` to write a structured clarification file at `.graphward/aidlc/open-questions/`. Stop and wait for the user to fill answers and signal "questions answered, continue" before decomposing.
+1. **Clarify Scope** — If the initiative description is vague or missing key decisions (target users, excluded scope, phasing, integration boundaries), use `question-file-engine` to prompt structured clarification questions interactively in the IDE chat via the `ask_question` tool. Wait for user responses before decomposing.
 2. **Read Intelligence** — Consult `.graphward/knowledge-base/`, `.graphward/graph/`, `.graphward/memory/`, and existing `.graphward/aidlc/` artifacts.
 3. **Decompose** — Run `backlog-decomposition-engine` to frame epics, slice features, and cut tickets with stable IDs (`EPIC-XXX`, `FEAT-XXX`, `TKT-XXX`).
 4. **Write Backlog** — Create artifacts under `.graphward/aidlc/agile/backlog/`: `backlog-index.md`, `epics/`, `features/`, `tickets/`, and `dependency-graph.md`. Keep `agile/product-backlog.md` and `execution-plan.md` consistent.

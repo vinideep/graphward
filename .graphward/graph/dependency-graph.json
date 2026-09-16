@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "graphType": "dependency",
-  "generatedAt": "2026-09-14T21:51:10.350Z",
+  "generatedAt": "2026-09-16T00:55:07.570Z",
   "scope": "engineering-intelligence-OS",
   "nodes": [
     {
@@ -216,7 +216,7 @@
       "path": "src/adapters/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 19
+        "churn": 20
       },
       "evidence": [
         "src/adapters/index.ts",
@@ -268,7 +268,7 @@
       "path": "src/hooks/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 8
+        "churn": 9
       },
       "evidence": [
         "src/adapters/index.ts:10",
@@ -283,7 +283,7 @@
       "path": "src/mcp/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 18
+        "churn": 19
       },
       "evidence": [
         "src/adapters/index.ts:11",
@@ -350,7 +350,7 @@
       "path": "src/graph/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 12
+        "churn": 13
       },
       "evidence": [
         "src/aidlc/backlog-graph.ts:5",
@@ -572,7 +572,7 @@
       "path": "src/claims/derive.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "src/claims/derive.ts",
@@ -621,7 +621,7 @@
       "path": "src/cli/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 25
+        "churn": 26
       },
       "evidence": [
         "src/cli/index.ts"
@@ -649,7 +649,7 @@
       "path": "src/validation/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 7
+        "churn": 8
       },
       "evidence": [
         "src/cli/index.ts:10",
@@ -742,7 +742,7 @@
       "path": "src/orchestrators/setup.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 5
+        "churn": 6
       },
       "evidence": [
         "src/cli/index.ts:421",
@@ -772,7 +772,7 @@
       "path": "src/orchestrators/initialize.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 5
+        "churn": 6
       },
       "evidence": [
         "src/cli/index.ts:574",
@@ -819,7 +819,7 @@
       "path": "src/orchestrators/health.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 3
+        "churn": 4
       },
       "evidence": [
         "src/cli/index.ts:670",
@@ -868,7 +868,7 @@
       "path": "src/context/orchestrator.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 4
+        "churn": 5
       },
       "evidence": [
         "src/cli/index.ts:812",
@@ -1021,7 +1021,7 @@
       "path": "src/project-files/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 3
+        "churn": 4
       },
       "evidence": [
         "src/context/orchestrator.ts:8",
@@ -1043,7 +1043,7 @@
       "path": "src/providers/manager.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 7
+        "churn": 8
       },
       "evidence": [
         "src/context/orchestrator.ts:9",
@@ -1064,7 +1064,7 @@
       "path": "src/providers/cce.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 3
+        "churn": 4
       },
       "evidence": [
         "src/context/orchestrator.ts:10",
@@ -1083,7 +1083,7 @@
       "path": "src/providers/project-status.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "src/context/orchestrator.ts:11",
@@ -1206,7 +1206,7 @@
       "path": "src/experiment/workspace.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 1
+        "churn": 2
       },
       "evidence": [
         "src/experiment/index.ts:7",
@@ -1305,7 +1305,7 @@
       "path": "src/graph/provider-evidence.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 4
+        "churn": 5
       },
       "evidence": [
         "src/graph/index.ts:8",
@@ -1348,7 +1348,7 @@
       "path": "src/providers/graphify.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "src/graph/provider-evidence.ts:4",
@@ -1367,7 +1367,7 @@
       "path": "src/providers/workspace.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 3
+        "churn": 4
       },
       "evidence": [
         "src/graph/provider-evidence.ts:5",
@@ -1386,7 +1386,7 @@
       "path": "src/hooks/git-sync.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 1
+        "churn": 2
       },
       "evidence": [
         "src/hooks/git-sync.ts"
@@ -6301,7 +6301,7 @@
       "path": "src/mcp/consolidated.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 5
+        "churn": 6
       },
       "evidence": [
         "src/mcp/consolidated.ts",
@@ -6377,7 +6377,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "test/accuracy.test.mjs"
@@ -6479,7 +6479,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 11
+        "churn": 12
       },
       "evidence": [
         "test/adapters.test.mjs"
@@ -6613,7 +6613,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "test/cce.test.mjs"
@@ -6627,7 +6627,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 3
+        "churn": 4
       },
       "evidence": [
         "test/claims-derived.test.mjs"
@@ -6744,7 +6744,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "test/context-v2.test.mjs"
@@ -11083,7 +11083,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 3
+        "churn": 4
       },
       "evidence": [
         "test/graphify-evidence.test.mjs"
@@ -11165,7 +11165,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 4
+        "churn": 5
       },
       "evidence": [
         "test/initialize.test.mjs"
@@ -11196,7 +11196,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 9
+        "churn": 10
       },
       "evidence": [
         "test/install-integration.test.mjs"
@@ -11394,7 +11394,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 9
+        "churn": 10
       },
       "evidence": [
         "test/mcp.test.mjs"
@@ -35528,6 +35528,6 @@
   "unknowns": [
     "Graphify evidence excluded as stale: 114 item(s)."
   ],
-  "commit": "9bf9df773cdda847b9f0b21dbab54dab01f3dec6",
-  "workspaceHash": "595ea778683f4ec1a57c04fe3a5022b71764dbd6823a42d82156a23f087f5268"
+  "commit": "86dc2e12e234ab0c39f4c25de44cbe01aeed2570",
+  "workspaceHash": "50f00dd483f2544935f4350e337fc3f7097b930a70192d38bad5409a418da564"
 }

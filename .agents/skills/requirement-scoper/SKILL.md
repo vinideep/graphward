@@ -33,10 +33,10 @@ Act as a detailed Business Analyst and Technical Architect persona. Analyze the 
    | Clarity | Undefined ambiguities | Action |
    |---|---|---|
    | Clear | 0–2 minor gaps | Ask inline; proceed after user responds |
-   | Vague | 3–5 gaps or unclear scope | Use `question-file-engine` to write a structured question file; **stop and wait** |
-   | Incomplete | Missing critical info | Use `question-file-engine`; do not proceed until all critical questions are answered |
+   | Vague | 3–5 gaps or unclear scope | Use `question-file-engine` to prompt structured MCQ questions interactively in the IDE chat via the `ask_question` tool; **wait for user responses** |
+   | Incomplete | Missing critical info | Use `question-file-engine` to prompt via `ask_question`; do not proceed until all critical questions are answered |
 
-   When using `question-file-engine`, invoke it now and stop. Do not continue this procedure until the user signals answers are ready.
+   When using `question-file-engine`, it will prompt questions interactively in the IDE and wait for responses. Do not continue this procedure until all responses are received.
 
    When asking inline (Clear clarity), keep to 3–5 targeted questions covering:
    - **Business Value & Scope**: What are the limits of the MVP?

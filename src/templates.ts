@@ -274,7 +274,7 @@ export async function validateCanonicalTemplates(): Promise<string[]> {
     }
   }
   const questionFile = await readTemplate("skills", "question-file-engine").catch(() => "");
-  for (const requiredContract of ["open-questions", "questions answered, continue", "Re-read", "Multiple", "Stop"]) {
+  for (const requiredContract of ["open-questions", "ask_question", "Multiple", "Stop"]) {
     if (!questionFile.includes(requiredContract)) {
       errors.push(`question-file-engine does not define required question file contract: ${requiredContract}`);
     }
