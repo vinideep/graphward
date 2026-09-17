@@ -10,6 +10,7 @@ import { generateBrief, readBrief } from "../brief/index.js";
 import { shape, terseNode, terseEdge, packRows } from "./shaper.js";
 import { loadGwConfig } from "../config/index.js";
 import { packageVersion } from "../version.js";
+import { MCP_API_VERSION } from "../graph/schema.js";
 import { createConsolidatedRegistry } from "./consolidated.js";
 
 // Resolve the token budget for a tool call. Precedence:
@@ -215,6 +216,75 @@ const TOOLS = [
       },
     },
   },
+  {
+    name: "simulate_change_intent",
+    description:
+      "Stage 1 Pre-Edit Intent Simulator: Traverses reverse dependencies from a proposed change intent to predict blast radius, affected routes, execution paths, and suggested regression tests.",
+    inputSchema: {
+      type: "object" as const,
+      required: ["intent"],
+      properties: {
+        root: { type: "string", description: "Absolute path to the repository root. Defaults to cwd." },
+        intent: {
+          type: "object",
+          description: "Change intent details (action, description, filePath, symbol).",
+        },
+        maxDepth: { type: "number", description: "Max traversal depth (default 5)." },
+        graph: { type: "object", description: "Optional in-memory graph." },
+      },
+    },
+  },
+  {
+    name: "evaluate_counterfactual",
+    description:
+      "Stage 2 Post-Patch Counterfactual Graph Branch: Evaluates tentative in-memory patch overlays before committing, detecting newly introduced dependency cycles and broken call contracts with 100% precision.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {
+        root: { type: "string", description: "Absolute path to the repository root. Defaults to cwd." },
+        baseSnapshot: { type: "object", description: "Baseline Snapshot." },
+        delta: { type: "object", description: "PatchDelta containing added/removed nodes and edges." },
+        baseGraph: { type: "object", description: "Optional base graph." },
+      },
+    },
+  },
+  {
+    name: "assess_risk",
+    description:
+      "Adaptive Risk Engine: Assesses multi-dimensional risk profile (blast radius, runtime exposure, unknown dynamic boundaries, test coverage deficit, architectural purity) and generates tiered verification plans.",
+    inputSchema: {
+      type: "object" as const,
+      required: ["predictedImpact"],
+      properties: {
+        root: { type: "string", description: "Absolute path to the repository root. Defaults to cwd." },
+        predictedImpact: { type: "object", description: "PredictedImpact object." },
+        inboundRuntimeRequests: { type: "number", description: "Observed runtime invocation count." },
+        hasUnknownBoundaries: { type: "boolean", description: "Whether unknown dynamic boundaries exist." },
+        existingTestCount: { type: "number", description: "Count of existing covering tests." },
+        introducesCycle: { type: "boolean", description: "Whether change introduces a dependency cycle." },
+        isPublicApi: { type: "boolean", description: "Whether change touches public API." },
+        isFinancialOrDb: { type: "boolean", description: "Whether change touches payments or database schema." },
+      },
+    },
+  },
+  {
+    name: "slice_graph",
+    description:
+      "Hierarchical Graph Partitioner: Extracts scoped subgraphs across 4 tiers (GLOBAL package architecture, PACKAGE intra-module closure, COMMUNITY modularity clustering, TASK seed-hop bounded view) for 100k+ symbol monorepos.",
+    inputSchema: {
+      type: "object" as const,
+      required: ["level"],
+      properties: {
+        root: { type: "string", description: "Absolute path to the repository root. Defaults to cwd." },
+        level: { type: "string", enum: ["GLOBAL", "PACKAGE", "COMMUNITY", "TASK"], description: "Partition tier." },
+        package: { type: "string", description: "Package name for PACKAGE tier." },
+        seeds: { type: "array", items: { type: "string" }, description: "Seed node IDs for TASK tier." },
+        maxHops: { type: "number", description: "Max hop radius for TASK tier (default 2)." },
+        tokenBudget: { type: "number", description: "Token ceiling for TASK tier (default 2500)." },
+        graph: { type: "object", description: "Optional DependencyGraph to slice." },
+      },
+    },
+  },
 ];
 
 /** Tool names and one-line purposes, for the installed instructions. */
@@ -224,6 +294,10 @@ export const MCP_TOOL_SUMMARY: ReadonlyArray<readonly [string, string]> = [
   ["validate_change", "run impact, safety gates, claims, knowledge, and citation validation"],
   ["sync_engineering_knowledge", "refresh affected graph, provider indexes, claims, and knowledge health after edits"],
   ["provider_status", "report pinned provider health, versions, fallbacks, and remediation"],
+  ["simulate_change_intent", "simulate pre-edit change intent blast radius, routes, and tests"],
+  ["evaluate_counterfactual", "evaluate tentative patch overlay branch and detect introduced dependency cycles"],
+  ["assess_risk", "compute multi-dimensional risk profile and tiered verification plan"],
+  ["slice_graph", "hierarchically slice monorepo graph at global, package, community, or task level"],
 ];
 
 /**
@@ -259,8 +333,8 @@ function safeRegex(pattern: string | undefined): RegExp | undefined {
 export async function startMcpServer(projectRoot: string): Promise<void> {
   const consolidated = await createConsolidatedRegistry(projectRoot);
   const server = new Server(
-    { name: "graphward", version: await packageVersion() },
-    { capabilities: { tools: {} } },
+    { name: "graphward", version: MCP_API_VERSION },
+    { capabilities: { tools: {}, apiVersion: MCP_API_VERSION, experimental: { apiVersion: MCP_API_VERSION } } as any },
   );
 
   // Advertise only the cohesive GraphWard control-plane surface. The legacy tools

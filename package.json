@@ -1,6 +1,6 @@
 {
   "name": "graphward",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Graph-backed codebase intelligence for AI coding editors. Real dependency graphs, MCP server, and installable skills/agents/workflows across 10 AI IDEs.",
   "type": "module",
   "homepage": "https://github.com/vinideep/graphward#readme",
@@ -27,12 +27,19 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
-    "test": "npm run build && node --test --test-concurrency=1 test/accuracy.test.mjs test/adapters.test.mjs test/aidlc-clarification.test.mjs test/aidlc-state.test.mjs test/backlog-graph.test.mjs test/cce.test.mjs test/claims-derived.test.mjs test/claims.test.mjs test/context-v2.test.mjs test/context.test.mjs test/context-skeleton.test.mjs test/evidence.test.mjs test/evidence-healing.test.mjs test/experiment.test.mjs test/flight.test.mjs test/flight-handoff.test.mjs test/freshness.test.mjs test/gates.test.mjs test/graph-honesty.test.mjs test/graph.test.mjs test/graph-paths.test.mjs test/graphify-evidence.test.mjs test/hooks.test.mjs test/initialize.test.mjs test/installer.test.mjs test/json-merge.test.mjs test/learning.test.mjs test/mcp-registry.test.mjs test/negative-constraints.test.mjs test/orchestrators.test.mjs test/project-files.test.mjs test/providers.test.mjs test/reachability.test.mjs test/shiplogic-integration.test.mjs test/telemetry.test.mjs test/templates.test.mjs test/token-budget.test.mjs test/token-reduction.test.mjs test/verify.test.mjs test/verify-impact.test.mjs test/provenance.test.mjs test/coverage-gap.test.mjs test/visualizer.test.mjs test/workspace.test.mjs test/e2e-features.test.mjs test/e2e-scenarios.test.mjs test/schemas.test.mjs test/tree-sitter.test.mjs test/secrets-scan.test.mjs",
+    "test": "npm run build && node --test --test-concurrency=1 test/accuracy.test.mjs test/adapters.test.mjs test/aidlc-clarification.test.mjs test/aidlc-state.test.mjs test/backlog-graph.test.mjs test/cce.test.mjs test/claims-derived.test.mjs test/claims.test.mjs test/context-v2.test.mjs test/context.test.mjs test/context-skeleton.test.mjs test/evidence.test.mjs test/evidence-healing.test.mjs test/experiment.test.mjs test/flight.test.mjs test/flight-handoff.test.mjs test/freshness.test.mjs test/gates.test.mjs test/graph-honesty.test.mjs test/graph.test.mjs test/graph-paths.test.mjs test/graphify-evidence.test.mjs test/hooks.test.mjs test/initialize.test.mjs test/installer.test.mjs test/json-merge.test.mjs test/learning.test.mjs test/mcp-registry.test.mjs test/negative-constraints.test.mjs test/orchestrators.test.mjs test/project-files.test.mjs test/providers.test.mjs test/reachability.test.mjs test/shiplogic-integration.test.mjs test/telemetry.test.mjs test/templates.test.mjs test/token-budget.test.mjs test/token-reduction.test.mjs test/verify.test.mjs test/verify-impact.test.mjs test/provenance.test.mjs test/coverage-gap.test.mjs test/visualizer.test.mjs test/workspace.test.mjs test/e2e-features.test.mjs test/e2e-scenarios.test.mjs test/schemas.test.mjs test/tree-sitter.test.mjs test/secrets-scan.test.mjs test/symbol-identity.test.mjs test/evidence-schema.test.mjs test/language-parsers.test.mjs test/typescript-compiler.test.mjs test/sqlite-store.test.mjs test/resource-governor.test.mjs test/runtime-engine.test.mjs test/retrieval-engine.test.mjs test/simulation-engine.test.mjs test/partitioning-and-scip.test.mjs test/calibration-and-eval.test.mjs",
     "test:integration": "npm run build && node --test --test-concurrency=1 test/install-integration.test.mjs test/mcp.test.mjs test/shiplogic-integration.test.mjs",
     "test:benchmark": "node scripts/benchmark-runner.mjs",
     "test:provider-smoke": "npm run build && node scripts/provider-smoke.mjs",
     "test:graph": "npm run build && node --test test/graph.test.mjs",
     "test:mcp": "npm run build && node --test test/mcp.test.mjs",
+    "benchmark:gate1": "npm run build && node --experimental-strip-types benchmarks/phase1-graph-accuracy.ts",
+    "benchmark:gate2": "npm run build && node --experimental-strip-types benchmarks/phase2-runtime-mapping.ts",
+    "benchmark:gate3": "npm run build && node --experimental-strip-types benchmarks/phase3-retrieval-quality.ts",
+    "benchmark:gate4": "npm run build && node --experimental-strip-types benchmarks/phase4-simulation-accuracy.ts",
+    "benchmark:gate5": "npm run build && node --experimental-strip-types benchmarks/phase5-scalability.ts",
+    "benchmark:gate6": "npm run build && node --experimental-strip-types benchmarks/eval-runner.ts",
+    "benchmark:all": "npm run benchmark:gate1 && npm run benchmark:gate2 && npm run benchmark:gate3 && npm run benchmark:gate4 && npm run benchmark:gate5 && npm run benchmark:gate6",
     "prepack": "npm run clean && npm run build",
     "bench": "npm run build && node bench/replay.mjs . --commits 30"
   },

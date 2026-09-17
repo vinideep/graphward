@@ -77,7 +77,7 @@ test("MCP server: initialize, list tools, call get_graph and analyze_impact", as
     const initResponse = await readResponse(proc, 1);
     assert.ok(!initResponse.error, `initialize failed: ${JSON.stringify(initResponse.error)}`);
     assert.equal(initResponse.result?.serverInfo?.name, "graphward");
-    assert.equal(initResponse.result?.serverInfo?.version, await packageVersion());
+    assert.equal(initResponse.result?.serverInfo?.version, "2.2");
 
     // Notify initialized
     proc.stdin.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized", params: {} }) + "\n");
@@ -90,8 +90,10 @@ test("MCP server: initialize, list tools, call get_graph and analyze_impact", as
     const expectedTools = [
       "analyze_change_impact",
       "assess_prompt_clarity",
+      "assess_risk",
       "check_aidlc_gate",
       "create_session_handoff",
+      "evaluate_counterfactual",
       "evaluate_experiment_step",
       "find_symbol",
       "freeze_clarified_requirements",
@@ -104,6 +106,8 @@ test("MCP server: initialize, list tools, call get_graph and analyze_impact", as
       "provider_status",
       "query_project_memory",
       "record_learned_pattern",
+      "simulate_change_intent",
+      "slice_graph",
       "sync_engineering_knowledge",
       "update_aidlc_state",
       "validate_change",
@@ -198,6 +202,98 @@ test("MCP server: initialize, list tools, call get_graph and analyze_impact", as
     assert.ok(whoData.callers && Array.isArray(whoData.callers.rows), "callers should be packed {cols, rows}");
     assert.ok(whoData.callers.rows.length > 0, `expected callers of buildGraph, got: ${JSON.stringify(whoData)}`);
     assert.ok(whoData.callers.cols.includes("label"), "packed callers should carry a label column");
+
+    // 8. Call simulate_change_intent over stdio JSON-RPC
+    sendRequest(proc, {
+      jsonrpc: "2.0",
+      id: 8,
+      method: "tools/call",
+      params: {
+        name: "simulate_change_intent",
+        arguments: {
+          root: REPO_ROOT,
+          intent: { action: "modify", description: "update types", filePath: "src/types.ts" },
+        },
+      },
+    });
+    const simResponse = await readResponse(proc, 8, 30_000);
+    assert.ok(!simResponse.error, `simulate_change_intent call failed: ${JSON.stringify(simResponse.error)}`);
+    const simData = JSON.parse(simResponse.result?.content?.[0]?.text ?? "{}");
+    assert.ok(Array.isArray(simData.affectedFiles), "affectedFiles should be an array");
+    assert.ok(simData.affectedFiles.includes("src/types.ts"));
+
+    // 9. Call evaluate_counterfactual over stdio JSON-RPC
+    sendRequest(proc, {
+      jsonrpc: "2.0",
+      id: 9,
+      method: "tools/call",
+      params: {
+        name: "evaluate_counterfactual",
+        arguments: {
+          root: REPO_ROOT,
+          delta: {
+            addedEdges: [{ from: "nodeA", to: "nodeB" }, { from: "nodeB", to: "nodeA" }],
+          },
+        },
+      },
+    });
+    const cfResponse = await readResponse(proc, 9, 30_000);
+    assert.ok(!cfResponse.error, `evaluate_counterfactual call failed: ${JSON.stringify(cfResponse.error)}`);
+    const cfData = JSON.parse(cfResponse.result?.content?.[0]?.text ?? "{}");
+    assert.equal(cfData.isCycleFree, false, "Introduced cycle between nodeA and nodeB must be flagged");
+    assert.ok(cfData.newCyclesDetected.length > 0);
+
+    // 10. Call assess_risk over stdio JSON-RPC
+    sendRequest(proc, {
+      jsonrpc: "2.0",
+      id: 10,
+      method: "tools/call",
+      params: {
+        name: "assess_risk",
+        arguments: {
+          root: REPO_ROOT,
+          predictedImpact: {
+            affectedFiles: ["src/types.ts"],
+            affectedSymbols: [],
+            affectedRoutes: ["/api/test"],
+            affectedExecutionPaths: [],
+            suggestedTests: [],
+          },
+          inboundRuntimeRequests: 3000,
+          hasUnknownBoundaries: true,
+        },
+      },
+    });
+    const riskResponse = await readResponse(proc, 10, 30_000);
+    assert.ok(!riskResponse.error, `assess_risk call failed: ${JSON.stringify(riskResponse.error)}`);
+    const riskData = JSON.parse(riskResponse.result?.content?.[0]?.text ?? "{}");
+    assert.equal(riskData.tier, "CRITICAL");
+    assert.ok(riskData.verificationPlan, "verificationPlan should be generated in assess_risk result");
+    assert.equal(riskData.verificationPlan.tierNumber, 4);
+
+    // 11. Call slice_graph over stdio JSON-RPC (verifying parameter handling: level TASK)
+    sendRequest(proc, {
+      jsonrpc: "2.0",
+      id: 11,
+      method: "tools/call",
+      params: {
+        name: "slice_graph",
+        arguments: {
+          root: REPO_ROOT,
+          level: "TASK",
+          seeds: ["src/types.ts"],
+          maxHops: 2,
+          tokenBudget: 3000,
+        },
+      },
+    });
+    const sliceResponse = await readResponse(proc, 11, 30_000);
+    assert.ok(!sliceResponse.error, `slice_graph call failed: ${JSON.stringify(sliceResponse.error)}`);
+    const sliceData = JSON.parse(sliceResponse.result?.content?.[0]?.text ?? "{}");
+    assert.equal(sliceData.level, "TASK");
+    assert.equal(sliceData.hopRadius, 2);
+    assert.ok(Array.isArray(sliceData.nodes));
+    assert.ok(sliceData.nodes.length > 0);
 
   } finally {
     proc.stdin.end();

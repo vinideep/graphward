@@ -7,8 +7,56 @@ import { validateGraph, type DependencyGraph, type GraphNode, type GraphEdge } f
 import { buildDependencyGraph, loadExistingGraph, mergeIncrementalUpdate } from "./builders/dependency.js";
 import { reconcileGraphifyEvidence } from "./provider-evidence.js";
 
-export type { DependencyGraph, GraphNode, GraphEdge, Confidence } from "./schema.js";
-export { validateGraph, SchemaValidationError } from "./schema.js";
+export type {
+  DependencyGraph,
+  GraphNode,
+  GraphEdge,
+  Confidence,
+  EvidenceStrength,
+  EvidenceScope,
+  EvidenceKind,
+  ConfidenceState,
+  EvidenceSource,
+  Evidence,
+  MultiEvidenceEdge,
+  UnknownBoundaryType,
+  Snapshot,
+  UnknownBoundary,
+  UserAssertion,
+  Inference,
+  Change,
+} from "./schema.js";
+export {
+  validateGraph,
+  SchemaValidationError,
+  calculateCalibratedConfidence,
+  generateWhyExplanation,
+  createUnknownBoundaryNode,
+  createUnknownBoundaryEdge,
+  UNKNOWN_DYNAMIC_TARGET,
+  UNKNOWN_DYNAMIC_CALL,
+  UNKNOWN_RUNTIME_PATH,
+  UNKNOWN_REFLECTION,
+  UNKNOWN_EXTERNAL_SYSTEM,
+} from "./schema.js";
+export type { SymbolId, SymbolOrigin, RuntimeSymbolHint, ResolvedRuntimeSymbol } from "./symbol-identity.js";
+export {
+  formatSymbolUri,
+  parseSymbolUri,
+  createSymbolId,
+  computeSignatureHash,
+  computeDeclarationHash,
+  getOverloadQualifiedName,
+  resolveRuntimeSymbol,
+} from "./symbol-identity.js";
+export type { LanguageParser, ParseResult, CanonicalSymbolKind, CanonicalRelationKind } from "./parsers/interface.js";
+export { defaultParserRegistry } from "./parsers/interface.js";
+export { TypeScriptCompilerResolver, loadTypeScriptCompiler, discoverTsConfigs } from "./parsers/typescript-compiler.js";
+export { SqlitePartitionedStore } from "../storage/sqlite-store.js";
+export type { ResourceBudget, ResourceState } from "../governor/resource-governor.js";
+export { ResourceGovernor, defaultGovernor } from "../governor/resource-governor.js";
+export { HierarchicalGraphPartitioner, HierarchicalGraphPartitioner as HierarchicalPartitioner } from "./partitioning.js";
+export type { PartitionLevel, GlobalGraphSlice, PackageGraphSlice, CommunityGraphSlice, TaskGraphSlice } from "./partitioning.js";
 
 const SOURCE_EXT_RE = /\.(ts|tsx|js|mjs|cjs|py|go|rs|rb|java|kt)$/;
 

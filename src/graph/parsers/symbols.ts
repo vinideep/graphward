@@ -268,19 +268,28 @@ export async function extractSymbols(filePath: string, root: string): Promise<Sy
   const moduleId = `module:${rel}`;
   
   const tsResult = await parseWithTreeSitter(filePath, content);
-  if (tsResult && tsResult.exports.length > 0) {
+  if (tsResult && (tsResult.definitions.length > 0 || tsResult.exports.length > 0)) {
     const nodes: GraphNode[] = [];
     const edges: GraphEdge[] = [];
-    for (const exp of tsResult.exports) {
-      const id = `symbol:${rel}#${exp.name}`;
+    const pendingCalls: PendingCall[] = [];
+    const localByName = new Map<string, string>();
+
+    // 1. Process definitions from Tree-sitter
+    for (const def of tsResult.definitions) {
+      const id = `symbol:${rel}#${def.name}`;
+      localByName.set(def.name, id);
+      if (def.kind === "method" && def.name.includes(".")) {
+        const bare = def.name.split(".").pop()!;
+        if (!localByName.has(bare)) localByName.set(bare, id);
+      }
       nodes.push({
         id,
         kind: "symbol",
-        label: exp.name,
+        label: def.name,
         path: rel,
         confidence: "verified",
-        metadata: { symbolKind: exp.kind },
-        evidence: [`${relFile}`],
+        metadata: { symbolKind: def.kind, line: def.line },
+        evidence: [`${relFile}:${def.line}`],
       });
       edges.push({
         from: moduleId,
@@ -288,11 +297,72 @@ export async function extractSymbols(filePath: string, root: string): Promise<Sy
         relation: "defines",
         confidence: "verified",
         metadata: {},
-        evidence: [`${relFile}`],
+        evidence: [`${relFile}:${def.line}`],
       });
     }
-    // Tree-sitter basic implementation doesn't extract calls yet
-    return { nodes, edges, pendingCalls: [] };
+
+    // 2. Add any exports not already in definitions
+    for (const exp of tsResult.exports) {
+      if (!localByName.has(exp.name)) {
+        const id = `symbol:${rel}#${exp.name}`;
+        localByName.set(exp.name, id);
+        nodes.push({
+          id,
+          kind: "symbol",
+          label: exp.name,
+          path: rel,
+          confidence: "verified",
+          metadata: { symbolKind: exp.kind, line: exp.line ?? 1 },
+          evidence: [`${relFile}:${exp.line ?? 1}`],
+        });
+        edges.push({
+          from: moduleId,
+          to: id,
+          relation: "defines",
+          confidence: "verified",
+          metadata: {},
+          evidence: [`${relFile}:${exp.line ?? 1}`],
+        });
+      }
+    }
+
+    // 3. Process calls from Tree-sitter
+    const seenEdges = new Set<string>();
+    const ignored = isPy ? PY_IGNORED_CALLEES : JS_IGNORED_CALLEES;
+    for (const call of tsResult.calls) {
+      if (ignored.has(call.callee)) continue;
+      const callerId = call.from && call.from !== "file" && localByName.has(call.from)
+        ? localByName.get(call.from)!
+        : moduleId;
+
+      if (localByName.has(call.callee)) {
+        const targetId = localByName.get(call.callee)!;
+        if (targetId !== callerId) {
+          const edgeKey = `${callerId}->${targetId}`;
+          if (!seenEdges.has(edgeKey)) {
+            seenEdges.add(edgeKey);
+            edges.push({
+              from: callerId,
+              to: targetId,
+              relation: "calls",
+              confidence: "verified",
+              metadata: call.isDynamic ? { isDynamic: true } : {},
+              evidence: [`${relFile}:${call.line}`],
+            });
+          }
+        }
+      } else {
+        pendingCalls.push({
+          from: callerId,
+          calleeName: call.callee,
+          evidence: `${relFile}:${call.line}`,
+        });
+      }
+    }
+
+    if (nodes.length > 0) {
+      return { nodes, edges, pendingCalls };
+    }
   }
 
   const lineStarts = buildLineIndex(content);

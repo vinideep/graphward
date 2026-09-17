@@ -14,6 +14,8 @@ import { estimateTokens } from "../token-optimizer.js";
 import { verifyKnowledge } from "../verify/index.js";
 import { loadExperiments } from "../experiment/ledger.js";
 import { generateCodeSkeleton } from "./skeleton.js";
+import { evaluateEvidencePolicy, type EvidencePolicyDecision } from "./evidence-policy.js";
+import { SqlitePartitionedStore } from "../storage/sqlite-store.js";
 
 export interface NegativeConstraint {
   experimentId: string;
@@ -107,6 +109,8 @@ export interface ContextPackV2 {
     graphify: { version?: string; health: string; fallback: boolean };
     cce: { version?: string; health: string; fallback: boolean };
   };
+  evidencePolicy?: EvidencePolicyDecision;
+  provenanceBadges?: Array<{ entityId: string; badge: string; source: string; confidence: string }>;
   markdown: string;
 }
 
@@ -599,11 +603,194 @@ export async function getEngineeringContext(
     }
   }
 
+  // Dynamic Unknown Boundary and Runtime Invocation Analysis
+  const affectedNodeIds = new Set<string>([
+    ...architecture.seeds,
+    ...architecture.nodes.map((n) => n.id),
+  ]);
+  if (architecture.graph) {
+    for (const node of architecture.graph.nodes) {
+      if (node.path && (requestedSet.has(node.path) || requestedFiles.includes(node.path))) {
+        affectedNodeIds.add(node.id);
+      }
+    }
+  }
+
+  let hasUnknownCallers = false;
+  if (architecture.graph) {
+    const isUnknownNode = (node: { id: string; kind?: string; metadata?: Record<string, unknown> }) =>
+      node.kind === "unknown_boundary" || node.id.startsWith("unknown:") || Boolean(node.metadata?.boundaryType);
+
+    const isUnknownEdge = (edge: { from: string; to: string; relation?: string; metadata?: Record<string, unknown> }) =>
+      edge.relation === "reaches_unknown" ||
+      edge.from.startsWith("unknown:") ||
+      edge.to.startsWith("unknown:") ||
+      Boolean(edge.metadata?.boundaryType);
+
+    const unknownNodeIds = new Set<string>(
+      architecture.graph.nodes.filter(isUnknownNode).map((n) => n.id)
+    );
+
+    // 1. Check if any affected node itself is an unknown boundary
+    for (const id of affectedNodeIds) {
+      if (unknownNodeIds.has(id) || id.startsWith("unknown:")) {
+        hasUnknownCallers = true;
+        break;
+      }
+    }
+
+    // 2. Check if any edge connects an affected node to/from an unknown boundary
+    if (!hasUnknownCallers) {
+      for (const edge of architecture.graph.edges) {
+        const connectsUnknown = unknownNodeIds.has(edge.from) || unknownNodeIds.has(edge.to) || isUnknownEdge(edge);
+        if (connectsUnknown && (affectedNodeIds.has(edge.from) || affectedNodeIds.has(edge.to))) {
+          hasUnknownCallers = true;
+          break;
+        }
+      }
+    }
+
+    // 3. Check if any unknown boundary node originates in an affected file
+    if (!hasUnknownCallers) {
+      for (const node of architecture.graph.nodes) {
+        if (isUnknownNode(node)) {
+          if (node.path && (requestedSet.has(node.path) || requestedFiles.includes(node.path))) {
+            hasUnknownCallers = true;
+            break;
+          }
+          if (node.evidence && node.evidence.some((ev) => requestedFiles.some((f) => ev.startsWith(f)))) {
+            hasUnknownCallers = true;
+            break;
+          }
+        }
+      }
+    }
+
+    // 4. Check if graph unknowns mention any affected file or symbol
+    if (!hasUnknownCallers && architecture.graph.unknowns && architecture.graph.unknowns.length > 0) {
+      const mentionsAffected = architecture.graph.unknowns.some((u) =>
+        requestedFiles.some((f) => u.includes(f)) || Array.from(affectedNodeIds).some((id) => u.includes(id))
+      );
+      if (mentionsAffected) {
+        hasUnknownCallers = true;
+      }
+    }
+  }
+
+  // Query recorded runtime observations for affected symbols
+  let observedRuntimeInvocations = 0;
+  for (const dbPath of [
+    path.join(root, ".graphward", "graphward.db"),
+    path.join(root, ".graphward", "graph", "store.db"),
+    path.join(root, ".graphward", "store.db"),
+  ]) {
+    if (existsSync(dbPath)) {
+      let store: SqlitePartitionedStore | undefined;
+      try {
+        store = new SqlitePartitionedStore(dbPath);
+        await store.initialize();
+        const observations = store.getRuntimeObservations();
+        for (const obs of observations) {
+          const matchesFrom = affectedNodeIds.has(obs.fromSymbol) || requestedFiles.some((f) => obs.fromSymbol.includes(f));
+          const matchesTo = affectedNodeIds.has(obs.toSymbol) || requestedFiles.some((f) => obs.toSymbol.includes(f));
+          if (matchesFrom || matchesTo) {
+            observedRuntimeInvocations += obs.count || 0;
+          }
+        }
+      } catch {
+        // Non-fatal if store fails to open
+      } finally {
+        try {
+          store?.close();
+        } catch {
+          // Non-fatal
+        }
+      }
+      break;
+    }
+  }
+
+  try {
+    const runtimeGraphPath = path.join(root, ".graphward", "graph", "runtime-graph.json");
+    if (existsSync(runtimeGraphPath)) {
+      const raw = JSON.parse(await readFile(runtimeGraphPath, "utf8"));
+      if (raw && Array.isArray(raw.nodes)) {
+        for (const node of raw.nodes) {
+          if (node.path && (requestedSet.has(node.path) || requestedFiles.includes(node.path))) {
+            const count = typeof node.metadata?.invocations === "number" ? node.metadata.invocations
+              : typeof node.metadata?.observations === "number" ? node.metadata.observations
+              : typeof node.metadata?.count === "number" ? node.metadata.count
+              : node.metadata?.hotness === "high" ? 1500
+              : 0;
+            observedRuntimeInvocations += count;
+          }
+        }
+      }
+    }
+  } catch {
+    // Non-fatal
+  }
+
+  if (architecture.graph) {
+    for (const node of architecture.graph.nodes) {
+      if (affectedNodeIds.has(node.id)) {
+        if (typeof node.metadata?.runtimeInvocations === "number") {
+          observedRuntimeInvocations += node.metadata.runtimeInvocations;
+        } else if (typeof node.metadata?.observations === "number") {
+          observedRuntimeInvocations += node.metadata.observations;
+        }
+      }
+    }
+    for (const edge of architecture.graph.edges) {
+      if (affectedNodeIds.has(edge.from) || affectedNodeIds.has(edge.to)) {
+        if (typeof edge.metadata?.runtimeInvocations === "number") {
+          observedRuntimeInvocations += edge.metadata.runtimeInvocations;
+        } else if (typeof edge.metadata?.observations === "number") {
+          observedRuntimeInvocations += edge.metadata.observations;
+        } else if (typeof edge.metadata?.count === "number") {
+          observedRuntimeInvocations += edge.metadata.count;
+        }
+      }
+    }
+  }
+
+  const evidencePolicy = evaluateEvidencePolicy({
+    task: request.task,
+    changedFiles: requestedFiles,
+    dependentTestCount: testsToRun.length,
+    isPublicApi: classification.kind === "api-change",
+    isDatabaseSchema: classification.kind === "database-change",
+    isPaymentContract: request.task.toLowerCase().includes("pay") || requestedFiles.some((f: string) => f.includes("pay")),
+    hasUnknownCallers,
+    routeExposure: classification.domains.includes("api"),
+    runtimeInvocations: observedRuntimeInvocations > 0 ? observedRuntimeInvocations : undefined,
+  });
+
+  const provenanceBadges: Array<{ entityId: string; badge: string; source: string; confidence: string }> = [];
+  for (const node of architecture.nodes) {
+    provenanceBadges.push({
+      entityId: node.id,
+      badge: node.trustState === "verified" ? "PROV:COMPILER-SEMANTIC" : "PROV:STRUCTURAL",
+      source: "COMPILER",
+      confidence: node.confidence,
+    });
+  }
+  for (const chunk of trimmed) {
+    provenanceBadges.push({
+      entityId: `${chunk.path}:${chunk.startLine}-${chunk.endLine}`,
+      badge: "PROV:STATIC-SOURCE",
+      source: "AST",
+      confidence: "CALIBRATED",
+    });
+  }
+
   const base: Omit<ContextPackV2, "markdown"> = {
     schemaVersion: 2,
     generatedAt: new Date().toISOString(),
     task: request.task,
     classification,
+    evidencePolicy,
+    provenanceBadges,
     knowledge: {
       ...knowledge,
       constraints: [

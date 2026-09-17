@@ -79,6 +79,19 @@ export async function deadExportsGate(root: string): Promise<GateResult> {
     if (typeof pkg.main === "string") entryPaths.push(pkg.main);
     if (typeof pkg.bin === "string") entryPaths.push(pkg.bin);
     else if (pkg.bin && typeof pkg.bin === "object") entryPaths.push(...Object.values(pkg.bin));
+
+    if (typeof pkg.exports === "string") {
+      entryPaths.push(pkg.exports);
+    } else if (pkg.exports && typeof pkg.exports === "object") {
+      const collectExports = (exp: unknown) => {
+        if (typeof exp === "string") entryPaths.push(exp);
+        else if (exp && typeof exp === "object") {
+          for (const v of Object.values(exp as Record<string, unknown>)) collectExports(v);
+        }
+      };
+      collectExports(pkg.exports);
+    }
+
     for (const p of entryPaths) {
       entryModules.add(moduleId(root, path.resolve(root, p.replace(/^\.\//, "").replace(/^dist\//, "src/"))));
       entryModules.add(`module:${p.replace(/\.(tsx?|jsx?|mjs|cjs)$/, "").replace(/^\.\//, "")}`);
@@ -137,12 +150,14 @@ export async function deadExportsGate(root: string): Promise<GateResult> {
     const key = `${site.moduleId}#${site.name}`;
     if (seen.has(key)) continue;
     seen.add(key);
+    const confidence = calculateDeadExportConfidence(site);
     findings.push({
       severity: "warning",
       message: `Exported '${site.name}' in ${site.file} is never imported anywhere. Remove it or wire it up.`,
       file: site.file,
       line: site.line,
       evidence: `${site.file}:${site.line}`,
+      confidence,
     });
   }
 
@@ -151,3 +166,20 @@ export async function deadExportsGate(root: string): Promise<GateResult> {
     : "No unused exports detected.";
   return { gate: "dead-exports", status: statusFromFindings(findings), summary, findings };
 }
+
+export function calculateDeadExportConfidence(site: ExportSite): number {
+  const lowerName = site.name.toLowerCase();
+  const lowerFile = site.file.toLowerCase();
+
+  if (lowerName === "main" || lowerName === "handler" || lowerName === "init" || lowerName === "default") {
+    return 0.35;
+  }
+  if (lowerFile.includes("adapter") || lowerFile.includes("plugin") || lowerFile.includes("provider")) {
+    return 0.50;
+  }
+  if (lowerFile.includes("util") || lowerFile.includes("helper") || lowerFile.includes("internal")) {
+    return 0.95;
+  }
+  return 0.85;
+}
+

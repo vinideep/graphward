@@ -88,3 +88,69 @@ test("unverifiable provider-only edges cannot expand the approved retrieval neig
   assert.ok(!pack.architecture.edges.some((edge) => edge.trustState === "unverifiable"));
   assert.ok(!pack.architecture.approvedScope.includes("src/untrusted.ts"));
 });
+
+test("getEngineeringContext wires hasUnknownCallers and runtimeInvocations triggering CRITICAL: REFUSE", async () => {
+  const root = await fixture();
+  // Inject an UnknownBoundary node and edge in dependency graph
+  const graphPath = path.join(root, ".graphward", "graph", "dependency-graph.json");
+  const graph = JSON.parse(await readFile(graphPath, "utf8"));
+  
+  graph.nodes.push({
+    id: "unknown:dynamic_target:src/pay.ts:42",
+    kind: "unknown_boundary",
+    label: "UNKNOWN_DYNAMIC_TARGET: dynamic property dispatch",
+    path: "src/pay.ts",
+    confidence: "unknown",
+    metadata: { boundaryType: "UNKNOWN_DYNAMIC_TARGET" },
+    evidence: ["src/pay.ts:42"],
+  });
+  graph.edges.push({
+    from: "symbol:src/pay.ts#charge",
+    to: "unknown:dynamic_target:src/pay.ts:42",
+    relation: "reaches_unknown",
+    confidence: "unknown",
+    metadata: { boundaryType: "UNKNOWN_DYNAMIC_TARGET" },
+    evidence: ["src/pay.ts:42"],
+  });
+  await writeFile(graphPath, `${JSON.stringify(graph, null, 2)}\n`);
+
+  // 1. With API route exposure
+  const packRefuse = await getEngineeringContext(root, {
+    task: "modify payment api route with dynamic caller",
+    files: ["src/pay.ts"],
+  }, { runner: missingProvider, providerHome: path.join(root, "missing-providers") });
+
+  assert.equal(packRefuse.evidencePolicy.tier, "CRITICAL");
+  assert.equal(packRefuse.evidencePolicy.action, "REFUSE");
+  assert.equal(packRefuse.evidencePolicy.blocked, true);
+  assert.ok(packRefuse.evidencePolicy.provenanceBadge.includes("UNKNOWN BOUNDARY DETECTED"));
+
+  // 2. With high runtime invocations from runtime-graph.json
+  await write(root, ".graphward/graph/runtime-graph.json", JSON.stringify({
+    schemaVersion: 1,
+    graphType: "runtime",
+    generatedAt: new Date().toISOString(),
+    scope: "test",
+    nodes: [
+      {
+        id: "entry:pay",
+        kind: "entrypoint",
+        label: "pay entry",
+        path: "src/pay.ts",
+        confidence: "verified",
+        metadata: { invocations: 5000 },
+        evidence: ["src/pay.ts:1"],
+      },
+    ],
+    edges: [],
+  }));
+
+  const packRuntimeRefuse = await getEngineeringContext(root, {
+    task: "update pay internal function",
+    files: ["src/pay.ts"],
+  }, { runner: missingProvider, providerHome: path.join(root, "missing-providers") });
+
+  assert.equal(packRuntimeRefuse.evidencePolicy.tier, "CRITICAL");
+  assert.equal(packRuntimeRefuse.evidencePolicy.action, "REFUSE");
+  assert.equal(packRuntimeRefuse.evidencePolicy.blocked, true);
+});

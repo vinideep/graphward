@@ -29,6 +29,7 @@ export interface GateFinding {
   file?: string;
   line?: number;
   evidence?: string;
+  confidence?: number;
 }
 
 export interface GateResult {

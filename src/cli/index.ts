@@ -14,9 +14,9 @@ import { packageVersion } from "../version.js";
 import type { ProviderName } from "../providers/types.js";
 import type { ProviderPolicy } from "../config/index.js";
 
-type Command = "initialize" | "providers" | "install" | "update" | "sync" | "doctor" | "uninstall" | "visualize" | "create" | "map" | "mcp" | "freshness" | "git-analysis" | "user-profile" | "hook" | "gate" | "verify" | "claims" | "context" | "telemetry" | "setup" | "ask" | "guard" | "health" | "impact" | "who-calls" | "preflight" | "postflight" | "evidence-record" | "evidence-check" | "experiment" | "aidlc" | "handoff" | "learn" | "prune";
+type Command = "initialize" | "providers" | "install" | "update" | "sync" | "doctor" | "uninstall" | "visualize" | "create" | "map" | "mcp" | "freshness" | "git-analysis" | "user-profile" | "hook" | "gate" | "verify" | "claims" | "context" | "telemetry" | "setup" | "ask" | "guard" | "health" | "impact" | "who-calls" | "preflight" | "postflight" | "evidence-record" | "evidence-check" | "experiment" | "aidlc" | "handoff" | "learn" | "prune" | "resources";
 
-const COMMANDS: Command[] = ["initialize", "providers", "install", "create", "update", "sync", "doctor", "uninstall", "visualize", "map", "mcp", "freshness", "git-analysis", "user-profile", "hook", "gate", "verify", "claims", "context", "telemetry", "setup", "ask", "guard", "health", "impact", "who-calls", "preflight", "postflight", "evidence-record", "evidence-check", "experiment", "aidlc", "handoff", "learn", "prune"];
+const COMMANDS: Command[] = ["initialize", "providers", "install", "create", "update", "sync", "doctor", "uninstall", "visualize", "map", "mcp", "freshness", "git-analysis", "user-profile", "hook", "gate", "verify", "claims", "context", "telemetry", "setup", "ask", "guard", "health", "impact", "who-calls", "preflight", "postflight", "evidence-record", "evidence-check", "experiment", "aidlc", "handoff", "learn", "prune", "resources"];
 
 interface Options {
   command: Command;
@@ -98,6 +98,7 @@ Usage:
   gw claims list [path] [--json]
   gw context "<task>" [path] [--files a,b] [--budget 2000] [--json]
   gw prune [path] [--ttl-days 30] [--json]
+  gw resources [--json]
   graphward telemetry [path] [--json]
 
 IDE ids: ${IDE_IDS.join(", ")}
@@ -1103,6 +1104,18 @@ async function main(): Promise<void> {
       output.write(`${JSON.stringify(result, null, 2)}\n`);
     } else {
       output.write(`Pruned ${result.pruned} expired constraints. ${result.remaining} remaining.\n`);
+    }
+    if (readline) readline.close();
+    return;
+  }
+
+  if (options.command === "resources") {
+    const { ResourceGovernor } = await import("../governor/resource-governor.js");
+    const governor = new ResourceGovernor();
+    if (options.json) {
+      output.write(`${JSON.stringify(governor.getMetrics(), null, 2)}\n`);
+    } else {
+      output.write(`${governor.formatResourceReport()}\n`);
     }
     if (readline) readline.close();
     return;

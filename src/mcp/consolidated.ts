@@ -2,7 +2,12 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { loadGwConfig } from "../config/index.js";
 import { getEngineeringContext } from "../context/orchestrator.js";
-import { analyzeImpact, ensureFreshGraph, findSymbol, whoCalls } from "../graph/index.js";
+import { analyzeImpact, ensureFreshGraph, findSymbol, whoCalls, loadExistingGraph } from "../graph/index.js";
+import type { DependencyGraph, Snapshot } from "../graph/schema.js";
+import { ChangeSimulator, type ChangeIntent, type GraphLike } from "../simulation/change-simulator.js";
+import { CounterfactualGraphBranch, type PatchDelta } from "../simulation/counterfactual-graph.js";
+import { RiskEngine } from "../risk/risk-engine.js";
+import { HierarchicalPartitioner } from "../graph/partitioning.js";
 import { validateChange, syncEngineeringKnowledge } from "../orchestrators/change.js";
 import { GRAPHIFY_GRAPH_PATH } from "../providers/graphify.js";
 import { providerStatus } from "../providers/manager.js";
@@ -439,6 +444,193 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
         file: typeof args.file === "string" ? args.file : undefined,
         topic: typeof args.topic === "string" ? args.topic : undefined,
       });
+    },
+  });
+
+  registry.register({
+    name: "simulate_change_intent",
+    description: "Stage 1 Pre-Edit Intent Simulator: Traverses reverse dependencies from a proposed change intent to predict blast radius, affected routes, execution paths, and suggested regression tests.",
+    inputSchema: {
+      type: "object",
+      required: ["intent"],
+      additionalProperties: false,
+      properties: {
+        root: rootProperty,
+        intent: {
+          type: "object",
+          required: ["action", "description"],
+          properties: {
+            action: { type: "string", enum: ["create", "modify", "delete", "rename", "refactor"] },
+            description: { type: "string" },
+            filePath: { type: "string" },
+            symbol: { type: "object" },
+          },
+        },
+        maxDepth: { type: "number", minimum: 1, description: "Max traversal depth for reverse blast radius (default 5)." },
+        graph: { type: "object", description: "Optional in-memory graph to simulate against." },
+      },
+    },
+    handler: async (args) => {
+      const root = rootOf(args, projectRoot);
+      const rawIntent = (typeof args.intent === "object" && args.intent !== null ? args.intent : {
+        action: "modify",
+        description: String(args.intent ?? ""),
+      }) as ChangeIntent;
+
+      let graph = args.graph as GraphLike | undefined;
+      if (!graph) {
+        await ensureFreshGraph(root);
+        const depGraph = await loadExistingGraph(path.join(root, ".graphward", "graph", "dependency-graph.json"));
+        graph = depGraph
+          ? {
+              nodes: depGraph.nodes.map((n) => ({ id: n.id, path: n.path ?? "", kind: n.kind, label: n.label })),
+              edges: depGraph.edges.map((e) => ({ from: e.from, to: e.to, relation: e.relation })),
+            }
+          : { nodes: [], edges: [] };
+      }
+
+      const maxDepth = typeof args.maxDepth === "number" ? args.maxDepth : 5;
+      return ChangeSimulator.simulateChangeIntent(rawIntent, graph, maxDepth);
+    },
+  });
+
+  registry.register({
+    name: "evaluate_counterfactual",
+    description: "Stage 2 Post-Patch Counterfactual Graph Branch: Evaluates tentative in-memory patch overlays before committing, detecting newly introduced dependency cycles and broken call contracts with 100% precision.",
+    inputSchema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        root: rootProperty,
+        baseSnapshot: { type: "object", description: "Optional baseline Snapshot record." },
+        delta: {
+          type: "object",
+          properties: {
+            patchHash: { type: "string" },
+            addedNodes: { type: "array", items: { type: "object" } },
+            removedNodeIds: { type: "array", items: { type: "string" } },
+            addedEdges: { type: "array", items: { type: "object" } },
+            removedEdges: { type: "array", items: { type: "object" } },
+          },
+        },
+        baseGraph: { type: "object", description: "Optional base graph to branch from." },
+      },
+    },
+    handler: async (args) => {
+      const root = rootOf(args, projectRoot);
+      let baseGraph = args.baseGraph as GraphLike | undefined;
+      if (!baseGraph) {
+        await ensureFreshGraph(root);
+        const depGraph = await loadExistingGraph(path.join(root, ".graphward", "graph", "dependency-graph.json"));
+        baseGraph = depGraph
+          ? {
+              nodes: depGraph.nodes.map((n) => ({ id: n.id, path: n.path ?? "", kind: n.kind, label: n.label })),
+              edges: depGraph.edges.map((e) => ({ from: e.from, to: e.to, relation: e.relation })),
+            }
+          : { nodes: [], edges: [] };
+      }
+
+      const baseSnapshot: Snapshot = (args.baseSnapshot as Snapshot) ?? {
+        id: `snap_${Date.now()}`,
+        repository: path.basename(root),
+        commit: "HEAD",
+        kind: "REAL",
+        generatedAt: new Date().toISOString(),
+        schemaVersion: "2.2",
+      };
+
+      const delta = (args.delta as PatchDelta) ?? {};
+      return CounterfactualGraphBranch.evaluateClosureDelta(baseSnapshot, baseGraph, delta);
+    },
+  });
+
+  registry.register({
+    name: "assess_risk",
+    description: "Adaptive Risk Engine: Assesses multi-dimensional risk profile (blast radius, runtime exposure, unknown dynamic boundaries, test coverage deficit, architectural purity) and generates tiered verification plans.",
+    inputSchema: {
+      type: "object",
+      required: ["predictedImpact"],
+      additionalProperties: false,
+      properties: {
+        root: rootProperty,
+        predictedImpact: {
+          type: "object",
+          required: ["affectedFiles", "affectedSymbols"],
+          properties: {
+            affectedFiles: filesProperty,
+            affectedSymbols: { type: "array", items: { type: "object" } },
+            affectedRoutes: { type: "array", items: { type: "string" } },
+            affectedExecutionPaths: { type: "array", items: { type: "string" } },
+            suggestedTests: { type: "array", items: { type: "string" } },
+          },
+        },
+        inboundRuntimeRequests: { type: "number", minimum: 0 },
+        hasUnknownBoundaries: { type: "boolean" },
+        existingTestCount: { type: "number", minimum: 0 },
+        introducesCycle: { type: "boolean" },
+        isPublicApi: { type: "boolean" },
+        isFinancialOrDb: { type: "boolean" },
+      },
+    },
+    handler: async (args) => {
+      return RiskEngine.assessRisk({
+        predictedImpact: args.predictedImpact as any,
+        inboundRuntimeRequests: typeof args.inboundRuntimeRequests === "number" ? args.inboundRuntimeRequests : undefined,
+        hasUnknownBoundaries: typeof args.hasUnknownBoundaries === "boolean" ? args.hasUnknownBoundaries : undefined,
+        existingTestCount: typeof args.existingTestCount === "number" ? args.existingTestCount : undefined,
+        introducesCycle: typeof args.introducesCycle === "boolean" ? args.introducesCycle : undefined,
+        isPublicApi: typeof args.isPublicApi === "boolean" ? args.isPublicApi : undefined,
+        isFinancialOrDb: typeof args.isFinancialOrDb === "boolean" ? args.isFinancialOrDb : undefined,
+      });
+    },
+  });
+
+  registry.register({
+    name: "slice_graph",
+    description: "Hierarchical Graph Partitioner: Extracts scoped subgraphs across 4 tiers (GLOBAL package architecture, PACKAGE intra-module closure, COMMUNITY modularity clustering, TASK seed-hop bounded view) for 100k+ symbol monorepos.",
+    inputSchema: {
+      type: "object",
+      required: ["level"],
+      additionalProperties: false,
+      properties: {
+        root: rootProperty,
+        level: { type: "string", enum: ["GLOBAL", "PACKAGE", "COMMUNITY", "TASK"] },
+        package: { type: "string", description: "Target package name (required when level is PACKAGE)." },
+        seeds: { type: "array", items: { type: "string" }, description: "Seed symbol/file IDs (required when level is TASK)." },
+        maxHops: { type: "number", minimum: 1, description: "Max BFS hop radius for TASK slice (default 2)." },
+        tokenBudget: { type: "number", minimum: 1, description: "Token ceiling for TASK slice (default 2500)." },
+        graph: { type: "object", description: "Optional in-memory DependencyGraph to slice." },
+      },
+    },
+    handler: async (args) => {
+      const root = rootOf(args, projectRoot);
+      let graph = args.graph as DependencyGraph | undefined;
+      if (!graph) {
+        await ensureFreshGraph(root);
+        const loaded = await loadExistingGraph(path.join(root, ".graphward", "graph", "dependency-graph.json"));
+        if (!loaded) throw new Error("No dependency-graph.json found to slice");
+        graph = loaded;
+      }
+
+      const partitioner = new HierarchicalPartitioner();
+      const level = String(args.level ?? "GLOBAL").toUpperCase();
+      switch (level) {
+        case "GLOBAL":
+          return partitioner.sliceGlobal(graph);
+        case "PACKAGE":
+          return partitioner.slicePackage(graph, String(args.package ?? ""));
+        case "COMMUNITY":
+          return partitioner.sliceCommunity(graph);
+        case "TASK":
+          return partitioner.sliceTask(
+            graph,
+            Array.isArray(args.seeds) ? (args.seeds as string[]) : [],
+            typeof args.tokenBudget === "number" ? args.tokenBudget : undefined,
+            typeof args.maxHops === "number" ? args.maxHops : undefined,
+          );
+        default:
+          throw new Error(`Unknown slice level: ${level}. Must be GLOBAL, PACKAGE, COMMUNITY, or TASK.`);
+      }
     },
   });
 
