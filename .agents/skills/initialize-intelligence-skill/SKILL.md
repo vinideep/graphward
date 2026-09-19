@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: initialize-intelligence-skill
-description: Initializes GraphWard project intelligence by analyzing repository evidence and generating knowledge, context, memory, event guidance, architecture graphs, and an initialization change record. Invoke when onboarding a repository or when asked to initialize GraphWard.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to initialize-intelligence-skill. Do not use for direct selection from an unclassified user request."
 ---
 
 # Initialize GraphWard
@@ -168,3 +169,9 @@ Generate the following artifacts in order:
 - Consumed by: `graphward-skill`, all sync engines, `impact-analysis-engine`
 
 This initialization documents and validates the project. It does not implement product changes.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to initialize-intelligence-skill.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: context-budget-optimizer
-description: Minimizes AI IDE token usage by ranking, slicing, summarizing, and lazy-loading project intelligence while preserving required gates and output quality.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to context-budget-optimizer. Do not use for direct selection from an unclassified user request."
 ---
 
 # Context Budget Optimizer
@@ -112,3 +113,9 @@ Format:
 - [ ] Required gates still had enough evidence to run
 - [ ] Pack records provider health/fallback, current hashes, confidence, conflicts, and unknowns
 - [ ] Retrieval stopped once the explicit stop conditions were satisfied
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to context-budget-optimizer.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

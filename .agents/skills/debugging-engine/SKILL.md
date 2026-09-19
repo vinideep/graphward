@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: debugging-engine
-description: Performs structured root cause analysis using graph intelligence, log correlation, error propagation tracing, and reproduction step generation. Produces evidence-backed debug reports with fix suggestions and impact analysis.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to debugging-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Debugging Engine
@@ -194,3 +195,9 @@ If `.graphward/graph/` files do not exist or are empty:
 - Reproduction harness: `vertical-tdd-engine` (for creating minimal reproduction tests)
 
 This capability is analytical only. It must not modify product code.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to debugging-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

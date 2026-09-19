@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: user-intelligence-engine
-description: Resolves developer identity from git config, seeds a personal user-intelligence profile from git history, observes post-interaction signals to refine preferences, and promotes team-wide consensus to team-preferences.md. Multi-user safe: personal profiles are gitignored; team layer is committed.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to user-intelligence-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # User Intelligence Engine
@@ -227,3 +228,9 @@ coding-patterns   →  applies when both above are silent
 - Related: `incremental-sync-engine` (Memory sync manages team-preferences.md), `ongoing-learning-engine` (uncertainty tracking)
 
 This capability does not modify product code.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to user-intelligence-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

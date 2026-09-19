@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: git-intelligence-engine
-description: Extracts structural intelligence from git history — hotspot analysis, ownership mapping, change coupling, velocity tracking, and drift detection. Feeds graph intelligence and impact analysis with git-derived edges.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to git-intelligence-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Git Intelligence Engine
@@ -155,3 +156,9 @@ Write `.graphward/reports/GIT-intelligence.md`:
 - Consumed by: `pr-intelligence-engine`
 
 This capability is analytical only. It must not modify product code.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to git-intelligence-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

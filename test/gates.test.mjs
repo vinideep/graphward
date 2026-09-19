@@ -32,7 +32,7 @@ function git(root, ...args) {
 }
 
 test("GATE_NAMES / isGateName / statusFromFindings basics", () => {
-  assert.deepEqual([...GATE_NAMES].sort(), ["api-diff", "dead-exports", "env-vars", "migration-lint"]);
+  assert.deepEqual([...GATE_NAMES].sort(), ["api-diff", "api-snapshot", "conventions", "dead-exports", "env-vars", "migration-lint", "rollback-readiness", "security-audit"]);
   assert.equal(isGateName("env-vars"), true);
   assert.equal(isGateName("nope"), false);
   assert.equal(statusFromFindings([]), "pass");

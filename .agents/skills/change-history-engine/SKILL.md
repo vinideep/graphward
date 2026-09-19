@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: change-history-engine
-description: Records validated engineering work, impacted systems, tests, synchronized documentation, and outstanding risks. Use after initialization and completed engineering changes.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to change-history-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Change History Engine
@@ -130,3 +131,9 @@ Initial GraphWard intelligence generated for <project name>.
 - Used by: `graphward-skill` (step 7), `initialize-intelligence-skill` (step 9)
 - Depends on: `impact-analysis-engine` (for report references)
 - Related: `engineering-change-review` (may trigger a review report)
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to change-history-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

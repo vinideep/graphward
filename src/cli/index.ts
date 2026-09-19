@@ -14,9 +14,9 @@ import { packageVersion } from "../version.js";
 import type { ProviderName } from "../providers/types.js";
 import type { ProviderPolicy } from "../config/index.js";
 
-type Command = "initialize" | "providers" | "install" | "update" | "sync" | "doctor" | "uninstall" | "visualize" | "create" | "map" | "mcp" | "freshness" | "git-analysis" | "user-profile" | "hook" | "gate" | "verify" | "claims" | "context" | "telemetry" | "setup" | "ask" | "guard" | "health" | "impact" | "who-calls" | "preflight" | "postflight" | "evidence-record" | "evidence-check" | "experiment" | "aidlc" | "handoff" | "learn" | "prune" | "resources";
+type Command = "initialize" | "providers" | "install" | "update" | "sync" | "doctor" | "uninstall" | "visualize" | "create" | "map" | "mcp" | "freshness" | "git-analysis" | "user-profile" | "hook" | "gate" | "snapshot" | "verify" | "claims" | "context" | "telemetry" | "setup" | "ask" | "guard" | "health" | "impact" | "who-calls" | "preflight" | "postflight" | "evidence-record" | "evidence-check" | "experiment" | "aidlc" | "handoff" | "learn" | "prune" | "resources";
 
-const COMMANDS: Command[] = ["initialize", "providers", "install", "create", "update", "sync", "doctor", "uninstall", "visualize", "map", "mcp", "freshness", "git-analysis", "user-profile", "hook", "gate", "verify", "claims", "context", "telemetry", "setup", "ask", "guard", "health", "impact", "who-calls", "preflight", "postflight", "evidence-record", "evidence-check", "experiment", "aidlc", "handoff", "learn", "prune", "resources"];
+const COMMANDS: Command[] = ["initialize", "providers", "install", "create", "update", "sync", "doctor", "uninstall", "visualize", "map", "mcp", "freshness", "git-analysis", "user-profile", "hook", "gate", "snapshot", "verify", "claims", "context", "telemetry", "setup", "ask", "guard", "health", "impact", "who-calls", "preflight", "postflight", "evidence-record", "evidence-check", "experiment", "aidlc", "handoff", "learn", "prune", "resources"];
 
 interface Options {
   command: Command;
@@ -66,6 +66,10 @@ interface Options {
   ttlDays: number;
   share: boolean;
   provenance?: "human" | "agent" | "unknown";
+  unit?: string;
+  inputPath?: string;
+  volatilePaths: string[];
+  sensitivePaths: string[];
 }
 
 function usage(all = false): string {
@@ -91,6 +95,7 @@ Usage:
   gw user-profile [path] [--json]
   gw hook <event> [path]   (internal: driven by IDE lifecycle hooks)
   gw gate <name> [path] [--base <ref>] [--fail-on error|warning] [--json]
+  gw snapshot capture|replay [path] --unit <name> --input <exchange.json> --files <response-source,...> [--volatile a,b] [--sensitive a,b]
   gw verify [path] [--json]
   gw claims verify [path] [--json] [--strict]
   gw claims derive [path] [--json]
@@ -177,6 +182,10 @@ function parseArgs(args: string[]): Options {
   let ttlDays = 30;
   let share = false;
   let provenance: "human" | "agent" | "unknown" | undefined;
+  let unit: string | undefined;
+  let inputPath: string | undefined;
+  let volatilePaths: string[] = [];
+  let sensitivePaths: string[] = [];
 
   for (let index = 0; index < remaining.length; index += 1) {
     const arg = remaining[index];
@@ -333,6 +342,22 @@ function parseArgs(args: string[]): Options {
       area = remaining[++index];
     } else if (arg.startsWith("--area=")) {
       area = arg.slice("--area=".length);
+    } else if (arg === "--unit") {
+      unit = remaining[++index];
+    } else if (arg.startsWith("--unit=")) {
+      unit = arg.slice("--unit=".length);
+    } else if (arg === "--input") {
+      inputPath = remaining[++index];
+    } else if (arg.startsWith("--input=")) {
+      inputPath = arg.slice("--input=".length);
+    } else if (arg === "--volatile") {
+      volatilePaths = (remaining[++index] ?? "").split(",").filter(Boolean);
+    } else if (arg.startsWith("--volatile=")) {
+      volatilePaths = arg.slice("--volatile=".length).split(",").filter(Boolean);
+    } else if (arg === "--sensitive") {
+      sensitivePaths = (remaining[++index] ?? "").split(",").filter(Boolean);
+    } else if (arg.startsWith("--sensitive=")) {
+      sensitivePaths = arg.slice("--sensitive=".length).split(",").filter(Boolean);
     } else if (arg === "--provenance") {
       const val = remaining[++index];
       if (val === "human" || val === "agent" || val === "unknown") provenance = val;
@@ -345,7 +370,7 @@ function parseArgs(args: string[]): Options {
       hookEvent = arg;
     } else if (command === "gate" && gateName === undefined) {
       gateName = arg;
-    } else if ((command === "claims" || command === "context" || command === "experiment" || command === "aidlc" || command === "handoff" || command === "learn") && positional === undefined) {
+    } else if ((command === "claims" || command === "context" || command === "experiment" || command === "aidlc" || command === "handoff" || command === "learn" || command === "snapshot") && positional === undefined) {
       positional = arg;
     } else if (command === "providers" && providerAction === undefined) {
       if (!["status", "install", "repair", "upgrade", "expose", "hide", "purge"].includes(arg)) throw new Error(`Unknown providers action "${arg}".`);
@@ -412,6 +437,10 @@ function parseArgs(args: string[]): Options {
     ttlDays,
     share,
     provenance,
+    unit,
+    inputPath,
+    volatilePaths,
+    sensitivePaths,
   };
 }
 
@@ -759,7 +788,27 @@ async function main(): Promise<void> {
         output.write(`  ${icon[f.severity]} ${f.message}${loc}\n`);
       }
     }
-    process.exitCode = result.status === "fail" ? 1 : 0;
+    process.exitCode = result.status === "fail" || (result.status === "unavailable" && result.required) ? 1 : 0;
+    if (readline) readline.close();
+    return;
+  }
+
+  if (options.command === "snapshot") {
+    const action = options.positional;
+    if ((action !== "capture" && action !== "replay") || !options.unit || !options.inputPath || (action === "capture" && !options.files.length)) {
+      output.write("Usage: gw snapshot capture|replay [path] --unit <name> --input <exchange.json> --files <response-source,...> [--volatile a,b] [--sensitive a,b]\n");
+      process.exitCode = 2;
+      if (readline) readline.close();
+      return;
+    }
+    const { captureApiSnapshot, replayApiSnapshot } = await import("../gates/api-snapshot.js");
+    const inputFile = path.resolve(process.cwd(), options.inputPath);
+    const exchange = JSON.parse(await readFile(inputFile, "utf8"));
+    const result = action === "capture"
+      ? await captureApiSnapshot(options.root, options.unit, exchange, { volatilePaths: options.volatilePaths, sensitivePaths: options.sensitivePaths, sourceFiles: options.files })
+      : await replayApiSnapshot(options.root, options.unit, exchange);
+    output.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : `${action === "capture" ? "Captured" : "Replayed"} API snapshot '${options.unit}'.\n`);
+    if (action === "replay" && "status" in result && result.status === "fail") process.exitCode = 1;
     if (readline) readline.close();
     return;
   }
@@ -1038,8 +1087,23 @@ async function main(): Promise<void> {
   }
 
   if (options.command === "learn") {
-    const { recordLearnedPattern, logUncertaintyEvent, queryProjectMemory } = await import("../learning/index.js");
+    const { recordLearnedPattern, promoteLearnedPattern, migrateLegacyRegressionPatterns, logUncertaintyEvent, queryProjectMemory } = await import("../learning/index.js");
     const subAction = options.positional || "query";
+
+    if (subAction === "promote") {
+      if (!options.id || !options.author || !options.description) throw new Error("learn promote requires --id, --author, and --description rationale.");
+      const res = await promoteLearnedPattern(options.root, options.id, { reviewer: options.author, rationale: options.description, promote: true });
+      output.write(options.json ? `${JSON.stringify(res, null, 2)}\n` : `Learning proposal ${res.id}: ${res.status} (${res.path})\n`);
+      if (readline) readline.close();
+      return;
+    }
+
+    if (subAction === "migrate-legacy") {
+      const res = await migrateLegacyRegressionPatterns(options.root);
+      output.write(options.json ? `${JSON.stringify(res, null, 2)}\n` : `Legacy regression migration: ${res.migrated} migrated, ${res.conflicts} conflicts.\n`);
+      if (readline) readline.close();
+      return;
+    }
 
     if (subAction === "pattern") {
       const type = (options.graphType as any) || "convention";
@@ -1056,7 +1120,7 @@ async function main(): Promise<void> {
       if (options.json) {
         output.write(`${JSON.stringify(res, null, 2)}\n`);
       } else {
-        output.write(`Recorded ${type} pattern "${title}" to ${res.path}\n`);
+        output.write(`Proposed ${type} pattern "${title}" at ${res.path}; incremental-sync must review and promote it.\n`);
       }
       if (readline) readline.close();
       return;
@@ -1272,7 +1336,7 @@ async function main(): Promise<void> {
   }
 
   if (options.command === "doctor") {
-    const actions = await doctor(options.root);
+    const actions = await doctor(options.root, undefined, options.strict);
     if (options.json) {
       output.write(`${JSON.stringify(actions, null, 2)}\n`);
     } else {
@@ -1392,4 +1456,3 @@ if (isEntrypoint()) {
     process.exitCode = 1;
   });
 }
-

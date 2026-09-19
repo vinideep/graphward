@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: interface-design-explorer
-description: Explores and compares alternative interface contracts and TypeScript type definitions across multiple design philosophies before implementation.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to interface-design-explorer. Do not use for direct selection from an unclassified user request."
 ---
 
 # Interface Design Explorer
@@ -35,3 +36,9 @@ Explore, draft, and benchmark alternative interface designs and type contracts u
 4. **Select & Finalize Contract**:
    - Align with the user on the chosen design option.
    - Codify the approved type definitions in the target module or `.graphward/context/` before starting implementation.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to interface-design-explorer.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

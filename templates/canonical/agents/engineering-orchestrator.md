@@ -83,14 +83,14 @@ For non-trivial work, call `get_engineering_context` before direct file explorat
 
 ### Adaptive Implementation Pipeline
 
-1. **Pre-flight & Clarification**: Request ContextPackV2 and AI-DLC state → identify verified relevant context, provider fallback, conflicts, and unknowns. Run `socratic-clarification-gate` (`assess_prompt_clarity`); if ambiguity score < 75 or requirements are underspecified, halt and resolve trade-offs before writing code. Check if discovery has been run; if not, perform discovery inside initialization or requirement scoping.
+1. **Pre-flight & Clarification**: Request ContextPackV2 and AI-DLC state → identify verified relevant context, provider fallback, conflicts, and unknowns. Run `socratic-clarification-gate` (`assess_prompt_clarity`); if clarity score < 75 or requirements are underspecified, halt and resolve trade-offs before writing code. Check if discovery has been run; if not, perform discovery inside initialization or requirement scoping.
 2. **Adaptive Socratic Gauntlet**: If change is `architecture`, `security`, `high`/`critical` risk, or has 3+ ambiguities, invoke `socratic-stress-tester` to stress-test trade-offs before impact planning.
 3. **Impact**: Run `impact-analysis-engine` → write impact report
 4. **AI-DLC + Agile Plan**: Run `aidlc-lifecycle-engine` → select delivery mode, update backlog, acceptance criteria, state, and unit plan.
 5. **Adaptive Interface Exploration**: If introducing new public APIs, exported types, or schema contracts, invoke `interface-design-explorer` to benchmark 3 proposals before writing code.
 6. **Implement**: Execute `graphward-skill` → code changes + tests. When in TDD mode or implementing critical business logic, enforce `vertical-tdd-engine`.
 7. **Validate**: Run `environmental-backpressure-engine` → tests, type checks, lints, scans — record results honestly
-8. **Govern**: Run `nfr-adr-governor`, `mcp-security-governor`, or `operations-readiness-engine` when triggered by risk
+8. **Govern**: Run `security-audit-engine`, `nfr-adr-governor`, `mcp-security-governor`, `database-migration-safety-engine`, or `operations-readiness-engine` when triggered by risk
 9. **Sync & Continuity**: Call `sync_engineering_knowledge`, update affected canonical intelligence only, then call `validate_change`. If session bounds or pauses occur, serialize state via `session-handoff-engine`.
 10. **Record**: Run `change-history-engine` → write change record
 11. **Review gate** (high-risk only): Run `engineering-change-review`
@@ -117,16 +117,15 @@ These workflows analyze without modifying product code:
 | `sync-graphward` | `change-detection-engine`, `impact-analysis-engine`, `incremental-sync-engine` | Updated intelligence |
 | `review-engineering-change` | `change-detection-engine`, `engineering-change-review` | Review report |
 | `discover-codebase` | `codebase-discovery-engine`, `convention-detector`, `graph-engine` | Discovery report + conventions |
-| `create-project` | `greenfield-architect`, `initialize-intelligence-skill` | Scaffolded project + intelligence |
 | `decompose-backlog` | `backlog-decomposition-engine`, `issue-tracker-sync-engine` | Epic/feature/ticket backlog (planning only) |
 
 ## Agent Delegation
 
 | Agent | Responsibility | When to Delegate |
 |---|---|---|
-| **Change Agent** | Implementation and testing | Step 3-4 of implementation pipeline |
-| **Quality Agent** | Validation and review | Step 4, 7 of implementation pipeline |
-| **Knowledge Agent** | Intelligence maintenance | Step 5-6 of implementation pipeline, all read-only pipelines |
+| **Change Agent** | Implementation and implementation tests | Steps 3-6 of implementation pipeline |
+| **Quality Agent** | Validation and review | Steps 7 and 11 of implementation pipeline |
+| **Knowledge Agent** | Intelligence maintenance | Steps 9-10 of implementation pipeline, all read-only pipelines |
 | **System Architect** | Component boundaries, NFR design, ADRs | Design-first, architecture, broad feature work |
 | **Security Officer** | Threat model and tool security | Security, MCP, public API, auth, payment |
 | **Test Engineer** | Test design and backpressure | TDD and validation-heavy changes |

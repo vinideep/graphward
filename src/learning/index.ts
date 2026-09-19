@@ -1,6 +1,7 @@
-import { mkdir, readFile, appendFile } from "node:fs/promises";
+import { mkdir, readFile, appendFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 
 export interface LearnedPatternInput {
   type: "convention" | "regression" | "constraint";
@@ -9,6 +10,14 @@ export interface LearnedPatternInput {
   rule: string;
   targetFiles?: string[];
   provenance?: 'human' | 'agent' | 'unknown';
+}
+
+export interface LearnedPatternProposal extends LearnedPatternInput {
+  schemaVersion: 1;
+  id: string;
+  deduplicationHash: string;
+  proposedAt: string;
+  status: "proposed" | "promoted" | "rejected";
 }
 
 export interface UncertaintyEventInput {
@@ -34,52 +43,103 @@ function eventsDir(root: string): string {
   return path.join(root, ".graphward", "events");
 }
 
-/**
- * Record a learned pattern, convention, or negative constraint to durable project memory.
- */
-export async function recordLearnedPattern(
-  root: string,
-  pattern: LearnedPatternInput,
-): Promise<{ saved: boolean; path: string }> {
-  const validTypes = ["convention", "regression", "constraint"] as const;
-  if (!pattern || !validTypes.includes(pattern.type as any)) {
-    throw new Error(`Invalid pattern type "${pattern?.type}". Allowed types: ${validTypes.join(", ")}.`);
-  }
+function proposalDir(root: string): string {
+  return path.join(eventsDir(root), "learning-proposals");
+}
 
-  const dir = memoryDir(root);
+function patternHash(pattern: LearnedPatternInput): string {
+  const normalized = JSON.stringify({
+    type: pattern.type,
+    title: pattern.title.trim().toLowerCase(),
+    description: pattern.description.trim(),
+    rule: pattern.rule.trim(),
+    targetFiles: [...(pattern.targetFiles ?? [])].sort(),
+  });
+  return createHash("sha256").update(normalized).digest("hex");
+}
+
+function safeInline(value: string): string {
+  return value.replace(/[\r\n\t]+/g, " ").replace(/\s{2,}/g, " ").trim();
+}
+
+export async function proposeLearnedPattern(root: string, pattern: LearnedPatternInput): Promise<LearnedPatternProposal & { path: string }> {
+  const validTypes = ["convention", "regression", "constraint"] as const;
+  if (!pattern || !validTypes.includes(pattern.type as any)) throw new Error(`Invalid pattern type "${pattern?.type}". Allowed types: ${validTypes.join(", ")}.`);
+  if (!pattern.title?.trim() || !pattern.description?.trim() || !pattern.rule?.trim()) throw new Error("Learned-pattern proposals require title, description, and rule.");
+  if (!pattern.targetFiles?.length) throw new Error("Learned-pattern proposals require at least one evidence path in targetFiles.");
+  const hash = patternHash(pattern);
+  const proposal: LearnedPatternProposal = {
+    ...pattern,
+    schemaVersion: 1,
+    id: `pat-${hash.slice(0, 16)}`,
+    deduplicationHash: hash,
+    proposedAt: new Date().toISOString(),
+    status: "proposed",
+  };
+  const dir = proposalDir(root);
   await mkdir(dir, { recursive: true });
+  const target = path.join(dir, `${proposal.id}.json`);
+  await writeFile(target, `${JSON.stringify(proposal, null, 2)}\n`, "utf8");
+  return { ...proposal, path: path.relative(root, target).replace(/\\/g, "/") };
+}
+
+export async function promoteLearnedPattern(
+  root: string,
+  id: string,
+  decision: { reviewer: string; rationale: string; promote: boolean },
+): Promise<{ saved: boolean; path: string; id: string; status: "promoted" | "rejected" | "duplicate" }> {
+  if (!decision.reviewer.trim() || !decision.rationale.trim()) throw new Error("Promotion requires reviewer and rationale.");
+  const proposalPath = path.join(proposalDir(root), `${id}.json`);
+  const proposal = JSON.parse(await readFile(proposalPath, "utf8")) as LearnedPatternProposal;
+  if (!decision.promote) {
+    await writeFile(proposalPath, `${JSON.stringify({ ...proposal, status: "rejected", decision }, null, 2)}\n`, "utf8");
+    return { saved: false, path: path.relative(root, proposalPath).replace(/\\/g, "/"), id, status: "rejected" };
+  }
 
   const fileNameMap: Record<LearnedPatternInput["type"], { file: string; heading: string }> = {
     convention: { file: "coding-patterns.md", heading: "# Coding Patterns" },
     regression: { file: "regression-patterns.md", heading: "# Regression Patterns" },
     constraint: { file: "project-constraints.md", heading: "# Project Constraints" },
   };
-
-  const info = fileNameMap[pattern.type];
+  const info = fileNameMap[proposal.type];
+  const dir = memoryDir(root);
   const filePath = path.join(dir, info.file);
-
-  const evidenceStr = pattern.targetFiles && pattern.targetFiles.length > 0
-    ? ` (evidence: ${pattern.targetFiles.join(", ")})`
-    : "";
-
-  const provStr = pattern.provenance ? ` [provenance: ${pattern.provenance}]` : "";
-
-  const entry = `- **${pattern.title}:** ${pattern.rule} (${pattern.description})${evidenceStr}${provStr}\n`;
-
+  await mkdir(dir, { recursive: true });
+  const existing = existsSync(filePath) ? await readFile(filePath, "utf8") : `${info.heading}\n<!-- freshness: last_checked=${new Date().toISOString().split("T")[0]} -->\n\n`;
+  if (existing.includes(`[pattern-id:${proposal.id}]`)) return { saved: false, path: path.relative(root, filePath).replace(/\\/g, "/"), id, status: "duplicate" };
+  const entry = `- **${safeInline(proposal.title)}:** ${safeInline(proposal.rule)} (${safeInline(proposal.description)}) (evidence: ${proposal.targetFiles!.map(safeInline).join(", ")}) [provenance: ${proposal.provenance ?? "unknown"}] [pattern-id:${proposal.id}] [reviewer:${safeInline(decision.reviewer)}]\n`;
   const { writeProtectedFile } = await import("../manifest/lock.js");
-  if (!existsSync(filePath)) {
-    const today = new Date().toISOString().split("T")[0];
-    const initialContent = `${info.heading}\n<!-- freshness: last_checked=${today} -->\n\n${entry}`;
-    await writeProtectedFile(root, filePath, initialContent);
-  } else {
-    const existing = await readFile(filePath, "utf8");
-    await writeProtectedFile(root, filePath, existing + entry);
-  }
+  await writeProtectedFile(root, filePath, existing + entry);
+  await writeFile(proposalPath, `${JSON.stringify({ ...proposal, status: "promoted", decision }, null, 2)}\n`, "utf8");
+  return { saved: true, path: path.relative(root, filePath).replace(/\\/g, "/"), id, status: "promoted" };
+}
 
-  return {
-    saved: true,
-    path: path.relative(root, filePath).replace(/\\/g, "/"),
-  };
+/**
+ * Record a learned pattern, convention, or negative constraint to durable project memory.
+ */
+export async function recordLearnedPattern(
+  root: string,
+  pattern: LearnedPatternInput,
+): Promise<{ saved: false; path: string; id: string; status: "proposed"; deprecated: true }> {
+  const proposal = await proposeLearnedPattern(root, pattern);
+  return { saved: false, path: proposal.path, id: proposal.id, status: "proposed", deprecated: true };
+}
+
+export async function migrateLegacyRegressionPatterns(root: string): Promise<{ migrated: number; conflicts: number; report?: string }> {
+  const legacy = path.join(root, ".engineering-intelligence", "memory", "regression-patterns.md");
+  if (!existsSync(legacy)) return { migrated: 0, conflicts: 0 };
+  const current = path.join(memoryDir(root), "regression-patterns.md");
+  const legacyLines = (await readFile(legacy, "utf8")).split("\n").filter((line) => /^[-*]\s+/.test(line));
+  const currentText = existsSync(current) ? await readFile(current, "utf8") : "# Regression Patterns\n\n";
+  const additions = legacyLines.filter((line) => !currentText.includes(line)).map((line) => `${line} [legacy-unverified; review before reuse]`);
+  const conflicts = legacyLines.length - additions.length;
+  await mkdir(path.dirname(current), { recursive: true });
+  const { writeProtectedFile } = await import("../manifest/lock.js");
+  await writeProtectedFile(root, current, currentText + (additions.length ? `${additions.join("\n")}\n` : ""));
+  const reportPath = path.join(root, ".graphward", "reports", "legacy-regression-pattern-migration.json");
+  await mkdir(path.dirname(reportPath), { recursive: true });
+  await writeFile(reportPath, `${JSON.stringify({ source: path.relative(root, legacy), destination: path.relative(root, current), migrated: additions.length, conflicts, legacyPreserved: true }, null, 2)}\n`, "utf8");
+  return { migrated: additions.length, conflicts, report: path.relative(root, reportPath).replace(/\\/g, "/") };
 }
 
 /**

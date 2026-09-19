@@ -13,7 +13,15 @@
  * - SKILL-BRIEF.md = CCR tier 2: understand without executing; SKILL.md = CCR tier 3 retrieval
  */
 
-import { WORKFLOW_NAMES, readTemplate } from "./templates.js";
+import { readTemplate } from "./templates.js";
+import {
+  SKILL_INVOCATION_POLICIES,
+  WORKFLOW_CATALOG,
+  WORKFLOW_SKILL_ROUTING,
+  type SkillName,
+} from "./routing/catalog.js";
+
+export { WORKFLOW_SKILL_ROUTING } from "./routing/catalog.js";
 
 // --- Rendered-file preparation ------------------------------------------------
 
@@ -50,128 +58,30 @@ export function prepareRendered(content: string): string {
  * Saving: replaces LLM inference of "which skills apply?" with a deterministic
  * lookup. This is the CacheAligner benefit: the same stable prefix every time.
  */
-export const WORKFLOW_SKILL_ROUTING: Record<
-  (typeof WORKFLOW_NAMES)[number],
-  { primary: string[]; optional: string[] }
-> = {
-  "graphward": {
-    primary: [
-      "graphward-skill",
-      "socratic-clarification-gate",
-      "aidlc-lifecycle-engine",
-      "impact-analysis-engine",
-      "context-budget-optimizer",
-    ],
-    optional: [
-      "graph-guided-autoresearch",
-      "socratic-stress-tester",
-      "interface-design-explorer",
-      "vertical-tdd-engine",
-      "session-handoff-engine",
-      "user-intelligence-engine",
-      "change-detection-engine",
-      "incremental-sync-engine",
-      "change-history-engine",
-      "environmental-backpressure-engine",
-      "testing-intelligence-engine",
-      "question-file-engine",
-      "refactoring-planner",
-      "debugging-engine",
-    ],
-  },
-  "initialize-graphward": {
-    primary: ["initialize-intelligence-skill"],
-    optional: [
-      "deep-project-knowledge-extractor",
-      "knowledge-base-validator",
-      "graph-engine",
-      "change-history-engine",
-    ],
-  },
-  "decompose-backlog": {
-    primary: ["backlog-decomposition-engine", "context-budget-optimizer"],
-    optional: ["issue-tracker-sync-engine", "aidlc-lifecycle-engine", "question-file-engine"],
-  },
-  "deliver-backlog": {
-    primary: ["aidlc-lifecycle-engine", "graphward-skill"],
-    optional: [
-      "backlog-decomposition-engine",
-      "issue-tracker-sync-engine",
-      "incremental-sync-engine",
-    ],
-  },
-  "map-architecture": {
-    primary: ["graph-engine"],
-    optional: ["codebase-discovery-engine", "git-intelligence-engine"],
-  },
-  "analyze-impact": {
-    primary: ["change-detection-engine", "impact-analysis-engine"],
-    optional: ["graph-engine"],
-  },
-  "sync-graphward": {
-    primary: ["change-detection-engine", "incremental-sync-engine"],
-    optional: [
-      "staleness-detector",
-      "ongoing-learning-engine",
-      "knowledge-base-validator",
-      "graph-engine",
-    ],
-  },
-  "review-engineering-change": {
-    primary: ["change-detection-engine", "engineering-change-review"],
-    optional: ["impact-analysis-engine"],
-  },
-  "scope-requirement": {
-    primary: ["requirement-scoper"],
-    optional: ["context-budget-optimizer", "aidlc-lifecycle-engine", "question-file-engine"],
-  },
-  "discover-codebase": {
-    primary: ["codebase-discovery-engine", "convention-detector", "graph-engine"],
-    optional: [],
-  },
-  "create-project": {
-    primary: ["greenfield-architect", "initialize-intelligence-skill"],
-    optional: [],
-  },
-  "grill-me": {
-    primary: ["socratic-stress-tester"],
-    optional: ["requirement-scoper", "architecture-review-engine", "nfr-adr-governor"],
-  },
-  "handoff": {
-    primary: ["session-handoff-engine"],
-    optional: ["context-budget-optimizer", "incremental-sync-engine"],
-  },
-  "tdd": {
-    primary: ["vertical-tdd-engine", "testing-intelligence-engine"],
-    optional: ["type-safety-engine", "environmental-backpressure-engine"],
-  },
-  "design-an-interface": {
-    primary: ["interface-design-explorer"],
-    optional: ["type-safety-engine", "architecture-review-engine"],
-  },
-};
-
 export const SKILLS_INDEX_FILENAME = "SKILLS-INDEX.md";
 export const WORKFLOW_ROUTING_FILENAME = "WORKFLOW-ROUTING.md";
 
-export function generateWorkflowRouting(skillsDir = ".claude/skills"): string {
+export function generateWorkflowRouting(skillsDir = ".claude/skills", briefsAvailable = true): string {
   const rows = (Object.entries(WORKFLOW_SKILL_ROUTING) as [string, { primary: string[]; optional: string[] }][])
     .map(([cmd, r]) => {
       const primary = r.primary.map((s) => `\`${s}\``).join(", ");
       const optional = r.optional.length ? r.optional.map((s) => `\`${s}\``).join(", ") : "—";
-      return `| \`${cmd}\` | ${primary} | ${optional} |`;
+      const route = WORKFLOW_CATALOG[cmd as keyof typeof WORKFLOW_CATALOG];
+      return `| \`${cmd}\` | ${route.mutatesProduct ? "yes" : "no"} | ${primary} | ${optional} |`;
     });
 
   return [
     "# Workflow Routing Table",
     "",
     "> **Read this before loading any skill files.**",
-    "> For each primary skill: load `SKILL-BRIEF.md` to understand it (~150t), then `SKILL.md` to execute.",
+    briefsAvailable
+      ? "> For each primary skill: load `SKILL-BRIEF.md` to understand it (~150t), then `SKILL.md` to execute."
+      : "> Load each primary `SKILL.md` only after the entry workflow selects it; brief files are not installed for this provider.",
     "> Load **optional** skills only when the request explicitly requires that capability.",
-    `> Skill files are in \`${skillsDir}/<name>/\` (SKILL-BRIEF.md and SKILL.md).`,
+    `> Skill files are in \`${skillsDir}/<name>/\` (${briefsAvailable ? "SKILL-BRIEF.md and SKILL.md" : "SKILL.md"}).`,
     "",
-    "| Command | Primary Skills — load first | Optional Skills — load if needed |",
-    "|---|---|---|",
+    "| Command | Mutates product | Primary Skills — load first | Optional Skills — load if needed |",
+    "|---|---:|---|---|",
     ...rows,
     "",
   ].join("\n");
@@ -179,47 +89,43 @@ export function generateWorkflowRouting(skillsDir = ".claude/skills"): string {
 
 // --- Skills index ------------------------------------------------------------
 
-function parseFrontmatterDescription(content: string): string {
-  const match = content.match(/^description:\s*(.+)$/m);
-  return match ? match[1].trim() : "";
-}
-
 /**
- * Generate a compact one-line-per-skill index.
- * ~1,500 tokens total vs reading every full skill file.
- * The AI reads this index to identify which 1-3 skills to load in full.
+ * Generate a compact discriminator-first skill index. Raw template
+ * descriptions are intentionally not used here: several describe adjacent
+ * capabilities in generic terms, which recreates the model-selection
+ * ambiguity that the routing catalog is designed to eliminate.
  */
 export async function generateSkillsIndex(
   skillNames: ReadonlyArray<string>,
   skillsDir = ".claude/skills",
   activeWorkflow?: string,
+  briefsAvailable = true,
 ): Promise<string> {
   let relevantSkills = skillNames;
   if (activeWorkflow && activeWorkflow in WORKFLOW_SKILL_ROUTING) {
     const route = WORKFLOW_SKILL_ROUTING[activeWorkflow as keyof typeof WORKFLOW_SKILL_ROUTING];
-    const allowed = new Set([...route.primary, ...route.optional]);
+    const allowed = new Set<string>([...route.primary, ...route.optional]);
     relevantSkills = skillNames.filter((name) => allowed.has(name));
   }
 
-  const rows = await Promise.all(
-    relevantSkills.map(async (name) => {
-      const content = await readTemplate("skills", name).catch(() => "");
-      const desc = parseFrontmatterDescription(content);
-      const short = desc.length > 110 ? desc.slice(0, 107) + "…" : desc;
-      return `| \`${name}\` | ${short} |`;
-    }),
-  );
+  const compact = (value: string, max = 76): string => value.length > max ? `${value.slice(0, max - 1)}…` : value;
+  const rows = relevantSkills.map((name) => {
+    const policy = SKILL_INVOCATION_POLICIES[name as SkillName];
+    return `| \`${name}\` | ${compact(policy.triggers.join("; "))} | ${compact(policy.excludes.join("; "))} |`;
+  });
 
   return [
     "# Skills Index",
     "",
     "> **Token-saving routing layer.** Read this index first.",
     "> Identify the 1-3 skills relevant to the request.",
-    "> Tiered loading: `SKILL-BRIEF.md` (~150t) → understand the skill. `SKILL.md` → execute the procedure.",
-    `> Both files live at \`${skillsDir}/<name>/\`.`,
+    briefsAvailable
+      ? "> Tiered loading: `SKILL-BRIEF.md` (~150t) → understand the skill. `SKILL.md` → execute the procedure."
+      : "> Entry workflows select internal engines. Load only the selected `SKILL.md`; brief files are not installed for this provider.",
+    `> ${briefsAvailable ? "Both files live" : "Skill files live"} at \`${skillsDir}/<name>/\`.`,
     "",
-    "| Skill | Purpose |",
-    "|---|---|",
+    "| Internal engine | Use only when routed for | Do not select for |",
+    "|---|---|---|",
     ...rows,
     "",
   ].join("\n");

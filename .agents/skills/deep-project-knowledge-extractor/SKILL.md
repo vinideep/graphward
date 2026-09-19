@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: deep-project-knowledge-extractor
-description: Analyzes an existing software repository and produces evidence-based architecture, runtime, API, infrastructure, risk, and onboarding documentation. Use when creating or refreshing the project knowledge base.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to deep-project-knowledge-extractor. Do not use for direct selection from an unclassified user request."
 ---
 
 # Deep Project Knowledge Extractor
@@ -179,3 +180,9 @@ Generate each document in `.graphward/knowledge-base/` with this structure:
 
 - Used by: `initialize-intelligence-skill`
 - Feeds into: `knowledge-base-validator`, all sync engines
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to deep-project-knowledge-extractor.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

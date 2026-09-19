@@ -21,7 +21,8 @@ import { collectProjectFiles, ProjectFilePolicy } from "../project-files/index.j
 import { runProcess } from "../process/index.js";
 
 export type Severity = "error" | "warning" | "info";
-export type GateStatus = "pass" | "warn" | "fail";
+export type GateStatus = "pass" | "warn" | "fail" | "unavailable" | "skipped";
+export type GateRisk = "low" | "medium" | "high" | "critical";
 
 export interface GateFinding {
   severity: Severity;
@@ -37,6 +38,10 @@ export interface GateResult {
   status: GateStatus;
   summary: string;
   findings: GateFinding[];
+  applicable?: boolean;
+  required?: boolean;
+  reason?: string;
+  artifact?: string;
 }
 
 export interface GateOptions {
@@ -51,11 +56,22 @@ export interface GateOptions {
    * `failOn: "warning"` lets a team promote them to real blocking gates.
    */
   failOn?: Severity;
+  risk?: GateRisk;
+  changedFiles?: string[];
 }
 
 const SEVERITY_RANK: Record<Severity, number> = { info: 0, warning: 1, error: 2 };
 
-export const GATE_NAMES = ["env-vars", "dead-exports", "api-diff", "migration-lint"] as const;
+export const GATE_NAMES = [
+  "env-vars",
+  "dead-exports",
+  "api-diff",
+  "migration-lint",
+  "api-snapshot",
+  "security-audit",
+  "rollback-readiness",
+  "conventions",
+] as const;
 export type GateName = (typeof GATE_NAMES)[number];
 
 export function isGateName(value: string): value is GateName {
@@ -125,6 +141,7 @@ export async function gitAvailable(root: string): Promise<boolean> {
 
 export async function runGate(name: GateName, root: string, options: GateOptions = {}): Promise<GateResult> {
   const result = await dispatch(name, root, options);
+  if (result.status === "unavailable" || result.status === "skipped") return result;
   // Re-derive status against the caller's threshold so a team can promote
   // advisory gates to blocking ones without changing each gate's severities.
   return { ...result, status: statusFromFindings(result.findings, options.failOn ?? "error") };
@@ -136,6 +153,10 @@ async function dispatch(name: GateName, root: string, options: GateOptions): Pro
     case "dead-exports":   return (await import("./dead-exports.js")).deadExportsGate(root);
     case "api-diff":       return (await import("./api-diff.js")).apiDiffGate(root, options.base ?? "HEAD");
     case "migration-lint": return (await import("./migration-lint.js")).migrationLintGate(root, options);
-    default:               return { gate: name, status: "pass", summary: "unknown gate", findings: [] };
+    case "api-snapshot":   return (await import("./api-snapshot.js")).apiSnapshotGate(root, options);
+    case "security-audit": return (await import("./security-audit.js")).securityAuditGate(root, options);
+    case "rollback-readiness": return (await import("./rollback-readiness.js")).rollbackReadinessGate(root, options);
+    case "conventions":    return (await import("./conventions.js")).conventionsGate(root, options);
+    default:               return { gate: name, status: "unavailable", summary: "Unknown gate.", findings: [], applicable: true, required: true };
   }
 }

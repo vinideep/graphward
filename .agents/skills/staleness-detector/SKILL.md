@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: staleness-detector
-description: Compares knowledge-base document timestamps against related source file modification times, scores each document 0-100 for freshness, triggers incremental sync when freshness drops below threshold, and adds freshness metadata to document headers.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to staleness-detector. Do not use for direct selection from an unclassified user request."
 ---
 
 # Staleness Detector
@@ -212,3 +213,9 @@ This capability does not modify product code.
 - Related: `knowledge-base-validator` (validates content accuracy; staleness-detector validates currency)
 
 This capability does not modify product code.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to staleness-detector.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

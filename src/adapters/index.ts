@@ -10,6 +10,7 @@ import {
 import { claudeCodeHookSettings, cursorHookSettings, defaultConfigFile } from "../hooks/index.js";
 import { MCP_TOOL_SUMMARY, mcpServerRegistration } from "../mcp/index.js";
 import { IDE_IDS, type IdeId, type RenderedFile } from "../types.js";
+import { invocationPolicyDescription, invocationPolicyMarkdown, type SkillName } from "../routing/catalog.js";
 
 const BLOCK_ID = "graphward";
 
@@ -51,7 +52,7 @@ const sharedInstructions = `# GraphWard OS
 
 This repository uses installed GraphWard workflows.
 
-- When the .agents/agents/ directory is available, start non-trivial work with the engineering-orchestrator custom agent. It routes the request to the right specialist and keeps the workflow evidence-based.
+- When a provider-installed custom-agent directory exists, start non-trivial work with the engineering-orchestrator custom agent. Never assume an agent path exists; use the active provider's installed manifest.
 - For initial understanding and documentation, invoke \`initialize-graphward\` or ask the agent to initialize GraphWard.
 - For implementation work, invoke \`graphward\` with the request or ask the agent to apply the GraphWard workflow. This workflow embeds AI-DLC and Agile delivery modes internally.
 - For epic-sized initiatives, invoke \`decompose-backlog\` to autonomously create an Epic → Feature → Ticket backlog under \`.graphward/aidlc/agile/backlog/\`, then \`deliver-backlog\` to implement it feature by feature. Each feature requires human approval before implementation; the local backlog is the source of truth and can optionally be mirrored to GitHub Issues.
@@ -61,7 +62,7 @@ This repository uses installed GraphWard workflows.
 - AI-DLC work must preserve durable state in \`.graphward/aidlc/aidlc-state.md\`, maintain Agile artifacts, use environmental backpressure, and end with an \`AI-DLC: <phase> -> <stage> -> <status>\` breadcrumb.
 - Base documentation claims on repository evidence and identify unknowns explicitly.
 - **Prefer persisted intelligence over re-exploration.** Before reading source files to understand the codebase, read the persisted knowledge base in \`.graphward/knowledge-base/\`, context maps in \`.graphward/context/\`, and architecture graphs in \`.graphward/graph/\`. Re-read source only for the specific files a task touches. Run \`sync-graphward\` to refresh these artifacts incrementally rather than re-deriving from scratch each session.
-- **Route before loading skills.** Consult the installed \`WORKFLOW-ROUTING.md\` and \`SKILLS-INDEX.md\` in your IDE's skills directory before opening any individual \`SKILL.md\`. Load only the 1-3 skills relevant to the current request.
+- **Route before loading skills.** Consult the active provider's installed \`WORKFLOW-ROUTING.md\` and \`SKILLS-INDEX.md\` before opening an internal \`SKILL.md\`. Entry workflows are model-invocable; internal engines are loaded only through the selected route.
 
 ## Tools (prefer these over reasoning by hand)
 
@@ -71,6 +72,22 @@ ${MCP_TOOL_SUMMARY.map(([n, d]) => `- \`${n}\` — ${d}`).join("\n")}
 
 CLI equivalents: \`npx gw map|gate <name>|verify|freshness|context|claims verify|git-analysis .\`. \`gate\` and \`verify\` exit non-zero on failure, so they work in CI too.
 `;
+
+function providerInstructions(options: {
+  agentsPath?: string;
+  routingPath: string;
+  indexPath: string;
+  nativeHooks: boolean;
+}): string {
+  const agentLine = options.agentsPath
+    ? `- When the ${options.agentsPath} directory is available, start non-trivial work with the engineering-orchestrator custom agent. It routes the request to the right specialist and keeps the workflow evidence-based.`
+    : "- This provider has no installed custom-agent surface; route non-trivial work through a GraphWard entry workflow.";
+  const routingLine = `- **Route before loading skills.** Consult \`${options.routingPath}\` and \`${options.indexPath}\` before opening an internal \`SKILL.md\`. Entry workflows are model-invocable; internal engines are loaded only through the selected route.`;
+  return sharedInstructions
+    .replace(/- When the \.agents\/agents\/ directory[^\n]+/, agentLine)
+    .replace(/- \*\*Route before loading skills\.\*\*[^\n]+/, routingLine)
+    + `\n- ${options.nativeHooks ? "Native lifecycle hooks enforce configured completion checks." : "This provider has no GraphWard runtime hooks; run `gw verify` and applicable `gw gate` commands in CI before completion."}\n`;
+}
 
 /**
  * Claude Code-specific instructions appended after the shared block.
@@ -105,7 +122,7 @@ Load **optional** skills only when the request explicitly requires that capabili
 - **PostToolUse** records changed source files and validation commands for the session.
 - **Stop** can require that a validation command actually ran before finishing.
 
-Tune behaviour in \`.graphward/gw.config.json\` (\`blockStaleEdits\`, \`requireValidationOnStop\`, \`freshnessThreshold\`). Hooks are fail-safe: with no intelligence installed they do nothing.
+Tune behaviour in \`.graphward/gw.config.json\` (\`hooks.blockStaleEdits\`, \`hooks.requireValidationOnStop\`, \`hooks.freshnessThreshold\`). Hooks are fail-safe: with no intelligence installed they do nothing.
 `;
 
 function file(path: string, content: string, owner: IdeId): RenderedFile {
@@ -128,13 +145,17 @@ function block(path: string, content: string, owner: IdeId): RenderedFile {
 
 async function skillsAt(directory: string, owner: IdeId): Promise<RenderedFile[]> {
   return Promise.all(
-    SKILL_NAMES.map(async (name) =>
-      file(
+    SKILL_NAMES.map(async (name) => {
+      const skillName = name as SkillName;
+      const raw = `${await readTemplate("skills", name)}\n\n${invocationPolicyMarkdown(skillName)}\n`
+        .replace(/^description:\s*.+$/m, `description: ${JSON.stringify(invocationPolicyDescription(skillName))}`);
+      return file(
         `${directory}/${name}/SKILL.md`,
-        prepareRendered(await readTemplate("skills", name)),
+        prepareRendered(raw)
+          .replace(/^---\n/, "---\ndisable-model-invocation: true\n"),
         owner,
-      ),
-    ),
+      );
+    }),
   );
 }
 
@@ -143,18 +164,6 @@ async function workflowsAt(directory: string, owner: IdeId): Promise<RenderedFil
     WORKFLOW_NAMES.map(async (name) =>
       file(
         `${directory}/${name}.md`,
-        prepareRendered(await readTemplate("workflows", name)),
-        owner,
-      ),
-    ),
-  );
-}
-
-async function workflowSkillsAt(directory: string, owner: IdeId): Promise<RenderedFile[]> {
-  return Promise.all(
-    WORKFLOW_NAMES.map(async (name) =>
-      file(
-        `${directory}/${name}/SKILL.md`,
         prepareRendered(await readTemplate("workflows", name)),
         owner,
       ),
@@ -221,19 +230,17 @@ interface SkillBundleProfile {
 }
 
 async function skillBundle(owner: IdeId, p: SkillBundleProfile): Promise<RenderedFile[]> {
-  const [index, skills, workflowSkills, briefs] = await Promise.all([
-    generateSkillsIndex(SKILL_NAMES, p.skillsDir),
+  const [index, skills, briefs] = await Promise.all([
+    generateSkillsIndex(SKILL_NAMES, p.skillsDir, undefined, p.emitBriefs),
     skillsAt(p.skillsDir, owner),
-    workflowSkillsAt(p.skillsDir, owner),
     p.emitBriefs ? skillBriefsAt(p.skillsDir, owner) : Promise.resolve([]),
   ]);
-  const routing = generateWorkflowRouting(p.skillsDir);
+  const routing = generateWorkflowRouting(p.skillsDir, p.emitBriefs);
   return [
     file(p.indexPath, index, owner),
     file(p.routingPath, routing, owner),
     ...briefs,
     ...skills,
-    ...workflowSkills,
   ];
 }
 
@@ -452,13 +459,16 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
       ];
     }
     case "generic": {
-      const bundle = await skillBundle(ide, {
-        skillsDir: ".agents/skills",
-        indexPath: `.agents/skills/${SKILLS_INDEX_FILENAME}`,
-        routingPath: `.agents/${WORKFLOW_ROUTING_FILENAME}`,
-        emitBriefs: false,
-      });
-      return [...bundle, block("AGENTS.md", sharedInstructions, ide)];
+      const [bundle, workflows] = await Promise.all([
+        skillBundle(ide, {
+          skillsDir: ".agents/skills",
+          indexPath: `.agents/skills/${SKILLS_INDEX_FILENAME}`,
+          routingPath: `.agents/${WORKFLOW_ROUTING_FILENAME}`,
+          emitBriefs: false,
+        }),
+        workflowsAt(".agents/workflows", ide),
+      ]);
+      return [...bundle, ...workflows, block("AGENTS.md", sharedInstructions, ide)];
     }
     case "claude-code": {
       const [bundle, agents, commands] = await Promise.all([
@@ -478,15 +488,25 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
         jsonMerge(".claude/settings.json", claudeCodeHookSettings(), ide),
         jsonMerge(".mcp.json", mcpServerRegistration(), ide),
         seed(".graphward/gw.config.json", defaultConfigFile(), ide),
-        block("CLAUDE.md", sharedInstructions + claudeCodeInstructions, ide),
+        block("CLAUDE.md", providerInstructions({ agentsPath: ".claude/agents/", routingPath: ".claude/WORKFLOW-ROUTING.md", indexPath: ".claude/skills/SKILLS-INDEX.md", nativeHooks: true }) + claudeCodeInstructions, ide),
       ];
     }
     case "cursor": {
       const ruleContent = prepareRendered(await readTemplate("rules", "graphward"));
-      const rule = `---\ndescription: GraphWard orchestration and synchronization rules\nalwaysApply: true\n---\n\n${ruleContent}`;
+      const rule = `---\ndescription: GraphWard orchestration and synchronization rules\nalwaysApply: true\n---\n\n${ruleContent}\n\n${routingInstructions(".cursor/WORKFLOW-ROUTING.md", ".cursor/skills/SKILLS-INDEX.md")}`;
+      const [bundle, commands] = await Promise.all([
+        skillBundle(ide, {
+          skillsDir: ".cursor/skills",
+          indexPath: `.cursor/skills/${SKILLS_INDEX_FILENAME}`,
+          routingPath: `.cursor/${WORKFLOW_ROUTING_FILENAME}`,
+          emitBriefs: false,
+        }),
+        workflowsAt(".cursor/commands", ide),
+      ]);
       return [
+        ...bundle,
         file(".cursor/rules/graphward.mdc", rule, ide),
-        ...(await workflowsAt(".cursor/commands", ide)),
+        ...commands,
         jsonMerge(".cursor/hooks.json", cursorHookSettings(), ide),
         jsonMerge(".cursor/mcp.json", mcpServerRegistration(), ide),
         seed(".graphward/gw.config.json", defaultConfigFile(), ide),
@@ -515,7 +535,7 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
         ...bundle,
         ...agentFiles,
         ...promptFiles,
-        block(".github/copilot-instructions.md", sharedInstructions, ide),
+        block(".github/copilot-instructions.md", providerInstructions({ agentsPath: ".github/agents/", routingPath: ".github/WORKFLOW-ROUTING.md", indexPath: ".github/skills/SKILLS-INDEX.md", nativeHooks: false }), ide),
       ];
     }
     case "gemini-cli": {
@@ -556,7 +576,7 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
       return [
         ...bundle,
         ...commands,
-        block("GEMINI.md", sharedInstructions, ide),
+        block("GEMINI.md", providerInstructions({ routingPath: ".agents/WORKFLOW-ROUTING.md", indexPath: ".agents/skills/SKILLS-INDEX.md", nativeHooks: false }), ide),
       ];
     }
     case "commandcode": {

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "packageVersion": "1.0.5",
-  "templateVersion": "4.1.0",
+  "packageVersion": "1.2.0",
+  "templateVersion": "5.0.0",
   "adapters": [
     "antigravity",
     "antigravity-cli",
@@ -12,7 +12,7 @@
     {
       "path": ".agents/skills/SKILLS-INDEX.md",
       "kind": "file",
-      "hash": "2a661159bd3b926ce5c57178df88afe65d56546269859b26dd8ad6113bfdaf9d",
+      "hash": "eabffcc67d90f8967b9b2d622c86588c2363903325a3262a49bc90bc4365e449",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -22,7 +22,7 @@
     {
       "path": ".agents/WORKFLOW-ROUTING.md",
       "kind": "file",
-      "hash": "300fa795d9e256646f76d47b2700dace8e263129ba3690c4f7942044f21be750",
+      "hash": "ced95568a87fa2f7870b81e0ed2a9b210262dbd14a1cefab83d6aa11f6a9a677",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -32,7 +32,7 @@
     {
       "path": ".claude/skills/SKILLS-INDEX.md",
       "kind": "file",
-      "hash": "569923397fbde2d58d874c0b13a9a83299de98c22aa0a23af0bcb90cd28fae60",
+      "hash": "0c000984a57e1ae4ff6c567491ceb61bd1871ccd781f632f26183c8af9c4d165",
       "owners": [
         "claude-code"
       ]
@@ -40,7 +40,7 @@
     {
       "path": ".claude/WORKFLOW-ROUTING.md",
       "kind": "file",
-      "hash": "e80b7a5a8f57ef2dd0e9772a9bb693ecec4945d3183c573c5e8a415b45f5e0c9",
+      "hash": "8e25c7b0931706edf6fca4bc881e96b819725f58b311de2ea0d2bccf031e256f",
       "owners": [
         "claude-code"
       ]
@@ -48,7 +48,7 @@
     {
       "path": ".agents/agents/adversary/agent.md",
       "kind": "file",
-      "hash": "b50d1c032756880f33d8d7cf5d020369d3f2c2d40dc1e2f186ae1ed41c6d31c9",
+      "hash": "43a1a2fdb7ded3b7abd84eeb24a644168f43e61ba7cb9f471d1840914791448a",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -58,7 +58,7 @@
     {
       "path": ".agents/agents/change-agent/agent.md",
       "kind": "file",
-      "hash": "3fa1ccbba1b847a145b2d60394cdb71265ef9c1de92450a7565dac56aa2716d4",
+      "hash": "bf797d8050af7ae66725459e64bf186b5c9ae436910322ec6bb8662afcd5aad0",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -68,7 +68,7 @@
     {
       "path": ".agents/agents/compliance-auditor/agent.md",
       "kind": "file",
-      "hash": "e4e183efc75b8b3a2bac84d52258c44e04f5c5244f4f5f7da123f3e4f084ac6f",
+      "hash": "c824949eeb90c603f52f013ab3d634e683470bcd6d92505f76f82cc05f817bf4",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -78,7 +78,7 @@
     {
       "path": ".agents/agents/database-administrator/agent.md",
       "kind": "file",
-      "hash": "76373e4ba72810ce410aa2efae39c804adf9b04baea0aa05256e8ef84035726e",
+      "hash": "39c1c9d1f68a115251e13085da1f7d9e8852922a88f45063f51cb44c962f916e",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -88,7 +88,7 @@
     {
       "path": ".agents/agents/documentation-writer/agent.md",
       "kind": "file",
-      "hash": "305002f0a27f3ce2492dc8653e1b0858626bdaf19e972bee2a11d89edcfc8456",
+      "hash": "c8911df74c30db5c55ccda61c983299f24c2c77372c6c358c121538c4c912fd9",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -98,7 +98,7 @@
     {
       "path": ".agents/agents/engineering-orchestrator/agent.md",
       "kind": "file",
-      "hash": "b06e683cd04e680ed2d00edac6c200042a62bd64dde0e660b19218af58c8bd25",
+      "hash": "4745cf7000bb5d6fd2c546d8dfeff7e9c4fee67664ca6f071338c347141fa1d0",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -108,7 +108,7 @@
     {
       "path": ".agents/agents/knowledge-agent/agent.md",
       "kind": "file",
-      "hash": "8ee66e5e1da2fa171a2e943856483b9457051be74d1a5a9f755633bb1015c60a",
+      "hash": "01f8219b19b84175e21a71fc499f8f300b4caa89ae0c77c869e93a2d9d9f2b95",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -118,7 +118,7 @@
     {
       "path": ".agents/agents/performance-analyst/agent.md",
       "kind": "file",
-      "hash": "4eaf13ce1da21a3041de2923723a1ebebb701e03dbdf6ba761e8b4b32e59e527",
+      "hash": "5160fe3679fa54254dfaac72e3270e8de0d79d365b81a4ebd637199e60afeb9b",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -128,7 +128,7 @@
     {
       "path": ".agents/agents/product-analyst/agent.md",
       "kind": "file",
-      "hash": "916075f3078bf5fcb634cb88b869a362bd19932c1f7a5663f4a6632550a6da9d",
+      "hash": "84dcbf522168f93fb360a543619809db27076b48f42c8480a617a01633f080bb",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -138,7 +138,7 @@
     {
       "path": ".agents/agents/quality-agent/agent.md",
       "kind": "file",
-      "hash": "9641c6e63d5dc6c5ac3ae3ec282e06e3227034239aa989e5c9ceab1fb46dddf6",
+      "hash": "273795e8d32044250116caa38ace056171665164530024cff96f46eda24bc930",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -148,7 +148,7 @@
     {
       "path": ".agents/agents/release-engineer/agent.md",
       "kind": "file",
-      "hash": "410be1242e053b2528a8d843b249bccbfaad18462544252523c157d0047b1b8c",
+      "hash": "f809e7c2b66d0473c5b52c3a10719887ba98ecc596423c6784baca9ff9efc072",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -158,7 +158,7 @@
     {
       "path": ".agents/agents/security-officer/agent.md",
       "kind": "file",
-      "hash": "29a806def609b960832d6083e9fbdbf048057decca8debeb88a16d21da8494e6",
+      "hash": "e34dd6b270e455130ac740d01f2c2ea02e573c79470cdc3fe6193726012cf434",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -168,7 +168,7 @@
     {
       "path": ".agents/agents/site-reliability-engineer/agent.md",
       "kind": "file",
-      "hash": "67e8b624135782ce3b851928284d9ad24f8175cdd49f1752d7b596a3863a3b49",
+      "hash": "87c240809de8e30f709c3ca41dbf5a40b4df7ea0f0195da90e3be1bc3c340d81",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -178,7 +178,7 @@
     {
       "path": ".agents/agents/system-architect/agent.md",
       "kind": "file",
-      "hash": "7b489e11180c3002e91b0c0ce230f0da7f398264ace6519c620120868de74c63",
+      "hash": "7ce072fb3c9a040334bce613650163ac17a3d5fa657ac98d65d9bd8b173d573f",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -188,7 +188,7 @@
     {
       "path": ".agents/agents/test-engineer/agent.md",
       "kind": "file",
-      "hash": "76ff43616e4418feedab999d76520b7b3b6ee7cb75c4c7847ee401261f0d965d",
+      "hash": "f75f1c7fcee3d80b8548996307ccea173cb35929986da5b59054f4ad23f1297e",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -198,7 +198,7 @@
     {
       "path": ".agents/rules/graphward.md",
       "kind": "file",
-      "hash": "39bd9bc94a651de5df5416da14dc724d085796d5e7ed4e10f79c2f61c1c2a962",
+      "hash": "a0d947d5a63187e0ea545a8180506e025c450ae1d0716d98f39aee20ae8804e6",
       "owners": [
         "antigravity"
       ]
@@ -206,7 +206,7 @@
     {
       "path": ".agents/skills/adr-compliance-checker/SKILL.md",
       "kind": "file",
-      "hash": "e556c35b2e32b611944be57a102e3ff5aca0692402d6776d14947d77d530ed24",
+      "hash": "72716622f7a276f62308d1eb038117553c34a8f7db6eed5f6f6f99af758a881e",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -216,17 +216,7 @@
     {
       "path": ".agents/skills/aidlc-lifecycle-engine/SKILL.md",
       "kind": "file",
-      "hash": "0a1438934cb0b8a1add5795a070f9039169b46ff26ce63a5e96958e77fb810f4",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/analyze-impact/SKILL.md",
-      "kind": "file",
-      "hash": "4ba05bb3daaef10a69d3a4808e7dbf7070ee28b34a3b83f63f03c78f60e0eed1",
+      "hash": "9edd21bb1c72db67bfb34a2f846786f8d39627ca0f0200d77adeda7e8b9c6208",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -236,7 +226,7 @@
     {
       "path": ".agents/skills/api-backward-compatibility-engine/SKILL.md",
       "kind": "file",
-      "hash": "0679518205a5306adfe46b4d6629db9bfa37a249d8bcc0fd4ae96e71119a04c9",
+      "hash": "800411fac78e346e683087aab765ce4098529c3da0ef5826d723d4f5643537ad",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -246,7 +236,7 @@
     {
       "path": ".agents/skills/architecture-review-engine/SKILL.md",
       "kind": "file",
-      "hash": "f249e01071af147a3878a7565ca42a1dce633c5ae5050157c83887ce6e53d6cf",
+      "hash": "ea08e760afc3f61b98af37cb0199250b1249efb9f4d3fb40919d20ee7584b941",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -256,7 +246,7 @@
     {
       "path": ".agents/skills/backlog-decomposition-engine/SKILL.md",
       "kind": "file",
-      "hash": "4161692525662e40179986e5e4aec40d466bd333e7353d9334509aa330b1f571",
+      "hash": "d80f15af7f189dd555fbbe37b1fdcdab93d03335d50915a6182eea6717b8837f",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -266,7 +256,7 @@
     {
       "path": ".agents/skills/change-detection-engine/SKILL.md",
       "kind": "file",
-      "hash": "ef5af7c6a583d335f4261a72c99aab06aa5a5aee7b414faa7c545bc0c99562c1",
+      "hash": "62dc0831981289b0d3da9313baab630a37ce15542c8d52005fa844710e67f6e5",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -276,7 +266,7 @@
     {
       "path": ".agents/skills/change-history-engine/SKILL.md",
       "kind": "file",
-      "hash": "236cadc80257486055c47d8fd37e92adf608b06fdd31380ecdd4f3685be91b1d",
+      "hash": "a4e8933d61d481d0f1431bad68d041eb53cd23c8f610d567a70c608f2a8a105e",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -286,7 +276,7 @@
     {
       "path": ".agents/skills/codebase-discovery-engine/SKILL.md",
       "kind": "file",
-      "hash": "5887f1a0080f0b666006279312b7a9a65b529e33ec9bf515c021da7c505b7803",
+      "hash": "ec708d0e6a208b9b6254daf0e014f2f824eb1b4acf4bc45eb8242ff6c78b8f89",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -296,7 +286,7 @@
     {
       "path": ".agents/skills/context-budget-optimizer/SKILL.md",
       "kind": "file",
-      "hash": "25fac275993496f82a2328d2d07ef1715101e7420012f2068bc821ebbe24ab4e",
+      "hash": "369451cdc1255e9eb4233d864d17f06753a6e12984eaa1b0ca0b54fe2baedfa7",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -306,7 +296,7 @@
     {
       "path": ".agents/skills/contract-test-generator/SKILL.md",
       "kind": "file",
-      "hash": "b6b3c08cfbc0a5e24e4dcf6f1eeef7f327766c9b37f2e8ad1f896e7ce879267f",
+      "hash": "6182c3ec8befaab20ade0a82ce72b7a87f4de959146ec93f28f8d84727f17113",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -316,17 +306,7 @@
     {
       "path": ".agents/skills/convention-detector/SKILL.md",
       "kind": "file",
-      "hash": "6de38874a0e24d23e8e30dce3a27806f3a2d4f7f2de2e26d84899bd7ed975953",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/create-project/SKILL.md",
-      "kind": "file",
-      "hash": "015813d0691aeb12e717d2d7e52eb913b59b0d3cfebd9550fe609fc977d02a18",
+      "hash": "fedaae848dc0235a38bf377ec6f97236fed6f9dc17cacadd03f81ebe022478a3",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -336,7 +316,7 @@
     {
       "path": ".agents/skills/database-migration-safety-engine/SKILL.md",
       "kind": "file",
-      "hash": "4ee11a3a480f5e4d8a57bc775cde72b1d6aeef859ec0100af5e4176515c516c1",
+      "hash": "7586bfe4fd2a580d60ba3ce2794d16f13de52504a651ea6e220f042d540e13cf",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -346,7 +326,7 @@
     {
       "path": ".agents/skills/dead-code-detector/SKILL.md",
       "kind": "file",
-      "hash": "97dcadf3d396edf1487c376eaf0572a5e3a5f0bc170042183cb2d5540f0b4e42",
+      "hash": "c5a82dd87f6b828e360301b971eb1376a0484314168044bba4b8acc26533e4ad",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -356,17 +336,7 @@
     {
       "path": ".agents/skills/debugging-engine/SKILL.md",
       "kind": "file",
-      "hash": "839a84e6a749dc430669de7d461eaa528f6f873ec8657c02570be2489031dad2",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/decompose-backlog/SKILL.md",
-      "kind": "file",
-      "hash": "8db4a1406fe91c526ecc943e81e99c4c6ac655ca4d71e1d954191f4df92bf27a",
+      "hash": "295f9a429c6dbc7fb4d9335a314293b3871bf3771d86de0e9f2cac4f6887138e",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -376,37 +346,7 @@
     {
       "path": ".agents/skills/deep-project-knowledge-extractor/SKILL.md",
       "kind": "file",
-      "hash": "2e6b45a5798f232c45930ae34900e07b005afd37ae87fb930ab62baf1c767bfa",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/deliver-backlog/SKILL.md",
-      "kind": "file",
-      "hash": "7cacddae2f002785703314421e19ebcd0c72552dd89d3740363f3bbe9ee69252",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/design-an-interface/SKILL.md",
-      "kind": "file",
-      "hash": "08c59164680d57efc73c5a5bf6b020b9c056444d8493f64b7a66b8aded7e4688",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/discover-codebase/SKILL.md",
-      "kind": "file",
-      "hash": "ac9c178bbfa9967ac1a758008ebf8df81429711d538c8a39aa7bdefbd175745b",
+      "hash": "b2c0202349f554460b879a7aa85bab3d78e1d19a6c52357320092f166beb2a37",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -416,7 +356,7 @@
     {
       "path": ".agents/skills/engineering-change-review/SKILL.md",
       "kind": "file",
-      "hash": "3ea686838881937f0a1a2faaac8ddf9d23d2156019f70ca0ec1027d93ce2b5be",
+      "hash": "af15bb45219497a6a708b65257a318e4314ad3a4a84517f353882a13f7023716",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -426,7 +366,7 @@
     {
       "path": ".agents/skills/environment-variable-auditor/SKILL.md",
       "kind": "file",
-      "hash": "0cf7dfaa3b669e21b3d131acd64dddb912d17d13e533e7b6e88c1cdf8ce7b2fd",
+      "hash": "aa1b8b8f2de39d2f20b1029fd22944153424678c12c28730f1a28bf9767436db",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -436,7 +376,7 @@
     {
       "path": ".agents/skills/environmental-backpressure-engine/SKILL.md",
       "kind": "file",
-      "hash": "c2da3444432e71e2c3d1a0e8d54a90bcbfaafe5eb1ebbd4bdd65a25c2fe45bee",
+      "hash": "6d4cc95d8f19f0a6f6ec6b2c555de99eb75b6bcbf88dec6c81f7478613e1b007",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -446,7 +386,7 @@
     {
       "path": ".agents/skills/git-intelligence-engine/SKILL.md",
       "kind": "file",
-      "hash": "871429e9a33d23b93742c05be07cffcc65c7dd9f86e6bb9f3e757b66693e71db",
+      "hash": "6e4ec94a8164b803f699c76e648ad1866a0fb25a9ebc7b324592ae476303f750",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -456,7 +396,7 @@
     {
       "path": ".agents/skills/graph-engine/SKILL.md",
       "kind": "file",
-      "hash": "571468e996481f8b5c1e450361b5a5c7618405910e748a5f004fe7735f22e9d3",
+      "hash": "8a3977367aa8761cec21b5aecdbe42183be2ae68dbe759860b1314be8929c4c0",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -466,7 +406,7 @@
     {
       "path": ".agents/skills/graph-guided-autoresearch/SKILL.md",
       "kind": "file",
-      "hash": "2c63f604b4e2d4d36fec64313a7f7a99b9775e5646f7042d6e1ee4bf40a2ff77",
+      "hash": "e248b6c49c0012a0a9e787dba628a0372786834d1a5fcd944cd1c76cbb6992cc",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -476,17 +416,7 @@
     {
       "path": ".agents/skills/graphward-skill/SKILL.md",
       "kind": "file",
-      "hash": "46fd24773572f227676793ddd92d37bc68db80051321f3dfc2f33325cd812cb0",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/graphward/SKILL.md",
-      "kind": "file",
-      "hash": "af7e955b01f43a3f9b56cb3059a7bf93fb2bdf43589ef9841efa0e8600cc9a97",
+      "hash": "dd9f74745371ebde6aab3cd344a2f37dd05ce67d177cb21546e7500adbd59430",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -496,27 +426,7 @@
     {
       "path": ".agents/skills/greenfield-architect/SKILL.md",
       "kind": "file",
-      "hash": "518720ea5951ac4d0c6fb704d42e01ebb24f7f422def79fef31fb526a6d6ddec",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/grill-me/SKILL.md",
-      "kind": "file",
-      "hash": "2f1e8e1b744573bcc822609726da8279d4895a7283294e7baf3d1e2338fda735",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/handoff/SKILL.md",
-      "kind": "file",
-      "hash": "e00681f72929d3051bd23e11358339d09f0037e83558fd5709689784107795ae",
+      "hash": "3a31284fd568f10cdb412878738036e4582551c41f7cc7d54d26ca247c6dff73",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -526,7 +436,7 @@
     {
       "path": ".agents/skills/impact-analysis-engine/SKILL.md",
       "kind": "file",
-      "hash": "faa4275f83c2b678b9b20178141832e00bdb43aca125944cf8bab4c7312964cf",
+      "hash": "a128ccc11e98a052e5c675f4384f6fb7626d22307920ad5880fbb96ff549ed33",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -536,17 +446,7 @@
     {
       "path": ".agents/skills/incremental-sync-engine/SKILL.md",
       "kind": "file",
-      "hash": "4c565b6fba07d11f89112cf4023f4362ee1caa906b5da89d389a13a5ea900780",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/initialize-graphward/SKILL.md",
-      "kind": "file",
-      "hash": "6b017070bc51a8aee55cdc447f695ee9ce8749a4ab3e0eef69de0e5b555f07c7",
+      "hash": "c01aaa72c34af235e83f0e30297dd3cd1fb33fed1c34ea8a5c1828de631413c7",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -556,7 +456,7 @@
     {
       "path": ".agents/skills/initialize-intelligence-skill/SKILL.md",
       "kind": "file",
-      "hash": "a2b0caa57930b52a83a3e6135fc91f7e6682da94743eba2247e0fbbb944b25d3",
+      "hash": "f7b0f1aa9f5d740f3cf5a2cf28755f8aef116c5261740387b3a1ec13e36243a7",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -566,7 +466,7 @@
     {
       "path": ".agents/skills/interface-design-explorer/SKILL.md",
       "kind": "file",
-      "hash": "e023e0f57d342c01662c694c33b72ed1227a43aec453de57676f0a5660fb1933",
+      "hash": "ac8f35609f5b9d613710b9ef98bd80f8b30c563912d877b9777a4ae116404eb0",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -576,7 +476,7 @@
     {
       "path": ".agents/skills/issue-tracker-sync-engine/SKILL.md",
       "kind": "file",
-      "hash": "2b4a21197f4b942f0bee7271df9816eb8c26c31a40d46d6233ee34280db66562",
+      "hash": "399ce159f9dde004a85e5fe2da10a2861100787a47e2641360a9563fe31345d0",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -586,7 +486,7 @@
     {
       "path": ".agents/skills/knowledge-base-validator/SKILL.md",
       "kind": "file",
-      "hash": "c3571a1e587082f938b593c06273ee3d6f5ec19955c69ff9adccaa3736652fbd",
+      "hash": "5556b47606af0e506053e558a0985b08b5da31d3dad5e066d89fed3e62f08d87",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -596,17 +496,7 @@
     {
       "path": ".agents/skills/llm-prompt-injection-guard/SKILL.md",
       "kind": "file",
-      "hash": "7dcc6fc73ab80b7db5c6315529128540e5109e0a1a9578a901a83fce0874edf3",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/map-architecture/SKILL.md",
-      "kind": "file",
-      "hash": "04a29a30fd19d1a56a353b6195006f9c6ccecf63dad416f59f4d6afb5e75ab23",
+      "hash": "21becc2b15624640b96ac0250db5a76d50fb7c51723b422d07657b1c126b5dc6",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -616,7 +506,7 @@
     {
       "path": ".agents/skills/mcp-security-governor/SKILL.md",
       "kind": "file",
-      "hash": "348d99e090fd41f42452b3ae8bc35df4a2682c9d90c98aa6e4c41ec5e4deac28",
+      "hash": "489c18046b347abfa3dd8f30656abe2e3905ba153d12b26e8f7c317820fbf285",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -626,7 +516,7 @@
     {
       "path": ".agents/skills/nfr-adr-governor/SKILL.md",
       "kind": "file",
-      "hash": "58a220ad42c9ece466a6c971807295f5a1f2c2dd5ee6e2f92c290bec2b78c96e",
+      "hash": "c27ef0f1cf383b18928c031505203e16a9a08fcab3481dd77521125e46f83647",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -636,7 +526,7 @@
     {
       "path": ".agents/skills/ongoing-learning-engine/SKILL.md",
       "kind": "file",
-      "hash": "e966cde23d4ab8c728344be80410a10bf3893524b5f872580198bc82b635f9d5",
+      "hash": "f20c0225e1f67d1776eb0616f5f850d0aa9189d68ab34f18cead300bc89846e0",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -646,7 +536,7 @@
     {
       "path": ".agents/skills/operations-readiness-engine/SKILL.md",
       "kind": "file",
-      "hash": "695615814ddc623e5b6e4d95a08ab32b95121ca472ebe93fa7c49b56a1ac79d7",
+      "hash": "04cabc9a4813a1587eae56337f644eb20036d0b9611273be1056fe865135cc47",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -656,7 +546,7 @@
     {
       "path": ".agents/skills/performance-analysis-engine/SKILL.md",
       "kind": "file",
-      "hash": "42fe555a758f26ca405739d92dea11f53ded55aed81ab09f356232f9436f6130",
+      "hash": "bf499f13c2b587a1cc068ac2e614d77a86cfa297317ab4a4c9febcc8eded4482",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -666,7 +556,7 @@
     {
       "path": ".agents/skills/pr-intelligence-engine/SKILL.md",
       "kind": "file",
-      "hash": "25c6b7e1dfb3551476e05cab7fc130363f41964d59c3d72c46eb0b5f763bef96",
+      "hash": "cdbc840c1f59b81bdd9f088b4fc6b44e8ff131470af88f09d877b5f5bd8b43f1",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -676,7 +566,7 @@
     {
       "path": ".agents/skills/question-file-engine/SKILL.md",
       "kind": "file",
-      "hash": "d6a3cbc9e291520efb7f440181dd4c4dec65110dab7254bc171eb29369f15b0a",
+      "hash": "6258cd4ad334e167d68d71d60de83631c112a758d76cfc7932a799624815864e",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -686,7 +576,7 @@
     {
       "path": ".agents/skills/refactoring-planner/SKILL.md",
       "kind": "file",
-      "hash": "7f33b2136cb22f160ae35f3c5074a177094d626e1bad442aaf90610ff747c175",
+      "hash": "0a2de7683206b0a1964497eff18b78815d699c60f408cf3c38dad78a02cab38a",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -696,27 +586,7 @@
     {
       "path": ".agents/skills/requirement-scoper/SKILL.md",
       "kind": "file",
-      "hash": "38126e58de9548cde34b2dbf0b0ffb8c484a6f326cc6ad636a7c643e3967f023",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/review-engineering-change/SKILL.md",
-      "kind": "file",
-      "hash": "953b1600b21fd0c73deeb4804b0a926052ac2ed645058a730ad0611588f7542c",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/scope-requirement/SKILL.md",
-      "kind": "file",
-      "hash": "c087ff3d061acba5cd060f3c1632feea67bad2dade5d0b4bc0c8ee57e8804887",
+      "hash": "1b005f36fdb95faa51e4d543d1b3e163ad6bc2dc4beeefe0c8b2f83ea3e2ec6b",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -726,7 +596,7 @@
     {
       "path": ".agents/skills/security-audit-engine/SKILL.md",
       "kind": "file",
-      "hash": "da7b3c40cff0946ea2ff9c51898966dcc69e82ced6bd4e0b8b7658628c477f2d",
+      "hash": "296d49cd0f343eeb2fc37d7580267851d353376210cbeed60b836b13e671b722",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -736,7 +606,7 @@
     {
       "path": ".agents/skills/session-handoff-engine/SKILL.md",
       "kind": "file",
-      "hash": "5e0ada2200ec9da6096025e7c58f59c24a21bfdd54131868420f504555027546",
+      "hash": "53cc42b5a719784ed90fb6a8badd84099877b01bc08611719426222e13e21abb",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -746,7 +616,7 @@
     {
       "path": ".agents/skills/socratic-clarification-gate/SKILL.md",
       "kind": "file",
-      "hash": "f4441b273b68f53fc4bae98d851d150a46b6a416f72be881ccdcdc68bd874f1b",
+      "hash": "6d566710e48f583f6d95bb8ceb4d103c54703a65acdb219d13c6477f17be63b0",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -756,7 +626,7 @@
     {
       "path": ".agents/skills/socratic-stress-tester/SKILL.md",
       "kind": "file",
-      "hash": "6689e8c75985f8ca1720281a76eb669021e5b7cab25360329a084a25dd6d3263",
+      "hash": "ac1c207b6329c04c0fa776fd1040e3135c6def8b27c0e4ba9b2e5f7bc1afdc89",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -766,27 +636,7 @@
     {
       "path": ".agents/skills/staleness-detector/SKILL.md",
       "kind": "file",
-      "hash": "22f3f2bc01aaac07cae39b4e378120692f8b5d114a356efa169085f604742daa",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/sync-graphward/SKILL.md",
-      "kind": "file",
-      "hash": "84e799524fa79054ce034511d63c2362cc05c7d560b1556d51eb86216054faf1",
-      "owners": [
-        "antigravity",
-        "antigravity-cli",
-        "codex"
-      ]
-    },
-    {
-      "path": ".agents/skills/tdd/SKILL.md",
-      "kind": "file",
-      "hash": "108d8782c575716bb6582e65d25a59e892d662b1d7d589b8a6a0b852f6b01b3f",
+      "hash": "950ff4e30b4636c9c4b4cd2c6bc6872ae4008460be3fc4dd0f077eb76b8e5437",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -796,7 +646,7 @@
     {
       "path": ".agents/skills/testing-intelligence-engine/SKILL.md",
       "kind": "file",
-      "hash": "c717e2d3acb66537d1be1b363ea9878116ee84d0adb457141bea419c85176f0e",
+      "hash": "ccc40bc2ab5430e905d74a1d39256861c2ff81b62c6a160e160877320eff47d5",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -806,7 +656,7 @@
     {
       "path": ".agents/skills/type-safety-engine/SKILL.md",
       "kind": "file",
-      "hash": "f4128c52bcd5f783cd7b655ecff200b818656162f50ff17c9f01336dd9658b28",
+      "hash": "8244c85b7cdbca2e91b9cdf6804384f7d1ff629c03b6439c7aa6e6d1a342025d",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -816,7 +666,7 @@
     {
       "path": ".agents/skills/user-intelligence-engine/SKILL.md",
       "kind": "file",
-      "hash": "3681e689c3f61cd61ce0c17db38ff233518f8345320b561f2d21dafcf38e21fc",
+      "hash": "c377169d16892d94ca7b0f56e696588f496d6f9b593d29e39f5a010b67e37a57",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -826,7 +676,7 @@
     {
       "path": ".agents/skills/vertical-tdd-engine/SKILL.md",
       "kind": "file",
-      "hash": "55eab03861397d8e516791cd1e56ede067456248232440b9aef8724ee9e22b25",
+      "hash": "c22cf2ca6b630a6f950ad4a105c26ddad137272601597b22e1bde3687e493c56",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -856,7 +706,7 @@
     {
       "path": ".agents/workflows/decompose-backlog.md",
       "kind": "file",
-      "hash": "8db4a1406fe91c526ecc943e81e99c4c6ac655ca4d71e1d954191f4df92bf27a",
+      "hash": "7a8f18c0e0b79a933caaec8f0b82ba664d4c6fe0c139e01846637f14de788edf",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -896,7 +746,7 @@
     {
       "path": ".agents/workflows/graphward.md",
       "kind": "file",
-      "hash": "af7e955b01f43a3f9b56cb3059a7bf93fb2bdf43589ef9841efa0e8600cc9a97",
+      "hash": "df0bdb9f65f71fadd27000b81f1f0828f261e2623d26c74033c22bf8a04bd8bf",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -956,7 +806,7 @@
     {
       "path": ".agents/workflows/scope-requirement.md",
       "kind": "file",
-      "hash": "c087ff3d061acba5cd060f3c1632feea67bad2dade5d0b4bc0c8ee57e8804887",
+      "hash": "4d9d80a89c6ad0169f2e7d5ddae3e7b850fa3781f757de256f850ce30cfb02ff",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -1026,7 +876,7 @@
     {
       "path": ".claude/agents/engineering-orchestrator.md",
       "kind": "file",
-      "hash": "edbc636beaadccd9ae31b6a27ca6258b106217ed93eed1322cd5c286a88d7f4a",
+      "hash": "c145169b330f515e62e50ef1bc694650b761faf2879e796993fb0c475a4f63a4",
       "owners": [
         "claude-code"
       ]
@@ -1122,7 +972,7 @@
     {
       "path": ".claude/commands/decompose-backlog.md",
       "kind": "file",
-      "hash": "8565546af517c784d24a832e7fee0cf52032cadf48be7dece35091d8bf1b25fb",
+      "hash": "fca230e6b20a4c5099a6dbaed412b7c4846536de6c40ab2e341d7cc9215dbf00",
       "owners": [
         "claude-code"
       ]
@@ -1154,7 +1004,7 @@
     {
       "path": ".claude/commands/graphward.md",
       "kind": "file",
-      "hash": "388726988f75a0f921c5d69a42933bb7776407b609dc307443d308f0f4bfc05c",
+      "hash": "88d063123d3b594de019bbf9e567178b5318eb73692df1fcf8a76e47ef6b5f67",
       "owners": [
         "claude-code"
       ]
@@ -1202,7 +1052,7 @@
     {
       "path": ".claude/commands/scope-requirement.md",
       "kind": "file",
-      "hash": "0922b9d2c6f885ad7618b5ac34083c98483e90c39f0a0e0766b12f734a3112f4",
+      "hash": "3fc014528c7700625ae943e2d5da6fdb9527194a9c7e99a8209b6ac426912d6d",
       "owners": [
         "claude-code"
       ]
@@ -1242,7 +1092,7 @@
     {
       "path": ".claude/skills/adr-compliance-checker/SKILL.md",
       "kind": "file",
-      "hash": "e556c35b2e32b611944be57a102e3ff5aca0692402d6776d14947d77d530ed24",
+      "hash": "72716622f7a276f62308d1eb038117553c34a8f7db6eed5f6f6f99af758a881e",
       "owners": [
         "claude-code"
       ]
@@ -1258,15 +1108,7 @@
     {
       "path": ".claude/skills/aidlc-lifecycle-engine/SKILL.md",
       "kind": "file",
-      "hash": "0a1438934cb0b8a1add5795a070f9039169b46ff26ce63a5e96958e77fb810f4",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/analyze-impact/SKILL.md",
-      "kind": "file",
-      "hash": "4ba05bb3daaef10a69d3a4808e7dbf7070ee28b34a3b83f63f03c78f60e0eed1",
+      "hash": "9edd21bb1c72db67bfb34a2f846786f8d39627ca0f0200d77adeda7e8b9c6208",
       "owners": [
         "claude-code"
       ]
@@ -1282,7 +1124,7 @@
     {
       "path": ".claude/skills/api-backward-compatibility-engine/SKILL.md",
       "kind": "file",
-      "hash": "0679518205a5306adfe46b4d6629db9bfa37a249d8bcc0fd4ae96e71119a04c9",
+      "hash": "800411fac78e346e683087aab765ce4098529c3da0ef5826d723d4f5643537ad",
       "owners": [
         "claude-code"
       ]
@@ -1298,7 +1140,7 @@
     {
       "path": ".claude/skills/architecture-review-engine/SKILL.md",
       "kind": "file",
-      "hash": "f249e01071af147a3878a7565ca42a1dce633c5ae5050157c83887ce6e53d6cf",
+      "hash": "ea08e760afc3f61b98af37cb0199250b1249efb9f4d3fb40919d20ee7584b941",
       "owners": [
         "claude-code"
       ]
@@ -1314,7 +1156,7 @@
     {
       "path": ".claude/skills/backlog-decomposition-engine/SKILL.md",
       "kind": "file",
-      "hash": "4161692525662e40179986e5e4aec40d466bd333e7353d9334509aa330b1f571",
+      "hash": "d80f15af7f189dd555fbbe37b1fdcdab93d03335d50915a6182eea6717b8837f",
       "owners": [
         "claude-code"
       ]
@@ -1330,7 +1172,7 @@
     {
       "path": ".claude/skills/change-detection-engine/SKILL.md",
       "kind": "file",
-      "hash": "ef5af7c6a583d335f4261a72c99aab06aa5a5aee7b414faa7c545bc0c99562c1",
+      "hash": "62dc0831981289b0d3da9313baab630a37ce15542c8d52005fa844710e67f6e5",
       "owners": [
         "claude-code"
       ]
@@ -1346,7 +1188,7 @@
     {
       "path": ".claude/skills/change-history-engine/SKILL.md",
       "kind": "file",
-      "hash": "236cadc80257486055c47d8fd37e92adf608b06fdd31380ecdd4f3685be91b1d",
+      "hash": "a4e8933d61d481d0f1431bad68d041eb53cd23c8f610d567a70c608f2a8a105e",
       "owners": [
         "claude-code"
       ]
@@ -1362,7 +1204,7 @@
     {
       "path": ".claude/skills/codebase-discovery-engine/SKILL.md",
       "kind": "file",
-      "hash": "5887f1a0080f0b666006279312b7a9a65b529e33ec9bf515c021da7c505b7803",
+      "hash": "ec708d0e6a208b9b6254daf0e014f2f824eb1b4acf4bc45eb8242ff6c78b8f89",
       "owners": [
         "claude-code"
       ]
@@ -1378,7 +1220,7 @@
     {
       "path": ".claude/skills/context-budget-optimizer/SKILL.md",
       "kind": "file",
-      "hash": "25fac275993496f82a2328d2d07ef1715101e7420012f2068bc821ebbe24ab4e",
+      "hash": "369451cdc1255e9eb4233d864d17f06753a6e12984eaa1b0ca0b54fe2baedfa7",
       "owners": [
         "claude-code"
       ]
@@ -1394,7 +1236,7 @@
     {
       "path": ".claude/skills/contract-test-generator/SKILL.md",
       "kind": "file",
-      "hash": "b6b3c08cfbc0a5e24e4dcf6f1eeef7f327766c9b37f2e8ad1f896e7ce879267f",
+      "hash": "6182c3ec8befaab20ade0a82ce72b7a87f4de959146ec93f28f8d84727f17113",
       "owners": [
         "claude-code"
       ]
@@ -1410,15 +1252,7 @@
     {
       "path": ".claude/skills/convention-detector/SKILL.md",
       "kind": "file",
-      "hash": "6de38874a0e24d23e8e30dce3a27806f3a2d4f7f2de2e26d84899bd7ed975953",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/create-project/SKILL.md",
-      "kind": "file",
-      "hash": "015813d0691aeb12e717d2d7e52eb913b59b0d3cfebd9550fe609fc977d02a18",
+      "hash": "fedaae848dc0235a38bf377ec6f97236fed6f9dc17cacadd03f81ebe022478a3",
       "owners": [
         "claude-code"
       ]
@@ -1434,7 +1268,7 @@
     {
       "path": ".claude/skills/database-migration-safety-engine/SKILL.md",
       "kind": "file",
-      "hash": "4ee11a3a480f5e4d8a57bc775cde72b1d6aeef859ec0100af5e4176515c516c1",
+      "hash": "7586bfe4fd2a580d60ba3ce2794d16f13de52504a651ea6e220f042d540e13cf",
       "owners": [
         "claude-code"
       ]
@@ -1450,7 +1284,7 @@
     {
       "path": ".claude/skills/dead-code-detector/SKILL.md",
       "kind": "file",
-      "hash": "97dcadf3d396edf1487c376eaf0572a5e3a5f0bc170042183cb2d5540f0b4e42",
+      "hash": "c5a82dd87f6b828e360301b971eb1376a0484314168044bba4b8acc26533e4ad",
       "owners": [
         "claude-code"
       ]
@@ -1466,15 +1300,7 @@
     {
       "path": ".claude/skills/debugging-engine/SKILL.md",
       "kind": "file",
-      "hash": "839a84e6a749dc430669de7d461eaa528f6f873ec8657c02570be2489031dad2",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/decompose-backlog/SKILL.md",
-      "kind": "file",
-      "hash": "8db4a1406fe91c526ecc943e81e99c4c6ac655ca4d71e1d954191f4df92bf27a",
+      "hash": "295f9a429c6dbc7fb4d9335a314293b3871bf3771d86de0e9f2cac4f6887138e",
       "owners": [
         "claude-code"
       ]
@@ -1490,31 +1316,7 @@
     {
       "path": ".claude/skills/deep-project-knowledge-extractor/SKILL.md",
       "kind": "file",
-      "hash": "2e6b45a5798f232c45930ae34900e07b005afd37ae87fb930ab62baf1c767bfa",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/deliver-backlog/SKILL.md",
-      "kind": "file",
-      "hash": "7cacddae2f002785703314421e19ebcd0c72552dd89d3740363f3bbe9ee69252",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/design-an-interface/SKILL.md",
-      "kind": "file",
-      "hash": "08c59164680d57efc73c5a5bf6b020b9c056444d8493f64b7a66b8aded7e4688",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/discover-codebase/SKILL.md",
-      "kind": "file",
-      "hash": "ac9c178bbfa9967ac1a758008ebf8df81429711d538c8a39aa7bdefbd175745b",
+      "hash": "b2c0202349f554460b879a7aa85bab3d78e1d19a6c52357320092f166beb2a37",
       "owners": [
         "claude-code"
       ]
@@ -1530,7 +1332,7 @@
     {
       "path": ".claude/skills/engineering-change-review/SKILL.md",
       "kind": "file",
-      "hash": "3ea686838881937f0a1a2faaac8ddf9d23d2156019f70ca0ec1027d93ce2b5be",
+      "hash": "af15bb45219497a6a708b65257a318e4314ad3a4a84517f353882a13f7023716",
       "owners": [
         "claude-code"
       ]
@@ -1546,7 +1348,7 @@
     {
       "path": ".claude/skills/environment-variable-auditor/SKILL.md",
       "kind": "file",
-      "hash": "0cf7dfaa3b669e21b3d131acd64dddb912d17d13e533e7b6e88c1cdf8ce7b2fd",
+      "hash": "aa1b8b8f2de39d2f20b1029fd22944153424678c12c28730f1a28bf9767436db",
       "owners": [
         "claude-code"
       ]
@@ -1562,7 +1364,7 @@
     {
       "path": ".claude/skills/environmental-backpressure-engine/SKILL.md",
       "kind": "file",
-      "hash": "c2da3444432e71e2c3d1a0e8d54a90bcbfaafe5eb1ebbd4bdd65a25c2fe45bee",
+      "hash": "6d4cc95d8f19f0a6f6ec6b2c555de99eb75b6bcbf88dec6c81f7478613e1b007",
       "owners": [
         "claude-code"
       ]
@@ -1578,7 +1380,7 @@
     {
       "path": ".claude/skills/git-intelligence-engine/SKILL.md",
       "kind": "file",
-      "hash": "871429e9a33d23b93742c05be07cffcc65c7dd9f86e6bb9f3e757b66693e71db",
+      "hash": "6e4ec94a8164b803f699c76e648ad1866a0fb25a9ebc7b324592ae476303f750",
       "owners": [
         "claude-code"
       ]
@@ -1594,7 +1396,7 @@
     {
       "path": ".claude/skills/graph-engine/SKILL.md",
       "kind": "file",
-      "hash": "571468e996481f8b5c1e450361b5a5c7618405910e748a5f004fe7735f22e9d3",
+      "hash": "8a3977367aa8761cec21b5aecdbe42183be2ae68dbe759860b1314be8929c4c0",
       "owners": [
         "claude-code"
       ]
@@ -1610,7 +1412,7 @@
     {
       "path": ".claude/skills/graph-guided-autoresearch/SKILL.md",
       "kind": "file",
-      "hash": "2c63f604b4e2d4d36fec64313a7f7a99b9775e5646f7042d6e1ee4bf40a2ff77",
+      "hash": "e248b6c49c0012a0a9e787dba628a0372786834d1a5fcd944cd1c76cbb6992cc",
       "owners": [
         "claude-code"
       ]
@@ -1626,15 +1428,7 @@
     {
       "path": ".claude/skills/graphward-skill/SKILL.md",
       "kind": "file",
-      "hash": "46fd24773572f227676793ddd92d37bc68db80051321f3dfc2f33325cd812cb0",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/graphward/SKILL.md",
-      "kind": "file",
-      "hash": "af7e955b01f43a3f9b56cb3059a7bf93fb2bdf43589ef9841efa0e8600cc9a97",
+      "hash": "dd9f74745371ebde6aab3cd344a2f37dd05ce67d177cb21546e7500adbd59430",
       "owners": [
         "claude-code"
       ]
@@ -1650,23 +1444,7 @@
     {
       "path": ".claude/skills/greenfield-architect/SKILL.md",
       "kind": "file",
-      "hash": "518720ea5951ac4d0c6fb704d42e01ebb24f7f422def79fef31fb526a6d6ddec",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/grill-me/SKILL.md",
-      "kind": "file",
-      "hash": "2f1e8e1b744573bcc822609726da8279d4895a7283294e7baf3d1e2338fda735",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/handoff/SKILL.md",
-      "kind": "file",
-      "hash": "e00681f72929d3051bd23e11358339d09f0037e83558fd5709689784107795ae",
+      "hash": "3a31284fd568f10cdb412878738036e4582551c41f7cc7d54d26ca247c6dff73",
       "owners": [
         "claude-code"
       ]
@@ -1682,7 +1460,7 @@
     {
       "path": ".claude/skills/impact-analysis-engine/SKILL.md",
       "kind": "file",
-      "hash": "faa4275f83c2b678b9b20178141832e00bdb43aca125944cf8bab4c7312964cf",
+      "hash": "a128ccc11e98a052e5c675f4384f6fb7626d22307920ad5880fbb96ff549ed33",
       "owners": [
         "claude-code"
       ]
@@ -1698,15 +1476,7 @@
     {
       "path": ".claude/skills/incremental-sync-engine/SKILL.md",
       "kind": "file",
-      "hash": "4c565b6fba07d11f89112cf4023f4362ee1caa906b5da89d389a13a5ea900780",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/initialize-graphward/SKILL.md",
-      "kind": "file",
-      "hash": "6b017070bc51a8aee55cdc447f695ee9ce8749a4ab3e0eef69de0e5b555f07c7",
+      "hash": "c01aaa72c34af235e83f0e30297dd3cd1fb33fed1c34ea8a5c1828de631413c7",
       "owners": [
         "claude-code"
       ]
@@ -1722,7 +1492,7 @@
     {
       "path": ".claude/skills/initialize-intelligence-skill/SKILL.md",
       "kind": "file",
-      "hash": "a2b0caa57930b52a83a3e6135fc91f7e6682da94743eba2247e0fbbb944b25d3",
+      "hash": "f7b0f1aa9f5d740f3cf5a2cf28755f8aef116c5261740387b3a1ec13e36243a7",
       "owners": [
         "claude-code"
       ]
@@ -1738,7 +1508,7 @@
     {
       "path": ".claude/skills/interface-design-explorer/SKILL.md",
       "kind": "file",
-      "hash": "e023e0f57d342c01662c694c33b72ed1227a43aec453de57676f0a5660fb1933",
+      "hash": "ac8f35609f5b9d613710b9ef98bd80f8b30c563912d877b9777a4ae116404eb0",
       "owners": [
         "claude-code"
       ]
@@ -1754,7 +1524,7 @@
     {
       "path": ".claude/skills/issue-tracker-sync-engine/SKILL.md",
       "kind": "file",
-      "hash": "2b4a21197f4b942f0bee7271df9816eb8c26c31a40d46d6233ee34280db66562",
+      "hash": "399ce159f9dde004a85e5fe2da10a2861100787a47e2641360a9563fe31345d0",
       "owners": [
         "claude-code"
       ]
@@ -1770,7 +1540,7 @@
     {
       "path": ".claude/skills/knowledge-base-validator/SKILL.md",
       "kind": "file",
-      "hash": "c3571a1e587082f938b593c06273ee3d6f5ec19955c69ff9adccaa3736652fbd",
+      "hash": "5556b47606af0e506053e558a0985b08b5da31d3dad5e066d89fed3e62f08d87",
       "owners": [
         "claude-code"
       ]
@@ -1786,15 +1556,7 @@
     {
       "path": ".claude/skills/llm-prompt-injection-guard/SKILL.md",
       "kind": "file",
-      "hash": "7dcc6fc73ab80b7db5c6315529128540e5109e0a1a9578a901a83fce0874edf3",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/map-architecture/SKILL.md",
-      "kind": "file",
-      "hash": "04a29a30fd19d1a56a353b6195006f9c6ccecf63dad416f59f4d6afb5e75ab23",
+      "hash": "21becc2b15624640b96ac0250db5a76d50fb7c51723b422d07657b1c126b5dc6",
       "owners": [
         "claude-code"
       ]
@@ -1810,7 +1572,7 @@
     {
       "path": ".claude/skills/mcp-security-governor/SKILL.md",
       "kind": "file",
-      "hash": "348d99e090fd41f42452b3ae8bc35df4a2682c9d90c98aa6e4c41ec5e4deac28",
+      "hash": "489c18046b347abfa3dd8f30656abe2e3905ba153d12b26e8f7c317820fbf285",
       "owners": [
         "claude-code"
       ]
@@ -1826,7 +1588,7 @@
     {
       "path": ".claude/skills/nfr-adr-governor/SKILL.md",
       "kind": "file",
-      "hash": "58a220ad42c9ece466a6c971807295f5a1f2c2dd5ee6e2f92c290bec2b78c96e",
+      "hash": "c27ef0f1cf383b18928c031505203e16a9a08fcab3481dd77521125e46f83647",
       "owners": [
         "claude-code"
       ]
@@ -1842,7 +1604,7 @@
     {
       "path": ".claude/skills/ongoing-learning-engine/SKILL.md",
       "kind": "file",
-      "hash": "e966cde23d4ab8c728344be80410a10bf3893524b5f872580198bc82b635f9d5",
+      "hash": "f20c0225e1f67d1776eb0616f5f850d0aa9189d68ab34f18cead300bc89846e0",
       "owners": [
         "claude-code"
       ]
@@ -1850,7 +1612,7 @@
     {
       "path": ".claude/skills/operations-readiness-engine/SKILL-BRIEF.md",
       "kind": "file",
-      "hash": "bc1f07b45976002995b934717667945c4cbeb8ceba8b6719649685e909857103",
+      "hash": "0ef6ffcf0b123491a7afc12b75953cd1184a63be70062a6196aca24f506ada0b",
       "owners": [
         "claude-code"
       ]
@@ -1858,7 +1620,7 @@
     {
       "path": ".claude/skills/operations-readiness-engine/SKILL.md",
       "kind": "file",
-      "hash": "695615814ddc623e5b6e4d95a08ab32b95121ca472ebe93fa7c49b56a1ac79d7",
+      "hash": "04cabc9a4813a1587eae56337f644eb20036d0b9611273be1056fe865135cc47",
       "owners": [
         "claude-code"
       ]
@@ -1874,7 +1636,7 @@
     {
       "path": ".claude/skills/performance-analysis-engine/SKILL.md",
       "kind": "file",
-      "hash": "42fe555a758f26ca405739d92dea11f53ded55aed81ab09f356232f9436f6130",
+      "hash": "bf499f13c2b587a1cc068ac2e614d77a86cfa297317ab4a4c9febcc8eded4482",
       "owners": [
         "claude-code"
       ]
@@ -1890,7 +1652,7 @@
     {
       "path": ".claude/skills/pr-intelligence-engine/SKILL.md",
       "kind": "file",
-      "hash": "25c6b7e1dfb3551476e05cab7fc130363f41964d59c3d72c46eb0b5f763bef96",
+      "hash": "cdbc840c1f59b81bdd9f088b4fc6b44e8ff131470af88f09d877b5f5bd8b43f1",
       "owners": [
         "claude-code"
       ]
@@ -1898,7 +1660,7 @@
     {
       "path": ".claude/skills/question-file-engine/SKILL-BRIEF.md",
       "kind": "file",
-      "hash": "de1bbcce8e72e7eb44ee554db79197093da67ce0c9ba532e2bfb3fd4dedf9017",
+      "hash": "4d20f4e0dd63f84e4019cfa4644c71eadc0ef9b042fbfec27b5e687cd814ea1c",
       "owners": [
         "claude-code"
       ]
@@ -1906,7 +1668,7 @@
     {
       "path": ".claude/skills/question-file-engine/SKILL.md",
       "kind": "file",
-      "hash": "d6a3cbc9e291520efb7f440181dd4c4dec65110dab7254bc171eb29369f15b0a",
+      "hash": "6258cd4ad334e167d68d71d60de83631c112a758d76cfc7932a799624815864e",
       "owners": [
         "claude-code"
       ]
@@ -1922,7 +1684,7 @@
     {
       "path": ".claude/skills/refactoring-planner/SKILL.md",
       "kind": "file",
-      "hash": "7f33b2136cb22f160ae35f3c5074a177094d626e1bad442aaf90610ff747c175",
+      "hash": "0a2de7683206b0a1964497eff18b78815d699c60f408cf3c38dad78a02cab38a",
       "owners": [
         "claude-code"
       ]
@@ -1938,23 +1700,7 @@
     {
       "path": ".claude/skills/requirement-scoper/SKILL.md",
       "kind": "file",
-      "hash": "38126e58de9548cde34b2dbf0b0ffb8c484a6f326cc6ad636a7c643e3967f023",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/review-engineering-change/SKILL.md",
-      "kind": "file",
-      "hash": "953b1600b21fd0c73deeb4804b0a926052ac2ed645058a730ad0611588f7542c",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/scope-requirement/SKILL.md",
-      "kind": "file",
-      "hash": "c087ff3d061acba5cd060f3c1632feea67bad2dade5d0b4bc0c8ee57e8804887",
+      "hash": "1b005f36fdb95faa51e4d543d1b3e163ad6bc2dc4beeefe0c8b2f83ea3e2ec6b",
       "owners": [
         "claude-code"
       ]
@@ -1970,7 +1716,7 @@
     {
       "path": ".claude/skills/security-audit-engine/SKILL.md",
       "kind": "file",
-      "hash": "da7b3c40cff0946ea2ff9c51898966dcc69e82ced6bd4e0b8b7658628c477f2d",
+      "hash": "296d49cd0f343eeb2fc37d7580267851d353376210cbeed60b836b13e671b722",
       "owners": [
         "claude-code"
       ]
@@ -1986,7 +1732,7 @@
     {
       "path": ".claude/skills/session-handoff-engine/SKILL.md",
       "kind": "file",
-      "hash": "5e0ada2200ec9da6096025e7c58f59c24a21bfdd54131868420f504555027546",
+      "hash": "53cc42b5a719784ed90fb6a8badd84099877b01bc08611719426222e13e21abb",
       "owners": [
         "claude-code"
       ]
@@ -2002,7 +1748,7 @@
     {
       "path": ".claude/skills/socratic-clarification-gate/SKILL.md",
       "kind": "file",
-      "hash": "f4441b273b68f53fc4bae98d851d150a46b6a416f72be881ccdcdc68bd874f1b",
+      "hash": "6d566710e48f583f6d95bb8ceb4d103c54703a65acdb219d13c6477f17be63b0",
       "owners": [
         "claude-code"
       ]
@@ -2018,7 +1764,7 @@
     {
       "path": ".claude/skills/socratic-stress-tester/SKILL.md",
       "kind": "file",
-      "hash": "6689e8c75985f8ca1720281a76eb669021e5b7cab25360329a084a25dd6d3263",
+      "hash": "ac1c207b6329c04c0fa776fd1040e3135c6def8b27c0e4ba9b2e5f7bc1afdc89",
       "owners": [
         "claude-code"
       ]
@@ -2034,23 +1780,7 @@
     {
       "path": ".claude/skills/staleness-detector/SKILL.md",
       "kind": "file",
-      "hash": "22f3f2bc01aaac07cae39b4e378120692f8b5d114a356efa169085f604742daa",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/sync-graphward/SKILL.md",
-      "kind": "file",
-      "hash": "84e799524fa79054ce034511d63c2362cc05c7d560b1556d51eb86216054faf1",
-      "owners": [
-        "claude-code"
-      ]
-    },
-    {
-      "path": ".claude/skills/tdd/SKILL.md",
-      "kind": "file",
-      "hash": "108d8782c575716bb6582e65d25a59e892d662b1d7d589b8a6a0b852f6b01b3f",
+      "hash": "950ff4e30b4636c9c4b4cd2c6bc6872ae4008460be3fc4dd0f077eb76b8e5437",
       "owners": [
         "claude-code"
       ]
@@ -2066,7 +1796,7 @@
     {
       "path": ".claude/skills/testing-intelligence-engine/SKILL.md",
       "kind": "file",
-      "hash": "c717e2d3acb66537d1be1b363ea9878116ee84d0adb457141bea419c85176f0e",
+      "hash": "ccc40bc2ab5430e905d74a1d39256861c2ff81b62c6a160e160877320eff47d5",
       "owners": [
         "claude-code"
       ]
@@ -2082,7 +1812,7 @@
     {
       "path": ".claude/skills/type-safety-engine/SKILL.md",
       "kind": "file",
-      "hash": "f4128c52bcd5f783cd7b655ecff200b818656162f50ff17c9f01336dd9658b28",
+      "hash": "8244c85b7cdbca2e91b9cdf6804384f7d1ff629c03b6439c7aa6e6d1a342025d",
       "owners": [
         "claude-code"
       ]
@@ -2098,7 +1828,7 @@
     {
       "path": ".claude/skills/user-intelligence-engine/SKILL.md",
       "kind": "file",
-      "hash": "3681e689c3f61cd61ce0c17db38ff233518f8345320b561f2d21dafcf38e21fc",
+      "hash": "c377169d16892d94ca7b0f56e696588f496d6f9b593d29e39f5a010b67e37a57",
       "owners": [
         "claude-code"
       ]
@@ -2114,7 +1844,7 @@
     {
       "path": ".claude/skills/vertical-tdd-engine/SKILL.md",
       "kind": "file",
-      "hash": "55eab03861397d8e516791cd1e56ede067456248232440b9aef8724ee9e22b25",
+      "hash": "c22cf2ca6b630a6f950ad4a105c26ddad137272601597b22e1bde3687e493c56",
       "owners": [
         "claude-code"
       ]
@@ -2122,7 +1852,7 @@
     {
       "path": ".graphward/gw.config.json",
       "kind": "seed",
-      "hash": "8299896e8385799a228ce2179cc96d36f7f48a0bc7d7ad03a4724abb2e30e8ba",
+      "hash": "193d0a34c0b86dd255de5077388069ef8b88660d9a9ebad060f928c10040b969",
       "owners": [
         "claude-code"
       ]
@@ -2138,7 +1868,7 @@
     {
       "path": "AGENTS.md",
       "kind": "block",
-      "hash": "e2481433a39ba6bc5c660a7d7859d820e6c2363a134358593eecf1f34d750fa0",
+      "hash": "48fb51f9c91b7706ec0e9c2d93527fd045ca9277d70acd41675a9aede67b1b14",
       "blockId": "graphward",
       "owners": [
         "antigravity-cli",
@@ -2148,7 +1878,7 @@
     {
       "path": "CLAUDE.md",
       "kind": "block",
-      "hash": "abf9a00307745f1cbb325831939b3256eb6a67b5f0ea39bd2ba65964eaafe411",
+      "hash": "2fb2f89660b4632476b2fe6e0060deb5dc76bc12716b39fbbf94388f242b2403",
       "blockId": "graphward",
       "owners": [
         "claude-code"
@@ -2156,5 +1886,5 @@
     }
   ],
   "installedAt": "2026-07-13T08:35:35.436Z",
-  "updatedAt": "2026-09-14T14:46:29.687Z"
+  "updatedAt": "2026-09-19T09:44:23.927Z"
 }

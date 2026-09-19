@@ -182,7 +182,7 @@ test("CLI installs enforcement hooks (settings.json + gw.config.json)", async ()
   assert.match(settings.hooks.Stop[0].hooks[0].command, /gw hook stop/);
 
   const config = JSON.parse(await read(root, ".graphward/gw.config.json"));
-  assert.equal(config.hooks.requireValidationOnStop, false, "hard gates are opt-in by default");
+  assert.equal(config.hooks.requireValidationOnStop, true, "completion validation is enforced by default");
 
   // doctor reports the managed hook files as unchanged (installed and hash-matched).
   const doc = cli(["doctor", root]);

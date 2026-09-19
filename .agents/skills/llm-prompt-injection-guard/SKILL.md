@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: llm-prompt-injection-guard
-description: Detects user-input-to-LLM prompt injection paths, unsafe RAG ingestion, unvalidated LLM outputs, and poisoned AI memory/documentation flows.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to llm-prompt-injection-guard. Do not use for direct selection from an unclassified user request."
 ---
 
 # LLM Prompt Injection Guard
@@ -44,3 +45,9 @@ Write `.graphward/reports/LLM-PROMPT-INJECTION-<slug>.md`:
 - [ ] User-controlled sources were traced to LLM and durable-memory sinks
 - [ ] Output validation was checked
 - [ ] High-risk paths have adversarial tests or blocking findings
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to llm-prompt-injection-guard.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

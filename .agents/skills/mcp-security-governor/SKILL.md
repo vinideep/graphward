@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: mcp-security-governor
-description: Reviews MCP tools and external execution surfaces for scoped authorization, schema integrity, sandboxing, and human approval gates.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to mcp-security-governor. Do not use for direct selection from an unclassified user request."
 ---
 
 # MCP Security Governor
@@ -48,3 +49,9 @@ Write `.graphward/aidlc/operations/mcp-security-review.md`:
 - Do not grant a tool broader filesystem, network, or deployment permission than the task requires.
 - Treat changed tool definitions as untrusted until revalidated.
 - Destructive actions must expose raw parameters to the user before execution.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to mcp-security-governor.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

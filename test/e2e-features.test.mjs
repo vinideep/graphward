@@ -779,7 +779,8 @@ test("T1.26: recordLearnedPattern records convention pattern to coding-patterns.
       targetFiles: ["src/**/*.ts"],
     });
 
-    assert.ok(result.saved, "pattern must be saved");
+    assert.equal(result.status, "proposed");
+    await mod.promoteLearnedPattern(repo.dir, result.id, { reviewer: "incremental-sync-engine", rationale: "durable convention", promote: true });
     const content = await readFile(path.join(repo.dir, ".graphward", "memory", "coding-patterns.md"), "utf8");
     assert.ok(content.includes("Use ESM Import Extensions"), "title must be in memory file");
     assert.ok(content.includes("Imports of local modules must end with .js"), "rule must be in memory file");
@@ -799,9 +800,11 @@ test("T1.27: recordLearnedPattern records regression pattern to regression-patte
       title: "Negative Amount in Payment Charge",
       description: "Calling charge() with amount <= 0 causes transaction ledger mismatch.",
       rule: "Reject charges where amount <= 0 before gateway dispatch",
+      targetFiles: ["src/index.ts"],
     });
 
-    assert.ok(result.saved);
+    assert.equal(result.status, "proposed");
+    await mod.promoteLearnedPattern(repo.dir, result.id, { reviewer: "incremental-sync-engine", rationale: "durable regression", promote: true });
     const content = await readFile(path.join(repo.dir, ".graphward", "memory", "regression-patterns.md"), "utf8");
     assert.ok(content.includes("Negative Amount in Payment Charge"));
   } finally {
@@ -820,9 +823,11 @@ test("T1.28: recordLearnedPattern records constraint to project-constraints.md",
       title: "No Direct DB Access in Adapters",
       description: "Adapters must route all persistence calls through the repository abstraction.",
       rule: "Adapters cannot import node:sqlite or pg directly",
+      targetFiles: ["src/index.ts"],
     });
 
-    assert.ok(result.saved);
+    assert.equal(result.status, "proposed");
+    await mod.promoteLearnedPattern(repo.dir, result.id, { reviewer: "incremental-sync-engine", rationale: "durable constraint", promote: true });
     const content = await readFile(path.join(repo.dir, ".graphward", "memory", "project-constraints.md"), "utf8");
     assert.ok(content.includes("No Direct DB Access in Adapters"));
   } finally {
@@ -1355,13 +1360,18 @@ test("T2.26: recordLearnedPattern avoids unbounded duplicate identical patterns"
       title: "Idempotent Title",
       description: "Description",
       rule: "Rule",
+      targetFiles: ["src/index.ts"],
     };
-    await mod.recordLearnedPattern(repo.dir, pat);
-    await mod.recordLearnedPattern(repo.dir, pat);
+    const first = await mod.recordLearnedPattern(repo.dir, pat);
+    const second = await mod.recordLearnedPattern(repo.dir, pat);
+    assert.equal(first.id, second.id, "identical proposals must have one stable id");
+    await mod.promoteLearnedPattern(repo.dir, first.id, { reviewer: "incremental-sync-engine", rationale: "durable", promote: true });
+    const duplicate = await mod.promoteLearnedPattern(repo.dir, second.id, { reviewer: "incremental-sync-engine", rationale: "dedupe", promote: true });
+    assert.equal(duplicate.status, "duplicate");
 
     const file = await readFile(path.join(repo.dir, ".graphward", "memory", "coding-patterns.md"), "utf8");
     const count = (file.match(/Idempotent Title/g) || []).length;
-    assert.ok(count <= 2, "must not multiply uncontrollably");
+    assert.equal(count, 1, "identical durable patterns must be stored once");
   } finally {
     await repo.cleanup();
   }
@@ -1383,7 +1393,7 @@ test("T2.27: queryProjectMemory returns empty arrays for non-matching file/topic
   }
 });
 
-test("T2.28: recordLearnedPattern auto-creates memory directory if missing", async (t) => {
+test("T2.28: learned-pattern promotion auto-creates memory directory if missing", async (t) => {
   const mod = await getLearningModule();
   if (!mod?.recordLearnedPattern) return t.skip("recordLearnedPattern not exported");
 
@@ -1394,8 +1404,11 @@ test("T2.28: recordLearnedPattern auto-creates memory directory if missing", asy
       title: "Auto Init Test",
       description: "Testing auto initialization",
       rule: "Never omit null checks",
+      targetFiles: ["src/index.ts"],
     });
-    assert.ok(result.saved);
+    assert.equal(result.status, "proposed");
+    const promoted = await mod.promoteLearnedPattern(repo.dir, result.id, { reviewer: "incremental-sync-engine", rationale: "durable constraint", promote: true });
+    assert.ok(promoted.saved);
   } finally {
     await repo.cleanup();
   }
@@ -1412,8 +1425,9 @@ test("T2.29: recordLearnedPattern escapes markdown special characters and code b
       title: "Avoid `eval()` & RegExp `.*`",
       description: "Do not write code with `eval()` or unescaped `<script>` tags.",
       rule: "Pattern: /[a-z]+/i and `foo !== null`",
+      targetFiles: ["src/index.ts"],
     });
-    assert.ok(result.saved);
+    await mod.promoteLearnedPattern(repo.dir, result.id, { reviewer: "incremental-sync-engine", rationale: "durable convention", promote: true });
     const content = await readFile(path.join(repo.dir, ".graphward", "memory", "coding-patterns.md"), "utf8");
     assert.ok(content.includes("eval()"));
   } finally {

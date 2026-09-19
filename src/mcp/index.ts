@@ -12,6 +12,7 @@ import { loadGwConfig } from "../config/index.js";
 import { packageVersion } from "../version.js";
 import { MCP_API_VERSION } from "../graph/schema.js";
 import { createConsolidatedRegistry } from "./consolidated.js";
+import type { ApiSnapshotExchange } from "../gates/api-snapshot.js";
 
 // Resolve the token budget for a tool call. Precedence:
 //   explicit args.budget (0 = unlimited) → project config → built-in fallback.
@@ -147,7 +148,7 @@ const TOOLS = [
   {
     name: "run_gate",
     description:
-      "Run a deterministic safety gate and return structured findings (severity error/warning/info). Gates: 'env-vars' (code env references vs .env.example), 'dead-exports' (JS/TS exports never imported), 'api-diff' (routes/contracts removed vs a git base ref), 'migration-lint' (destructive/locking DB migration ops). Prefer this over reviewing the code by hand for these checks.",
+      "Run one executable GraphWard gate and return pass/warn/fail/skipped/unavailable plus evidence. Gates cover env vars, dead exports, API diffs/snapshots, migrations, security, rollback, and conventions.",
     inputSchema: {
       type: "object" as const,
       required: ["gate"],
@@ -155,16 +156,42 @@ const TOOLS = [
         root: { type: "string", description: "Absolute path to the repository root. Defaults to cwd." },
         gate: {
           type: "string",
-          enum: ["env-vars", "dead-exports", "api-diff", "migration-lint"],
+          enum: ["env-vars", "dead-exports", "api-diff", "migration-lint", "api-snapshot", "security-audit", "rollback-readiness", "conventions"],
           description: "Which gate to run.",
         },
         base: { type: "string", description: "Git base ref for api-diff/migration-lint. Defaults to HEAD." },
+        risk: { type: "string", enum: ["low", "medium", "high", "critical"] },
+        changedFiles: { type: "array", items: { type: "string" } },
         failOn: {
           type: "string",
           enum: ["error", "warning", "info"],
           description: "Minimum severity that fails the gate. Defaults to 'error'. Use 'warning' to make advisory gates (env-vars, dead-exports) blocking.",
         },
       },
+    },
+  },
+  {
+    name: "capture_api_snapshot",
+    description: "Capture a redacted, normalized pre-change API request/response baseline for one unit.",
+    inputSchema: {
+      type: "object" as const,
+      required: ["unit", "exchange", "sourceFiles"],
+      properties: {
+        root: { type: "string" }, unit: { type: "string" },
+        exchange: { type: "object", additionalProperties: true },
+        volatilePaths: { type: "array", items: { type: "string" } },
+        sensitivePaths: { type: "array", items: { type: "string" } },
+        sourceFiles: { type: "array", minItems: 1, items: { type: "string" } },
+      },
+    },
+  },
+  {
+    name: "replay_api_snapshot",
+    description: "Replay an API request/response exchange against a captured baseline and persist the semantic diff report.",
+    inputSchema: {
+      type: "object" as const,
+      required: ["unit", "exchange"],
+      properties: { root: { type: "string" }, unit: { type: "string" }, exchange: { type: "object", additionalProperties: true } },
     },
   },
   {
@@ -507,8 +534,25 @@ export async function startMcpServer(projectRoot: string): Promise<void> {
         }
         const base = typeof args.base === "string" ? args.base : undefined;
         const failOn = typeof args.failOn === "string" ? args.failOn as "error" | "warning" | "info" : undefined;
-        const result = await runGate(gate, root, { base, failOn });
+        const risk = typeof args.risk === "string" ? args.risk as "low" | "medium" | "high" | "critical" : undefined;
+        const changedFiles = Array.isArray(args.changedFiles) ? args.changedFiles.filter((item): item is string => typeof item === "string") : undefined;
+        const result = await runGate(gate, root, { base, failOn, risk, changedFiles });
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      }
+
+      if (name === "capture_api_snapshot" || name === "replay_api_snapshot") {
+        const unit = typeof args.unit === "string" ? args.unit : "";
+        const exchange = args.exchange;
+        if (!unit || !exchange || typeof exchange !== "object" || Array.isArray(exchange)) return text(JSON.stringify({ error: "unit and exchange are required" }), true);
+        const snapshots = await import("../gates/api-snapshot.js");
+        const result = name === "capture_api_snapshot"
+          ? await snapshots.captureApiSnapshot(root, unit, exchange as ApiSnapshotExchange, {
+              volatilePaths: Array.isArray(args.volatilePaths) ? args.volatilePaths.filter((item): item is string => typeof item === "string") : undefined,
+              sensitivePaths: Array.isArray(args.sensitivePaths) ? args.sensitivePaths.filter((item): item is string => typeof item === "string") : undefined,
+              sourceFiles: Array.isArray(args.sourceFiles) ? args.sourceFiles.filter((item): item is string => typeof item === "string") : undefined,
+            })
+          : await snapshots.replayApiSnapshot(root, unit, exchange as ApiSnapshotExchange);
+        return text(JSON.stringify(result, null, 2));
       }
 
       if (name === "get_context") {

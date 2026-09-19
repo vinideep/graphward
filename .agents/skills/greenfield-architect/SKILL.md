@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: greenfield-architect
-description: Interview-based skill for new greenfield projects. Conducts a structured requirements interview (7-12 questions), generates architecture recommendations with tech stack selection, and scaffolds a complete project with pre-filled knowledge base, memory, context, configuration, CI/CD, and environment setup.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to greenfield-architect. Do not use for direct selection from an unclassified user request."
 ---
 
 # Greenfield Architect
@@ -284,3 +285,9 @@ Generate starter event guidance files with generic templates appropriate for the
 - Feeds into: `initialize-intelligence-skill` (provides the initial knowledge baseline)
 - Consumed by: `graphward-skill`, `engineering-orchestrator`
 - Related: `convention-detector` (validates conventions after initial development)
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to greenfield-architect.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: environmental-backpressure-engine
-description: Drives compiler, linter, type-check, test, security, and architecture feedback loops until objective validation passes or blockers are recorded.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to environmental-backpressure-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Environmental Backpressure Engine
@@ -60,3 +61,9 @@ Write `.graphward/aidlc/construction/<unit>/build-and-test/build-and-test-summar
 - Never report validation as passed unless the command actually ran and passed.
 - Do not hide failing output. Summarize it and keep enough detail for reproduction.
 - Human review begins after local backpressure is exhausted, not before.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to environmental-backpressure-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

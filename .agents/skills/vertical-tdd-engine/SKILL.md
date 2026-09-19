@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: vertical-tdd-engine
-description: Enforces a strict vertical-slice Red-Green-Refactor loop targeting public API surfaces. Tests first, minimal implementation second, refactor third.
+description: "Internal GraphWard engine. Use only when a route explicitly requires red-green-refactor implementation. Do not use for test planning or review only."
 ---
 
 # Vertical TDD Engine
@@ -35,3 +36,9 @@ Drive implementation through strict, incremental Test-Driven Development (TDD) u
 
 5. **Repeat for Subsequent Slices**:
    - Iterate slice-by-slice until all acceptance criteria are completely satisfied.
+
+## Invocation Policy
+
+- **Use when:** a route explicitly requires red-green-refactor implementation.
+- **Do not use when:** test planning or review only.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

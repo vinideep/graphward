@@ -17,7 +17,7 @@ import { PROVIDER_NAMES } from "../providers/types.js";
 import { generateExperimentCandidates, evaluateExperimentStep, loadExperiments, type EvaluateStepOptions } from "../experiment/index.js";
 import { assessPromptClarity, checkPhaseGate, freezeRequirements, loadAidlcState, saveAidlcState, type Phase, type UserDecision, type AidlcState } from "../aidlc/index.js";
 import { createSessionHandoff, getSessionHandoff, listActiveFlights } from "../flight/index.js";
-import { recordLearnedPattern, queryProjectMemory } from "../learning/index.js";
+import { migrateLegacyRegressionPatterns, promoteLearnedPattern, queryProjectMemory, recordLearnedPattern } from "../learning/index.js";
 import { packRows } from "./shaper.js";
 import { McpToolRegistry } from "./registry.js";
 
@@ -400,10 +400,10 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
 
   registry.register({
     name: "record_learned_pattern",
-    description: "Record a learned coding convention, regression pattern, or project constraint into durable engineering memory.",
+    description: "Deprecated compatibility alias: propose an evidence-backed learned pattern for incremental-sync review; does not write durable memory directly.",
     inputSchema: {
       type: "object",
-      required: ["type", "title", "description", "rule"],
+      required: ["type", "title", "description", "rule", "targetFiles"],
       additionalProperties: false,
       properties: {
         root: rootProperty,
@@ -424,6 +424,35 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
         targetFiles: Array.isArray(args.targetFiles) ? (args.targetFiles as string[]) : undefined,
       });
     },
+  });
+
+  registry.register({
+    name: "promote_learned_pattern",
+    description: "Incremental-sync single-writer action: review and either promote or reject one evidence-backed learning proposal.",
+    inputSchema: {
+      type: "object",
+      required: ["id", "reviewer", "rationale", "promote"],
+      additionalProperties: false,
+      properties: {
+        root: rootProperty,
+        id: { type: "string" },
+        reviewer: { type: "string" },
+        rationale: { type: "string" },
+        promote: { type: "boolean" },
+      },
+    },
+    handler: async (args) => promoteLearnedPattern(rootOf(args, projectRoot), args.id as string, {
+      reviewer: args.reviewer as string,
+      rationale: args.rationale as string,
+      promote: args.promote as boolean,
+    }),
+  });
+
+  registry.register({
+    name: "migrate_legacy_regression_patterns",
+    description: "One-time, non-destructive migration of legacy regression patterns. Preserves the source and marks imported entries unverified.",
+    inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty } },
+    handler: async (args) => migrateLegacyRegressionPatterns(rootOf(args, projectRoot)),
   });
 
   registry.register({

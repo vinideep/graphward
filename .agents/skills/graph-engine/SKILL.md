@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: graph-engine
-description: Builds and maintains evidence-backed JSON architecture graphs and Mermaid architecture maps representing project dependencies, services, runtime flows, and business processes.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to graph-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Graph Engine
@@ -225,3 +226,9 @@ Derive Mermaid diagrams from the JSON graphs. Include:
 - Integrates data from: `git-intelligence-engine`
 
 This capability may write intelligence artifacts. It must not modify product code.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to graph-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

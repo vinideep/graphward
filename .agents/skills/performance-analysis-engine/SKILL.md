@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: performance-analysis-engine
-description: Identifies performance issues through static analysis of database query patterns, frontend bundle size, render performance, API response patterns, and caching opportunities. Use during initialization, before releases, or when performance-sensitive changes are detected.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to performance-analysis-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Performance Analysis Engine
@@ -153,3 +154,9 @@ Write `.graphward/knowledge-base/21-performance-assessment.md`:
 - Updates: `.graphward/knowledge-base/21-performance-assessment.md`
 
 This capability is analytical only. It must not modify product code.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to performance-analysis-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

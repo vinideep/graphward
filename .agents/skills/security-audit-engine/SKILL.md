@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: security-audit-engine
-description: Performs evidence-based security audits covering dependency vulnerabilities, auth/authz patterns, secrets detection, OWASP Top 10 compliance, and input validation. Use during initialization, before releases, or when security-sensitive changes are detected.
+description: "Internal GraphWard engine. Use only when auth, authorization, secrets, untrusted input, dependencies, LLM, MCP, or trust boundaries changed. Do not use for general code quality review without a security surface."
 ---
 
 # Security Audit Engine
@@ -189,3 +190,9 @@ Write `.graphward/knowledge-base/20-security-assessment.md`:
 - Updates: `.graphward/knowledge-base/20-security-assessment.md`
 
 This capability is analytical only. It must not modify product code.
+
+## Invocation Policy
+
+- **Use when:** auth, authorization, secrets, untrusted input, dependencies, LLM, MCP, or trust boundaries changed.
+- **Do not use when:** general code quality review without a security surface.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

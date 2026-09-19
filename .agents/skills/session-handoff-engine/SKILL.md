@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: session-handoff-engine
-description: Serializes in-flight tasks, verified facts, unverified assumptions, and next steps into a durable handoff artifact for seamless session or agent handover.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to session-handoff-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Session Handoff Engine
@@ -34,3 +35,9 @@ Serialize active conversation state, in-flight task progress, verified facts, an
 
 4. **Verify Resumeability**:
    - Ensure the handoff artifact contains all context necessary for a fresh agent instance to resume without re-asking questions or re-exploring the codebase.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to session-handoff-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

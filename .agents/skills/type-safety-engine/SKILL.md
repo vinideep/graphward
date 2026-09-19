@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: type-safety-engine
-description: Validates generated code against the project type system, traces type-level dependencies, and loops on compiler errors until clean or blocked.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to type-safety-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Type Safety Engine
@@ -78,3 +79,9 @@ Write or update `.graphward/aidlc/construction/<unit>/build-and-test/type-safety
 - [ ] `imports-type` graph edges were added or confirmed unnecessary
 - [ ] Type Error Map exists for failures
 - [ ] Final type status is clean, blocked with evidence, or not applicable
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to type-safety-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

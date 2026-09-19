@@ -29,9 +29,9 @@ test("every adapter renders the complete canonical skill and workflow inventory 
     antigravity: { skills: ".agents/skills", workflows: ".agents/workflows", workflowKind: "file" },
     "antigravity-cli": { skills: ".agents/skills", workflows: ".agents/workflows", workflowKind: "file" },
     codex: { skills: ".agents/skills", workflows: ".agents/workflows", workflowKind: "file" },
-    generic: { skills: ".agents/skills", workflows: ".agents/skills", workflowKind: "skill" },
+    generic: { skills: ".agents/skills", workflows: ".agents/workflows", workflowKind: "file" },
     "claude-code": { skills: ".claude/skills", workflows: ".claude/commands", workflowKind: "file" },
-    cursor: { skills: null, workflows: ".cursor/commands", workflowKind: "file" },
+    cursor: { skills: ".cursor/skills", workflows: ".cursor/commands", workflowKind: "file" },
     "github-copilot": { skills: ".github/skills", workflows: ".github/prompts", workflowKind: "prompt" },
     "gemini-cli": { skills: ".agents/skills", workflows: ".gemini/commands", workflowKind: "toml" },
     commandcode: { skills: ".commandcode/skills", workflows: ".commandcode/commands", workflowKind: "file" },
@@ -233,7 +233,7 @@ test("update upgrades a V1-shaped installation with V2 graph and impact assets",
   assert.ok(result.actions.some((action) => action.path === ".agents/skills/graph-engine/SKILL.md" && action.status === "created"));
   assert.ok(result.actions.some((action) => action.path === ".agents/workflows/analyze-impact.md" && action.status === "created"));
   const updatedManifest = JSON.parse(await readFile(manifestPath, "utf8"));
-  assert.equal(updatedManifest.templateVersion, "4.1.0");
+  assert.equal(updatedManifest.templateVersion, "5.0.0");
 });
 
 test("upgrade installs new V2 files while preserving edited managed instructions", async () => {
@@ -369,4 +369,3 @@ test("update with createPromptOverwrite resolves multiple conflicts with Accept 
   assert.notEqual(await readable(root, file1), "local edit 1\n");
   assert.notEqual(await readable(root, file2), "local edit 2\n");
 });
-

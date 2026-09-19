@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: incremental-sync-engine
-description: Synchronizes only the intelligence artifacts affected by a completed change — knowledge base, durable memory, navigation context, events, graphs, claims, and reports. The single sync engine; use for explicit synchronization or after implementation.
+description: "Internal GraphWard engine. Use only when validated changes must be promoted into canonical intelligence. Do not use for proposing an unreviewed learned pattern."
 ---
 
 # Sync Engine
@@ -59,7 +60,7 @@ Most changes do **not** touch memory — leaving it unchanged is usually correct
 | `team-preferences.md` | Team-wide preferences (≥2 developer consensus) | Promoted by `user-intelligence-engine` |
 | `users/<slug>/user-intelligence.md` | Personal profile (gitignored) | Per session / `ei user-profile` |
 
-Rules: cite evidence on every entry; mark superseded decisions `Superseded` rather than deleting them; retire stale memory only with evidence. `testing-intelligence-engine` proposes regression patterns; persist them here only when durable.
+Rules: cite evidence on every entry; mark superseded decisions `Superseded` rather than deleting them; retire stale memory only with evidence. `testing-intelligence-engine` proposes regression patterns under `.graphward/events/learning-proposals/`; this engine is the only durable writer and promotes an accepted proposal with `gw learn promote --id <proposal-id> --author incremental-sync-engine --description "<review rationale>"`. Never copy an unreviewed proposal directly into memory.
 
 ## Context sync (navigation maps)
 
@@ -93,3 +94,9 @@ Keep `.graphward/context/` maps concise and navigational (tables, under ~150 lin
 - Depends on: `change-detection-engine`, `impact-analysis-engine`, `graph-engine`
 - Used by: `graphward-skill`, `sync-graphward` workflow
 - Integrates with: `knowledge-base-validator` (validates after sync), `convention-detector` (convention sync), `user-intelligence-engine` (memory promotion)
+
+## Invocation Policy
+
+- **Use when:** validated changes must be promoted into canonical intelligence.
+- **Do not use when:** proposing an unreviewed learned pattern.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

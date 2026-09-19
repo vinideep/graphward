@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: database-migration-safety-engine
-description: Reviews database migrations for backward compatibility, rollback coverage, locks, destructive operations, and production-dangerous changes.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to database-migration-safety-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Database Migration Safety Engine
@@ -78,3 +79,9 @@ Write `.graphward/aidlc/construction/<unit>/database-migration-safety.md`:
 - [ ] Down migration or rollback strategy exists
 - [ ] Schema-to-query impacts are listed
 - [ ] Explicit approval is recorded for dangerous operations
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to database-migration-safety-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

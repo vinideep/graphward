@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: ongoing-learning-engine
-description: Handles post-initialization continuous learning by detecting uncertainty, logging learning events, triggering targeted re-discovery, updating memory with newly learned patterns, tracking knowledge freshness scores, and enforcing staleness detection rules.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to ongoing-learning-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Ongoing Learning Engine
@@ -172,3 +173,9 @@ The ongoing learning engine activates under these conditions:
 - Related: `convention-detector` (for convention drift detection)
 
 This capability does not modify product code.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to ongoing-learning-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

@@ -85,7 +85,7 @@ export interface HookConfig {
 export const DEFAULT_HOOK_CONFIG: HookConfig = {
   freshnessThreshold: 60,
   blockStaleEdits: false,
-  requireValidationOnStop: false,
+  requireValidationOnStop: true,
   verifyCommands: [],
 };
 
@@ -414,8 +414,8 @@ async function onStop(root: string, input: HookInput, config: HookConfig): Promi
   }
 
   if (!config.requireValidationOnStop) return ALLOW;
-  // Avoid infinite loops: if we already blocked and the model is re-stopping, let it go.
-  if (input.stop_hook_active) return ALLOW;
+  // A repeated Stop attempt is not validation evidence. The host may set
+  // stop_hook_active after a block; keep evaluating the deterministic record.
 
   const { changedFiles, coverageFor, detectCheckCommands } = await import("../verify/index.js");
 

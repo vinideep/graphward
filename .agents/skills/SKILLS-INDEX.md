@@ -2,56 +2,56 @@
 
 > **Token-saving routing layer.** Read this index first.
 > Identify the 1-3 skills relevant to the request.
-> Tiered loading: `SKILL-BRIEF.md` (~150t) → understand the skill. `SKILL.md` → execute the procedure.
-> Both files live at `.agents/skills/<name>/`.
+> Entry workflows select internal engines. Load only the selected `SKILL.md`; brief files are not installed for this provider.
+> Skill files live at `.agents/skills/<name>/`.
 
-| Skill | Purpose |
-|---|---|
-| `initialize-intelligence-skill` | Initializes GraphWard project intelligence by analyzing repository evidence and generating knowledge, conte… |
-| `graphward-skill` | Executes engineering changes with impact analysis, implementation, tests, validation, and incremental synch… |
-| `deep-project-knowledge-extractor` | Analyzes an existing software repository and produces evidence-based architecture, runtime, API, infrastruc… |
-| `knowledge-base-validator` | Validates project knowledge documentation against source and configuration evidence, identifying stale, uns… |
-| `impact-analysis-engine` | Determines direct and indirect impact of a proposed or implemented change across modules, APIs, schemas, ru… |
-| `testing-intelligence-engine` | Determines risk-based testing needs for engineering changes and identifies coverage gaps in critical runtim… |
-| `change-history-engine` | Records validated engineering work, impacted systems, tests, synchronized documentation, and outstanding ri… |
-| `architecture-review-engine` | Reviews architecture decisions, dependency health, structural quality, and identifies architectural smells.… |
-| `refactoring-planner` | Plans safe refactors by identifying dependencies, migration steps, validation needs, compatibility risk, an… |
-| `graph-engine` | Builds and maintains evidence-backed JSON architecture graphs and Mermaid architecture maps representing pr… |
-| `change-detection-engine` | Determines analysis scope from a proposed engineering change, working-tree diff, commit range, or explicit … |
-| `incremental-sync-engine` | Synchronizes only the intelligence artifacts affected by a completed change — knowledge base, durable memor… |
-| `engineering-change-review` | Reviews engineering changes for correctness, test coverage, architecture alignment, graph consistency, and … |
-| `requirement-scoper` | Iteratively scopes product requirements by acting as a detailed business and technical analyst, asking clar… |
-| `codebase-discovery-engine` | Autonomously explores and deeply understands a codebase before asking any questions. Scans repo structure, … |
-| `convention-detector` | Detects and codifies project conventions by analyzing naming patterns, import organization, code structure,… |
-| `ongoing-learning-engine` | Handles post-initialization continuous learning by detecting uncertainty, logging learning events, triggeri… |
-| `greenfield-architect` | Interview-based skill for new greenfield projects. Conducts a structured requirements interview (7-12 quest… |
-| `git-intelligence-engine` | Extracts structural intelligence from git history — hotspot analysis, ownership mapping, change coupling, v… |
-| `pr-intelligence-engine` | Generates intelligent PR descriptions, reviewer suggestions, impact summaries, and split recommendations fr… |
-| `question-file-engine` | Prompts structured MCQ clarification questions interactively in the IDE chat using the ask_question tool. C… |
-| `staleness-detector` | Compares knowledge-base document timestamps against related source file modification times, scores each doc… |
-| `security-audit-engine` | Performs evidence-based security audits covering dependency vulnerabilities, auth/authz patterns, secrets d… |
-| `performance-analysis-engine` | Identifies performance issues through static analysis of database query patterns, frontend bundle size, ren… |
-| `debugging-engine` | Performs structured root cause analysis using graph intelligence, log correlation, error propagation tracin… |
-| `aidlc-lifecycle-engine` | Runs the adaptive AI-DLC lifecycle with Discovery, Inception, Construction, Operations, durable artifacts, … |
-| `environmental-backpressure-engine` | Drives compiler, linter, type-check, test, security, and architecture feedback loops until objective valida… |
-| `nfr-adr-governor` | Captures non-functional requirements, maps them to architectural patterns, and governs ADR lifecycle states. |
-| `mcp-security-governor` | Reviews MCP tools and external execution surfaces for scoped authorization, schema integrity, sandboxing, a… |
-| `operations-readiness-engine` | Produces deployment, observability, rollback, and runbook readiness artifacts for production-bound AI-DLC c… |
-| `type-safety-engine` | Validates generated code against the project type system, traces type-level dependencies, and loops on comp… |
-| `database-migration-safety-engine` | Reviews database migrations for backward compatibility, rollback coverage, locks, destructive operations, a… |
-| `api-backward-compatibility-engine` | Diffs API contracts (additive/deprecated/breaking), requires versioning or migration notes for breaking cha… |
-| `adr-compliance-checker` | Checks implementation diffs against accepted ADRs and durable architecture decisions. |
-| `dead-code-detector` | Detects unused exports, unreachable code paths, zombie dependencies, and stale modules by combining static … |
-| `environment-variable-auditor` | Audits environment variable usage against examples, validation schemas, CI secrets, and deployment configur… |
-| `contract-test-generator` | Generates consumer-driven contract test stubs for service boundaries based on API contracts and service gra… |
-| `llm-prompt-injection-guard` | Detects user-input-to-LLM prompt injection paths, unsafe RAG ingestion, unvalidated LLM outputs, and poison… |
-| `context-budget-optimizer` | Minimizes AI IDE token usage by ranking, slicing, summarizing, and lazy-loading project intelligence while … |
-| `backlog-decomposition-engine` | Autonomously decomposes a high-level initiative into a durable Epic to Feature to Ticket backlog with stabl… |
-| `issue-tracker-sync-engine` | Mirrors the local Epic to Feature to Ticket backlog to an external issue tracker such as GitHub Issues, kee… |
-| `user-intelligence-engine` | Resolves developer identity from git config, seeds a personal user-intelligence profile from git history, o… |
-| `socratic-stress-tester` | Interactively interrogates architectural proposals, PRDs, trade-offs, security assumptions, and edge cases … |
-| `session-handoff-engine` | Serializes in-flight tasks, verified facts, unverified assumptions, and next steps into a durable handoff a… |
-| `vertical-tdd-engine` | Enforces a strict vertical-slice Red-Green-Refactor loop targeting public API surfaces. Tests first, minima… |
-| `interface-design-explorer` | Explores and compares alternative interface contracts and TypeScript type definitions across multiple desig… |
-| `socratic-clarification-gate` | Mandatory pre-flight alignment gate that assesses prompt clarity, identifies underspecified architectural c… |
-| `graph-guided-autoresearch` | Autonomous, metric-driven code optimization and regression prevention loop guided by dependency and call gr… |
+| Internal engine | Use only when routed for | Do not select for |
+|---|---|---|
+| `initialize-intelligence-skill` | the selected entry workflow explicitly routes to initialize-intelligence-sk… | direct selection from an unclassified user request |
+| `graphward-skill` | an entry workflow delegates implementation orchestration | read-only audit, review, discovery, or impact analysis |
+| `deep-project-knowledge-extractor` | the selected entry workflow explicitly routes to deep-project-knowledge-ext… | direct selection from an unclassified user request |
+| `knowledge-base-validator` | the selected entry workflow explicitly routes to knowledge-base-validator | direct selection from an unclassified user request |
+| `impact-analysis-engine` | a route needs dependency, runtime, API, schema, or test blast radius | changed-file detection only |
+| `testing-intelligence-engine` | a route needs risk-based test selection or gap analysis | executing the vertical TDD loop |
+| `change-history-engine` | the selected entry workflow explicitly routes to change-history-engine | direct selection from an unclassified user request |
+| `architecture-review-engine` | the selected entry workflow explicitly routes to architecture-review-engine | direct selection from an unclassified user request |
+| `refactoring-planner` | the selected entry workflow explicitly routes to refactoring-planner | direct selection from an unclassified user request |
+| `graph-engine` | the selected entry workflow explicitly routes to graph-engine | direct selection from an unclassified user request |
+| `change-detection-engine` | a route needs the exact changed-file scope | direct or indirect impact computation |
+| `incremental-sync-engine` | validated changes must be promoted into canonical intelligence | proposing an unreviewed learned pattern |
+| `engineering-change-review` | the selected entry workflow explicitly routes to engineering-change-review | direct selection from an unclassified user request |
+| `requirement-scoper` | the selected entry workflow explicitly routes to requirement-scoper | direct selection from an unclassified user request |
+| `codebase-discovery-engine` | the selected entry workflow explicitly routes to codebase-discovery-engine | direct selection from an unclassified user request |
+| `convention-detector` | repository conventions must be discovered or changed code evaluated | generic lint or formatting only |
+| `ongoing-learning-engine` | the selected entry workflow explicitly routes to ongoing-learning-engine | direct selection from an unclassified user request |
+| `greenfield-architect` | the selected entry workflow explicitly routes to greenfield-architect | direct selection from an unclassified user request |
+| `git-intelligence-engine` | the selected entry workflow explicitly routes to git-intelligence-engine | direct selection from an unclassified user request |
+| `pr-intelligence-engine` | the selected entry workflow explicitly routes to pr-intelligence-engine | direct selection from an unclassified user request |
+| `question-file-engine` | the selected entry workflow explicitly routes to question-file-engine | direct selection from an unclassified user request |
+| `staleness-detector` | the selected entry workflow explicitly routes to staleness-detector | direct selection from an unclassified user request |
+| `security-audit-engine` | auth, authorization, secrets, untrusted input, dependencies, LLM, MCP, or t… | general code quality review without a security surface |
+| `performance-analysis-engine` | the selected entry workflow explicitly routes to performance-analysis-engine | direct selection from an unclassified user request |
+| `debugging-engine` | the selected entry workflow explicitly routes to debugging-engine | direct selection from an unclassified user request |
+| `aidlc-lifecycle-engine` | the selected entry workflow explicitly routes to aidlc-lifecycle-engine | direct selection from an unclassified user request |
+| `environmental-backpressure-engine` | the selected entry workflow explicitly routes to environmental-backpressure… | direct selection from an unclassified user request |
+| `nfr-adr-governor` | the selected entry workflow explicitly routes to nfr-adr-governor | direct selection from an unclassified user request |
+| `mcp-security-governor` | the selected entry workflow explicitly routes to mcp-security-governor | direct selection from an unclassified user request |
+| `operations-readiness-engine` | a medium or high risk change needs rollback or operational evidence | low-risk documentation-only work |
+| `type-safety-engine` | the selected entry workflow explicitly routes to type-safety-engine | direct selection from an unclassified user request |
+| `database-migration-safety-engine` | the selected entry workflow explicitly routes to database-migration-safety-… | direct selection from an unclassified user request |
+| `api-backward-compatibility-engine` | the selected entry workflow explicitly routes to api-backward-compatibility… | direct selection from an unclassified user request |
+| `adr-compliance-checker` | the selected entry workflow explicitly routes to adr-compliance-checker | direct selection from an unclassified user request |
+| `dead-code-detector` | the selected entry workflow explicitly routes to dead-code-detector | direct selection from an unclassified user request |
+| `environment-variable-auditor` | the selected entry workflow explicitly routes to environment-variable-audit… | direct selection from an unclassified user request |
+| `contract-test-generator` | the selected entry workflow explicitly routes to contract-test-generator | direct selection from an unclassified user request |
+| `llm-prompt-injection-guard` | the selected entry workflow explicitly routes to llm-prompt-injection-guard | direct selection from an unclassified user request |
+| `context-budget-optimizer` | the selected entry workflow explicitly routes to context-budget-optimizer | direct selection from an unclassified user request |
+| `backlog-decomposition-engine` | the selected entry workflow explicitly routes to backlog-decomposition-engi… | direct selection from an unclassified user request |
+| `issue-tracker-sync-engine` | the selected entry workflow explicitly routes to issue-tracker-sync-engine | direct selection from an unclassified user request |
+| `user-intelligence-engine` | the selected entry workflow explicitly routes to user-intelligence-engine | direct selection from an unclassified user request |
+| `socratic-stress-tester` | the selected entry workflow explicitly routes to socratic-stress-tester | direct selection from an unclassified user request |
+| `session-handoff-engine` | the selected entry workflow explicitly routes to session-handoff-engine | direct selection from an unclassified user request |
+| `vertical-tdd-engine` | a route explicitly requires red-green-refactor implementation | test planning or review only |
+| `interface-design-explorer` | the selected entry workflow explicitly routes to interface-design-explorer | direct selection from an unclassified user request |
+| `socratic-clarification-gate` | the selected entry workflow explicitly routes to socratic-clarification-gate | direct selection from an unclassified user request |
+| `graph-guided-autoresearch` | the selected entry workflow explicitly routes to graph-guided-autoresearch | direct selection from an unclassified user request |

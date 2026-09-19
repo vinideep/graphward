@@ -116,8 +116,8 @@ test("PostToolUse records changed source files and check-shaped commands", async
   assert.deepEqual(state.validationCommands, ["npm test"], "check-shaped commands recorded as a hint");
 });
 
-test("Stop is a no-op unless requireValidationOnStop is enabled", async () => {
-  const root = await gitRoot(); // default config: gate off
+test("Stop can be explicitly disabled even though validation is enabled by default", async () => {
+  const root = await gitRoot({ requireValidationOnStop: false });
   await writeFile(path.join(root, "src/a.ts"), "export const a = 1;\n", "utf8");
   const result = await runHook("stop", root, { session_id: "off" });
   assert.equal(result.exitCode, 0);
@@ -146,8 +146,8 @@ test("Stop requires a passing record covering the current bytes", async () => {
   await runHook("post-tool-use", root, { session_id: sid, tool_name: "Bash", tool_input: { command: "npm test" } });
   assert.ok((await stop()).stdout, "claiming to have run tests must not satisfy the gate");
 
-  // The stop_hook_active guard still prevents an infinite block loop.
-  assert.equal((await stop({ stop_hook_active: true })).stdout, undefined);
+  // A repeated stop attempt is not evidence and must remain blocked.
+  assert.ok((await stop({ stop_hook_active: true })).stdout);
 
   // A real verification run produces a record → allow.
   const { record } = await runVerification(root, { provenance: "human" });
@@ -211,7 +211,7 @@ test("rendered Claude settings and default config are valid JSON with hook wirin
 
   const config = JSON.parse(defaultConfigFile());
   assert.equal(config.hooks.blockStaleEdits, false);
-  assert.equal(config.hooks.requireValidationOnStop, false);
+  assert.equal(config.hooks.requireValidationOnStop, true);
 });
 
 // --- Cross-IDE: Cursor host --------------------------------------------------

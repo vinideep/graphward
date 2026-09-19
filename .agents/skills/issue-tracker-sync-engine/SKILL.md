@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: issue-tracker-sync-engine
-description: Mirrors the local Epic to Feature to Ticket backlog to an external issue tracker such as GitHub Issues, keeping the local markdown backlog as the source of truth and recording a stable ID mapping. Use to publish or refresh tracker issues from the backlog.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to issue-tracker-sync-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Issue Tracker Sync Engine
@@ -74,3 +75,9 @@ Record every link in `sync/tracker-sync-map.md`:
 - [ ] Local `done` status closes the corresponding tracker issue
 - [ ] Sync summary appended to `aidlc/audit.md`
 - [ ] No product code modified
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to issue-tracker-sync-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

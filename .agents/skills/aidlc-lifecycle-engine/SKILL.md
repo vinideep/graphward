@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: aidlc-lifecycle-engine
-description: Runs the adaptive AI-DLC lifecycle with Discovery, Inception, Construction, Operations, durable artifacts, hatted agents, and objective completion gates.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to aidlc-lifecycle-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # AI-DLC Lifecycle Engine
@@ -215,3 +216,8 @@ AI-DLC: <phase> -> <stage> -> <status>
 - Operations: `operations-readiness-engine` (deployment, observability, rollback)
 - Used by: `graphward` (main workflow), `engineering-orchestrator` (routing)
 
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to aidlc-lifecycle-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

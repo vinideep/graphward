@@ -22,5 +22,14 @@ test("schemas", async (t) => {
     const content = await readFile(join(schemasDir, "config.schema.json"), "utf8");
     const parsed = JSON.parse(content);
     assert.strictEqual(parsed.title, "GraphWard Project Config");
+    assert.strictEqual(parsed.properties.schemaVersion.const, 2);
   });
+
+  for (const name of ["api-snapshot", "security-review", "rollback-readiness", "convention-findings", "learned-pattern-proposal"]) {
+    await t.test(`${name}.schema.json is valid JSON`, async () => {
+      const parsed = JSON.parse(await readFile(join(schemasDir, `${name}.schema.json`), "utf8"));
+      assert.ok(parsed.$id);
+      assert.strictEqual(parsed.type, "object");
+    });
+  }
 });

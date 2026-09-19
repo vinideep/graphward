@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: operations-readiness-engine
-description: Produces deployment, observability, rollback, and runbook readiness artifacts for production-bound AI-DLC changes.
+description: "Internal GraphWard engine. Use only when a medium or high risk change needs rollback or operational evidence. Do not use for low-risk documentation-only work."
 ---
 
 # Operations Readiness Engine
@@ -64,3 +65,9 @@ Write `.graphward/aidlc/operations/operations-readiness.md`:
 - For database changes, require backward-compatible migration planning unless downtime is approved.
 - Medium-and-above risk changes require rollback procedures in both `operations-readiness.md` and the CHG record.
 - Irreversible steps require explicit human approval.
+
+## Invocation Policy
+
+- **Use when:** a medium or high risk change needs rollback or operational evidence.
+- **Do not use when:** low-risk documentation-only work.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

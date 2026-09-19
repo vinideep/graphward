@@ -3,39 +3,36 @@
   "title": "GraphWard Project Config",
   "type": "object",
   "properties": {
-    "schemaVersion": { "type": "number", "const": 1 },
-    "gates": {
+    "schemaVersion": { "type": "number", "const": 2 },
+    "tokenBudgets": { "type": "object", "additionalProperties": { "type": "number", "minimum": 0 } },
+    "projectFiles": {
       "type": "object",
       "properties": {
-        "strictMode": { "type": "boolean" },
-        "preflight": {
-          "type": "object",
-          "properties": {
-            "requireFreshGraph": { "type": "boolean" },
-            "requireTests": { "type": "boolean" }
-          },
-          "required": ["requireFreshGraph", "requireTests"]
-        }
-      },
-      "required": ["strictMode", "preflight"]
+        "roots": { "type": "array", "items": { "type": "string" } },
+        "include": { "type": "array", "items": { "type": "string" } },
+        "exclude": { "type": "array", "items": { "type": "string" } }
+      }
     },
     "providers": {
       "type": "object",
       "properties": {
         "policy": { "type": "string", "enum": ["auto", "full", "native"] },
         "requireProviders": { "type": "boolean" },
-        "expertMode": { "type": "boolean" }
+        "exposeRawMcp": { "type": "boolean" },
+        "offline": { "type": "boolean" }
       },
-      "required": ["policy", "requireProviders", "expertMode"]
+      "required": ["policy", "requireProviders", "exposeRawMcp", "offline"]
     },
     "hooks": {
       "type": "object",
       "properties": {
         "verifyCommands": { "type": "array", "items": { "type": "string" } },
-        "syncOnCommit": { "type": "boolean" }
+        "freshnessThreshold": { "type": "number", "minimum": 0, "maximum": 100 },
+        "blockStaleEdits": { "type": "boolean" },
+        "requireValidationOnStop": { "type": "boolean" }
       },
-      "required": ["verifyCommands", "syncOnCommit"]
+      "required": ["verifyCommands", "freshnessThreshold", "blockStaleEdits", "requireValidationOnStop"]
     }
   },
-  "required": ["schemaVersion", "gates", "providers", "hooks"]
+  "required": ["schemaVersion", "tokenBudgets", "projectFiles", "providers", "hooks"]
 }

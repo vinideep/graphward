@@ -43,8 +43,10 @@ test("all V2 IDE adapters render internally valid native destinations and workfl
   assert.ok(paths.has(".gemini/commands/sync-graphward.toml"));
   assert.ok(paths.has(".gemini/commands/scope-requirement.toml"));
   assert.ok(paths.has(".gemini/commands/grill-me.toml"));
-  assert.ok(paths.has(".agents/skills/sync-graphward/SKILL.md"));
+  assert.ok(!paths.has(".agents/skills/sync-graphward/SKILL.md"), "entry workflows must not be duplicated as internal skills");
   assert.ok(paths.has(".agents/workflows/sync-graphward.md"));
+  assert.ok(paths.has(".cursor/skills/graphward-skill/SKILL.md"));
+  assert.ok(paths.has(".cursor/WORKFLOW-ROUTING.md"));
   assert.ok(paths.has(".commandcode/skills/graphward-skill/SKILL.md"));
   assert.ok(paths.has(".commandcode/skills/aidlc-lifecycle-engine/SKILL.md"));
   assert.ok(paths.has(".commandcode/skills/type-safety-engine/SKILL.md"));
@@ -164,7 +166,7 @@ test("Claude Code adapter generates skills index and workflow routing table with
   // Skills index covers all skills with one row each.
   assert.match(index, /backlog-decomposition-engine/);
   assert.match(index, /graphward-skill/);
-  assert.match(index, /\| Skill \| Purpose \|/);
+  assert.match(index, /\| Internal engine \| Use only when routed for \| Do not select for \|/);
 
   // Routing table maps every workflow to primary skills.
   assert.match(routing, /graphward/);

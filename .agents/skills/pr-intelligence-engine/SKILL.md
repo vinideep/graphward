@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: pr-intelligence-engine
-description: Generates intelligent PR descriptions, reviewer suggestions, impact summaries, and split recommendations from change records and git intelligence. Use before submitting or reviewing pull requests.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to pr-intelligence-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # PR Intelligence Engine
@@ -124,3 +125,9 @@ Generate the following artifacts (do not write to the repository — present to 
 - Consumed by: `engineering-change-review`
 
 This capability is analytical only. It must not modify product code.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to pr-intelligence-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

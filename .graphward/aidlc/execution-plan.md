@@ -37,4 +37,24 @@ Delivery mode: Design-First with adversarial checks for external process, retrie
 2. Keep provider support beta until every matrix job passes with the pinned compatibility tuple.
 3. Review the 118 dead-export warnings against package consumers and Git history only as a separate major-version API exercise; do not mass-delete them.
 
+## Active unit: IMP-005 agent accuracy and enforcement remediation
+
+Implement in dependency order:
+
+1. One typed routing catalog and provider-capability profiles.
+2. Dependency-closed adapter rendering and reference-closure tests.
+3. One typed executable gate registry consumed by validation and AI-DLC exits.
+4. API snapshot, security, rollback, and convention gate implementations.
+5. Single-writer learned-pattern proposal and promotion flow with legacy migration.
+6. Risk/orchestrator/rule alignment, hook enforcement, and strict doctor diagnostics.
+7. Full build, unit/integration suite, disposable installs, synchronization, and change record.
+
+Acceptance is defined in `.graphward/reports/IMP-005-agent-accuracy-enforcement.md`.
+
+Status: complete locally. Evidence is recorded in
+`.graphward/aidlc/construction/agent-accuracy-enforcement/build-and-test/build-and-test-summary.md`
+and `.graphward/changes/CHG-004-agent-accuracy-enforcement.md`. Machine-global legacy
+skill cleanup remains intentionally unexecuted because it is destructive and outside
+the repository-managed bundle.
+
 No product implementation unit remains open locally. A release cannot be called fully handled until action 1 passes in CI.

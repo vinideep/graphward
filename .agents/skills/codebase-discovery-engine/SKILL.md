@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: codebase-discovery-engine
-description: Autonomously explores and deeply understands a codebase before asking any questions. Scans repo structure, identifies tech stack with confidence scores, builds architecture hypotheses, maps entry points, detects conventions, analyzes git history, and produces a structured discovery report. Invoke when onboarding to a new repository or when deep understanding is required.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to codebase-discovery-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Codebase Discovery Engine
@@ -433,3 +434,9 @@ Scope: <full repo | specific scope>
 - Feeds into: `.graphward/knowledge-base/00-project-overview.md`, `.graphward/memory/technology-decisions.md`
 
 This capability does not modify product code.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to codebase-discovery-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

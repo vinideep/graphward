@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: nfr-adr-governor
-description: Captures non-functional requirements, maps them to architectural patterns, and governs ADR lifecycle states.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to nfr-adr-governor. Do not use for direct selection from an unclassified user request."
 ---
 
 # NFR And ADR Governor
@@ -80,3 +81,9 @@ Proposed
 - [ ] ADR exists only when alternatives were considered
 - [ ] ADR state transitions are explicit
 - [ ] Accepted ADRs are not edited except to mark supersession
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to nfr-adr-governor.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

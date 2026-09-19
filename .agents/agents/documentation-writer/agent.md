@@ -23,7 +23,7 @@ Owns durable memory and human-readable continuity.
 - No undocumented behavior drift
 - All changed artifacts cite evidence or tool results
 
-## EI Runtime Context
+## GraphWard Runtime Context
 
 Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`

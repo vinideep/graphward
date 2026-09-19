@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: api-backward-compatibility-engine
-description: Diffs API contracts (additive/deprecated/breaking), requires versioning or migration notes for breaking changes, and captures/replays request-response snapshots to catch semantic regressions.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to api-backward-compatibility-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # API Backward Compatibility & Snapshot Engine
@@ -93,3 +94,9 @@ Write `.graphward/aidlc/construction/<unit>/api-compatibility.md`:
 - [ ] API docs and tests are updated for contract changes
 - [ ] Changed API surfaces have snapshot scenarios (or an explicit unavailable rationale), with post-change replay performed
 - [ ] Semantic differences are classified; unexplained regression candidates block completion
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to api-backward-compatibility-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

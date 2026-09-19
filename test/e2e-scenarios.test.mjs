@@ -180,12 +180,14 @@ test("T3.3: Continuous Self-Learning + Evidence Citation Healing (F2 + F6)", asy
   const repo = await createIsolatedRepo();
   try {
     // 1. Record a regression pattern
-    await learnMod.recordLearnedPattern(repo.dir, {
+    const proposed = await learnMod.recordLearnedPattern(repo.dir, {
       type: "regression",
       title: "Integer Overflow in Rate Limiter",
       description: "Window calculation exceeds max integer on high traffic.",
       rule: "Use BigInt for timestamp math in rate limiter",
+      targetFiles: ["src/index.ts"],
     });
+    await learnMod.promoteLearnedPattern(repo.dir, proposed.id, { reviewer: "incremental-sync-engine", rationale: "durable regression", promote: true });
 
     // 2. Cite the memory file in knowledge base
     const memFile = ".graphward/memory/regression-patterns.md";
@@ -540,7 +542,9 @@ test("T4.3: Scenario 3 — Autonomous Test Failure Learning and Memory Feedback 
       rule: "Reject createOrder when total <= 0",
       targetFiles: ["src/order.ts"],
     });
-    assert.ok(saved.saved);
+    assert.equal(saved.status, "proposed");
+    const promoted = await learnMod.promoteLearnedPattern(repo.dir, saved.id, { reviewer: "incremental-sync-engine", rationale: "confirmed test failure", promote: true });
+    assert.ok(promoted.saved);
 
     // Phase 2: Verify project memory surfaces the regression rule
     const mem = await learnMod.queryProjectMemory(repo.dir, { file: "src/order.ts" });

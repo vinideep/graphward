@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: change-detection-engine
-description: Determines analysis scope from a proposed engineering change, working-tree diff, commit range, or explicit changed files. Use before impact analysis, synchronization, or review.
+description: "Internal GraphWard engine. Use only when a route needs the exact changed-file scope. Do not use for direct or indirect impact computation."
 ---
 
 # Change Detection Engine
@@ -89,3 +90,9 @@ Produce a structured scope object for downstream consumers:
 
 - Used by: `impact-analysis-engine`, `incremental-sync-engine`, `engineering-change-review`
 - Feeds into: `analyze-impact`, `sync-graphward`, `review-engineering-change` workflows
+
+## Invocation Policy
+
+- **Use when:** a route needs the exact changed-file scope.
+- **Do not use when:** direct or indirect impact computation.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

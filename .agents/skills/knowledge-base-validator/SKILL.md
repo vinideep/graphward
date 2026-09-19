@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: knowledge-base-validator
-description: Validates project knowledge documentation against source and configuration evidence, identifying stale, unsupported, or uncertain claims. Use after initialization or documentation synchronization.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to knowledge-base-validator. Do not use for direct selection from an unclassified user request."
 ---
 
 # Knowledge Base Validator
@@ -121,3 +122,9 @@ Scope: <documents validated>
 
 - Used by: `initialize-intelligence-skill`, `incremental-sync-engine`
 - Depends on: `deep-project-knowledge-extractor` (produces the docs to validate)
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to knowledge-base-validator.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

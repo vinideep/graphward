@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: convention-detector
-description: Detects and codifies project conventions by analyzing naming patterns, import organization, code structure, API patterns, test patterns, git conventions, and architecture patterns. Produces a conventions document and enhances coding-patterns memory.
+description: "Internal GraphWard engine. Use only when repository conventions must be discovered or changed code evaluated. Do not use for generic lint or formatting only."
 ---
 
 # Convention Detector
@@ -210,3 +211,9 @@ Add a `## Conventions` section with only durable patterns that pass the durabili
 - Consumed by: `ongoing-learning-engine` (for convention drift detection)
 
 This capability does not modify product code.
+
+## Invocation Policy
+
+- **Use when:** repository conventions must be discovered or changed code evaluated.
+- **Do not use when:** generic lint or formatting only.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graphward.dev/schemas/security-review.schema.json",
+  "type": "object",
+  "required": ["schemaVersion", "status", "findings"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "status": { "enum": ["pass", "needs-attention", "unavailable"] },
+    "findings": { "type": "array", "items": { "type": "object", "required": ["severity", "message"], "properties": { "severity": { "enum": ["critical", "high", "medium", "low", "info"] }, "message": { "type": "string" }, "waived": { "type": "boolean" } } } }
+  }
+}

@@ -104,16 +104,17 @@ export async function checkConstructionExit(root: string): Promise<GateCheckResu
     recs.push(`Call postflight to verify scope and close flight ${openFlight.id}`);
   }
 
-  // 2. Check deterministic safety gates
-  for (const gate of ["env-vars", "dead-exports", "api-diff"] as const) {
+  // 2. Check the same deterministic registry used by validate_change.
+  for (const gate of GATE_NAMES) {
     try {
-      const res = await runGate(gate, root);
-      if (res.status === "fail") {
+      const res = await runGate(gate, root, { risk: "medium" });
+      if (res.status === "fail" || (res.status === "unavailable" && res.required)) {
         missing.push(`Safety gate failed: ${gate} (${res.summary})`);
         recs.push(`Fix ${gate} findings before exiting construction`);
       }
-    } catch {
-      // gate non-blocking if target repo lacks configuration
+    } catch (error) {
+      missing.push(`Safety gate unavailable: ${gate} (${error instanceof Error ? error.message : String(error)})`);
+      recs.push(`Restore ${gate} execution before exiting construction`);
     }
   }
 
@@ -132,12 +133,10 @@ export async function checkOperationsExit(root: string): Promise<GateCheckResult
   const missing: string[] = [];
   const recs: string[] = [];
 
-  const opsDir = path.join(aidlcDir(root), "operations");
-  const hasOpsDir = existsSync(opsDir);
-
-  if (!hasOpsDir) {
-    missing.push("operations/ directory missing");
-    recs.push("Generate operations readiness artifacts and rollback procedures");
+  const rollback = await runGate("rollback-readiness", root, { risk: "medium" });
+  if (rollback.status !== "pass") {
+    missing.push(`Rollback readiness failed: ${rollback.summary}`);
+    recs.push("Create and validate .graphward/aidlc/operations/rollback-readiness.json");
   }
 
   const passed = missing.length === 0;

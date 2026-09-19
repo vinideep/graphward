@@ -7,24 +7,33 @@ import { prepareProviders } from "../providers/manager.js";
 import { deriveClaims, verifyClaims } from "../claims/index.js";
 import { changedFiles } from "../verify/index.js";
 import { verifyKnowledge } from "../verify/index.js";
+import type { GateRisk } from "../gates/index.js";
 
 const SOURCE_FILE_RE = /\.(ts|tsx|js|jsx|mjs|cjs|py|go|rs|rb|java|kt|sql)$/i;
+
+function inferRisk(files: string[]): GateRisk {
+  if (files.some((file) => /(auth|security|crypto|migration|schema|mcp|permissions?|secrets?)/i.test(file))) return "high";
+  if (files.some((file) => SOURCE_FILE_RE.test(file))) return "medium";
+  return "low";
+}
 
 export async function validateChange(root: string, files?: string[], base = "HEAD") {
   const changed = files && files.length > 0 ? files : await changedFiles(root);
   const freshness = await ensureFreshGraph(root);
-  const [impact, claims, knowledge, evidence, ...gates] = await Promise.all([
-    analyzeImpact(root, changed),
+  const impact = await analyzeImpact(root, changed);
+  const risk = inferRisk(changed);
+  const [claims, knowledge, evidence, ...gates] = await Promise.all([
     verifyClaims(root),
     verifyKnowledge(root),
     checkEvidenceHashes(root),
-    ...GATE_NAMES.map((gate) => runGate(gate, root, { base })),
+    ...GATE_NAMES.map((gate) => runGate(gate, root, { base, changedFiles: changed, risk })),
   ]);
-  const blocking = gates.filter((gate) => gate.status === "fail");
+  const blocking = gates.filter((gate) => gate.status === "fail" || (gate.status === "unavailable" && gate.required));
   return {
     changedFiles: changed,
     freshness,
     impact,
+    risk,
     claims,
     knowledge,
     evidence,

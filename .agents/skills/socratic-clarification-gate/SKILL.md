@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: socratic-clarification-gate
-description: Mandatory pre-flight alignment gate that assesses prompt clarity, identifies underspecified architectural constraints, poses concrete multiple-choice trade-offs, and freezes verified requirements into AI-DLC state before code modification.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to socratic-clarification-gate. Do not use for direct selection from an unclassified user request."
 ---
 
 # Socratic Clarification Gate
@@ -77,3 +78,9 @@ Power users who write precise, well-scoped prompts can lower the threshold to re
 - Deeper analysis: `socratic-stress-tester` (for high-risk architectural stress-testing after clarity is established)
 - Used by: `graphward` (Step 3), `graphward-skill` (Step 2), `engineering-orchestrator` (Pre-flight)
 - Related: `aidlc-lifecycle-engine` (phase model and gate definitions)
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to socratic-clarification-gate.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

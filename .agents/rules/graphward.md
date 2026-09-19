@@ -11,9 +11,9 @@ such as `/graphward` and `/sync-graphward`. They
 are not removed during an update, so existing projects can adopt agents
 incrementally.
 
-## Agent Reasoning
+## Agent Planning
 
-- **Think First:** Before making any tool calls, you must use a `<think>...</think>` block to state your reasoning, formulate hypotheses, and assess risks.
+- Before consequential tool calls, state a concise user-visible plan, relevant risks, and evidence needs. Never request or expose hidden chain-of-thought.
 
 ## Pre-Edit Requirements
 
@@ -91,7 +91,7 @@ These workflows analyze and report but do **not** modify product code:
 | `review-engineering-change` | Write review findings | `.graphward/reports/REV-XXX-*.md` |
 | `decompose-backlog` | Create the Epic → Feature → Ticket backlog | `.graphward/aidlc/agile/backlog/` |
 
-The `graphward` and `deliver-backlog` workflows are the only workflows intended to modify product code; `deliver-backlog` does so one approved feature at a time.
+The `graphward`, `tdd`, `create-project`, and `deliver-backlog` workflows may modify product code. `create-project` is limited to approved scaffolding; `deliver-backlog` modifies one approved feature at a time. Audit, review, analysis, discovery, mapping, synchronization, and design-only workflows remain read-only unless the user separately authorizes implementation.
 
 ## Canonical Paths
 

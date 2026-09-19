@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graphward.dev/schemas/learned-pattern-proposal.schema.json",
+  "type": "object",
+  "required": ["schemaVersion", "id", "deduplicationHash", "type", "title", "description", "rule", "targetFiles", "proposedAt", "status"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^pat-[a-f0-9]{16}$" },
+    "deduplicationHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "type": { "enum": ["convention", "regression", "constraint"] },
+    "title": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "rule": { "type": "string", "minLength": 1 },
+    "targetFiles": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+    "proposedAt": { "type": "string", "format": "date-time" },
+    "status": { "enum": ["proposed", "promoted", "rejected"] }
+  }
+}

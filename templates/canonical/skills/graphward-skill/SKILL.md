@@ -19,8 +19,8 @@ Classify the incoming request before starting:
 | Type | Description | Risk Level |
 |---|---|---|
 | `feature` | New user-facing functionality | Medium–High |
-| `bugfix` | Correction of incorrect behavior | Low–Medium |
-| `update` | Dependency, config, or version updates | Low–Medium |
+| `bugfix` | Correction of incorrect behavior; auth, data, API, or trust-boundary fixes escalate to High | Low–High |
+| `update` | Dependency, config, or version updates; security/runtime changes escalate to High | Low–High |
 | `refactor` | Structural improvement without behavior change | Medium |
 | `architecture` | Boundary, layer, or pattern changes | High |
 | `infrastructure` | CI, deployment, environment changes | Medium–High |
@@ -29,17 +29,17 @@ Classify the incoming request before starting:
 
 ## Depth Level
 
-Determine execution depth from the user's request before proceeding:
+Determine execution depth from the user's request before proceeding. Risk always overrides requested speed: Minimal depth may omit optional analysis but never an applicable mandatory gate.
 
 | Signal words | Depth | Effect |
 |---|---|---|
-| "minimal", "quick", "sketch", "spike", "prototype" | **Minimal** | Skip optional gates; lightweight impact report; no full sync; use existing intelligence as-is |
+| "minimal", "quick", "sketch", "spike", "prototype" | **Minimal** | Skip optional analysis only; mandatory gates still follow actual risk; lightweight impact report |
 | (default — no explicit signal) | **Standard** | Full procedure; all applicable gates; incremental sync after changes |
-| "comprehensive", "thorough", "production-critical", "audit" | **Comprehensive** | All gates mandatory; extended scope analysis; full intelligence sync; cross-reference all ADRs |
+| "comprehensive", "thorough", "production-critical" | **Comprehensive** | All gates mandatory; extended scope analysis; full intelligence sync; cross-reference all ADRs |
 
 Record the depth on line 2 of the impact report header. For **Minimal** depth, list which gates were skipped and why.
 
-**Context gate (Standard and Comprehensive):** On high-risk or architecture-level changes, commit all intelligence artifacts and the current execution plan to git before starting implementation. This creates a clean recovery point if the context window fills mid-implementation.
+**Context gate (Standard and Comprehensive):** On high-risk or architecture-level changes, commit only share-safe, tracked lifecycle artifacts and the current execution plan before implementation. Never force-add ignored knowledge, graph, claims, context, or reports unless the project explicitly opted into shared intelligence.
 
 ## Procedure
 
@@ -182,14 +182,14 @@ Before any code edit, write `.graphward/reports/IMP-XXX-<summary>.md`. Call `ana
 - Run `type-safety-engine` for typed projects or record why no type system applies
 - Run `api-backward-compatibility-engine` when API, event, webhook, SDK, route, or schema contracts changed — it also captures/replays response snapshots when API behavior can be sampled
 - Run `database-migration-safety-engine` when schema, ORM model, migration, index, or data persistence contracts changed
-- Run `security-audit-engine` in targeted dependency-risk mode when package manifests add or upgrade dependencies; critical CVEs block completion
+- Run `security-audit-engine` when auth/authz, secrets, cryptography, sessions, untrusted input, public endpoints, LLM/MCP trust boundaries, or dependencies change. Use deterministic scanners where available; report `unavailable` rather than inventing CVE, license, or maintenance claims. Unwaived high/critical findings block completion.
 - Run `environment-variable-auditor` when environment variable reads, validation schemas, deployment config, or CI secrets change
 - Run `adr-compliance-checker` when accepted ADRs or architecture decisions apply to the changed area
 - Run `llm-prompt-injection-guard` when user-controlled data reaches prompts, RAG, agent tools, LLM calls, or durable AI memory
 - Write `.graphward/aidlc/construction/<unit>/build-and-test/build-and-test-summary.md` for non-trivial units
 - **Never claim validation passed unless it actually ran and passed**
 - Record partial or failed validation honestly
-- The 10 specialized safety engines listed above are **skills** invoked as subagents or inline procedures; `validate_change` runs the deterministic subset automatically
+- `validate_change` runs the executable registry for env vars, dead exports, API diffs/snapshots, migrations, security, rollback, and conventions, reporting each as pass, warn, fail, skipped, or unavailable. Type checks, acceptance mapping, dependency scanning, ADR review, freshness, and LLM prompt-injection review remain separately named evidence; never imply the registry executed them. A required unavailable registry gate blocks medium/high-risk completion.
 
 #### Acceptance Criteria Verification Matrix
 

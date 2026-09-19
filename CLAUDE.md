@@ -3,7 +3,7 @@
 
 This repository uses installed GraphWard workflows.
 
-- When the .agents/agents/ directory is available, start non-trivial work with the engineering-orchestrator custom agent. It routes the request to the right specialist and keeps the workflow evidence-based.
+- When a provider-installed custom-agent directory exists, start non-trivial work with the engineering-orchestrator custom agent. Never assume an agent path exists; use the active provider's installed manifest.
 - For initial understanding and documentation, invoke `initialize-graphward` or ask the agent to initialize GraphWard.
 - For implementation work, invoke `graphward` with the request or ask the agent to apply the GraphWard workflow. This workflow embeds AI-DLC and Agile delivery modes internally.
 - For epic-sized initiatives, invoke `decompose-backlog` to autonomously create an Epic → Feature → Ticket backlog under `.graphward/aidlc/agile/backlog/`, then `deliver-backlog` to implement it feature by feature. Each feature requires human approval before implementation; the local backlog is the source of truth and can optionally be mirrored to GitHub Issues.
@@ -13,7 +13,7 @@ This repository uses installed GraphWard workflows.
 - AI-DLC work must preserve durable state in `.graphward/aidlc/aidlc-state.md`, maintain Agile artifacts, use environmental backpressure, and end with an `AI-DLC: <phase> -> <stage> -> <status>` breadcrumb.
 - Base documentation claims on repository evidence and identify unknowns explicitly.
 - **Prefer persisted intelligence over re-exploration.** Before reading source files to understand the codebase, read the persisted knowledge base in `.graphward/knowledge-base/`, context maps in `.graphward/context/`, and architecture graphs in `.graphward/graph/`. Re-read source only for the specific files a task touches. Run `sync-graphward` to refresh these artifacts incrementally rather than re-deriving from scratch each session.
-- **Route before loading skills.** Consult the installed `WORKFLOW-ROUTING.md` and `SKILLS-INDEX.md` in your IDE's skills directory before opening any individual `SKILL.md`. Load only the 1-3 skills relevant to the current request.
+- **Route before loading skills.** Consult `.claude/WORKFLOW-ROUTING.md` and `.claude/skills/SKILLS-INDEX.md` before opening an internal `SKILL.md`. Entry workflows are model-invocable; internal engines are loaded only through the selected route.
 
 ## Tools (prefer these over reasoning by hand)
 
@@ -24,8 +24,14 @@ These run deterministically. Use them instead of inferring the answer from sourc
 - `validate_change` — run impact, safety gates, claims, knowledge, and citation validation
 - `sync_engineering_knowledge` — refresh affected graph, provider indexes, claims, and knowledge health after edits
 - `provider_status` — report pinned provider health, versions, fallbacks, and remediation
+- `simulate_change_intent` — simulate pre-edit change intent blast radius, routes, and tests
+- `evaluate_counterfactual` — evaluate tentative patch overlay branch and detect introduced dependency cycles
+- `assess_risk` — compute multi-dimensional risk profile and tiered verification plan
+- `slice_graph` — hierarchically slice monorepo graph at global, package, community, or task level
 
 CLI equivalents: `npx gw map|gate <name>|verify|freshness|context|claims verify|git-analysis .`. `gate` and `verify` exit non-zero on failure, so they work in CI too.
+
+- Native lifecycle hooks enforce configured completion checks.
 
 ## Token-Efficient Skill Loading (Claude Code)
 
@@ -53,5 +59,5 @@ Load **optional** skills only when the request explicitly requires that capabili
 - **PostToolUse** records changed source files and validation commands for the session.
 - **Stop** can require that a validation command actually ran before finishing.
 
-Tune behaviour in `.graphward/gw.config.json` (`blockStaleEdits`, `requireValidationOnStop`, `freshnessThreshold`). Hooks are fail-safe: with no intelligence installed they do nothing.
+Tune behaviour in `.graphward/gw.config.json` (`hooks.blockStaleEdits`, `hooks.requireValidationOnStop`, `hooks.freshnessThreshold`). Hooks are fail-safe: with no intelligence installed they do nothing.
 <!-- graphward:end -->

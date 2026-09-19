@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: backlog-decomposition-engine
-description: Autonomously decomposes a high-level initiative into a durable Epic to Feature to Ticket backlog with stable IDs, acceptance criteria, dependencies, execution order, and a per-feature human approval gate. Use to plan large product work before implementation.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to backlog-decomposition-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Backlog Decomposition Engine
@@ -204,3 +205,9 @@ Implementation of this feature's tickets must not begin until a human records
 - Triggers: `deliver-backlog` (per-feature approval + implementation), `issue-tracker-sync-engine` (optional tracker sync)
 - Pre-flight: `socratic-clarification-gate` (when initiative has 3+ ambiguities before decomposition)
 - Used by: `graphward-skill` (when epic-sized work is detected)
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to backlog-decomposition-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

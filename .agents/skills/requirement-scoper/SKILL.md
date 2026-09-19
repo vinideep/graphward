@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: requirement-scoper
-description: Iteratively scopes product requirements by acting as a detailed business and technical analyst, asking clarifying questions, and generating a finalized requirement prompt.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to requirement-scoper. Do not use for direct selection from an unclassified user request."
 ---
 
 # Requirement Scoper
@@ -33,7 +34,7 @@ Act as a detailed Business Analyst and Technical Architect persona. Analyze the 
    | Clarity | Undefined ambiguities | Action |
    |---|---|---|
    | Clear | 0–2 minor gaps | Ask inline; proceed after user responds |
-   | Vague | 3–5 gaps or unclear scope | Use `question-file-engine` to prompt structured MCQ questions interactively in the IDE chat via the `ask_question` tool; **wait for user responses** |
+   | Vague | 3–5 gaps or unclear scope | Use `question-file-engine` to prompt via `ask_question`; wait for responses |
    | Incomplete | Missing critical info | Use `question-file-engine` to prompt via `ask_question`; do not proceed until all critical questions are answered |
 
    When using `question-file-engine`, it will prompt questions interactively in the IDE and wait for responses. Do not continue this procedure until all responses are received.
@@ -101,3 +102,9 @@ Provide the exact prompt to pass to the coding agent to execute this change:
 - [ ] Implicit codebase constraints were mined and cited before questions were finalized.
 - [ ] Finalized prompt maps exact files and modules.
 - [ ] Output does not contain any code modification.
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to requirement-scoper.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

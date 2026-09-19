@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: environment-variable-auditor
-description: Audits environment variable usage against examples, validation schemas, CI secrets, and deployment configuration.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to environment-variable-auditor. Do not use for direct selection from an unclassified user request."
 ---
 
 # Environment Variable Auditor
@@ -46,3 +47,9 @@ Write `.graphward/aidlc/construction/<unit>/environment-variable-audit.md`:
 - [ ] Example files and validation schemas were checked
 - [ ] CI/deployment declarations were checked when present
 - [ ] New required env vars are documented and validated
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to environment-variable-auditor.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

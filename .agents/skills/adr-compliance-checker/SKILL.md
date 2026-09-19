@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: adr-compliance-checker
-description: Checks implementation diffs against accepted ADRs and durable architecture decisions.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to adr-compliance-checker. Do not use for direct selection from an unclassified user request."
 ---
 
 # ADR Compliance Checker
@@ -40,3 +41,9 @@ Write `.graphward/reports/ADR-COMPLIANCE-<slug>.md`:
 - [ ] Binding rules were extracted explicitly
 - [ ] Diff was checked against applicable rules
 - [ ] ADR violations are blockers unless superseded by a new accepted ADR
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to adr-compliance-checker.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

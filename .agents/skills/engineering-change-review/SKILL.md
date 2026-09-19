@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: engineering-change-review
-description: Reviews engineering changes for correctness, test coverage, architecture alignment, graph consistency, and documentation accuracy. Use after implementation to validate quality before completion.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to engineering-change-review. Do not use for direct selection from an unclassified user request."
 ---
 
 # Engineering Change Review
@@ -166,3 +167,9 @@ Write `.graphward/reports/REV-XXX-<slug>.md`:
 - Depends on: `change-detection-engine` (identifies what to review)
 - Used by: `graphward-skill` (high-risk review gate), `review-engineering-change` workflow
 - Reads: Impact reports, change records, graph artifacts
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to engineering-change-review.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

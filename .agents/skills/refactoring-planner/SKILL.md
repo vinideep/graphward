@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: refactoring-planner
-description: Plans safe refactors by identifying dependencies, migration steps, validation needs, compatibility risk, and rollback strategy. Use before non-trivial refactors.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to refactoring-planner. Do not use for direct selection from an unclassified user request."
 ---
 
 # Refactoring Planner
@@ -148,3 +149,9 @@ Overall Risk: **High**
 - Depends on: `graph-engine` (dependency data), `architecture-review-engine` (findings)
 - Used by: `graphward-skill` (for refactor-type requests)
 - Triggers: `impact-analysis-engine` (when the refactor is implemented)
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to refactoring-planner.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

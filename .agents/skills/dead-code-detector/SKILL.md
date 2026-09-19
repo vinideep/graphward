@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: dead-code-detector
-description: Detects unused exports, unreachable code paths, zombie dependencies, and stale modules by combining static analysis with git history.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to dead-code-detector. Do not use for direct selection from an unclassified user request."
 ---
 
 # Dead Code Detector
@@ -33,3 +34,9 @@ Write or update `.graphward/knowledge-base/12-technical-debt.md`:
 - [ ] Framework dynamic entry points were considered
 - [ ] Git staleness was included
 - [ ] Findings include confidence and safe-removal steps
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to dead-code-detector.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

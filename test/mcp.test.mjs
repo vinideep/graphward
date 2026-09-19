@@ -103,6 +103,8 @@ test("MCP server: initialize, list tools, call get_graph and analyze_impact", as
       "get_experiment_history",
       "get_session_handoff",
       "list_active_flights",
+      "migrate_legacy_regression_patterns",
+      "promote_learned_pattern",
       "provider_status",
       "query_project_memory",
       "record_learned_pattern",

@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: architecture-review-engine
-description: Reviews architecture decisions, dependency health, structural quality, and identifies architectural smells. Use during refactoring planning or periodic architecture assessment.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to architecture-review-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Architecture Review Engine
@@ -116,3 +117,9 @@ Scope: <what was reviewed>
 - Depends on: `graph-engine` (provides structural data)
 - Used by: `refactoring-planner` (for input on what to refactor)
 - Related: `engineering-change-review` (per-change review vs architectural review)
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to architecture-review-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

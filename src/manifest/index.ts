@@ -4,7 +4,7 @@ import path from "node:path";
 import type { InstallManifest } from "../types.js";
 
 export const MANIFEST_PATH = ".graphward/install-manifest.json";
-export const TEMPLATE_VERSION = "4.1.0";
+export const TEMPLATE_VERSION = "5.0.0";
 
 export function hashContent(content: string): string {
   return createHash("sha256").update(content).digest("hex");

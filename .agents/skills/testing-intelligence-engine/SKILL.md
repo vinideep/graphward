@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: testing-intelligence-engine
-description: Determines risk-based testing needs for engineering changes and identifies coverage gaps in critical runtime flows. Use during implementation and validation.
+description: "Internal GraphWard engine. Use only when a route needs risk-based test selection or gap analysis. Do not use for executing the vertical TDD loop."
 ---
 
 # Testing Intelligence Engine
@@ -159,3 +160,9 @@ Only update when documenting project-wide testing posture:
 - Depends on: `impact-analysis-engine` (for risk assessment)
 - Used by: `graphward-skill` (step 4: tests and validation)
 - Updates: `.graphward/knowledge-base/17-testing-strategy.md` (broad posture only)
+
+## Invocation Policy
+
+- **Use when:** a route needs risk-based test selection or gap analysis.
+- **Do not use when:** executing the vertical TDD loop.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

@@ -60,7 +60,7 @@ Most changes do **not** touch memory — leaving it unchanged is usually correct
 | `team-preferences.md` | Team-wide preferences (≥2 developer consensus) | Promoted by `user-intelligence-engine` |
 | `users/<slug>/user-intelligence.md` | Personal profile (gitignored) | Per session / `ei user-profile` |
 
-Rules: cite evidence on every entry; mark superseded decisions `Superseded` rather than deleting them; retire stale memory only with evidence. `testing-intelligence-engine` proposes regression patterns; persist them here only when durable.
+Rules: cite evidence on every entry; mark superseded decisions `Superseded` rather than deleting them; retire stale memory only with evidence. `testing-intelligence-engine` proposes regression patterns under `.graphward/events/learning-proposals/`; this engine is the only durable writer and promotes an accepted proposal with `gw learn promote --id <proposal-id> --author incremental-sync-engine --description "<review rationale>"`. Never copy an unreviewed proposal directly into memory.
 
 ## Context sync (navigation maps)
 

@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { renderAdapters } from "../adapters/index.js";
 import { readManagedBlock } from "../installer/blocks.js";
@@ -7,6 +7,8 @@ import { MANIFEST_PATH, TEMPLATE_VERSION, hashContent, readManifest } from "../m
 import { exists, validateCanonicalTemplates } from "../templates.js";
 import type { FileAction, IdeId } from "../types.js";
 import { packageVersion } from "../version.js";
+import { homedir } from "node:os";
+import { SKILL_NAMES } from "../templates.js";
 
 export async function validateRender(ides: IdeId[]): Promise<string[]> {
   const errors = await validateCanonicalTemplates();
@@ -38,7 +40,7 @@ export async function validateRender(ides: IdeId[]): Promise<string[]> {
   return errors;
 }
 
-export async function doctor(root: string, expectedPackageVersion?: string): Promise<FileAction[]> {
+export async function doctor(root: string, expectedPackageVersion?: string, strict = false): Promise<FileAction[]> {
   const actions: FileAction[] = [];
   const manifest = await readManifest(root);
   if (!manifest) {
@@ -119,6 +121,28 @@ export async function doctor(root: string, expectedPackageVersion?: string): Pro
       actions.push({ path: entry.path, status: "warning", message: "Managed content was edited locally." });
     } else {
       actions.push({ path: entry.path, status: "unchanged" });
+    }
+  }
+
+  if (strict) {
+    const globalSkills = path.join(homedir(), ".agents", "skills");
+    for (const name of SKILL_NAMES) {
+      const globalSkill = path.join(globalSkills, name, "SKILL.md");
+      if (!(await exists(globalSkill))) continue;
+      const content = await readFile(globalSkill, "utf8").catch(() => "");
+      if (content.includes(".engineering-intelligence/")) {
+        actions.push({ path: globalSkill, status: "error", message: `Global skill '${name}' uses legacy .engineering-intelligence paths and can override the project skill. Migrate or remove it explicitly.` });
+      } else {
+        actions.push({ path: globalSkill, status: "warning", message: `Global skill '${name}' duplicates a project-managed skill; verify host precedence.` });
+      }
+    }
+    for (const legacyName of ["engineering-intelligence-skill", "memory-sync-engine", "knowledge-sync-engine", "context-sync-engine", "api-snapshot-testing-engine"]) {
+      const globalSkill = path.join(globalSkills, legacyName, "SKILL.md");
+      if (await exists(globalSkill)) actions.push({ path: globalSkill, status: "error", message: `Legacy global skill '${legacyName}' remains model-selectable beside GraphWard. Migrate or remove it explicitly.` });
+    }
+    const globalEntries = await readdir(globalSkills, { withFileTypes: true }).catch(() => []);
+    for (const entry of globalEntries.filter((item) => item.isDirectory() && item.name.startsWith("source-command-"))) {
+      actions.push({ path: path.join(globalSkills, entry.name), status: "error", message: `Legacy wrapper skill '${entry.name}' remains model-selectable and duplicates an entry workflow. Migrate or remove it explicitly.` });
     }
   }
 

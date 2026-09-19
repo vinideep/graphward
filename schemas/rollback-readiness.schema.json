@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graphward.dev/schemas/rollback-readiness.schema.json",
+  "type": "object",
+  "required": ["schemaVersion", "codeRevert", "stateCompensation", "disablePath", "externalEffects", "irreversibleSteps", "verification"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "codeRevert": { "type": "string", "minLength": 1 },
+    "stateCompensation": { "type": "string", "minLength": 1 },
+    "disablePath": { "type": "string", "minLength": 1 },
+    "externalEffects": { "type": "string", "minLength": 1 },
+    "irreversibleSteps": { "type": "string", "minLength": 1 },
+    "verification": { "type": "string", "minLength": 1 }
+  }
+}

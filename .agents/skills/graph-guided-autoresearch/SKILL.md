@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: graph-guided-autoresearch
-description: Autonomous, metric-driven code optimization and regression prevention loop guided by dependency and call graph intelligence.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to graph-guided-autoresearch. Do not use for direct selection from an unclassified user request."
 ---
 
 # Graph-Guided Autoresearch
@@ -78,3 +79,9 @@ Execute hypothesis-driven, metric-focused optimization loops using graph intelli
 - Depends on: `graph-engine` (dependency/call graph for candidate ranking), `environmental-backpressure-engine` (metric command execution)
 - Used by: `engineering-orchestrator` (optimization route), `graphward` (optional autoresearch trigger)
 - Related: `impact-analysis-engine` (blast radius of kept mutations)
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to graph-guided-autoresearch.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

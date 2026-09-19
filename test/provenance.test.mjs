@@ -3,20 +3,22 @@ import test from "node:test";
 import { mkdtempSync, rmSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { recordLearnedPattern } from "../dist/learning/index.js";
+import { recordLearnedPattern, promoteLearnedPattern } from "../dist/learning/index.js";
 import { coverageFor, writeRecord } from "../dist/verify/index.js";
 import { hashContent } from "../dist/verify/index.js";
 
 test("recordLearnedPattern includes provenance in markdown", async () => {
   const dir = mkdtempSync(path.join(os.tmpdir(), "ei-prov-"));
   try {
-    await recordLearnedPattern(dir, {
+    const proposal = await recordLearnedPattern(dir, {
       type: "convention",
       title: "Test pattern",
       description: "Desc",
       rule: "Rule",
-      provenance: "agent"
+      provenance: "agent",
+      targetFiles: ["src/a.ts"]
     });
+    await promoteLearnedPattern(dir, proposal.id, { reviewer: "incremental-sync-engine", rationale: "provenance test", promote: true });
 
     const content = readFileSync(path.join(dir, ".graphward", "memory", "coding-patterns.md"), "utf8");
     assert.ok(content.includes("[provenance: agent]"));

@@ -5,12 +5,12 @@
 
 | Field | Value |
 |---|---|
-| Phase | Transition |
-| Stage | Local validation complete; release matrix pending |
+| Phase | Construction |
+| Stage | Agent accuracy enforcement validated and synchronized |
 | Active workflow | `graphward` |
 | Active hat | Quality Agent |
-| Active unit | IMP-002 end-to-end validation and simple sync |
-| Completion status | Implementation and local qualification complete; CI matrix pending |
+| Active unit | IMP-005 agent accuracy and enforcement remediation |
+| Completion status | Complete locally |
 
 ## Workspace Classification
 
@@ -36,21 +36,22 @@
 ## Progress Breadcrumb
 
 ```
-AI-DLC: Transition -> Local validation and synchronization -> Complete locally; pending remote CI matrix
+AI-DLC: Construction -> Agent accuracy enforcement -> Complete locally; global legacy cleanup explicitly pending
 ```
 
 ## Active Delivery
 
-EPIC-001 and FEAT-001 through FEAT-005 are implemented and locally validated. GraphWard remains the canonical knowledge owner; Graphify is structural evidence and CCE is scoped retrieval. The only open release qualification is execution of the declared cross-platform provider matrix.
+EPIC-001 and FEAT-001 through FEAT-005 remain implemented and locally validated. IMP-005 aligned skill routing, provider bundles, executable gates, learning ownership, and enforcement truth. The pre-existing cross-platform provider matrix remains a separate release qualification item.
 
 ## Unknowns
 
 - Remote CI execution state is unavailable from this local workspace. Do not infer those jobs passed from the workflow definition.
+- Strict environment doctor reports 46 errors and 5 warnings from pre-existing machine-global skills under `/Users/vinithr/.agents/skills/`. Repository-managed provider bundles are current and clean; user-level cleanup was not performed automatically.
 
 ## Current Validation Unit
 
-IMP-002 verified the user journey in a disposable Shiplogic-shaped project. The
-CLI now supports a deterministic `sync` command for graph, provider indexes,
-and derived claims, while source edits explicitly request a follow-up
-evidence-aware prose synchronization. Provider-backed initialization is
-optional unless `--require-providers` is supplied.
+IMP-005 is locally complete: provider outputs are dependency-closed, entry workflows
+do not collide with internal engines inside the repository bundle, advertised gates
+are executable, durable learning has a single writer, and semantic regression tests
+cover the pre-change failures. Machine-global collision cleanup remains an explicit
+environment operation rather than an implicit repository edit.

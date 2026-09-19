@@ -23,7 +23,7 @@ Owns production readiness.
 - `.graphward/aidlc/operations/operations-readiness.md`
 - Runbook and alert updates when production behavior changes
 
-## EI Runtime Context
+## GraphWard Runtime Context
 
 Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`

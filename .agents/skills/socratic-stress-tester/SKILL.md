@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: socratic-stress-tester
-description: Interactively interrogates architectural proposals, PRDs, trade-offs, security assumptions, and edge cases before coding. Use for pre-flight alignment.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to socratic-stress-tester. Do not use for direct selection from an unclassified user request."
 ---
 
 # Socratic Stress Tester
@@ -49,3 +50,9 @@ Interactively stress-test technical proposals, PRDs, or architecture plans using
 - Depends on: `socratic-clarification-gate` (lightweight gate; this skill is the deep interrogation)
 - Used by: `graphward-skill` (Step 2 Pre-Flight), `graphward` (Step 4)
 - Related: `question-file-engine` (for 3+ ambiguities, prompts interactively via `ask_question` in the IDE chat)
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to socratic-stress-tester.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

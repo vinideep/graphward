@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: question-file-engine
-description: Prompts structured MCQ clarification questions interactively in the IDE chat using the ask_question tool. Creates durable decision artifacts after user responds. Use when a request has 3+ ambiguities or scope is unclear.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to question-file-engine. Do not use for direct selection from an unclassified user request."
 ---
 
 # Question File Engine
@@ -33,7 +34,7 @@ Group unknowns into categories before prompting:
 | Risk | Tolerance for breaking changes, migration complexity |
 | Priority | Ship now vs. defer, dependency ordering |
 
-Cap at 8 questions per prompt. If more are needed, prompt in batches.
+Cap at 8 questions per prompt. If more are needed, prompt in batches (Multiple rounds are acceptable).
 
 ### 2. Prompt Questions Interactively
 
@@ -72,11 +73,11 @@ Guidelines for good questions:
 - State the default assumption in the first option if the user skips the question
 - Include the context (why this matters) directly in the question text
 
-### 3. Process Responses
+### 3. Stop and Process Responses
 
-The `ask_question` tool blocks execution until the user responds. Once responses arrive:
+The `ask_question` tool blocks execution until the user responds — you do not need to tell the user to signal readiness. Once responses arrive:
 
-1. Map selected options to decision records.
+1. Re-read and map selected options to decision records. Never rely on stale in-context memory; always use the fresh response from `ask_question`.
 2. If any critical question was skipped or unclear, ask a single follow-up inline.
 3. Extract confirmed decisions and carry them forward.
 
@@ -110,3 +111,9 @@ After processing responses:
 
 - Used by: `socratic-clarification-gate` (delegates here for 3+ ambiguities), `requirement-scoper`, `backlog-decomposition-engine`
 - Related: `aidlc-lifecycle-engine` (phase model and gate definitions)
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to question-file-engine.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

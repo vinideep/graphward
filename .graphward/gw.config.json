@@ -2,7 +2,7 @@
   "hooks": {
     "freshnessThreshold": 60,
     "blockStaleEdits": false,
-    "requireValidationOnStop": false
+    "requireValidationOnStop": true
   },
   "schemaVersion": 2,
   "tokenBudgets": {},

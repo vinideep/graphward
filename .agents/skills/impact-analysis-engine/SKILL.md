@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: impact-analysis-engine
-description: Determines direct and indirect impact of a proposed or implemented change across modules, APIs, schemas, runtime flows, infrastructure, integrations, and tests. Use before implementation and during synchronization.
+description: "Internal GraphWard engine. Use only when a route needs dependency, runtime, API, schema, or test blast radius. Do not use for changed-file detection only."
 ---
 
 # Impact Analysis Engine
@@ -164,3 +165,9 @@ Write `.graphward/reports/IMP-XXX-<slug>.md`:
 - Consults: `api-backward-compatibility-engine`, `database-migration-safety-engine` when contracts or schemas change
 - Used by: `graphward-skill`, `incremental-sync-engine`, `analyze-impact` workflow
 - Consumed by: `engineering-change-review`, `testing-intelligence-engine`
+
+## Invocation Policy
+
+- **Use when:** a route needs dependency, runtime, API, schema, or test blast radius.
+- **Do not use when:** changed-file detection only.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.

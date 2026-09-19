@@ -28,7 +28,7 @@ Owns security review for auth, authorization, data exposure, secrets, public API
 - `.graphward/aidlc/operations/mcp-security-review.md` when MCP/tooling is in scope
 - Findings for review reports
 
-## EI Runtime Context
+## GraphWard Runtime Context
 
 Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`

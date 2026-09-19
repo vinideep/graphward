@@ -1,6 +1,7 @@
 ---
+disable-model-invocation: true
 name: contract-test-generator
-description: Generates consumer-driven contract test stubs for service boundaries based on API contracts and service graph topology.
+description: "Internal GraphWard engine. Use only when the selected entry workflow explicitly routes to contract-test-generator. Do not use for direct selection from an unclassified user request."
 ---
 
 # Contract Test Generator
@@ -37,3 +38,9 @@ Write `.graphward/aidlc/construction/<unit>/contract-test-plan.md`:
 - [ ] Existing contract-test style is matched
 - [ ] Canonical failure scenarios are covered or explicitly not applicable
 - [ ] Contract tests are linked to acceptance criteria
+
+## Invocation Policy
+
+- **Use when:** the selected entry workflow explicitly routes to contract-test-generator.
+- **Do not use when:** direct selection from an unclassified user request.
+- This is an internal engine. An entry workflow must select it; do not compete with entry workflows for the user request.
