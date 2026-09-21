@@ -41,8 +41,13 @@ test("every adapter renders the complete canonical skill and workflow inventory 
     const paths = new Set((await renderAdapters([adapter])).map((entry) => entry.path));
     if (profile.skills) {
       for (const name of SKILL_NAMES) {
+        if (adapter === "codex" && name === "graphward-skill") {
+          assert.ok(!paths.has(`${profile.skills}/${name}/SKILL.md`), "codex must hide the internal GraphWard engine");
+          continue;
+        }
         assert.ok(paths.has(`${profile.skills}/${name}/SKILL.md`), `${adapter} omitted skill ${name}`);
       }
+      if (adapter === "codex") assert.ok(paths.has(`${profile.skills}/graphward/SKILL.md`));
     }
     for (const name of WORKFLOW_NAMES) {
       const suffix = profile.workflowKind === "skill"
@@ -64,11 +69,14 @@ test("installs shared skills once for overlapping adapters", async () => {
   const manifest = JSON.parse(await readable(root, ".graphward/install-manifest.json"));
   const shared = manifest.files.filter((entry) => entry.path === ".agents/skills/graphward-skill/SKILL.md");
   assert.equal(shared.length, 1);
-  assert.deepEqual(shared[0].owners, ["antigravity", "codex", "gemini-cli"]);
+  assert.deepEqual(shared[0].owners, ["antigravity", "gemini-cli"]);
   assert.match(await readable(root, ".agents/workflows/initialize-graphward.md"), /knowledge-base/);
   assert.match(await readable(root, ".agents/workflows/map-architecture.md"), /dependency-graph\.json/);
   assert.match(await readable(root, "AGENTS.md"), /delegate non-trivial implementation work to the named `graphward` custom agent/);
   assert.match(await readable(root, ".codex/agents/graphward.toml"), /^name = "graphward"/m);
+  const launcher = await readable(root, ".agents/skills/graphward/SKILL.md");
+  assert.match(launcher, /custom agent type\/name `graphward`/);
+  assert.match(launcher, /`fork_turns: "none"`/);
   assert.match(await readable(root, ".codex/agents/engineering-orchestrator.toml"), /^name = "engineering-orchestrator"/m);
   assert.match(await readable(root, ".gemini/commands/graphward.toml"), /User supplied scope or request/);
 });

@@ -92,7 +92,9 @@ test("all V2 IDE adapters render internally valid native destinations and workfl
   assert.match(graphwardAgent, /^name = "graphward"/m);
   assert.match(graphwardAgent, /^description = "GraphWard implementation agent/m);
   assert.match(graphwardAgent, /^developer_instructions = '''/m);
-  assert.match(graphwardAgent, /## Pipeline/);
+  assert.match(graphwardAgent, /# GraphWard Implementation/);
+  assert.match(graphwardAgent, /complete implementation engine is embedded below/i);
+  assert.doesNotMatch(graphwardAgent, /Use the `graphward-skill` capability/);
   for (const name of AGENT_NAMES) {
     const agent = files.find((item) => item.path === `.codex/agents/${name}.toml`).content;
     assert.match(agent, new RegExp(`^name = "${name}"$`, "m"));
@@ -100,6 +102,21 @@ test("all V2 IDE adapters render internally valid native destinations and workfl
     assert.match(agent, /^developer_instructions = '''/m);
   }
   assert.deepEqual(await validateRender(ides), []);
+});
+
+test("Codex exposes a GraphWard launcher skill backed by the native custom agent", async () => {
+  const files = await renderAdapters(["codex"]);
+  const paths = new Set(files.map((item) => item.path));
+  assert.ok(paths.has(".agents/skills/graphward/SKILL.md"));
+  assert.ok(!paths.has(".agents/skills/graphward-skill/SKILL.md"));
+  assert.ok(paths.has(".codex/agents/graphward.toml"));
+
+  const launcher = files.find((item) => item.path === ".agents/skills/graphward/SKILL.md").content;
+  assert.match(launcher, /^name: graphward$/m);
+  assert.match(launcher, /custom agent type\/name `graphward`/);
+  assert.match(launcher, /`fork_turns: "none"`/);
+  assert.match(launcher, /Wait for the GraphWard agent to finish/);
+  assert.match(launcher, /Do not silently fall back/);
 });
 
 test("CommandCode adapter writes native project skills and commands", async () => {

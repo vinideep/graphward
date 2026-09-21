@@ -32,8 +32,15 @@ test("provider bundles expose workflows once and internal engines are route-only
     const files = await renderAdapters([ide]);
     const skills = files.filter((file) => /\/skills\/[^/]+\/SKILL\.md$/.test(file.path));
     assert.equal(skills.length, 48, `${ide} must expose exactly 48 internal engines`);
-    assert.ok(skills.every((file) => /disable-model-invocation: true/.test(file.content)));
-    assert.ok(!skills.some((file) => /\/skills\/(graphward|analyze-impact|tdd)\/SKILL\.md$/.test(file.path)));
+    if (ide === "codex") {
+      const launcher = skills.find((file) => file.path.endsWith("/skills/graphward/SKILL.md"));
+      assert.ok(launcher, "codex must expose the GraphWard custom-agent launcher");
+      assert.ok(!skills.some((file) => file.path.endsWith("/skills/graphward-skill/SKILL.md")));
+      assert.ok(skills.filter((file) => file !== launcher).every((file) => /disable-model-invocation: true/.test(file.content)));
+    } else {
+      assert.ok(skills.every((file) => /disable-model-invocation: true/.test(file.content)));
+      assert.ok(!skills.some((file) => /\/skills\/(graphward|analyze-impact|tdd)\/SKILL\.md$/.test(file.path)));
+    }
   }
 });
 

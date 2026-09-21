@@ -144,10 +144,14 @@ function block(path: string, content: string, owner: IdeId): RenderedFile {
   return { path, content, kind: "block", blockId: BLOCK_ID, owners: [owner] };
 }
 
-async function skillsAt(directory: string, owner: IdeId): Promise<RenderedFile[]> {
+async function skillsAt(
+  directory: string,
+  owner: IdeId,
+  names: readonly SkillName[] = SKILL_NAMES,
+): Promise<RenderedFile[]> {
   return Promise.all(
-    SKILL_NAMES.map(async (name) => {
-      const skillName = name as SkillName;
+    names.map(async (skillName) => {
+      const name = skillName;
       const raw = `${await readTemplate("skills", name)}\n\n${invocationPolicyMarkdown(skillName)}\n`
         .replace(/^description:\s*.+$/m, `description: ${JSON.stringify(invocationPolicyDescription(skillName))}`);
       return file(
@@ -228,13 +232,20 @@ interface SkillBundleProfile {
   indexPath: string;
   routingPath: string;
   emitBriefs: boolean;
+  skillNames?: readonly SkillName[];
 }
 
 async function skillBundle(owner: IdeId, p: SkillBundleProfile): Promise<RenderedFile[]> {
+  const skillNames = p.skillNames ?? SKILL_NAMES;
   const [index, skills, briefs] = await Promise.all([
+    // Shared `.agents` indexes must remain byte-identical when Codex is
+    // installed alongside Antigravity or Gemini. The index describes the
+    // canonical engine inventory; `skillNames` only controls provider-visible
+    // files, allowing Codex to replace one engine with its launcher.
     generateSkillsIndex(SKILL_NAMES, p.skillsDir, undefined, p.emitBriefs),
-    skillsAt(p.skillsDir, owner),
-    p.emitBriefs ? skillBriefsAt(p.skillsDir, owner) : Promise.resolve([]),
+    skillsAt(p.skillsDir, owner, skillNames),
+    p.emitBriefs ? generateAllSkillBriefs(skillNames).then((generated) =>
+      skillNames.map((name) => file(`${p.skillsDir}/${name}/SKILL-BRIEF.md`, generated.get(name) ?? "", owner))) : Promise.resolve([]),
   ]);
   const routing = generateWorkflowRouting(p.skillsDir, p.emitBriefs);
   return [
@@ -404,9 +415,10 @@ async function agentsAsMarkdownAt(directory: string, owner: IdeId): Promise<Rend
  * Keep this projection separate from the Antigravity Markdown projection:
  * `.agents/agents/<name>/agent.md` is a valid cross-provider artifact, but Codex
  * does not register it as a custom agent. The workflow itself is exposed as a
- * delegated `graphward` agent. The desktop slash picker intentionally lists
- * enabled skills, so the route-only `graphward-skill` entry remains visible
- * there; the TOML agent is loaded when Codex starts a delegated subagent.
+ * delegated `graphward` agent. The desktop slash picker lists skills rather
+ * than custom agents, so Codex also receives a thin `graphward` launcher skill.
+ * The route-only implementation engine is embedded in the agent and omitted
+ * from Codex's visible skill inventory.
  */
 async function codexAgentsAt(directory: string, owner: IdeId): Promise<RenderedFile[]> {
   const results: RenderedFile[] = [];
@@ -430,6 +442,7 @@ async function codexAgentsAt(directory: string, owner: IdeId): Promise<RenderedF
 
   const graphward = await readTemplate("workflows", "graphward");
   const graphwardParts = parseFrontmatter(graphward);
+  const implementation = parseFrontmatter(await readTemplate("skills", "graphward-skill"));
   results.push(
     renderAgent(
       "graphward",
@@ -437,8 +450,9 @@ async function codexAgentsAt(directory: string, owner: IdeId): Promise<RenderedF
       [
         "You are the project-scoped GraphWard implementation agent.",
         "Use this workflow as the entrypoint for implementation requests; route read-only requests to the dedicated GraphWard workflows instead of editing product code.",
+        "The complete implementation engine is embedded below. Execute it directly; do not delegate back to a launcher skill.",
         "",
-        graphwardParts.body.trim(),
+        implementation.body.trim(),
       ].join("\n"),
     ),
   );
@@ -475,6 +489,36 @@ async function codexAgentsAt(directory: string, owner: IdeId): Promise<RenderedF
     );
   }
   return results;
+}
+
+function codexGraphwardLauncherAt(directory: string, owner: IdeId): RenderedFile {
+  return file(
+    `${directory}/graphward/SKILL.md`,
+    `---
+name: graphward
+description: Launch the native GraphWard custom agent for implementation, fixes, refactors, and feature work. Do not use for read-only review, impact analysis, or architecture mapping.
+---
+
+# GraphWard Agent Launcher
+
+This is a launcher, not the implementation engine. For the user's accompanying
+implementation request:
+
+1. Confirm that \`.codex/agents/graphward.toml\` exists in the active project.
+2. Spawn one subagent with the custom agent type/name \`graphward\` and a clean
+   context (\`fork_turns: "none"\`). Codex rejects an explicit custom agent type
+   on a full-history fork. Pass the complete user request and relevant ownership
+   boundaries in the spawn prompt without weakening or summarizing its
+   acceptance criteria.
+3. Wait for the GraphWard agent to finish. Surface its progress as a spawned
+   subagent task/thread and return its result to the user.
+4. Do not implement the request in the launcher task. Do not silently fall back
+   to \`default\`, \`worker\`, or the internal \`graphward-skill\` engine. If the
+   named custom agent cannot be spawned, report that exact failure and the
+   missing or invalid agent file.
+`,
+    owner,
+  );
 }
 
 async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
@@ -520,12 +564,14 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
       ];
     }
     case "codex": {
+      const codexSkillNames = SKILL_NAMES.filter((name): name is SkillName => name !== "graphward-skill");
       const [bundle, agents, workflows, codexAgents] = await Promise.all([
         skillBundle(ide, {
           skillsDir: ".agents/skills",
           indexPath: `.agents/skills/${SKILLS_INDEX_FILENAME}`,
           routingPath: `.agents/${WORKFLOW_ROUTING_FILENAME}`,
           emitBriefs: false,
+          skillNames: codexSkillNames,
         }),
         agentsAsMarkdownAt(".agents/agents", ide),
         workflowsAt(".agents/workflows", ide),
@@ -536,6 +582,7 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
         ...agents,
         ...workflows,
         ...codexAgents,
+        codexGraphwardLauncherAt(".agents/skills", ide),
         block("AGENTS.md", sharedInstructions, ide),
       ];
     }
