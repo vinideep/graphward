@@ -52,9 +52,12 @@ EPIC-001 and FEAT-001 through FEAT-005 remain implemented and locally validated.
 
 IMP-006 is locally complete: the Codex adapter emits native `.codex/agents/*.toml`
 for GraphWard and its specialists, and the target `algo-trading` workspace has
-been reconciled with 16 managed agent files and zero conflicts. The route-only
-`.agents/skills/graphward-skill` artifact remains intentionally present for
-cross-provider routing; Codex users select the native agent through `/agent`.
+been reconciled with 16 managed agent files and zero conflicts. The
+`.agents/skills/graphward-skill` artifact remains intentionally present as the
+desktop slash-picker route; the native TOML projection is consumed when Codex
+delegates work to a custom agent. The generated `AGENTS.md` explicitly requests
+that Codex delegate non-trivial implementation work to the named `graphward`
+agent, matching the current Codex custom-agent trigger contract.
 
 IMP-005 is locally complete: provider outputs are dependency-closed, entry workflows
 do not collide with internal engines inside the repository bundle, advertised gates

@@ -1,6 +1,6 @@
 {
   "name": "graphward",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Graph-backed codebase intelligence for AI coding editors. Real dependency graphs, MCP server, and installable skills/agents/workflows across 10 AI IDEs.",
   "type": "module",
   "homepage": "https://github.com/vinideep/graphward#readme",

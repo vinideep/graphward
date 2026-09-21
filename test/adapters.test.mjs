@@ -62,6 +62,10 @@ test("all V2 IDE adapters render internally valid native destinations and workfl
   assert.ok(paths.has(".commandcode/commands/graphward.md"));
   assert.ok(paths.has(".commandcode/commands/scope-requirement.md"));
   assert.match(files.find((item) => item.path === "AGENTS.md").content, /map-architecture/);
+  const codexInstructions = files.find((item) => item.path === "AGENTS.md").content;
+  assert.match(codexInstructions, /When Codex is the active provider and `\.codex\/agents\/\*\.toml` is present/);
+  assert.match(codexInstructions, /delegate non-trivial implementation work to the named `graphward` custom agent/);
+  assert.match(codexInstructions, /use `engineering-orchestrator` for routing or decomposition/);
   // Modern Antigravity agents are Markdown files with frontmatter. The old
   // JSON + prompt pair is intentionally absent from fresh output.
   assert.ok(!paths.has(".agent/agents/engineering-orchestrator/agent.json"));

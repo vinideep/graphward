@@ -63,6 +63,7 @@ This repository uses installed GraphWard workflows.
 - Base documentation claims on repository evidence and identify unknowns explicitly.
 - **Prefer persisted intelligence over re-exploration.** Before reading source files to understand the codebase, read the persisted knowledge base in \`.graphward/knowledge-base/\`, context maps in \`.graphward/context/\`, and architecture graphs in \`.graphward/graph/\`. Re-read source only for the specific files a task touches. Run \`sync-graphward\` to refresh these artifacts incrementally rather than re-deriving from scratch each session.
 - **Route before loading skills.** Consult the active provider's installed \`WORKFLOW-ROUTING.md\` and \`SKILLS-INDEX.md\` before opening an internal \`SKILL.md\`. Entry workflows are model-invocable; internal engines are loaded only through the selected route.
+- When Codex is the active provider and \`.codex/agents/*.toml\` is present, delegate non-trivial implementation work to the named \`graphward\` custom agent and wait for its result; use \`engineering-orchestrator\` for routing or decomposition. These are spawned agent sessions, not desktop slash commands.
 
 ## Tools (prefer these over reasoning by hand)
 
@@ -403,8 +404,9 @@ async function agentsAsMarkdownAt(directory: string, owner: IdeId): Promise<Rend
  * Keep this projection separate from the Antigravity Markdown projection:
  * `.agents/agents/<name>/agent.md` is a valid cross-provider artifact, but Codex
  * does not register it as a custom agent. The workflow itself is exposed as a
- * first-class `graphward` agent so it cannot be mistaken for the route-only
- * `graphward-skill` skill in the Codex picker.
+ * delegated `graphward` agent. The desktop slash picker intentionally lists
+ * enabled skills, so the route-only `graphward-skill` entry remains visible
+ * there; the TOML agent is loaded when Codex starts a delegated subagent.
  */
 async function codexAgentsAt(directory: string, owner: IdeId): Promise<RenderedFile[]> {
   const results: RenderedFile[] = [];
