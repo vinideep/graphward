@@ -398,6 +398,83 @@ async function agentsAsMarkdownAt(directory: string, owner: IdeId): Promise<Rend
   return results;
 }
 
+/**
+ * Codex loads project-scoped custom agents from `.codex/agents/*.toml`.
+ * Keep this projection separate from the Antigravity Markdown projection:
+ * `.agents/agents/<name>/agent.md` is a valid cross-provider artifact, but Codex
+ * does not register it as a custom agent. The workflow itself is exposed as a
+ * first-class `graphward` agent so it cannot be mistaken for the route-only
+ * `graphward-skill` skill in the Codex picker.
+ */
+async function codexAgentsAt(directory: string, owner: IdeId): Promise<RenderedFile[]> {
+  const results: RenderedFile[] = [];
+  const tomlLiteral = (value: string): string => {
+    if (value.includes("'''")) {
+      throw new Error("Codex agent instructions cannot contain TOML literal-string delimiters");
+    }
+    return `'''\n${value.trimEnd()}\n'''`;
+  };
+  const renderAgent = (name: string, description: string, instructions: string): RenderedFile =>
+    file(
+      `${directory}/${name}.toml`,
+      [
+        `name = ${JSON.stringify(name)}`,
+        `description = ${JSON.stringify(description)}`,
+        `developer_instructions = ${tomlLiteral(instructions)}`,
+        "",
+      ].join("\n"),
+      owner,
+    );
+
+  const graphward = await readTemplate("workflows", "graphward");
+  const graphwardParts = parseFrontmatter(graphward);
+  results.push(
+    renderAgent(
+      "graphward",
+      `GraphWard implementation agent — ${graphwardParts.meta["description"] ?? "Implement an engineering request with GraphWard."}`,
+      [
+        "You are the project-scoped GraphWard implementation agent.",
+        "Use this workflow as the entrypoint for implementation requests; route read-only requests to the dedicated GraphWard workflows instead of editing product code.",
+        "",
+        graphwardParts.body.trim(),
+      ].join("\n"),
+    ),
+  );
+
+  for (const name of AGENT_NAMES) {
+    const raw = await readTemplate("agents", name);
+    const { meta, body } = parseFrontmatter(raw);
+    const extra = AGENT_METADATA[name];
+    const runtimeContext = [
+      "",
+      "## GraphWard Runtime Context",
+      "",
+      "Read the following project-owned context before making non-trivial decisions:",
+      ...extra.context.map((location) => `- \`${location}\``),
+      ...(extra.agents?.length
+        ? [
+            "",
+            `Delegate to these specialist agents when the request matches their responsibility: ${extra.agents.map((agent) => `\`${agent}\``).join(", ")}.`,
+          ]
+        : []),
+      ...(extra.autoRoute !== undefined
+        ? [
+            "",
+            `Routing policy: auto-route is ${extra.autoRoute ? "enabled" : "disabled"}; parallel delegation is ${extra.parallel ? "enabled" : "disabled"}.`,
+          ]
+        : []),
+    ].join("\n");
+    results.push(
+      renderAgent(
+        meta["name"] ?? name,
+        meta["description"] ?? "GraphWard specialist agent.",
+        `${body.trim()}${runtimeContext}`,
+      ),
+    );
+  }
+  return results;
+}
+
 async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
   switch (ide) {
     case "antigravity": {
@@ -441,7 +518,7 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
       ];
     }
     case "codex": {
-      const [bundle, agents, workflows] = await Promise.all([
+      const [bundle, agents, workflows, codexAgents] = await Promise.all([
         skillBundle(ide, {
           skillsDir: ".agents/skills",
           indexPath: `.agents/skills/${SKILLS_INDEX_FILENAME}`,
@@ -450,11 +527,13 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
         }),
         agentsAsMarkdownAt(".agents/agents", ide),
         workflowsAt(".agents/workflows", ide),
+        codexAgentsAt(".codex/agents", ide),
       ]);
       return [
         ...bundle,
         ...agents,
         ...workflows,
+        ...codexAgents,
         block("AGENTS.md", sharedInstructions, ide),
       ];
     }

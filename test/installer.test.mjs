@@ -67,6 +67,8 @@ test("installs shared skills once for overlapping adapters", async () => {
   assert.deepEqual(shared[0].owners, ["antigravity", "codex", "gemini-cli"]);
   assert.match(await readable(root, ".agents/workflows/initialize-graphward.md"), /knowledge-base/);
   assert.match(await readable(root, ".agents/workflows/map-architecture.md"), /dependency-graph\.json/);
+  assert.match(await readable(root, ".codex/agents/graphward.toml"), /^name = "graphward"/m);
+  assert.match(await readable(root, ".codex/agents/engineering-orchestrator.toml"), /^name = "engineering-orchestrator"/m);
   assert.match(await readable(root, ".gemini/commands/graphward.toml"), /User supplied scope or request/);
 });
 

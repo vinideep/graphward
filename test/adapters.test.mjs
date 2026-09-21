@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { renderAdapters } from "../dist/adapters/index.js";
 import { validateRender } from "../dist/validation/index.js";
-import { SKILL_NAMES } from "../dist/templates.js";
+import { AGENT_NAMES, SKILL_NAMES } from "../dist/templates.js";
 
 test("all V2 IDE adapters render internally valid native destinations and workflows", async () => {
   const ides = ["antigravity", "antigravity-cli", "codex", "claude-code", "cursor", "github-copilot", "gemini-cli", "commandcode", "generic", "roo-code", "cline"];
@@ -26,6 +26,8 @@ test("all V2 IDE adapters render internally valid native destinations and workfl
   assert.ok(paths.has(".agents/agents/system-architect/agent.md"));
   assert.ok(paths.has(".agents/agents/security-officer/agent.md"));
   assert.ok(paths.has(".agents/agents/site-reliability-engineer/agent.md"));
+  assert.ok(paths.has(".codex/agents/graphward.toml"));
+  assert.ok(paths.has(".codex/agents/engineering-orchestrator.toml"));
   assert.ok(paths.has("AGENTS.md"));
   assert.ok(paths.has(".claude/commands/graphward.md"));
   assert.ok(paths.has(".claude/commands/map-architecture.md"));
@@ -82,6 +84,17 @@ test("all V2 IDE adapters render internally valid native destinations and workfl
   assert.match(changeAgent, /skills\/type-safety-engine/);
   assert.match(changeAgent, /skills\/api-backward-compatibility-engine/);
   assert.match(changeAgent, /skills\/context-budget-optimizer/);
+  const graphwardAgent = files.find((item) => item.path === ".codex/agents/graphward.toml").content;
+  assert.match(graphwardAgent, /^name = "graphward"/m);
+  assert.match(graphwardAgent, /^description = "GraphWard implementation agent/m);
+  assert.match(graphwardAgent, /^developer_instructions = '''/m);
+  assert.match(graphwardAgent, /## Pipeline/);
+  for (const name of AGENT_NAMES) {
+    const agent = files.find((item) => item.path === `.codex/agents/${name}.toml`).content;
+    assert.match(agent, new RegExp(`^name = "${name}"$`, "m"));
+    assert.match(agent, /^description = /m);
+    assert.match(agent, /^developer_instructions = '''/m);
+  }
   assert.deepEqual(await validateRender(ides), []);
 });
 

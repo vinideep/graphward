@@ -1,15 +1,15 @@
 # AI-DLC State
-<!-- freshness: last_checked=2026-09-03 -->
+<!-- freshness: last_checked=2026-09-21 -->
 
 ## Current Position
 
 | Field | Value |
 |---|---|
 | Phase | Construction |
-| Stage | Agent accuracy enforcement validated and synchronized |
+| Stage | Codex native agent surface validated and synchronized |
 | Active workflow | `graphward` |
 | Active hat | Quality Agent |
-| Active unit | IMP-005 agent accuracy and enforcement remediation |
+| Active unit | IMP-006 Codex native agent surface |
 | Completion status | Complete locally |
 
 ## Workspace Classification
@@ -36,7 +36,7 @@
 ## Progress Breadcrumb
 
 ```
-AI-DLC: Construction -> Agent accuracy enforcement -> Complete locally; global legacy cleanup explicitly pending
+AI-DLC: Construction -> Codex native agent surface -> Complete locally; provider UI refresh remains required
 ```
 
 ## Active Delivery
@@ -49,6 +49,12 @@ EPIC-001 and FEAT-001 through FEAT-005 remain implemented and locally validated.
 - Strict environment doctor reports 46 errors and 5 warnings from pre-existing machine-global skills under `/Users/vinithr/.agents/skills/`. Repository-managed provider bundles are current and clean; user-level cleanup was not performed automatically.
 
 ## Current Validation Unit
+
+IMP-006 is locally complete: the Codex adapter emits native `.codex/agents/*.toml`
+for GraphWard and its specialists, and the target `algo-trading` workspace has
+been reconciled with 16 managed agent files and zero conflicts. The route-only
+`.agents/skills/graphward-skill` artifact remains intentionally present for
+cross-provider routing; Codex users select the native agent through `/agent`.
 
 IMP-005 is locally complete: provider outputs are dependency-closed, entry workflows
 do not collide with internal engines inside the repository bundle, advertised gates

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "graphType": "dependency",
-  "generatedAt": "2026-09-19T09:50:26.877Z",
+  "generatedAt": "2026-09-21T03:48:18.803Z",
   "scope": "engineering-intelligence-OS",
   "nodes": [
     {
@@ -550,22 +550,6 @@
       ]
     },
     {
-      "id": "module:src/adapters/index",
-      "kind": "module",
-      "label": "index",
-      "path": "src/adapters/index.ts",
-      "confidence": "verified",
-      "metadata": {
-        "churn": 20
-      },
-      "evidence": [
-        "src/adapters/index.ts",
-        "src/cli/index.ts:8",
-        "src/installer/index.ts:3",
-        "src/validation/index.ts:3"
-      ]
-    },
-    {
       "id": "module:src/templates",
       "kind": "module",
       "label": "templates",
@@ -591,7 +575,7 @@
       "path": "src/token-optimizer.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 12
+        "churn": 13
       },
       "evidence": [
         "src/adapters/index.ts:2",
@@ -609,7 +593,7 @@
       "path": "src/hooks/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 9
+        "churn": 10
       },
       "evidence": [
         "src/adapters/index.ts:10",
@@ -624,7 +608,7 @@
       "path": "src/mcp/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 20
+        "churn": 21
       },
       "evidence": [
         "src/adapters/index.ts:11",
@@ -659,7 +643,9 @@
       "label": "catalog",
       "path": "src/routing/catalog.ts",
       "confidence": "verified",
-      "metadata": {},
+      "metadata": {
+        "churn": 1
+      },
       "evidence": [
         "src/adapters/index.ts:13",
         "src/routing/catalog.ts",
@@ -802,7 +788,7 @@
       "path": "src/learning/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 3
+        "churn": 4
       },
       "evidence": [
         "src/aidlc/clarification.ts:11",
@@ -834,7 +820,7 @@
       "path": "src/aidlc/gates.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "src/aidlc/gates.ts",
@@ -848,7 +834,7 @@
       "path": "src/gates/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 5
+        "churn": 6
       },
       "evidence": [
         "src/aidlc/gates.ts:4",
@@ -991,7 +977,7 @@
       "path": "src/cli/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 27
+        "churn": 28
       },
       "evidence": [
         "src/cli/index.ts"
@@ -1019,7 +1005,7 @@
       "path": "src/validation/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 8
+        "churn": 9
       },
       "evidence": [
         "src/cli/index.ts:10",
@@ -1237,7 +1223,9 @@
       "label": "api-snapshot",
       "path": "src/gates/api-snapshot.ts",
       "confidence": "verified",
-      "metadata": {},
+      "metadata": {
+        "churn": 1
+      },
       "evidence": [
         "src/cli/index.ts:804",
         "src/gates/api-snapshot.ts",
@@ -1394,7 +1382,7 @@
       "path": "src/orchestrators/change.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "src/cli/index.ts:1391",
@@ -1685,7 +1673,9 @@
       "label": "conventions",
       "path": "src/gates/conventions.ts",
       "confidence": "verified",
-      "metadata": {},
+      "metadata": {
+        "churn": 1
+      },
       "evidence": [
         "src/gates/conventions.ts",
         "src/gates/index.ts:159"
@@ -1739,7 +1729,9 @@
       "label": "security-audit",
       "path": "src/gates/security-audit.ts",
       "confidence": "verified",
-      "metadata": {},
+      "metadata": {
+        "churn": 1
+      },
       "evidence": [
         "src/gates/index.ts:157",
         "src/gates/security-audit.ts"
@@ -1751,7 +1743,9 @@
       "label": "rollback-readiness",
       "path": "src/gates/rollback-readiness.ts",
       "confidence": "verified",
-      "metadata": {},
+      "metadata": {
+        "churn": 1
+      },
       "evidence": [
         "src/gates/index.ts:158",
         "src/gates/rollback-readiness.ts"
@@ -2091,314 +2085,6 @@
       },
       "evidence": [
         "script-rename.mjs:3"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#providerInstructions",
-      "kind": "symbol",
-      "label": "providerInstructions",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 75
-      },
-      "evidence": [
-        "src/adapters/index.ts:75"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#file",
-      "kind": "symbol",
-      "label": "file",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 127
-      },
-      "evidence": [
-        "src/adapters/index.ts:127"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#seed",
-      "kind": "symbol",
-      "label": "seed",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 133
-      },
-      "evidence": [
-        "src/adapters/index.ts:133"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#jsonMerge",
-      "kind": "symbol",
-      "label": "jsonMerge",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 138
-      },
-      "evidence": [
-        "src/adapters/index.ts:138"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#block",
-      "kind": "symbol",
-      "label": "block",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 141
-      },
-      "evidence": [
-        "src/adapters/index.ts:141"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#skillsAt",
-      "kind": "symbol",
-      "label": "skillsAt",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 145
-      },
-      "evidence": [
-        "src/adapters/index.ts:145"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#workflowsAt",
-      "kind": "symbol",
-      "label": "workflowsAt",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 161
-      },
-      "evidence": [
-        "src/adapters/index.ts:161"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#agentsAt",
-      "kind": "symbol",
-      "label": "agentsAt",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 173
-      },
-      "evidence": [
-        "src/adapters/index.ts:173"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#withArgumentHint",
-      "kind": "symbol",
-      "label": "withArgumentHint",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 185
-      },
-      "evidence": [
-        "src/adapters/index.ts:185"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#claudeCommandsAt",
-      "kind": "symbol",
-      "label": "claudeCommandsAt",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 198
-      },
-      "evidence": [
-        "src/adapters/index.ts:198"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#skillBriefsAt",
-      "kind": "symbol",
-      "label": "skillBriefsAt",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 218
-      },
-      "evidence": [
-        "src/adapters/index.ts:218"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#skillBundle",
-      "kind": "symbol",
-      "label": "skillBundle",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 231
-      },
-      "evidence": [
-        "src/adapters/index.ts:231"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#routingInstructions",
-      "kind": "symbol",
-      "label": "routingInstructions",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 246
-      },
-      "evidence": [
-        "src/adapters/index.ts:246"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#parseFrontmatter",
-      "kind": "symbol",
-      "label": "parseFrontmatter",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 258
-      },
-      "evidence": [
-        "src/adapters/index.ts:258"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#quoteYaml",
-      "kind": "symbol",
-      "label": "quoteYaml",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 341
-      },
-      "evidence": [
-        "src/adapters/index.ts:341"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#agentsAsMarkdownAt",
-      "kind": "symbol",
-      "label": "agentsAsMarkdownAt",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 353
-      },
-      "evidence": [
-        "src/adapters/index.ts:353"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#renderAdapter",
-      "kind": "symbol",
-      "label": "renderAdapter",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 400
-      },
-      "evidence": [
-        "src/adapters/index.ts:400"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#toGeminiCommand",
-      "kind": "symbol",
-      "label": "toGeminiCommand",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 643
-      },
-      "evidence": [
-        "src/adapters/index.ts:643"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#isKvCachePinned",
-      "kind": "symbol",
-      "label": "isKvCachePinned",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 652
-      },
-      "evidence": [
-        "src/adapters/index.ts:652"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#mergeRenderedFiles",
-      "kind": "symbol",
-      "label": "mergeRenderedFiles",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 655
-      },
-      "evidence": [
-        "src/adapters/index.ts:655"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#isIdeId",
-      "kind": "symbol",
-      "label": "isIdeId",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 680
-      },
-      "evidence": [
-        "src/adapters/index.ts:680"
-      ]
-    },
-    {
-      "id": "symbol:src/adapters/index#renderAdapters",
-      "kind": "symbol",
-      "label": "renderAdapters",
-      "path": "src/adapters/index",
-      "confidence": "verified",
-      "metadata": {
-        "symbolKind": "function",
-        "line": 684
-      },
-      "evidence": [
-        "src/adapters/index.ts:684"
       ]
     },
     {
@@ -5737,7 +5423,7 @@
       "path": "src/manifest/index.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 4
+        "churn": 5
       },
       "evidence": [
         "src/installer/index.ts:4",
@@ -5808,7 +5494,7 @@
       "path": "src/mcp/consolidated.ts",
       "confidence": "verified",
       "metadata": {
-        "churn": 7
+        "churn": 8
       },
       "evidence": [
         "src/mcp/consolidated.ts",
@@ -11246,7 +10932,8 @@
       "path": "test/accuracy-gates.test.mjs",
       "confidence": "verified",
       "metadata": {
-        "isTest": true
+        "isTest": true,
+        "churn": 1
       },
       "evidence": [
         "test/accuracy-gates.test.mjs"
@@ -11388,20 +11075,6 @@
       "evidence": [
         "test/accuracy.test.mjs:18",
         "test/project-files.test.mjs:8"
-      ]
-    },
-    {
-      "id": "module:test/adapters.test",
-      "kind": "module",
-      "label": "adapters.test",
-      "path": "test/adapters.test.mjs",
-      "confidence": "verified",
-      "metadata": {
-        "isTest": true,
-        "churn": 13
-      },
-      "evidence": [
-        "test/adapters.test.mjs"
       ]
     },
     {
@@ -11796,7 +11469,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "test/e2e-features.test.mjs"
@@ -11871,7 +11544,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "test/e2e-scenarios.test.mjs"
@@ -12019,7 +11692,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 3
+        "churn": 4
       },
       "evidence": [
         "test/gates.test.mjs"
@@ -16029,7 +15702,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 6
+        "churn": 7
       },
       "evidence": [
         "test/hooks.test.mjs"
@@ -16111,7 +15784,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 10
+        "churn": 11
       },
       "evidence": [
         "test/install-integration.test.mjs"
@@ -16125,7 +15798,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 6
+        "churn": 7
       },
       "evidence": [
         "test/installer.test.mjs"
@@ -16270,7 +15943,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 2
+        "churn": 3
       },
       "evidence": [
         "test/learning.test.mjs"
@@ -16358,7 +16031,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 11
+        "churn": 12
       },
       "evidence": [
         "test/mcp.test.mjs"
@@ -16548,7 +16221,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 1
+        "churn": 2
       },
       "evidence": [
         "test/provenance.test.mjs"
@@ -16683,7 +16356,7 @@
       "confidence": "verified",
       "metadata": {
         "isTest": true,
-        "churn": 1
+        "churn": 2
       },
       "evidence": [
         "test/schemas.test.mjs"
@@ -16806,7 +16479,8 @@
       "path": "test/skill-routing.test.mjs",
       "confidence": "verified",
       "metadata": {
-        "isTest": true
+        "isTest": true,
+        "churn": 1
       },
       "evidence": [
         "test/skill-routing.test.mjs"
@@ -17684,6 +17358,355 @@
       ]
     },
     {
+      "id": "module:src/adapters/index",
+      "kind": "module",
+      "label": "index",
+      "path": "src/adapters/index.ts",
+      "confidence": "verified",
+      "metadata": {
+        "churn": 21
+      },
+      "evidence": [
+        "src/adapters/index.ts"
+      ]
+    },
+    {
+      "id": "module:test/adapters.test",
+      "kind": "module",
+      "label": "adapters.test",
+      "path": "test/adapters.test.mjs",
+      "confidence": "verified",
+      "metadata": {
+        "isTest": true,
+        "churn": 14
+      },
+      "evidence": [
+        "test/adapters.test.mjs"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#providerInstructions",
+      "kind": "symbol",
+      "label": "providerInstructions",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 75
+      },
+      "evidence": [
+        "src/adapters/index.ts:75"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#file",
+      "kind": "symbol",
+      "label": "file",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 127
+      },
+      "evidence": [
+        "src/adapters/index.ts:127"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#seed",
+      "kind": "symbol",
+      "label": "seed",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 133
+      },
+      "evidence": [
+        "src/adapters/index.ts:133"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#jsonMerge",
+      "kind": "symbol",
+      "label": "jsonMerge",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 138
+      },
+      "evidence": [
+        "src/adapters/index.ts:138"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#block",
+      "kind": "symbol",
+      "label": "block",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 141
+      },
+      "evidence": [
+        "src/adapters/index.ts:141"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#skillsAt",
+      "kind": "symbol",
+      "label": "skillsAt",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 145
+      },
+      "evidence": [
+        "src/adapters/index.ts:145"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#workflowsAt",
+      "kind": "symbol",
+      "label": "workflowsAt",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 161
+      },
+      "evidence": [
+        "src/adapters/index.ts:161"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#agentsAt",
+      "kind": "symbol",
+      "label": "agentsAt",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 173
+      },
+      "evidence": [
+        "src/adapters/index.ts:173"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#withArgumentHint",
+      "kind": "symbol",
+      "label": "withArgumentHint",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 185
+      },
+      "evidence": [
+        "src/adapters/index.ts:185"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#claudeCommandsAt",
+      "kind": "symbol",
+      "label": "claudeCommandsAt",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 198
+      },
+      "evidence": [
+        "src/adapters/index.ts:198"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#skillBriefsAt",
+      "kind": "symbol",
+      "label": "skillBriefsAt",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 218
+      },
+      "evidence": [
+        "src/adapters/index.ts:218"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#skillBundle",
+      "kind": "symbol",
+      "label": "skillBundle",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 231
+      },
+      "evidence": [
+        "src/adapters/index.ts:231"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#routingInstructions",
+      "kind": "symbol",
+      "label": "routingInstructions",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 246
+      },
+      "evidence": [
+        "src/adapters/index.ts:246"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#parseFrontmatter",
+      "kind": "symbol",
+      "label": "parseFrontmatter",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 258
+      },
+      "evidence": [
+        "src/adapters/index.ts:258"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#quoteYaml",
+      "kind": "symbol",
+      "label": "quoteYaml",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 341
+      },
+      "evidence": [
+        "src/adapters/index.ts:341"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#agentsAsMarkdownAt",
+      "kind": "symbol",
+      "label": "agentsAsMarkdownAt",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 353
+      },
+      "evidence": [
+        "src/adapters/index.ts:353"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#codexAgentsAt",
+      "kind": "symbol",
+      "label": "codexAgentsAt",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 409
+      },
+      "evidence": [
+        "src/adapters/index.ts:409"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#renderAdapter",
+      "kind": "symbol",
+      "label": "renderAdapter",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 477
+      },
+      "evidence": [
+        "src/adapters/index.ts:477"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#toGeminiCommand",
+      "kind": "symbol",
+      "label": "toGeminiCommand",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 722
+      },
+      "evidence": [
+        "src/adapters/index.ts:722"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#isKvCachePinned",
+      "kind": "symbol",
+      "label": "isKvCachePinned",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 731
+      },
+      "evidence": [
+        "src/adapters/index.ts:731"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#mergeRenderedFiles",
+      "kind": "symbol",
+      "label": "mergeRenderedFiles",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 734
+      },
+      "evidence": [
+        "src/adapters/index.ts:734"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#isIdeId",
+      "kind": "symbol",
+      "label": "isIdeId",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 759
+      },
+      "evidence": [
+        "src/adapters/index.ts:759"
+      ]
+    },
+    {
+      "id": "symbol:src/adapters/index#renderAdapters",
+      "kind": "symbol",
+      "label": "renderAdapters",
+      "path": "src/adapters/index",
+      "confidence": "verified",
+      "metadata": {
+        "symbolKind": "function",
+        "line": 763
+      },
+      "evidence": [
+        "src/adapters/index.ts:763"
+      ]
+    },
+    {
       "id": "graphify:mcp",
       "kind": "provider-symbol",
       "label": ".mcp.json",
@@ -17692,7 +17715,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "f090013c31ce2845512133ba17beffff5742bcd775ada833862c72d57cd4bd3c",
         "extraction": "extracted",
         "freshness": "current",
@@ -17711,7 +17734,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "f090013c31ce2845512133ba17beffff5742bcd775ada833862c72d57cd4bd3c",
         "extraction": "extracted",
         "freshness": "current",
@@ -17730,7 +17753,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "f090013c31ce2845512133ba17beffff5742bcd775ada833862c72d57cd4bd3c",
         "extraction": "extracted",
         "freshness": "current",
@@ -17749,8 +17772,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -17768,8 +17791,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -17787,8 +17810,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -17806,8 +17829,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -17825,8 +17848,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -17844,8 +17867,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -17863,8 +17886,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -17882,8 +17905,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -17901,8 +17924,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -17920,8 +17943,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -17939,8 +17962,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -17958,8 +17981,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -17977,8 +18000,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -17996,8 +18019,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18015,8 +18038,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18034,8 +18057,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18053,8 +18076,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18072,8 +18095,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18091,8 +18114,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18110,8 +18133,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18129,8 +18152,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18148,8 +18171,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18167,8 +18190,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18186,8 +18209,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18205,8 +18228,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18224,8 +18247,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18243,8 +18266,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18262,8 +18285,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18281,8 +18304,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18300,8 +18323,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18319,8 +18342,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18338,8 +18361,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18357,8 +18380,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18376,8 +18399,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18395,8 +18418,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18414,8 +18437,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18433,8 +18456,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18452,8 +18475,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18471,8 +18494,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18490,8 +18513,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18509,8 +18532,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18528,8 +18551,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18547,8 +18570,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18566,8 +18589,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18585,8 +18608,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18604,8 +18627,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18623,8 +18646,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18642,8 +18665,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18661,8 +18684,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18680,8 +18703,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18699,8 +18722,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18718,8 +18741,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18737,8 +18760,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18756,8 +18779,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18775,8 +18798,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "freshness": "current",
         "trustState": "fresh"
@@ -18794,7 +18817,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -18813,7 +18836,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -18832,7 +18855,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -18851,7 +18874,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -18870,7 +18893,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -18889,7 +18912,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -18908,7 +18931,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -18927,7 +18950,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -18946,7 +18969,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -18965,7 +18988,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -18984,7 +19007,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -19003,7 +19026,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -19022,7 +19045,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -19041,7 +19064,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -19060,7 +19083,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -19079,7 +19102,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "freshness": "current",
@@ -19353,66 +19376,6 @@
       },
       "evidence": [
         "mass_rename_phase2.cjs:2"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "module:src/templates",
-      "relation": "imports",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:1"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "module:src/token-optimizer",
-      "relation": "imports",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:2"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "module:src/hooks/index",
-      "relation": "imports",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:10"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "module:src/mcp/index",
-      "relation": "imports",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:11"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "module:src/types",
-      "relation": "imports",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:12"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "module:src/routing/catalog",
-      "relation": "imports",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:13"
       ]
     },
     {
@@ -21151,486 +21114,6 @@
       "metadata": {},
       "evidence": [
         "script-rename.mjs:3"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#providerInstructions",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:75"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#file",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:127"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#seed",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:133"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#jsonMerge",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:138"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#block",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:141"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#skillsAt",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:145"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#workflowsAt",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:161"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#agentsAt",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:173"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#withArgumentHint",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:185"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#claudeCommandsAt",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:198"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#skillBriefsAt",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:218"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#skillBundle",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:231"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#routingInstructions",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:246"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#parseFrontmatter",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:258"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#quoteYaml",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:341"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#agentsAsMarkdownAt",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:353"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#renderAdapter",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:400"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#toGeminiCommand",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:643"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#isKvCachePinned",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:652"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#mergeRenderedFiles",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:655"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#isIdeId",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:680"
-      ]
-    },
-    {
-      "from": "module:src/adapters/index",
-      "to": "symbol:src/adapters/index#renderAdapters",
-      "relation": "defines",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:684"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#skillsAt",
-      "to": "symbol:src/adapters/index#file",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:152"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#workflowsAt",
-      "to": "symbol:src/adapters/index#file",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:165"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#agentsAt",
-      "to": "symbol:src/adapters/index#file",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:177"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#claudeCommandsAt",
-      "to": "symbol:src/adapters/index#file",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:203"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#claudeCommandsAt",
-      "to": "symbol:src/adapters/index#withArgumentHint",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:205"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#skillBriefsAt",
-      "to": "symbol:src/adapters/index#file",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:221"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#skillBundle",
-      "to": "symbol:src/adapters/index#skillsAt",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:235"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#skillBundle",
-      "to": "symbol:src/adapters/index#skillBriefsAt",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:236"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#skillBundle",
-      "to": "symbol:src/adapters/index#file",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:240"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#agentsAsMarkdownAt",
-      "to": "symbol:src/adapters/index#parseFrontmatter",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:357"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#agentsAsMarkdownAt",
-      "to": "symbol:src/adapters/index#quoteYaml",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:364"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#agentsAsMarkdownAt",
-      "to": "symbol:src/adapters/index#file",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:391"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/adapters/index#skillBundle",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:406"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/adapters/index#agentsAsMarkdownAt",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:415"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/adapters/index#workflowsAt",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:416"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/adapters/index#file",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:422"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/adapters/index#block",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:440"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/adapters/index#agentsAt",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:481"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/adapters/index#claudeCommandsAt",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:482"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/adapters/index#jsonMerge",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:488"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/adapters/index#seed",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:490"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/adapters/index#providerInstructions",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:491"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/adapters/index#routingInstructions",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:496"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/adapters/index#toGeminiCommand",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:572"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#mergeRenderedFiles",
-      "to": "symbol:src/adapters/index#isKvCachePinned",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:674"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapters",
-      "to": "symbol:src/adapters/index#mergeRenderedFiles",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:688"
       ]
     },
     {
@@ -35109,36 +34592,6 @@
       ]
     },
     {
-      "from": "module:test/adapters.test",
-      "to": "external:dist/adapters/index.js",
-      "relation": "imports",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "test/adapters.test.mjs:3"
-      ]
-    },
-    {
-      "from": "module:test/adapters.test",
-      "to": "external:dist/validation/index.js",
-      "relation": "imports",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "test/adapters.test.mjs:4"
-      ]
-    },
-    {
-      "from": "module:test/adapters.test",
-      "to": "external:dist/templates.js",
-      "relation": "imports",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "test/adapters.test.mjs:5"
-      ]
-    },
-    {
       "from": "module:test/aidlc-clarification.test",
       "to": "external:dist/aidlc/index.js",
       "relation": "imports",
@@ -43694,226 +43147,6 @@
       ]
     },
     {
-      "from": "symbol:src/adapters/index#skillsAt",
-      "to": "symbol:src/templates#readTemplate",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:150"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#skillsAt",
-      "to": "symbol:src/routing/catalog#invocationPolicyMarkdown",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:150"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#skillsAt",
-      "to": "symbol:src/routing/catalog#invocationPolicyDescription",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:151"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#skillsAt",
-      "to": "symbol:src/token-optimizer#prepareRendered",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:154"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#workflowsAt",
-      "to": "symbol:src/token-optimizer#prepareRendered",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:167"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#workflowsAt",
-      "to": "symbol:src/templates#readTemplate",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:167"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#agentsAt",
-      "to": "symbol:src/templates#readTemplate",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:177"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#claudeCommandsAt",
-      "to": "symbol:src/token-optimizer#prepareRendered",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:201"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#claudeCommandsAt",
-      "to": "symbol:src/templates#readTemplate",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:201"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#claudeCommandsAt",
-      "to": "symbol:src/mcp/registry#McpToolRegistry.has",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:202"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#skillBriefsAt",
-      "to": "symbol:src/token-optimizer#generateAllSkillBriefs",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:219"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#skillBundle",
-      "to": "symbol:src/token-optimizer#generateSkillsIndex",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:234"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#skillBundle",
-      "to": "symbol:src/runtime/symbol-resolver#RuntimeSymbolResolver.resolve",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:236"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#skillBundle",
-      "to": "symbol:src/token-optimizer#generateWorkflowRouting",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:238"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#agentsAsMarkdownAt",
-      "to": "symbol:src/templates#readTemplate",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:356"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/token-optimizer#prepareRendered",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:404"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/templates#readTemplate",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:404"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/hooks/index#claudeCodeHookSettings",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:488"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/mcp/index#mcpServerRegistration",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:489"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/hooks/index#defaultConfigFile",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:490"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/hooks/index#cursorHookSettings",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:510"
-      ]
-    },
-    {
-      "from": "symbol:src/adapters/index#renderAdapter",
-      "to": "symbol:src/mcp/registry#McpToolRegistry.has",
-      "relation": "calls",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        "src/adapters/index.ts:569"
-      ]
-    },
-    {
       "from": "symbol:src/aidlc/clarification#freezeRequirements",
       "to": "symbol:src/aidlc/state#loadRequirements",
       "relation": "calls",
@@ -49924,6 +49157,1066 @@
       ]
     },
     {
+      "from": "module:src/adapters/index",
+      "to": "module:src/templates",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:1"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "module:src/token-optimizer",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:2"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "module:src/hooks/index",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:10"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "module:src/mcp/index",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:11"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "module:src/types",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:12"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "module:src/routing/catalog",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:13"
+      ]
+    },
+    {
+      "from": "module:test/adapters.test",
+      "to": "external:dist/adapters/index.js",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "test/adapters.test.mjs:3"
+      ]
+    },
+    {
+      "from": "module:test/adapters.test",
+      "to": "external:dist/validation/index.js",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "test/adapters.test.mjs:4"
+      ]
+    },
+    {
+      "from": "module:test/adapters.test",
+      "to": "external:dist/templates.js",
+      "relation": "imports",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "test/adapters.test.mjs:5"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#providerInstructions",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:75"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#file",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:127"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#seed",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:133"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#jsonMerge",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:138"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#block",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:141"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#skillsAt",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:145"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#workflowsAt",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:161"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#agentsAt",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:173"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#withArgumentHint",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:185"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#claudeCommandsAt",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:198"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#skillBriefsAt",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:218"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#skillBundle",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:231"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#routingInstructions",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:246"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#parseFrontmatter",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:258"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#quoteYaml",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:341"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#agentsAsMarkdownAt",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:353"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#codexAgentsAt",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:409"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#renderAdapter",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:477"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#toGeminiCommand",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:722"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#isKvCachePinned",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:731"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#mergeRenderedFiles",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:734"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#isIdeId",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:759"
+      ]
+    },
+    {
+      "from": "module:src/adapters/index",
+      "to": "symbol:src/adapters/index#renderAdapters",
+      "relation": "defines",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:763"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#skillsAt",
+      "to": "symbol:src/adapters/index#file",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:152"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#workflowsAt",
+      "to": "symbol:src/adapters/index#file",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:165"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#agentsAt",
+      "to": "symbol:src/adapters/index#file",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:177"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#claudeCommandsAt",
+      "to": "symbol:src/adapters/index#file",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:203"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#claudeCommandsAt",
+      "to": "symbol:src/adapters/index#withArgumentHint",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:205"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#skillBriefsAt",
+      "to": "symbol:src/adapters/index#file",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:221"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#skillBundle",
+      "to": "symbol:src/adapters/index#skillsAt",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:235"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#skillBundle",
+      "to": "symbol:src/adapters/index#skillBriefsAt",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:236"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#skillBundle",
+      "to": "symbol:src/adapters/index#file",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:240"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#agentsAsMarkdownAt",
+      "to": "symbol:src/adapters/index#parseFrontmatter",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:357"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#agentsAsMarkdownAt",
+      "to": "symbol:src/adapters/index#quoteYaml",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:364"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#agentsAsMarkdownAt",
+      "to": "symbol:src/adapters/index#file",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:391"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#file",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:418"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#parseFrontmatter",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:430"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#renderAdapter",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:478"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#skillBundle",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:483"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#agentsAsMarkdownAt",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:492"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#workflowsAt",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:493"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#block",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:517"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#agentsAt",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:560"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#claudeCommandsAt",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:561"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#jsonMerge",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:567"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#seed",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:569"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#providerInstructions",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:570"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#routingInstructions",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:575"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#toGeminiCommand",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:651"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#isKvCachePinned",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:731"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#mergeRenderedFiles",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:735"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#isIdeId",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:760"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/adapters/index#renderAdapters",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:764"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/adapters/index#skillBundle",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:483"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/adapters/index#agentsAsMarkdownAt",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:492"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/adapters/index#workflowsAt",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:493"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/adapters/index#file",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:499"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/adapters/index#block",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:517"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/adapters/index#codexAgentsAt",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:530"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/adapters/index#agentsAt",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:560"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/adapters/index#claudeCommandsAt",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:561"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/adapters/index#jsonMerge",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:567"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/adapters/index#seed",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:569"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/adapters/index#providerInstructions",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:570"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/adapters/index#routingInstructions",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:575"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/adapters/index#toGeminiCommand",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:651"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#mergeRenderedFiles",
+      "to": "symbol:src/adapters/index#isKvCachePinned",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:753"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapters",
+      "to": "symbol:src/adapters/index#mergeRenderedFiles",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:767"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#skillsAt",
+      "to": "symbol:src/templates#readTemplate",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:150"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#skillsAt",
+      "to": "symbol:src/routing/catalog#invocationPolicyMarkdown",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:150"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#skillsAt",
+      "to": "symbol:src/routing/catalog#invocationPolicyDescription",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:151"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#skillsAt",
+      "to": "symbol:src/token-optimizer#prepareRendered",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:154"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#workflowsAt",
+      "to": "symbol:src/token-optimizer#prepareRendered",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:167"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#workflowsAt",
+      "to": "symbol:src/templates#readTemplate",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:167"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#agentsAt",
+      "to": "symbol:src/templates#readTemplate",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:177"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#claudeCommandsAt",
+      "to": "symbol:src/token-optimizer#prepareRendered",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:201"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#claudeCommandsAt",
+      "to": "symbol:src/templates#readTemplate",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:201"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#claudeCommandsAt",
+      "to": "symbol:src/mcp/registry#McpToolRegistry.has",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:202"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#skillBriefsAt",
+      "to": "symbol:src/token-optimizer#generateAllSkillBriefs",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:219"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#skillBundle",
+      "to": "symbol:src/token-optimizer#generateSkillsIndex",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:234"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#skillBundle",
+      "to": "symbol:src/runtime/symbol-resolver#RuntimeSymbolResolver.resolve",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:236"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#skillBundle",
+      "to": "symbol:src/token-optimizer#generateWorkflowRouting",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:238"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#agentsAsMarkdownAt",
+      "to": "symbol:src/templates#readTemplate",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:356"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/templates#readTemplate",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:429"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/token-optimizer#prepareRendered",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:481"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/hooks/index#claudeCodeHookSettings",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:567"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/mcp/index#mcpServerRegistration",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:568"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/hooks/index#defaultConfigFile",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:569"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/hooks/index#cursorHookSettings",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:589"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#codexAgentsAt",
+      "to": "symbol:src/mcp/registry#McpToolRegistry.has",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:648"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/token-optimizer#prepareRendered",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:481"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/templates#readTemplate",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:481"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/hooks/index#claudeCodeHookSettings",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:567"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/mcp/index#mcpServerRegistration",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:568"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/hooks/index#defaultConfigFile",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:569"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/hooks/index#cursorHookSettings",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:589"
+      ]
+    },
+    {
+      "from": "symbol:src/adapters/index#renderAdapter",
+      "to": "symbol:src/mcp/registry#McpToolRegistry.has",
+      "relation": "calls",
+      "confidence": "inferred",
+      "metadata": {},
+      "evidence": [
+        "src/adapters/index.ts:648"
+      ]
+    },
+    {
       "from": "graphify:mcp",
       "to": "graphify:mcp_mcp_server_engineering_intelligence",
       "relation": "defines",
@@ -49931,7 +50224,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "f090013c31ce2845512133ba17beffff5742bcd775ada833862c72d57cd4bd3c",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -49951,7 +50244,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "f090013c31ce2845512133ba17beffff5742bcd775ada833862c72d57cd4bd3c",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -49971,8 +50264,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -49991,8 +50284,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50011,8 +50304,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50031,8 +50324,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50051,8 +50344,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50071,8 +50364,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50091,8 +50384,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50111,8 +50404,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50131,8 +50424,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50151,8 +50444,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50171,8 +50464,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50191,8 +50484,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50211,8 +50504,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50231,8 +50524,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50251,8 +50544,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50271,8 +50564,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50291,8 +50584,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50311,8 +50604,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50331,8 +50624,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50351,8 +50644,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50371,8 +50664,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50391,8 +50684,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50411,8 +50704,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50431,8 +50724,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50451,8 +50744,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50471,8 +50764,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50491,8 +50784,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50511,8 +50804,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50531,8 +50824,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50551,8 +50844,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50571,8 +50864,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50591,8 +50884,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50611,8 +50904,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50631,8 +50924,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50651,8 +50944,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50671,8 +50964,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50691,8 +50984,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50711,8 +51004,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50731,8 +51024,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50751,8 +51044,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50771,8 +51064,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50791,8 +51084,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50811,8 +51104,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50831,8 +51124,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50851,8 +51144,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50871,8 +51164,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50891,8 +51184,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50911,8 +51204,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50931,8 +51224,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50951,8 +51244,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50971,8 +51264,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -50991,8 +51284,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -51011,8 +51304,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -51031,8 +51324,8 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-        "sourceHash": "a36c5de76b26863c50ffa08fe7924a6d8269b51abd12b5d8e499cd03899ed51f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+        "sourceHash": "7c0e7463d5ee80011b4653bd5743a950810ea2994c40e9e50f25282179e7adc9",
         "extraction": "extracted",
         "confidenceScore": 1,
         "freshness": "current",
@@ -51051,7 +51344,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51071,7 +51364,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51091,7 +51384,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51111,7 +51404,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51131,7 +51424,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51151,7 +51444,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51171,7 +51464,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51191,7 +51484,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51211,7 +51504,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51231,7 +51524,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51251,7 +51544,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51271,7 +51564,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51291,7 +51584,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51311,7 +51604,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51331,7 +51624,7 @@
       "metadata": {
         "provider": "graphify",
         "providerVersion": "0.9.29",
-        "sourceCommit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
+        "sourceCommit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
         "sourceHash": "6caa6588eb638e987588fb03721fc4b64b1ff13e8a67b1b73b13bfb93b0f2c1f",
         "extraction": "extracted",
         "confidenceScore": 1,
@@ -51344,7 +51637,37 @@
       ]
     }
   ],
-  "unknowns": [],
-  "commit": "5f6d4146e9dda26bbeeca1950f8c791d64388f2f",
-  "workspaceHash": "071838da9fa9511fb6e548eefac564ddae136011e65d9e3be3cb20897c6b776c"
+  "unknowns": [
+    "unresolved target \"symbol:src/templates#readTemplate\" referenced from \"symbol:src/adapters/index#skillsAt\"",
+    "unresolved target \"symbol:src/routing/catalog#invocationPolicyMarkdown\" referenced from \"symbol:src/adapters/index#skillsAt\"",
+    "unresolved target \"symbol:src/routing/catalog#invocationPolicyDescription\" referenced from \"symbol:src/adapters/index#skillsAt\"",
+    "unresolved target \"symbol:src/token-optimizer#prepareRendered\" referenced from \"symbol:src/adapters/index#skillsAt\"",
+    "unresolved target \"symbol:src/token-optimizer#prepareRendered\" referenced from \"symbol:src/adapters/index#workflowsAt\"",
+    "unresolved target \"symbol:src/templates#readTemplate\" referenced from \"symbol:src/adapters/index#workflowsAt\"",
+    "unresolved target \"symbol:src/templates#readTemplate\" referenced from \"symbol:src/adapters/index#agentsAt\"",
+    "unresolved target \"symbol:src/token-optimizer#prepareRendered\" referenced from \"symbol:src/adapters/index#claudeCommandsAt\"",
+    "unresolved target \"symbol:src/templates#readTemplate\" referenced from \"symbol:src/adapters/index#claudeCommandsAt\"",
+    "unresolved target \"symbol:src/mcp/registry#McpToolRegistry.has\" referenced from \"symbol:src/adapters/index#claudeCommandsAt\"",
+    "unresolved target \"symbol:src/token-optimizer#generateAllSkillBriefs\" referenced from \"symbol:src/adapters/index#skillBriefsAt\"",
+    "unresolved target \"symbol:src/token-optimizer#generateSkillsIndex\" referenced from \"symbol:src/adapters/index#skillBundle\"",
+    "unresolved target \"symbol:src/runtime/symbol-resolver#RuntimeSymbolResolver.resolve\" referenced from \"symbol:src/adapters/index#skillBundle\"",
+    "unresolved target \"symbol:src/token-optimizer#generateWorkflowRouting\" referenced from \"symbol:src/adapters/index#skillBundle\"",
+    "unresolved target \"symbol:src/templates#readTemplate\" referenced from \"symbol:src/adapters/index#agentsAsMarkdownAt\"",
+    "unresolved target \"symbol:src/templates#readTemplate\" referenced from \"symbol:src/adapters/index#codexAgentsAt\"",
+    "unresolved target \"symbol:src/token-optimizer#prepareRendered\" referenced from \"symbol:src/adapters/index#codexAgentsAt\"",
+    "unresolved target \"symbol:src/hooks/index#claudeCodeHookSettings\" referenced from \"symbol:src/adapters/index#codexAgentsAt\"",
+    "unresolved target \"symbol:src/mcp/index#mcpServerRegistration\" referenced from \"symbol:src/adapters/index#codexAgentsAt\"",
+    "unresolved target \"symbol:src/hooks/index#defaultConfigFile\" referenced from \"symbol:src/adapters/index#codexAgentsAt\"",
+    "unresolved target \"symbol:src/hooks/index#cursorHookSettings\" referenced from \"symbol:src/adapters/index#codexAgentsAt\"",
+    "unresolved target \"symbol:src/mcp/registry#McpToolRegistry.has\" referenced from \"symbol:src/adapters/index#codexAgentsAt\"",
+    "unresolved target \"symbol:src/token-optimizer#prepareRendered\" referenced from \"symbol:src/adapters/index#renderAdapter\"",
+    "unresolved target \"symbol:src/templates#readTemplate\" referenced from \"symbol:src/adapters/index#renderAdapter\"",
+    "unresolved target \"symbol:src/hooks/index#claudeCodeHookSettings\" referenced from \"symbol:src/adapters/index#renderAdapter\"",
+    "unresolved target \"symbol:src/mcp/index#mcpServerRegistration\" referenced from \"symbol:src/adapters/index#renderAdapter\"",
+    "unresolved target \"symbol:src/hooks/index#defaultConfigFile\" referenced from \"symbol:src/adapters/index#renderAdapter\"",
+    "unresolved target \"symbol:src/hooks/index#cursorHookSettings\" referenced from \"symbol:src/adapters/index#renderAdapter\"",
+    "unresolved target \"symbol:src/mcp/registry#McpToolRegistry.has\" referenced from \"symbol:src/adapters/index#renderAdapter\""
+  ],
+  "commit": "92bfedd336f7b80f587c053d289ddbfc1b836694",
+  "workspaceHash": "aa207f6e8941589c274636f309dda3a17ca477387684b90b65cb5e3d12415009"
 }
