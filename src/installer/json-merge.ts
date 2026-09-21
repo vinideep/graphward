@@ -19,6 +19,13 @@ const OWNERSHIP_MARKER = "gw hook";
 /** The key under which we register ourselves in an `mcpServers` map. */
 export const MCP_SERVER_KEY = "graphward";
 
+/**
+ * Top-level key in `.claude/settings.json` that auto-approves project-scoped
+ * MCP servers declared in `.mcp.json`. Without this, Claude Code leaves the
+ * graphward server in "Pending approval" state and the `/mcp` panel won't show it.
+ */
+const ENABLED_MCP_JSON_KEY = "enabledMcpjsonServers";
+
 type Json = Record<string, unknown>;
 
 function isObject(value: unknown): value is Json {
@@ -63,6 +70,18 @@ export function mergeHookConfig(existingSource: string | undefined, oursSource: 
   const merged: Json = { ...existing };
   for (const [topKey, ourValue] of Object.entries(ours)) {
     const theirValue = existing[topKey];
+
+    // enabledMcpjsonServers: set-union merge so we add our entry without
+    // overwriting the user's existing approved servers.
+    if (topKey === ENABLED_MCP_JSON_KEY && Array.isArray(ourValue)) {
+      const base = Array.isArray(theirValue) ? [...theirValue] : [];
+      for (const entry of ourValue) {
+        if (!base.includes(entry)) base.push(entry);
+      }
+      merged[topKey] = base;
+      continue;
+    }
+
     if (!isObject(ourValue) || !isObject(theirValue)) {
       // `version`, or the user has nothing here yet — take ours wholesale.
       merged[topKey] = ourValue;
@@ -88,6 +107,15 @@ export function hasOurEntries(existingSource: string | undefined, oursSource: st
   const existing = parseJsonOrEmpty(existingSource);
   const ours = parseJsonOrEmpty(oursSource);
   for (const [topKey, ourValue] of Object.entries(ours)) {
+    // enabledMcpjsonServers: verify each of our entries is present.
+    if (topKey === ENABLED_MCP_JSON_KEY && Array.isArray(ourValue)) {
+      const theirValue = existing[topKey];
+      if (!Array.isArray(theirValue)) return false;
+      for (const entry of ourValue) {
+        if (!theirValue.includes(entry)) return false;
+      }
+      continue;
+    }
     if (!isObject(ourValue)) continue;
     const theirValue = existing[topKey];
     if (!isObject(theirValue)) return false;
@@ -118,7 +146,12 @@ export function hasOurEntries(existingSource: string | undefined, oursSource: st
  * caller can delete the file instead of leaving an empty husk.
  */
 export function removeOurEntries(existingSource: string | undefined): string | null {
-  const prune = (value: unknown, parentKey?: string): unknown => {
+  const prune = (value: unknown, parentKey?: string, key?: string): unknown => {
+    // enabledMcpjsonServers: remove only our server name, keep the rest.
+    if (key === ENABLED_MCP_JSON_KEY && Array.isArray(value)) {
+      const kept = value.filter((e) => e !== MCP_SERVER_KEY);
+      return kept.length > 0 ? kept : undefined;
+    }
     if (Array.isArray(value)) {
       // Ownership is decided per ELEMENT. Testing a whole container would drop
       // the user's own hooks whenever one of ours happened to sit beside them.
@@ -132,7 +165,7 @@ export function removeOurEntries(existingSource: string | undefined): string | n
       const out: Json = {};
       for (const [k, v] of Object.entries(value)) {
         if (isOurKey(parentKey, k)) continue; // our MCP server registration
-        const pruned = prune(v, k);
+        const pruned = prune(v, k, k);
         if (pruned !== undefined) out[k] = pruned;
       }
       return Object.keys(out).length > 0 ? out : undefined;

@@ -108,13 +108,15 @@ export function hookCommand(event: HookEvent, host: HookHost = "claude-code"): s
 }
 
 /**
- * `.claude/settings.json` content wiring all four lifecycle hooks to the CLI.
+ * `.claude/settings.json` content wiring all four lifecycle hooks to the CLI
+ * and auto-approving the graphward MCP server from the project `.mcp.json`.
  * Rendered as a whole managed file; if the user already owns settings.json the
  * installer preserves theirs and `doctor` surfaces this snippet to merge.
  */
 export function claudeCodeHookSettings(): string {
   return JSON.stringify(
     {
+      enabledMcpjsonServers: ["graphward"],
       hooks: {
         SessionStart: [{ hooks: [{ type: "command", command: hookCommand("session-start") }] }],
         PreToolUse: [
