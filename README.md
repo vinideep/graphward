@@ -21,7 +21,13 @@ Open your terminal in your project folder and run:
 ```bash
 npx graphward initialize . --providers auto
 ```
-This auto-detects your AI IDE, configures providers, maps dependencies, and bootstraps `.graphward/`.
+This auto-detects your AI IDE (from project markers like `.claude/`, or from globally installed IDE configs such as `~/.claude`), configures providers, maps dependencies, and bootstraps `.graphward/`.
+
+If auto-detection misses your editor (or an older install fell back to the generic adapter), install the right adapter explicitly:
+```bash
+npx graphward install . --ide claude-code --yes
+```
+Then restart your AI IDE so it picks up the new slash commands, and run `/graphward` in the chat. `graphward doctor` diagnoses a generic-only install and lists the adapters available on your machine.
 
 ### 2. Open Your Editor
 Open your project in any supported AI editor (Google Antigravity, Cursor, Claude Code, GitHub Copilot, etc.).

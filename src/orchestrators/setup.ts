@@ -1,4 +1,5 @@
 import { existsSync } from "node:fs";
+import { homedir } from "node:os";
 import path from "node:path";
 import { install, update } from "../installer/index.js";
 import { buildGraph } from "../graph/index.js";
@@ -29,12 +30,46 @@ const IDE_MARKERS: Array<{ marker: string; ide: IdeId }> = [
   { marker: ".agents/agents", ide: "antigravity" },
 ];
 
-export function detectIdes(root: string): IdeId[] {
+// Global config directories installed by the IDEs themselves. A fresh project
+// has no project markers yet (e.g. `.claude` appears only after Claude Code has
+// written settings or commands there), so project-level detection alone would
+// silently fall back to the generic adapter and install no slash commands.
+// These user-level markers identify which IDE(s) the developer actually runs.
+// `.agents` is deliberately excluded: it doubles as a shared skill directory
+// for other tools, so its presence does not imply Antigravity.
+const GLOBAL_MARKERS: Array<{ marker: string; ide: IdeId }> = [
+  { marker: ".claude", ide: "claude-code" },
+  { marker: ".cursor", ide: "cursor" },
+  { marker: ".codex", ide: "codex" },
+  { marker: ".gemini", ide: "gemini-cli" },
+  { marker: ".commandcode", ide: "commandcode" },
+  { marker: ".copilot", ide: "github-copilot" },
+];
+
+export function detectProjectIdes(root: string): IdeId[] {
   const found = new Set<IdeId>();
   for (const { marker, ide } of IDE_MARKERS) {
     if (existsSync(path.join(root, marker))) found.add(ide);
   }
   return [...found];
+}
+
+export function detectGlobalIdes(home: string = homedir()): IdeId[] {
+  const found = new Set<IdeId>();
+  for (const { marker, ide } of GLOBAL_MARKERS) {
+    if (existsSync(path.join(home, marker))) found.add(ide);
+  }
+  return [...found];
+}
+
+/** Union of project-level and user-level IDE signals, used by doctor-style diagnostics. */
+export function detectAllIdes(root: string, home: string = homedir()): IdeId[] {
+  return [...new Set([...detectProjectIdes(root), ...detectGlobalIdes(home)])];
+}
+
+export function detectIdes(root: string, home: string = homedir()): IdeId[] {
+  const found = detectProjectIdes(root);
+  return found.length > 0 ? found : detectGlobalIdes(home);
 }
 
 export interface SetupResult {

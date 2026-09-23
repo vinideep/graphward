@@ -94,6 +94,35 @@ test("detectIdes finds adapters from marker directories", () => {
   }
 });
 
+test("detectIdes falls back to globally installed IDE configs when no project markers exist", () => {
+  const dir = initRepo();
+  const home = mkdtempSync(path.join(os.tmpdir(), "ei-home-"));
+  try {
+    mkdirSync(path.join(home, ".claude"));
+    mkdirSync(path.join(home, ".cursor"));
+    const ides = detectIdes(dir, home);
+    assert.deepEqual(ides, ["claude-code", "cursor"], `expected global fallback, got ${ides}`);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+    rmSync(home, { recursive: true, force: true });
+  }
+});
+
+test("detectIdes returns no adapters for a bare project on a bare machine", () => {
+  const dir = initRepo();
+  const home = mkdtempSync(path.join(os.tmpdir(), "ei-home-"));
+  try {
+    assert.deepEqual(detectIdes(dir, home), []);
+    // Project markers always win over global fallback.
+    mkdirSync(path.join(home, ".claude"));
+    mkdirSync(path.join(dir, ".cursor"));
+    assert.deepEqual(detectIdes(dir, home), ["cursor"]);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+    rmSync(home, { recursive: true, force: true });
+  }
+});
+
 test("runHealth reports graph stats and an overall verdict", async () => {
   const dir = initRepo();
   try {

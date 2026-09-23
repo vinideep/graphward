@@ -451,7 +451,9 @@ async function selectIdes(options: Options, readline: any): Promise<IdeId[]> {
   const { detectIdes } = await import("../orchestrators/setup.js");
   const detected = detectIdes(options.root);
   if (options.yes || !readline) {
-    return detected.length > 0 ? detected : ["generic"];
+    if (detected.length > 0) return detected;
+    output.write("No AI IDE detected (no project markers, no globally installed IDE config). Installing the generic adapter — slash commands like /graphward will not be available. Re-run with --ide <id> to target your IDE.\n");
+    return ["generic"];
   }
   const defaultChoices = detected.length > 0 ? detected.join(", ") : "generic";
   output.write(`\nSelect target AI IDE adapter(s):\n${IDE_IDS.map((ide, i) => `  ${i + 1}. ${ide}${detected.includes(ide) ? " (auto-detected)" : ""}`).join("\n")}\n`);
@@ -1434,7 +1436,11 @@ async function main(): Promise<void> {
   });
   printResult(`Installed ${ides.join(", ")}`, result, options.dryRun);
   if (!options.dryRun && result.conflicts === 0) {
-    output.write("Open your selected AI IDE and invoke the installed initialization workflow.\n");
+    if (ides.includes("claude-code")) {
+      output.write("Restart Claude Code in this project if it is already open, then type /graphward or /initialize-graphward in the chat.\n");
+    } else {
+      output.write("Open your selected AI IDE and invoke the installed initialization workflow.\n");
+    }
   }
   process.exitCode = result.conflicts > 0 ? 1 : 0;
   if (readline) readline.close();

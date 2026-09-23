@@ -8,6 +8,7 @@ import { exists, validateCanonicalTemplates } from "../templates.js";
 import type { FileAction, IdeId } from "../types.js";
 import { packageVersion } from "../version.js";
 import { homedir } from "node:os";
+import { detectAllIdes } from "../orchestrators/setup.js";
 import { SKILL_NAMES } from "../templates.js";
 
 export async function validateRender(ides: IdeId[]): Promise<string[]> {
@@ -79,6 +80,31 @@ export async function doctor(root: string, expectedPackageVersion?: string, stri
       status: "warning",
       message: "Legacy .agent directory found; installed adapters use .agents.",
     });
+  }
+  // The most common silent failure: an earlier install fell back to the
+  // generic adapter, so the developer's IDE has no slash commands at all.
+  // Only diagnose that specific state — projects with a real adapter are
+  // already wired up, and warning about every globally installed IDE would
+  // be noise.
+  if (manifest.adapters.length === 1 && manifest.adapters[0] === "generic") {
+    const IDE_DIRS: Partial<Record<IdeId, string>> = {
+      "claude-code": ".claude",
+      cursor: ".cursor",
+      codex: ".codex",
+      "gemini-cli": ".gemini",
+      "github-copilot": ".github",
+      commandcode: ".commandcode",
+      antigravity: ".agents",
+      "antigravity-cli": ".agents",
+    };
+    for (const ide of detectAllIdes(root)) {
+      const slashHint = ide === "claude-code" ? " (/graphward, /initialize-graphward)" : "";
+      actions.push({
+        path: IDE_DIRS[ide] ?? ".agents",
+        status: "warning",
+        message: `${ide} is installed on this machine but the generic adapter was installed instead; run \`graphward install --ide ${ide}\` to add its commands${slashHint}.`,
+      });
+    }
   }
   for (const entry of manifest.files) {
     const absolute = path.join(root, entry.path);
