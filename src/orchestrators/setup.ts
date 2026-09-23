@@ -194,6 +194,9 @@ export function mcpRegistrationHint(root: string, ides: IdeId[]): string {
     lines.push(`  • Start the MCP server for your IDE:  gw-mcp ${root}`);
   }
   lines.push("  • In your IDE, run: /initialize-graphward");
-  lines.push("  • Ask the codebase anything:  graphward ask \"who calls <fn>\"");
+  if (ides.includes("claude-code")) {
+    lines.push("  • Claude Code: restart it so it loads the new .claude/ commands, accept the folder-trust prompt (required for hooks and MCP approval), then type /graphward.");
+  }
+  lines.push(`  • Ask the codebase anything:  graphward ask "who calls <fn>"`);
   return lines.join("\n") + "\n";
 }

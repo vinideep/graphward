@@ -135,6 +135,23 @@ test("doctor recognizes an untouched installation as healthy", async () => {
   assert.equal(actions.filter((action) => action.status !== "unchanged").length, 0);
 });
 
+test("doctor flags Claude Code files that Claude Code would silently skip or hide", async () => {
+  const root = await project();
+  await install(root, ["claude-code"], options);
+  await writeFile(path.join(root, ".claude/commands/graphward.md"), "no frontmatter here\n");
+  await writeFile(path.join(root, ".claude/commands/plain.md"), "---\ndescription: Kept\n---\n\nBody\n");
+  await writeFile(path.join(root, ".claude/agents/nameless.md"), "---\ndescription: No name\n---\n\nBody\n");
+
+  const actions = await doctor(root, options.packageVersion);
+  const command = actions.find((action) => action.path === ".claude/commands/graphward.md");
+  assert.equal(command?.status, "error");
+  assert.match(command.message, /frontmatter on line 1/);
+  assert.ok(!actions.some((action) => action.path === ".claude/commands/plain.md" && action.status === "error"));
+  const agent = actions.find((action) => action.path === ".claude/agents/nameless.md");
+  assert.equal(agent?.status, "error");
+  assert.match(agent.message, /no name/);
+});
+
 test("doctor detects package drift and canonical files omitted from the install manifest", async () => {
   const root = await project();
   await install(root, ["generic"], options);

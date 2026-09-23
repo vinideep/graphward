@@ -1437,7 +1437,7 @@ async function main(): Promise<void> {
   printResult(`Installed ${ides.join(", ")}`, result, options.dryRun);
   if (!options.dryRun && result.conflicts === 0) {
     if (ides.includes("claude-code")) {
-      output.write("Restart Claude Code in this project if it is already open, then type /graphward or /initialize-graphward in the chat.\n");
+      output.write("Claude Code: restart it if it is already open so it loads the new .claude/ commands, then type /graphward. Accept the folder-trust prompt — trust is what enables GraphWard's hooks and MCP server approval.\n");
     } else {
       output.write("Open your selected AI IDE and invoke the installed initialization workflow.\n");
     }
