@@ -21,9 +21,9 @@ Open your terminal in your project folder and run:
 ```bash
 npx graphward initialize . --providers auto
 ```
-This auto-detects your AI IDE (from project markers like `.claude/`, or from globally installed IDE configs such as `~/.claude`), configures providers, maps dependencies, and bootstraps `.graphward/`.
+This auto-detects your AI IDE from both project markers (`.claude/`, `.cursor/`, …) and globally installed IDE configs (`~/.claude`, `~/.cursor`, …), configures providers, maps dependencies, and bootstraps `.graphward/`. It is the union of the two: a project that already has markers for other IDEs still picks up the IDE you actually work in.
 
-If auto-detection misses your editor (or an older install fell back to the generic adapter), install the right adapter explicitly:
+If auto-detection is too broad, or misses your editor, install the adapter explicitly:
 ```bash
 npx graphward install . --ide claude-code --yes
 ```

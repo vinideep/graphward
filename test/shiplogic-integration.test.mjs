@@ -9,20 +9,29 @@
 
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { mkdtempSync } from "node:fs";
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import test from "node:test";
+import test, { after } from "node:test";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CLI = path.resolve(__dirname, "../dist/cli/index.js");
+
+// IDE detection also reads the user's home directory for globally installed IDE
+// configs, so run the CLI against an isolated HOME. Otherwise the adapters this
+// test observes depend on which IDEs the machine running the tests happens to
+// have installed.
+const ISOLATED_HOME = mkdtempSync(path.join(tmpdir(), "ei-home-"));
+after(() => rm(ISOLATED_HOME, { recursive: true, force: true }));
 
 function cli(args, cwd) {
   const result = spawnSync(process.execPath, [CLI, ...args], {
     cwd,
     encoding: "utf8",
     timeout: 30_000,
+    env: { ...process.env, HOME: ISOLATED_HOME },
   });
   if (result.error) throw result.error;
   return result;

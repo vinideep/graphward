@@ -94,14 +94,20 @@ test("detectIdes finds adapters from marker directories", () => {
   }
 });
 
-test("detectIdes falls back to globally installed IDE configs when no project markers exist", () => {
+test("detectIdes unions project markers with globally installed IDE configs", () => {
   const dir = initRepo();
   const home = mkdtempSync(path.join(os.tmpdir(), "ei-home-"));
   try {
     mkdirSync(path.join(home, ".claude"));
     mkdirSync(path.join(home, ".cursor"));
+    // No project markers yet: globals carry the detection.
+    assert.deepEqual(detectIdes(dir, home), ["claude-code", "cursor"], `expected global detection, got ${detectIdes(dir, home)}`);
+    // GraphWard's own installs create project markers; they must not mask the
+    // IDE the developer actually works in.
+    mkdirSync(path.join(dir, ".agents", "agents"), { recursive: true });
+    mkdirSync(path.join(dir, ".commandcode"));
     const ides = detectIdes(dir, home);
-    assert.deepEqual(ides, ["claude-code", "cursor"], `expected global fallback, got ${ides}`);
+    assert.deepEqual(ides, ["commandcode", "antigravity", "claude-code", "cursor"], `expected union, got ${ides}`);
   } finally {
     rmSync(dir, { recursive: true, force: true });
     rmSync(home, { recursive: true, force: true });
@@ -113,8 +119,6 @@ test("detectIdes returns no adapters for a bare project on a bare machine", () =
   const home = mkdtempSync(path.join(os.tmpdir(), "ei-home-"));
   try {
     assert.deepEqual(detectIdes(dir, home), []);
-    // Project markers always win over global fallback.
-    mkdirSync(path.join(home, ".claude"));
     mkdirSync(path.join(dir, ".cursor"));
     assert.deepEqual(detectIdes(dir, home), ["cursor"]);
   } finally {

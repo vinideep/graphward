@@ -62,14 +62,25 @@ export function detectGlobalIdes(home: string = homedir()): IdeId[] {
   return [...found];
 }
 
-/** Union of project-level and user-level IDE signals, used by doctor-style diagnostics. */
+/**
+ * Union of project-level and user-level IDE signals.
+ *
+ * The union — rather than "project markers win, globals only as a fallback" —
+ * is deliberate. GraphWard's own installs create project markers (`.agents/`,
+ * `.codex/`, `.commandcode/`), so a project installed for one IDE would
+ * permanently mask every other IDE the developer actually runs. That is the
+ * exact failure this has to avoid: a project with `.agents/` alongside a
+ * developer who works in Claude Code must still get the claude-code adapter,
+ * otherwise `/graphward` never appears in their session.
+ *
+ * Explicit `--ide` remains the precise override when the union is too broad.
+ */
 export function detectAllIdes(root: string, home: string = homedir()): IdeId[] {
   return [...new Set([...detectProjectIdes(root), ...detectGlobalIdes(home)])];
 }
 
 export function detectIdes(root: string, home: string = homedir()): IdeId[] {
-  const found = detectProjectIdes(root);
-  return found.length > 0 ? found : detectGlobalIdes(home);
+  return detectAllIdes(root, home);
 }
 
 export interface SetupResult {
