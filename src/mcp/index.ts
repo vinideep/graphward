@@ -325,6 +325,9 @@ export const MCP_TOOL_SUMMARY: ReadonlyArray<readonly [string, string]> = [
   ["evaluate_counterfactual", "evaluate tentative patch overlay branch and detect introduced dependency cycles"],
   ["assess_risk", "compute multi-dimensional risk profile and tiered verification plan"],
   ["slice_graph", "hierarchically slice monorepo graph at global, package, community, or task level"],
+  ["get_routing_decision", "evaluate task complexity against capability cards and select optimal cost/performance model"],
+  ["get_routing_stats", "return aggregate routing statistics including cache hit rate and estimated cost savings"],
+  ["set_routing_config", "dynamically configure routing thresholds, forced models, log levels, and status"],
 ];
 
 /**

@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { loadGwConfig } from "../config/index.js";
+import { loadGwConfig, updateRoutingConfig, type RoutingConfig, type RoutingLogLevel } from "../config/index.js";
+import { getGlobalRouter } from "../routing/index.js";
 import { getEngineeringContext } from "../context/orchestrator.js";
 import { analyzeImpact, ensureFreshGraph, findSymbol, whoCalls, loadExistingGraph } from "../graph/index.js";
 import type { DependencyGraph, Snapshot } from "../graph/schema.js";
@@ -660,6 +661,111 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
         default:
           throw new Error(`Unknown slice level: ${level}. Must be GLOBAL, PACKAGE, COMMUNITY, or TASK.`);
       }
+    },
+  });
+
+  registry.register({
+    name: "get_routing_decision",
+    description: "Evaluate task complexity using capability cards and return optimal model routing decision with confidence and reasoning.",
+    inputSchema: {
+      type: "object",
+      required: ["task"],
+      additionalProperties: false,
+      properties: {
+        root: rootProperty,
+        task: {
+          type: "string",
+          description: "Task description, instruction, or prompt to evaluate.",
+        },
+        options: {
+          type: "object",
+          description: "Optional routing options such as forceModel or taskId.",
+        },
+        taskId: {
+          type: "string",
+          description: "Optional explicit task identifier.",
+        },
+        forceModel: {
+          type: "string",
+          description: "Optional model name override.",
+        },
+      },
+    },
+    handler: async (args) => {
+      const root = rootOf(args, projectRoot);
+      const router = await getGlobalRouter(root);
+      const task = args.task as string;
+      const rawOpts = (typeof args.options === "object" && args.options !== null ? args.options : {}) as Record<string, unknown>;
+      const taskId = typeof rawOpts.taskId === "string" ? rawOpts.taskId : (typeof args.taskId === "string" ? args.taskId : undefined);
+      const forceModel = typeof rawOpts.forceModel === "string" ? rawOpts.forceModel : (typeof args.forceModel === "string" ? args.forceModel : undefined);
+      return router.route(task, {
+        ...(taskId ? { taskId } : {}),
+        ...(forceModel ? { forceModel } : {}),
+      });
+    },
+  });
+
+  registry.register({
+    name: "get_routing_stats",
+    description: "Get aggregate model routing statistics: total routed tasks, cache hit rate, model distribution, and estimated cost savings.",
+    inputSchema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        root: rootProperty,
+      },
+    },
+    handler: async (args) => {
+      const root = rootOf(args, projectRoot);
+      const router = await getGlobalRouter(root);
+      return router.getStats();
+    },
+  });
+
+  registry.register({
+    name: "set_routing_config",
+    description: "Update model router configuration at runtime (threshold, enabled, forceModel, logLevel) and persist changes to disk.",
+    inputSchema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        root: rootProperty,
+        threshold: {
+          type: "number",
+          description: "Routing confidence threshold for escalating to premium models (0.0 to 1.0).",
+        },
+        enabled: {
+          type: "boolean",
+          description: "Enable or disable auto-model-router.",
+        },
+        forceModel: {
+          type: "string",
+          description: "Force all requests to a specific model.",
+        },
+        logLevel: {
+          type: "string",
+          enum: ["none", "summary", "verbose"],
+          description: "Routing log verbosity level.",
+        },
+        classifier: {
+          type: "string",
+          description: "Model name used for task complexity classification.",
+        },
+      },
+    },
+    handler: async (args) => {
+      const root = rootOf(args, projectRoot);
+      const router = await getGlobalRouter(root);
+      const patch: Partial<RoutingConfig> = {};
+      if (typeof args.threshold === "number") patch.threshold = args.threshold;
+      if (typeof args.enabled === "boolean") patch.enabled = args.enabled;
+      if (typeof args.forceModel === "string") patch.forceModel = args.forceModel;
+      if (typeof args.logLevel === "string") patch.logLevel = args.logLevel as RoutingLogLevel;
+      if (typeof args.classifier === "string") patch.classifier = args.classifier;
+
+      const updated = await updateRoutingConfig(root, patch);
+      router.updateConfig(updated);
+      return { status: "updated", config: updated, ...updated };
     },
   });
 

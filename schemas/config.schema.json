@@ -32,6 +32,37 @@
         "requireValidationOnStop": { "type": "boolean" }
       },
       "required": ["verifyCommands", "freshnessThreshold", "blockStaleEdits", "requireValidationOnStop"]
+    },
+    "routing": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "threshold": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.7 },
+        "classifier": { "type": "string", "default": "gpt-4o-mini" },
+        "logLevel": { "type": "string", "enum": ["none", "summary", "verbose"], "default": "summary" },
+        "forceModel": { "type": "string" },
+        "capabilityCards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "model": { "type": "string" },
+              "description": { "type": "string" },
+              "strengths": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "costTier": {
+                "type": "string",
+                "enum": ["cheap", "standard", "premium"]
+              },
+              "contextWindow": { "type": "number", "minimum": 0 }
+            },
+            "required": ["id", "model", "description", "strengths", "costTier"]
+          }
+        }
+      }
     }
   },
   "required": ["schemaVersion", "tokenBudgets", "projectFiles", "providers", "hooks"]

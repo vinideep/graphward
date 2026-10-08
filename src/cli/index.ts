@@ -14,9 +14,9 @@ import { packageVersion } from "../version.js";
 import type { ProviderName } from "../providers/types.js";
 import type { ProviderPolicy } from "../config/index.js";
 
-type Command = "initialize" | "providers" | "install" | "update" | "sync" | "doctor" | "uninstall" | "visualize" | "create" | "map" | "mcp" | "freshness" | "git-analysis" | "user-profile" | "hook" | "gate" | "snapshot" | "verify" | "claims" | "context" | "telemetry" | "setup" | "ask" | "guard" | "health" | "impact" | "who-calls" | "preflight" | "postflight" | "evidence-record" | "evidence-check" | "experiment" | "aidlc" | "handoff" | "learn" | "prune" | "resources";
+type Command = "initialize" | "providers" | "install" | "update" | "sync" | "doctor" | "uninstall" | "visualize" | "create" | "map" | "mcp" | "freshness" | "git-analysis" | "user-profile" | "hook" | "gate" | "snapshot" | "verify" | "claims" | "context" | "telemetry" | "setup" | "ask" | "guard" | "health" | "impact" | "who-calls" | "preflight" | "postflight" | "evidence-record" | "evidence-check" | "experiment" | "aidlc" | "handoff" | "learn" | "prune" | "resources" | "routing";
 
-const COMMANDS: Command[] = ["initialize", "providers", "install", "create", "update", "sync", "doctor", "uninstall", "visualize", "map", "mcp", "freshness", "git-analysis", "user-profile", "hook", "gate", "snapshot", "verify", "claims", "context", "telemetry", "setup", "ask", "guard", "health", "impact", "who-calls", "preflight", "postflight", "evidence-record", "evidence-check", "experiment", "aidlc", "handoff", "learn", "prune", "resources"];
+const COMMANDS: Command[] = ["initialize", "providers", "install", "create", "update", "sync", "doctor", "uninstall", "visualize", "map", "mcp", "freshness", "git-analysis", "user-profile", "hook", "gate", "snapshot", "verify", "claims", "context", "telemetry", "setup", "ask", "guard", "health", "impact", "who-calls", "preflight", "postflight", "evidence-record", "evidence-check", "experiment", "aidlc", "handoff", "learn", "prune", "resources", "routing"];
 
 interface Options {
   command: Command;
@@ -104,6 +104,7 @@ Usage:
   gw context "<task>" [path] [--files a,b] [--budget 2000] [--json]
   gw prune [path] [--ttl-days 30] [--json]
   gw resources [--json]
+  gw routing status|stats [path] [--json]
   graphward telemetry [path] [--json]
 
 IDE ids: ${IDE_IDS.join(", ")}
@@ -122,6 +123,7 @@ Advanced commands (the 4 verbs above orchestrate these; use directly if you want
   freshness [path] [--threshold 60]    git-analysis [path] [--window 90]
   experiment candidates|history [path] [--json]
   aidlc gate|clarify|state [phase|prompt] [path] [--json]
+  routing status|stats [path] [--json]
   user-profile [path] [--json]         prune [path] [--ttl-days 30] [--json]
 `;
 }
@@ -133,6 +135,10 @@ function parseArgs(args: string[]): Options {
     command = remaining.shift() as Command;
   }
   if (remaining.includes("--help") || remaining.includes("-h")) {
+    if (command === "routing") {
+      output.write("Usage: gw routing <status|stats> [path] [--json]\n\nSubcommands:\n  gw routing status [path] [--json]   Show routing configuration and status\n  gw routing stats [path] [--json]    Show aggregate routing statistics\n");
+      process.exit(0);
+    }
     output.write(usage(remaining.includes("--all")));
     process.exit(0);
   }
@@ -370,7 +376,7 @@ function parseArgs(args: string[]): Options {
       hookEvent = arg;
     } else if (command === "gate" && gateName === undefined) {
       gateName = arg;
-    } else if ((command === "claims" || command === "context" || command === "experiment" || command === "aidlc" || command === "handoff" || command === "learn" || command === "snapshot") && positional === undefined) {
+    } else if ((command === "claims" || command === "context" || command === "experiment" || command === "aidlc" || command === "handoff" || command === "learn" || command === "snapshot" || command === "routing") && positional === undefined) {
       positional = arg;
     } else if (command === "providers" && providerAction === undefined) {
       if (!["status", "install", "repair", "upgrade", "expose", "hide", "purge"].includes(arg)) throw new Error(`Unknown providers action "${arg}".`);
@@ -1182,6 +1188,46 @@ async function main(): Promise<void> {
       output.write(`${JSON.stringify(governor.getMetrics(), null, 2)}\n`);
     } else {
       output.write(`${governor.formatResourceReport()}\n`);
+    }
+    if (readline) readline.close();
+    return;
+  }
+
+  if (options.command === "routing") {
+    const subAction = options.positional || options.positionals[0];
+    if (subAction === "status") {
+      const { loadGwConfig } = await import("../config/index.js");
+      const { renderRoutingStatus } = await import("../routing/index.js");
+      const config = await loadGwConfig(options.root);
+      if (options.json) {
+        output.write(`${JSON.stringify(config.routing, null, 2)}\n`);
+      } else {
+        output.write(`${renderRoutingStatus(config.routing)}\n`);
+      }
+      if (readline) readline.close();
+      return;
+    }
+
+    if (subAction === "stats") {
+      const { getGlobalRouter, renderRoutingStats } = await import("../routing/index.js");
+      const router = await getGlobalRouter(options.root);
+      const stats = router.getStats();
+      if (options.json) {
+        output.write(`${JSON.stringify(stats, null, 2)}\n`);
+      } else {
+        output.write(`${renderRoutingStats(stats)}\n`);
+      }
+      if (readline) readline.close();
+      return;
+    }
+
+    if (!subAction || subAction === "help") {
+      output.write("Usage: gw routing <status|stats> [path] [--json]\n\nSubcommands:\n  gw routing status [path] [--json]   Show routing configuration and status\n  gw routing stats [path] [--json]    Show aggregate routing statistics\n");
+      process.exitCode = 0;
+    } else {
+      output.write(`Unknown routing action "${subAction}". Expected "status" or "stats".\n`);
+      output.write("Usage: gw routing <status|stats> [path] [--json]\n");
+      process.exitCode = 1;
     }
     if (readline) readline.close();
     return;

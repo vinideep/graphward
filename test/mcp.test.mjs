@@ -101,6 +101,8 @@ test("MCP server: initialize, list tools, call get_graph and analyze_impact", as
       "get_aidlc_state",
       "get_engineering_context",
       "get_experiment_history",
+      "get_routing_decision",
+      "get_routing_stats",
       "get_session_handoff",
       "list_active_flights",
       "migrate_legacy_regression_patterns",
@@ -108,6 +110,7 @@ test("MCP server: initialize, list tools, call get_graph and analyze_impact", as
       "provider_status",
       "query_project_memory",
       "record_learned_pattern",
+      "set_routing_config",
       "simulate_change_intent",
       "slice_graph",
       "sync_engineering_knowledge",
@@ -297,6 +300,43 @@ test("MCP server: initialize, list tools, call get_graph and analyze_impact", as
     assert.ok(Array.isArray(sliceData.nodes));
     assert.ok(sliceData.nodes.length > 0);
 
+    // 12. Call get_routing_decision over stdio JSON-RPC
+    sendRequest(proc, {
+      jsonrpc: "2.0",
+      id: 12,
+      method: "tools/call",
+      params: {
+        name: "get_routing_decision",
+        arguments: {
+          root: REPO_ROOT,
+          task: "Implement high-throughput Kafka ingestion pipeline",
+        },
+      },
+    });
+    const routeResponse = await readResponse(proc, 12, 30_000);
+    assert.ok(!routeResponse.error, `get_routing_decision call failed: ${JSON.stringify(routeResponse.error)}`);
+    const routeData = JSON.parse(routeResponse.result?.content?.[0]?.text ?? "{}");
+    assert.ok(routeData.taskId, "RoutingDecision must contain taskId");
+    assert.ok(routeData.model, "RoutingDecision must contain selected model");
+    assert.equal(typeof routeData.confidence, "number");
+    assert.ok(["cheap", "standard", "premium"].includes(routeData.tier));
+
+    // 13. Call get_routing_stats over stdio JSON-RPC
+    sendRequest(proc, {
+      jsonrpc: "2.0",
+      id: 13,
+      method: "tools/call",
+      params: {
+        name: "get_routing_stats",
+        arguments: { root: REPO_ROOT },
+      },
+    });
+    const statsResponse = await readResponse(proc, 13, 30_000);
+    assert.ok(!statsResponse.error, `get_routing_stats call failed: ${JSON.stringify(statsResponse.error)}`);
+    const statsData = JSON.parse(statsResponse.result?.content?.[0]?.text ?? "{}");
+    assert.equal(typeof statsData.totalRouted, "number");
+    assert.equal(typeof statsData.cacheHits, "number");
+    assert.equal(typeof statsData.cacheMisses, "number");
   } finally {
     proc.stdin.end();
     await new Promise((resolve) => proc.on("close", resolve));

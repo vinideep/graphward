@@ -12,5 +12,41 @@
     "offline": false,
     "requireProviders": false,
     "exposeRawMcp": false
+  },
+  "routing": {
+    "enabled": true,
+    "threshold": 0.7,
+    "classifier": "gpt-4o-mini",
+    "capabilityCards": [
+      {
+        "id": "card-cheap",
+        "model": "gpt-4o-mini",
+        "description": "Fast lightweight model for formatting, syntax checks, and simple unit tests",
+        "strengths": [
+          "formatting",
+          "syntax",
+          "quick-fixes",
+          "comments",
+          "unit-tests"
+        ],
+        "costTier": "cheap",
+        "contextWindow": 128000
+      },
+      {
+        "id": "card-premium",
+        "model": "gpt-4o",
+        "description": "High-reasoning model for complex architecture, distributed systems, and refactoring",
+        "strengths": [
+          "architecture",
+          "refactoring",
+          "distributed-systems",
+          "complex-debugging",
+          "consensus"
+        ],
+        "costTier": "premium",
+        "contextWindow": 128000
+      }
+    ],
+    "logLevel": "summary"
   }
 }
