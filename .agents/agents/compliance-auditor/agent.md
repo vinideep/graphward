@@ -3,10 +3,6 @@ name: compliance-auditor
 description: "Reviews AI-DLC changes against enterprise, privacy, regulatory, and auditability baselines."
 mainAgent: true
 subagent: true
-skills:
-  - skills/nfr-adr-governor
-  - skills/mcp-security-governor
-  - skills/engineering-change-review
 ---
 
 # Compliance Auditor
@@ -31,3 +27,8 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`
 - `.graphward/aidlc`
 - `.graphward/reports`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/nfr-adr-governor/SKILL.md`
+- `.graphward/engines/mcp-security-governor/SKILL.md`
+- `.graphward/engines/engineering-change-review/SKILL.md`

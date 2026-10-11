@@ -7,6 +7,7 @@ import { prepareProviders } from "../providers/manager.js";
 import { deriveClaims, verifyClaims } from "../claims/index.js";
 import { changedFiles } from "../verify/index.js";
 import { verifyKnowledge } from "../verify/index.js";
+import { checkTaskReadiness, loadTask } from "../aidlc/task-contract.js";
 import type { GateRisk } from "../gates/index.js";
 
 const SOURCE_FILE_RE = /\.(ts|tsx|js|jsx|mjs|cjs|py|go|rs|rb|java|kt|sql)$/i;
@@ -17,11 +18,17 @@ function inferRisk(files: string[]): GateRisk {
   return "low";
 }
 
-export async function validateChange(root: string, files?: string[], base = "HEAD") {
+export async function validateChange(root: string, files?: string[], base = "HEAD", options: { taskId?: string } = {}) {
   const changed = files && files.length > 0 ? files : await changedFiles(root);
   const freshness = await ensureFreshGraph(root);
   const impact = await analyzeImpact(root, changed);
   const risk = inferRisk(changed);
+  const readiness = await checkTaskReadiness(root, { taskId: options.taskId, files: changed });
+  const task = options.taskId ? await loadTask(root, options.taskId) : undefined;
+  const mappingGaps = task ? [
+    ...task.contract.acceptanceCriteria.filter(criterion => !task.changeMapping?.some(entry => entry.criterion === criterion)).map(criterion => `Unmapped requirement: ${criterion}`),
+    ...changed.filter(file => !task.changeMapping?.some(entry => entry.files.includes(file))).map(file => `Change lacks requirement rationale: ${file}`),
+  ] : [];
   const [claims, knowledge, evidence, ...gates] = await Promise.all([
     verifyClaims(root),
     verifyKnowledge(root),
@@ -31,6 +38,8 @@ export async function validateChange(root: string, files?: string[], base = "HEA
   const blocking = gates.filter((gate) => gate.status === "fail" || (gate.status === "unavailable" && gate.required));
   return {
     changedFiles: changed,
+    readiness,
+    mappingGaps,
     freshness,
     impact,
     risk,
@@ -38,8 +47,8 @@ export async function validateChange(root: string, files?: string[], base = "HEA
     knowledge,
     evidence,
     gates,
-    verdict: blocking.length === 0 && claims.refuted + claims.stale + claims.missing === 0 && knowledge.drift === 0 && evidence.stale === 0 ? "pass" : "needs-attention",
-    blocking: [...blocking.map((gate) => gate.gate), ...(claims.refuted + claims.stale + claims.missing > 0 ? ["claims"] : []), ...(knowledge.drift > 0 || evidence.stale > 0 ? ["knowledge"] : [])],
+    verdict: readiness.ready && mappingGaps.length === 0 && blocking.length === 0 && claims.refuted + claims.stale + claims.missing === 0 && knowledge.drift === 0 && evidence.stale === 0 && !evidence.documentDrift ? "pass" : "needs-attention",
+    blocking: [...(mappingGaps.length ? ["requirement-change-test-mapping"] : []), ...(!readiness.ready ? ["task-readiness"] : []), ...blocking.map((gate) => gate.gate), ...(claims.refuted + claims.stale + claims.missing > 0 ? ["claims"] : []), ...(knowledge.drift > 0 || evidence.stale > 0 || (evidence.documentDrift ?? 0) > 0 ? ["knowledge"] : [])],
   };
 }
 
@@ -67,7 +76,7 @@ export async function syncEngineeringKnowledge(root: string, files?: string[]) {
     // cannot decide whether changed application code requires prose updates.
     // Signal that follow-up explicitly for source changes, even when the old
     // prose did not cite the newly added file.
-    requiresModelKnowledgeSync: changed.some((file) => SOURCE_FILE_RE.test(file)) || knowledge.drift > 0 || evidence.stale > 0,
+    requiresModelKnowledgeSync: changed.some((file) => SOURCE_FILE_RE.test(file)) || knowledge.drift > 0 || evidence.stale > 0 || (evidence.documentDrift ?? 0) > 0,
     note: "Code, graph, provider index, and derived claims are synchronized. Canonical prose is never rewritten without evidence-aware model synthesis.",
   };
 }

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, rm, readFile, writeFile as rawWriteFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -10,6 +10,16 @@ import { buildDependencyGraph } from "../dist/graph/builders/dependency.js";
 import { reconcileGraphifyEvidence } from "../dist/graph/provider-evidence.js";
 
 const digest = (value) => createHash("sha256").update(value).digest("hex");
+
+async function writeFile(location, content, ...options) {
+  await rawWriteFile(location, content, ...options);
+  if (location.endsWith('/graphify/graph.json')) {
+    const receipt = path.join(path.dirname(location), 'run.json');
+    const manifest = JSON.parse(await readFile(receipt, 'utf8'));
+    manifest.graphHash = digest(content);
+    await rawWriteFile(receipt, JSON.stringify(manifest));
+  }
+}
 
 async function fixture() {
   const root = await mkdtemp(path.join(os.tmpdir(), "ei-graphify-"));
@@ -30,6 +40,7 @@ async function fixture() {
   const sourceHashes = { ".mcp.json": digest(mcp), "src/a.ts": digest(a), "src/b.ts": digest(b) };
   const run = {
     schemaVersion: 1,
+    projectRoot: await import("../dist/providers/workspace.js").then(m=>m.toCanonicalPath(root)),
     provider: "graphify",
     providerVersion: "0.9.29",
     generatedAt: new Date().toISOString(),

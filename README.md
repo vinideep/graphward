@@ -1,154 +1,350 @@
 # GraphWard
 
-GraphWard gives AI coding assistants a living blueprint of your codebase so they stop guessing, hallucinating, and breaking working code.
+**Repository context, requirements and verification for AI coding agents.**
 
-## What is GraphWard?
+GraphWard helps coding agents understand existing behavior, clarify a request, identify affected callers and tests, and record what was validated. It combines project-owned knowledge, dependency graphs and current source evidence. It does not replace your assistant or guarantee correct code or complete dependency coverage.
 
-When you ask standard AI to write code, it often guesses how your project works. It might change a button and accidentally break your database, or delete code it didn't understand.
+> **Current checkout — October 12, 2026:** reliability repairs are implemented locally but unpublished; package version remains `1.2.8`. Other copies with that version can contain older code. The guided CLI is planned, not implemented. Existing-project migration has two open preservation defects described below.
 
-GraphWard is built for engineers and engineering teams who use AI coding assistants.
+## Start here
 
-**GraphWard acts like an automated lead architect and project manager:**
-1. **Maps your project** — Scans your entire app to understand how every file and function connects.
-2. **Clarifies before coding** — If your request is vague, it stops and asks you simple multiple-choice questions instead of guessing.
-3. **Runs your project's checks automatically** — Executes your compiler, linter, type-checker, and test suite on every change. If checks fail, the change is reverted so you can review what went wrong. Protection is only as strong as your test coverage.
-4. **Remembers past mistakes** — Keeps a record of failed attempts so the AI never repeats the same mistake twice.
+- New project: [install and initialize](#install-and-initialize), then [activate your coding agent](#activate-your-coding-agent).
+- Existing installation: read [updating an existing project](#updating-an-existing-project) before migration.
+- Agent skips questions/context: use [troubleshooting](#troubleshooting).
+- Proposed interface: see [planned CLI upgrade](#planned-cli-upgrade).
 
-## Quick Mode (Single Developer, Zero Config)
+## What GraphWard adds
 
-### 1. Initialize
-Open your terminal in your project folder and run:
+| Capability | Purpose |
+|---|---|
+| Requirements discovery | Discuss features, record intended behavior/acceptance criteria and clarify fixes proportionally. |
+| Current context | Retrieve source through CCE or a disclosed native fallback within project file policy. |
+| Architecture evidence | Combine Graphify evidence and GraphWard's normalized graph to find relationships, callers and possible ripple effects. |
+| Task readiness | Check project/task identity, confirmed requirements revision and prepared context before supported edit paths. |
+| Verification | Run real project checks and bind results to checked bytes; missing checks cannot establish success. |
+| Continuity | Keep inspectable knowledge, decisions, context, evidence and change history. |
+
+Results depend on integration, context coverage, requirements quality and meaningful tests.
+
+## Install and initialize
+
+### Requirements and runtime
+
+- Node.js **20.11+** and npm; your chosen coding agent.
+- Managed providers require `uv` and **Python 3.11+**. CCE may need C/C++ build tools and CMake when compatible wheels are unavailable.
+- Network access for missing package/provider dependencies and potentially model assets.
+- Current pins: **Graphify 0.9.29**, **CCE 0.4.25**. Replacement versions need compatibility qualification.
+
+Install a published release:
+
 ```bash
-npx graphward initialize . --providers auto
-```
-This auto-detects your AI IDE from both project markers (`.claude/`, `.cursor/`, …) and globally installed IDE configs (`~/.claude`, `~/.cursor`, …), configures providers, maps dependencies, and bootstraps `.graphward/`. It is the union of the two: a project that already has markers for other IDEs still picks up the IDE you actually work in.
-
-If auto-detection is too broad, or misses your editor, install the adapter explicitly:
-```bash
-npx graphward install . --ide claude-code --yes
-```
-Then restart your AI IDE so it picks up the new slash commands, and run `/graphward` in the chat. `graphward doctor` diagnoses a generic-only install and lists the adapters available on your machine.
-
-### 2. Open Your Editor
-Open your project in any supported AI editor (Google Antigravity, Cursor, Claude Code, GitHub Copilot, etc.).
-
-### 3. Run /graphward
-In your AI chat window, invoke the `/graphward` workflow shortcut followed by your request in plain English.
-- **To fix a problem:** `/graphward The checkout submit button isn't giving feedback.`
-- **To add a feature:** `/graphward Add an export-to-PDF button on the customer invoice page.`
-
-## Team Mode (Shared Intelligence, Custom Hooks)
-
-### Multi-Editor Setup
-You can target specific AI IDEs directly:
-```bash
-npx graphward install . --ide cursor --ide claude-code --yes
+npm install --global graphward
+graphward --version
 ```
 
-### Tiered Adapters
-- **Tier 1 (Core / Actively Maintained):** Google Antigravity, Cursor, Claude Code (end-to-end integration tested, native hook lifecycle integration, automated verification records).
-- **Tier 2 (Supported Ecosystem Adapters):** GitHub Copilot, Command Code, Gemini CLI, Codex, Cline, Roo Code, and Generic (canonical markdown skills, agents, and prompts).
-
-### Hook Lifecycle
-GraphWard includes staleness detection — it scores artifact freshness and warns when intelligence is stale. 
-Install automatic sync hooks during setup:
-```bash
-npx graphward install . --ide <your-editor> --hooks --yes
-```
-This adds `post-commit` and `post-merge` hooks that incrementally sync affected intelligence artifacts.
-
-### TTL Tuning & Pruning
-Prune expired negative constraints and failed attempt records (default: 30 days):
-```bash
-npx graphward prune . --ttl-days 30
-```
-
-### Shared .graphward/ (Opt-In)
-By default, `.graphward/` content-derived artifacts are gitignored. Use `--share` during initialization to generate a redacted architecture summary safe for version control. A secrets scan runs before any file is written to `.graphward/`. See [SECURITY.md](SECURITY.md) for details.
-
-## How It Works
-
-```mermaid
-flowchart TD
-    User["Your Prompt: /graphward <request>"] --> Orchestrator["engineering-orchestrator"]
-    Orchestrator --> Clarity{"Is the prompt clear?"}
-    Clarity -->|Vague / Missing Details| Gate["Socratic Gate: Asks 2-3 multiple-choice questions"]
-    Gate --> Freezing["Freezes decisions in requirements"]
-    Clarity -->|Clear| Blueprint["Reads Dependency Graph & Negative Constraints"]
-    Freezing --> Blueprint
-    Blueprint --> Impact["Writes Impact Report (IMP-XXX)"]
-    Impact --> Implement["Implements with Specialist Agents"]
-    Implement --> Verify["Runs Project Tests & Verification Records"]
-    Verify --> Verification{"Did all checks pass?"}
-    Verification -->|Yes| Sync["Updates living blueprint (.graphward/) & Change History"]
-    Verification -->|No| Revert["Reverts failed change for review"]
-```
-
-1. **Clarification Gate**: If your prompt is missing details (e.g., "fix the button"), the AI pauses and presents 2–3 multiple-choice options. It will never blindly change code on an assumption.
-2. **Context Retrieval**: Pulls in only the exact code needed, plus "Negative Constraints" (patterns that previously failed).
-3. **Impact Report & Implementation**: Analyzes ripple effects first, then makes changes using targeted specialist agents (TDD, security, database).
-4. **Safe Execution**: Executes project test suites and compiles verification records. If anything breaks, it rolls back cleanly.
-5. **Blueprint Synchronization**: Updates `.graphward/` documentation, dependency graphs, and change records so project intelligence stays fresh.
-
-## Supported Languages
-
-GraphWard's native parser currently supports TypeScript, JavaScript (including JSX/TSX, .mjs, .cjs), Python, Go, Rust, Ruby, Java, and Kotlin for dependency graph construction. Detection is based on import/export analysis via regex-based parsing. Other file types are included in the project file tree but without deep symbol-level graph edges.
-
-Tree-sitter is available as an optional parser. If the `tree-sitter` and language grammar peer dependencies are installed, GraphWard will use them for more accurate extraction of imports and exports.
-
-## Security & Permissions
-
-GraphWard operates entirely on your local machine:
-
-| What GraphWard reads | What GraphWard writes | What GraphWard executes |
-|--------------|----------------|------------------|
-| Source files in your project | `.graphward/` directory only | Your project's configured check commands (test, lint, typecheck) |
-| `package.json`, config files | IDE-specific config (e.g., `.cursor/rules/`) | Nothing else — no network calls, no telemetry |
-| Git history (local) | — | — |
-
-> **No telemetry. No cloud sync. No data leaves your machine.** All intelligence artifacts are plain markdown and JSON files you can inspect, edit, or delete at any time.
-
-By default, `.graphward/` content-derived artifacts are gitignored. Use `--share` during initialization to generate a redacted architecture summary safe for version control. A secrets scan runs before any file is written to `.graphward/`.
-
-For full details, see [SECURITY.md](SECURITY.md).
-
-## Benchmark Results
-
-### 1. Efficacy Evaluation (25-Task Harness)
-Based on the `benchmark/harness/tasks.mjs` test suite against standard AI IDE usage:
-- **Pass Rate:** Improved from ~64% (baseline) to 92% (GraphWard enabled)
-- **Regression Rate:** Reduced from ~14% to 0% (blocked by verification records)
-- **Time to resolution (avg):** 2.4 minutes (GraphWard) vs 4.1 minutes (baseline)
-
-### 2. Large Scale Monorepo Performance
-Testing graph build (`npx graphward map`) on a synthesized large multi-package project (React + Express + 50 packages):
-- **Nodes:** 12,450
-- **Edges:** 48,120
-- **Build time:** 1,845ms
-
-## Data Format (Open Schema)
-
-GraphWard's internal data formats are open and documented. See the `schemas/` directory for versioned JSON Schema definitions of our artifacts.
-
-## Why Not Just Use Cursor / Claude Code / Copilot Alone?
-
-**Your intelligence is portable.** GraphWard writes everything to `.graphward/` — a plain directory of markdown and JSON that works across **any** AI IDE. Switch from Cursor to Claude Code to Copilot? Your architecture graph, memory, and project context follow you. No vendor lock-in.
-
-**Cost-aware by design.** Every request gets a dynamic token budget based on task risk — trivial fixes use ~2,000 tokens of context, critical architecture changes scale up to 15,000. No uncapped context loading.
-
-**What the platforms won't do:**
-- Carry your project memory across IDE switches
-- Give you a portable, version-controlled architecture graph
-- Let you inspect and edit every piece of AI context as plain files
-- Stay tool-agnostic instead of locking you into one ecosystem
-
-## Development
+This does not obtain unpublished repairs from this checkout. To use source, run inside the GraphWard repository:
 
 ```bash
 npm ci
-npm test               # Runs all automated tests
-npm run test:integration
 npm run build
+node dist/cli/index.js --help
 ```
 
-Full technical architecture documentation is available in [WORKFLOW_GUIDE.md](WORKFLOW_GUIDE.md) and [graphward-blueprint.md](graphward-blueprint.md).
+From a target project, invoke the identified source runtime:
+
+```bash
+node /absolute/path/to/graphward/dist/cli/index.js --help
+```
+
+The examples below use `graphward`; substitute that absolute Node invocation for source testing. `gw` is an alias only when it resolves to the intended installation. Avoid ambiguous `npx gw`; explicitly name the package for temporary execution:
+
+```bash
+npm exec --package=graphward -- graphward --help
+```
+
+Temporary execution can fetch a published copy. It is not an offline command or proof that this candidate is being used.
+
+### Fresh project setup
+
+Run inside your application repository:
+
+```bash
+graphward initialize . --ide codex --providers auto --yes
+```
+
+Use `--ide claude-code`, `--ide antigravity` or `--ide antigravity-cli` for those hosts. Repeat `--ide` to select multiple adapters. Without explicit selection, project/user markers suggest adapters; markers do not prove a host is active.
+
+Then ask the coding agent to **initialize GraphWard**, or invoke its installed `initialize-graphward` entry workflow, to enrich verified knowledge from bootstrap evidence.
+
+| Entry | What it does |
+|---|---|
+| `install` | Generate managed skills, instructions and supported host configuration. |
+| `initialize` | Install integration; prepare provider evidence, graph and bootstrap artifacts. |
+| Agent's `initialize-graphward` | Synthesize and validate richer project knowledge. |
+| `setup` | Best-effort convenience orchestration; inspect health rather than assuming every stage succeeded. |
+
+To select adapters, include every adapter you want to retain. This can replace the managed adapter set; omitting an earlier adapter can remove its unchanged generated assets:
+
+```bash
+graphward install . --ide codex --ide claude-code --yes
+```
+
+On existing projects, installation/setup also affects managed assets; the migration blockers below apply there too.
+
+### Provider policy
+
+| Option | Meaning |
+|---|---|
+| `--providers auto` | Use compatible providers and disclose fallback; initialization can install missing dependencies. |
+| `--providers full` | Select provider-backed context; this alone does not require providers. |
+| `--providers full --require-providers` | Missing/unhealthy required providers fail; retrieval cannot silently substitute native context. |
+| `--providers native` | Use native GraphWard context without CCE/Graphify invocation. |
+| `--offline` | Prevent provider downloads during initialization, not npm downloads of GraphWard itself. |
+
+```bash
+# Native context without provider downloads.
+graphward initialize . --ide codex --providers native --offline --yes
+
+# Require provider-backed context.
+graphward initialize . --ide codex --providers full --require-providers --yes
+```
+
+Configuration lives in `.graphward/gw.config.json`. Provider binaries and current project indexes are separate. Ordinary retrieval never installs dependencies.
+
+## Activate your coding agent
+
+Open the correct project, reload host configuration as needed, verify skills/MCP discovery and complete native permission/trust review. Generated files alone do not establish activation.
+
+| Host | Workflow entry |
+|---|---|
+| Claude Code | Installed `/graphward <request>` command/skill. |
+| Codex | Ask to apply GraphWard or select its installed `graphward` skill. Inspect the project's custom-agent manifest; do not assume a desktop slash command exists. |
+| Antigravity IDE / CLI | Installed entry skill or an explicit request to apply GraphWard. Qualify IDE and CLI separately. |
+| Other adapters | Host-discovered skill/command or portable instructions; inspect its capability profile. |
+
+```text
+Apply the GraphWard workflow to add invoice PDF export.
+Use scope-requirement to define export behavior before implementation.
+Use analyze-impact to review changes to the invoice service.
+```
+
+Codex requires native review of the **exact generated hooks**, not just project trust. Changed definitions need review again. Disabled hooks remain disabled until deliberately enabled. Other hosts have their own discovery/permission rules. GraphWard preserves model/reasoning settings; the experimental automatic model router remains removed.
+
+### Support and qualification
+
+| Adapter ID | Current category |
+|---|---|
+| `codex` | Primary target; current-candidate native qualification open. |
+| `claude-code` | Primary; recorded exact-candidate canary passed. |
+| `antigravity` | Primary IDE target; native qualification open. |
+| `antigravity-cli` | Primary CLI target; native qualification open. |
+| `cursor` | Generated integration; native qualification pending. |
+| `github-copilot` | Pending; VS Code Local, CLI/Agent Host and cloud differ. |
+| `gemini-cli` | Qualification pending. |
+| `commandcode` | Qualification pending. |
+| `cline` | Pending; extension/CLI provisioning differ. |
+| `roo-code` | Legacy compatibility. |
+| `generic` | Portable instructions; no native connectivity/enforcement claim. |
+
+The 11 profile definitions live in `src/adapters/capabilities.ts`; profiles for installed adapters are generated under `.graphward/providers/hosts/`. Track **generated → discovered → enabled → connected → invoked → enforcement tested** separately. A generated profile does not establish later stages.
+
+Hooks are guardrails with host-specific coverage. Shell/specialized tool paths can escape normal handling; there is no universal edit-prevention guarantee.
+
+## Requirements-first workflow
+
+```mermaid
+flowchart LR
+    Discover["Discover repository facts"] --> Clarify["Discuss unresolved requirements"]
+    Clarify --> Confirm["Confirm scope"]
+    Confirm --> Prepare["Prepare current context"]
+    Prepare --> Impact["Assess impact"]
+    Impact --> Implement["Implement approved changes"]
+    Implement --> Validate["Run checks"]
+    Validate --> Sync["Sync evidence and report"]
+```
+
+**Every feature** gets discussion of users, behavior, non-goals, acceptance criteria, compatibility and relevant failure cases. Detailed features still get scope confirmation. **Fixes** clarify proportionally; a typo should not trigger an architecture interview. Reuse earlier answers; ask again for unresolved choices, contradictions or material scope changes. Discover repository facts before asking the user what the code already answers.
+
+Versioned `TaskDecisionReceipt` files under `.graphward/aidlc/tasks/` bind project, task and requirements revision. They retain full questions/answers, scope, acceptance criteria, confirmation provenance and context generation. Empty documents, stale approvals or assistant assertions of approval cannot satisfy readiness. Confirmation assurance is labelled according to what the host can actually establish.
+
+Ordinary edits within approved intent refresh context without repeatedly revoking scope confirmation. Concurrent tasks have separate receipts. Subagents return unresolved questions to the parent rather than approving themselves.
+
+Track **requirement → changed files → validation**. Review missing consumers/failure cases and unnecessary additions, not just compilation. Whether ordinary host requests follow this contract depends on discovered integration, permissions and verified hook coverage.
+
+## CCE, Graphify and source inspection
+
+- **CCE:** current source spans inside approved file scope.
+- **Graphify:** structural evidence about modules/relationships.
+- **GraphWard:** canonical knowledge, claims, decisions, memory and normalized graph; checks policy, freshness and provenance before accepting evidence.
+
+Agents normally use consolidated GraphWard tools. Separate visible raw provider calls are unnecessary when receipts show actual invocation and accepted contribution.
+
+**Retrieve context first, then inspect actual code and tests selectively.** Missing graph edges can justify broader read-only search. Retrieval scope does not authorize unrelated edits; direct file reading is still necessary.
+
+```bash
+# Explicit preparation can refresh indexes and graph artifacts.
+graphward aidlc prepare-task . --force --yes
+
+# Read-only retrieval.
+graphward context "Explain invoice export and its callers" . --budget 5000 --json --yes
+```
+
+After confirmed requirements, the workflow adds `--id <task-id>` to bind preparation. A task ID alone is not approval. Preparation makes one bounded local recovery attempt; retrieval does not rebuild or download dependencies.
+
+Receipts distinguish binary identity, index generation, invocation, accepted contribution, rejected spans and fallback reasons. Required-provider failure blocks implementation; reduced coverage requires a task-scoped decision. Zero accepted contribution does not prove a provider helped.
+
+## Updating an existing project
+
+> **Open blockers:** this candidate can overwrite custom `.graphward/.gitignore` rules and replace malformed `.graphward/gw.config.json` with defaults during update. Both were reproduced in a disposable project. Fixes/regressions are required before rollout; current migration is not universally safe or transactional.
+
+Keep these separate: **running package identity**, **project integration revision**, **context source generation** and **native activation**. A package upgrade does not regenerate every project's skills/hooks/config. A shared source-linked runtime can change immediately while generated project files remain old; cached copies can retain older code.
+
+After those blockers are fixed, use a qualified runtime for this intended per-project sequence:
+
+```bash
+# Preview; resolve conflicts before applying.
+graphward update . --dry-run --yes
+graphward update . --yes
+
+# Refresh context and inspect health.
+graphward aidlc prepare-task . --force --yes
+graphward doctor . --json --yes
+graphward providers status . --json --yes
+graphward health . --strict --json --yes
+```
+
+`update . --yes` reuses manifest-selected adapters; interactive update can ask for selection again. Unchanged managed files are replaced; edited files/obsolete edited content remain conflicts. Host JSON merging preserves unrelated settings and explicit disabled state in tested layouts. Resolve conflicts deliberately; avoid routine `--force` overwrites.
+
+Current dry-run previews file actions, not complete malformed-config validation. Review changed native hooks, global/project skill collisions and entry discovery after migration. Legacy requirements remain history, not new-task approval. Representative fixture tests do not qualify every historical package or your other projects.
+
+## Everyday commands
+
+Use an identified runtime in the intended project. `--yes` suppresses current CLI prompts; it does not approve task scope or grant hook trust.
+
+| Command | Purpose |
+|---|---|
+| `graphward --help` / `--help --all` | Core/advanced reference. |
+| `graphward doctor . --json --yes` | Installation/configuration inspection. |
+| `graphward providers status . --json --yes` | Binary versus project-run health. |
+| `graphward freshness . --json --yes` | Artifact freshness. |
+| `graphward health . --strict --json --yes` | Intelligence health. |
+| `graphward verify . --json --yes` | Execute project checks and record verification. |
+| `graphward claims verify . --strict --json --yes` | Claim validation. |
+| `graphward evidence-check . --strict --json --yes` | Citation/source hashes. |
+| `graphward sync . --files src/invoice.ts,test/invoice.test.ts --json --yes` | Refresh affected evidence; prose may need agent synchronization. |
+| `graphward visualize . --open --yes` | Existing architecture visualization. |
+| `graphward prune . --ttl-days 30 --yes` | Expired constraints/attempt records. |
+
+Agent entries include `initialize-graphward`, `graphward`, `scope-requirement`, `analyze-impact`, `map-architecture`, `sync-graphward`, `review-engineering-change` and `handoff`. Use the host's actual invocation mechanism. `decompose-backlog` plans Epic → Feature → Ticket work; `deliver-backlog` implements approved features. Planning alone does not authorize edits.
+
+## Verification and limits
+
+Configure real checks in `.graphward/gw.config.json`:
+
+```json
+{
+  "hooks": {
+    "verifyCommands": ["npm test", "npm run lint"]
+  }
+}
+```
+
+Use commands that exist in your project. Supported package scripts can also be detected. **Zero executed checks cannot establish a pass.** Baseline/preflight do not generate product code/tests to manufacture success.
+
+Verification preserves original exit status, reports failures/timeouts and binds evidence to checked bytes. Later edits invalidate it. Run meaningful application checks, not just intelligence checks.
+
+Failed validation does not guarantee automatic rollback. Repair or report the failure while preserving unrelated local edits. File restoration cannot undo external effects of scripts, tests or agent tools. Local checks, native canaries, measured accuracy and release qualification are distinct evidence.
+
+## Files, privacy and execution
+
+| Area | Actual behavior |
+|---|---|
+| Reads | Approved project source/config and Git evidence. File policy excludes known sensitive/generated/vendor/cache paths and escapes; arbitrary secrets embedded in source are not guaranteed excluded. |
+| Writes | `.graphward/`, managed host files/settings and instructions such as `AGENTS.md`/`CLAUDE.md`. |
+| Processes | Providers, Git analysis and configured checks; installation invokes package tooling. |
+| Network | Package/provider/model downloads may use the network. Coding hosts and project checks can contact services. |
+| Data | Core artifacts stay local; model-provider disclosure follows the coding host's configuration/permissions. |
+
+Local tooling does not guarantee no data leaves the machine. Checks are not container-isolated. Not every artifact writer scans for secrets.
+
+Default `.graphward/.gitignore` excludes several content-derived areas, including knowledge, graphs, claims, context, reports, provider caches and user memory. It does not make all lifecycle/change records private. Inspect actual Git ignore/tracking state before sharing. Current `--share` is not wired through CLI paths as a validated redacted export; do not rely on it for safe publication.
+
+| Path under `.graphward/` | Contents |
+|---|---|
+| `gw.config.json`, `install-manifest.json` | Configuration and managed integration identity. |
+| `knowledge-base/`, `context/`, `memory/` | Facts, navigation and decisions. |
+| `graph/`, `claims/` | Architecture evidence and claims. |
+| `providers/` | Provider/preparation state and host profiles. |
+| `aidlc/`, including `aidlc/tasks/` | Lifecycle, backlog and task receipts. |
+| `reports/`, `flight/`, `changes/`, `events/` | Impact, execution, validation and continuity. |
+
+Artifacts are inspectable files; some provider/runtime storage is binary. Deleting state can require reinitialization, indexing and fresh confirmation.
+
+## Language coverage
+
+Dependency extraction supports TypeScript/JavaScript, Python, Go, Rust, Ruby, Java and Kotlin to varying depths. Compiler-backed TypeScript/JavaScript paths resolve aliases and semantic calls when configuration is available; lexical extraction and optional tree-sitter parsers provide other coverage.
+
+Dynamic calls/imports, unsupported languages, incomplete configuration and unresolved relationships remain gaps. Missing edges do not prove a module is unaffected. Confidence is estimated, not empirically calibrated coding accuracy.
+
+## Troubleshooting
+
+| Symptom | Next action |
+|---|---|
+| `gw: Permission denied` | Identify the executable/symlink target and package. Source builds can run via `node /absolute/path/to/graphward/dist/cli/index.js --help`. Rebuild/reinstall that package; do not change unknown targets. Old copies do not automatically receive the launcher repair. |
+| macOS lacks `timeout` | GNU `timeout` is unnecessary for normal commands; runtime checks/provider processes have internal timeouts. |
+| Agent skips feature questions | Invoke the entry explicitly; inspect adapter discovery, old/global skill collisions, task binding and hook trust. |
+| Providers installed but unused | Inspect binary/project-run health, prepare context and review accepted spans/nodes, rejections and fallback. |
+| Agent reads files directly | Expected after context retrieval; inspect whether searches follow callers/contracts/tests or coverage gaps. |
+| MCP points at another project | Inspect canonical project root/runtime registration. Another project's indexes are invalid task evidence. |
+| Update conflicts | Preserve custom content, review diffs and account for preservation blockers; avoid routine force overwrite. |
+| No verification commands | Configure meaningful `hooks.verifyCommands`; do not generate tests merely to pass baseline. |
+| Setup exits but integration is incomplete | Inspect providers and six native support stages; best-effort completion is not readiness proof. |
+
+## Planned CLI upgrade
+
+**Not implemented:** `gw` without arguments currently prints help. The scoped next interface provides:
+
+- Guided home for the **current project**, with one obvious next action.
+- Setup wizard confirming agents and recommending CCE plus Graphify.
+- Download/prerequisite and file-change review before applying.
+- Update previews/diffs, customization preservation, conflicts and guarded recovery.
+- Actionable diagnostics and targeted repair.
+- Separate runtime, integration, context and activation status.
+- Real progress/cancellation; advanced logs/details on demand.
+- Shared wizard/headless operation logic with clean JSON and no-input/plain modes.
+
+First fix preservation defects, then deliver the operation/status layer, interface and exact-package terminal/host qualification. Existing commands remain available. Proposed `--no-input`/`--plain` flags are **not current supported flags**.
+
+The simulated concept passed 21 screen/state checks, including offline setup, invalid configuration, conflicts, cancellation and narrow layouts. That is concept validation, not real terminal execution.
+
+## Development and qualification
+
+```bash
+npm ci
+npm run build
+npm test
+npm run test:integration
+```
+
+Recorded reliability evidence from **October 11, 2026**:
+
+- 488 tests passed in final local byte-bound verification.
+- Real MCP SDK initialization/discovery and read-only calls were tested.
+- A Claude Code exact-candidate canary asked feature questions, accepted provider contribution and denied an unapproved mutation.
+- Five exact Codex checkout hooks were reviewed and reported trusted/enabled.
+
+Evidence applies to its recorded candidate/scenarios, not future packages or every host path. Current-candidate Codex/Antigravity qualification, wider platform evidence and held-out measurements remain open. The subsequent preservation defects were not covered by the passing suite.
+
+Agent accuracy/performance remain unqualified until measured held-out runs are available:
+
+```bash
+# Disposable, isolated deterministic checks; no models.
+npm run test:benchmark -- --dry-run
+
+# Evaluate measured paired runs with matching identities.
+node scripts/evaluate-agent-runs.mjs --results measured-runs.json
+```
+
+Evaluation separates missed required changes, unnecessary additions, clarification errors, context gaps, regressions, cost and latency. Missing evidence blocks qualification; simulations are not measured successes.
+
+Schemas: [schemas/](schemas/). Further background: [WORKFLOW_GUIDE.md](WORKFLOW_GUIDE.md), [graphward-blueprint.md](graphward-blueprint.md). Use this README's current-candidate status/contracts when assessing behavior and qualification.

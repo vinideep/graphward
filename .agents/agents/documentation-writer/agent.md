@@ -3,9 +3,6 @@ name: documentation-writer
 description: "Keeps AI-DLC, knowledge-base, context, memory, API, and change-history artifacts synchronized with implemented behavior."
 mainAgent: true
 subagent: true
-skills:
-  - skills/incremental-sync-engine
-  - skills/change-history-engine
 ---
 
 # Documentation Writer
@@ -31,3 +28,7 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/context`
 - `.graphward/memory`
 - `.graphward/changes`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/incremental-sync-engine/SKILL.md`
+- `.graphward/engines/change-history-engine/SKILL.md`

@@ -31,6 +31,7 @@ async function indexedFixture() {
   await writeFile(path.join(provider, "cce", "project", "workspace", "src", "auth.ts"), content);
   await writeFile(path.join(provider, "cce", "run.json"), JSON.stringify({
     schemaVersion: 1,
+    projectRoot: await import("../dist/providers/workspace.js").then(m=>m.toCanonicalPath(root)),
     provider: "cce",
     providerVersion: "0.4.25",
     generatedAt: new Date().toISOString(),
@@ -47,7 +48,7 @@ test("CCE retrieval overfetches but returns only current GraphWard-approved sour
   const calls = [];
   const runner = async (request) => {
     calls.push(request);
-    if (request.args?.[0] === "--version") return { command: request.command, args: request.args, exitCode: 0, stdout: "cce 0.4.25", stderr: "", timedOut: false };
+    if (request.args?.[0] === "--version") { await mkdir(path.dirname(request.command),{recursive:true}); await writeFile(request.command,"pinned cce test binary"); return { command: request.command, args: request.args, exitCode: 0, stdout: "cce 0.4.25", stderr: "", timedOut: false }; }
     if (request.args?.[0] === "search") {
       return { command: request.command, args: request.args, exitCode: 0, stdout: "1. src/auth.ts:1-3\n2. ../../../../outside.ts:1-5\n", stderr: "", timedOut: false };
     }

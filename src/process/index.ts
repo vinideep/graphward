@@ -10,6 +10,7 @@ export interface ProcessRequest {
   shell?: boolean | string;
   windowsVerbatimArguments?: boolean;
   onChunk?: (chunk: string, source: "stdout" | "stderr") => void;
+  signal?: AbortSignal;
 }
 
 export interface ProcessResult {
@@ -31,6 +32,9 @@ export const runProcess: ProcessRunner = (request) => {
     let stderr = "";
     let timedOut = false;
     let timer: NodeJS.Timeout | undefined;
+    let killTimer: NodeJS.Timeout | undefined;
+    let settled = false;
+    let cancelled = false;
     const maxBuffer = request.maxBuffer ?? 10 * 1024 * 1024;
 
     let child;
@@ -59,11 +63,14 @@ export const runProcess: ProcessRunner = (request) => {
       timer = setTimeout(() => {
         timedOut = true;
         child.kill("SIGTERM");
-        setTimeout(() => {
-          if (!child.killed) child.kill("SIGKILL");
+        killTimer = setTimeout(() => {
+          if (!settled) child.kill("SIGKILL");
         }, 3000);
       }, request.timeoutMs);
     }
+    const abort = () => { cancelled = true; child.kill("SIGTERM"); killTimer = setTimeout(() => { if (!settled) child.kill("SIGKILL"); }, 3000); };
+    request.signal?.addEventListener("abort", abort, { once: true });
+    if (request.signal?.aborted) abort();
 
     child.stdout.setEncoding("utf8");
     child.stdout.on("data", (chunk: string) => {
@@ -82,7 +89,10 @@ export const runProcess: ProcessRunner = (request) => {
     });
 
     child.on("error", (error) => {
+      settled = true;
+      request.signal?.removeEventListener("abort", abort);
       if (timer) clearTimeout(timer);
+      if (killTimer) clearTimeout(killTimer);
       resolve({
         command: request.command,
         args,
@@ -95,11 +105,14 @@ export const runProcess: ProcessRunner = (request) => {
     });
 
     child.on("close", (code) => {
+      settled = true;
+      request.signal?.removeEventListener("abort", abort);
       if (timer) clearTimeout(timer);
+      if (killTimer) clearTimeout(killTimer);
       resolve({
         command: request.command,
         args,
-        exitCode: timedOut ? 124 : (code ?? 0),
+        exitCode: cancelled ? 130 : timedOut ? 124 : (code ?? 1),
         stdout,
         stderr,
         timedOut,

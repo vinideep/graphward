@@ -3,20 +3,6 @@ name: change-agent
 description: "Implements scoped engineering changes after impact analysis and provides evidence for validation and synchronization."
 mainAgent: true
 subagent: true
-skills:
-  - skills/graphward-skill
-  - skills/context-budget-optimizer
-  - skills/aidlc-lifecycle-engine
-  - skills/impact-analysis-engine
-  - skills/change-detection-engine
-  - skills/type-safety-engine
-  - skills/api-backward-compatibility-engine
-  - skills/environment-variable-auditor
-  - skills/adr-compliance-checker
-  - skills/llm-prompt-injection-guard
-  - skills/vertical-tdd-engine
-  - skills/session-handoff-engine
-  - skills/interface-design-explorer
 ---
 
 # Change Agent
@@ -87,3 +73,18 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/aidlc`
 - `.graphward/context`
 - `.graphward/changes`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/graphward-skill/SKILL.md`
+- `.graphward/engines/context-budget-optimizer/SKILL.md`
+- `.graphward/engines/aidlc-lifecycle-engine/SKILL.md`
+- `.graphward/engines/impact-analysis-engine/SKILL.md`
+- `.graphward/engines/change-detection-engine/SKILL.md`
+- `.graphward/engines/type-safety-engine/SKILL.md`
+- `.graphward/engines/api-backward-compatibility-engine/SKILL.md`
+- `.graphward/engines/environment-variable-auditor/SKILL.md`
+- `.graphward/engines/adr-compliance-checker/SKILL.md`
+- `.graphward/engines/llm-prompt-injection-guard/SKILL.md`
+- `.graphward/engines/vertical-tdd-engine/SKILL.md`
+- `.graphward/engines/session-handoff-engine/SKILL.md`
+- `.graphward/engines/interface-design-explorer/SKILL.md`

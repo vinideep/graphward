@@ -3,10 +3,6 @@ name: database-administrator
 description: "Designs schemas, migrations, indexes, retention, and data compatibility for AI-DLC units."
 mainAgent: true
 subagent: true
-skills:
-  - skills/nfr-adr-governor
-  - skills/impact-analysis-engine
-  - skills/database-migration-safety-engine
 ---
 
 # Database Administrator
@@ -32,3 +28,8 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`
 - `.graphward/aidlc`
 - `.graphward/graph`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/nfr-adr-governor/SKILL.md`
+- `.graphward/engines/impact-analysis-engine/SKILL.md`
+- `.graphward/engines/database-migration-safety-engine/SKILL.md`

@@ -1,79 +1,19 @@
 ---
 name: socratic-clarification-gate
-description: Mandatory pre-flight alignment gate that assesses prompt clarity, identifies underspecified architectural constraints, poses concrete multiple-choice trade-offs, and freezes verified requirements into AI-DLC state before code modification.
+description: Discover repository facts, resolve material requirement decisions, and confirm task scope before feature implementation; use proportional clarification for fixes.
 ---
 
 # Socratic Clarification Gate
 
-Never begin writing code or generating impact reports while requirements, non-functional constraints, or architectural trade-offs remain unverified.
+Use Discover → clarify → confirm scope → prepare implementation context → implement → validate.
 
-## Execution Rules
+1. Read relevant persisted intelligence and call `get_engineering_context`. Retrieval is read-only. If stale, explicitly call `prepare_task_context`; it performs one bounded local refresh without installing dependencies. A required-provider failure blocks implementation. Disclose reduced coverage and obtain a task-scoped decision before relying on fallback.
+2. Discover existing users, contracts, configuration, callers, tests, conventions, and relevant decisions before asking about repository facts. Missing graph edges permit justified search expansion; retrieval scope does not grant edit permission.
+3. Call `assess_prompt_clarity` as a diagnostic. Its result is `{mustClarify,promptAssessment:{clarityScore,isClear,questions,ambiguities},graphAssessment}`. A score cannot authorize edits. Every feature needs a requirements discussion and confirmed scope; precise fixes ask only about unresolved behavior, contradictions, or material risks. Reuse prior answers and already approved scope.
+4. Establish intended users, behavior, non-goals, acceptance criteria, compatibility, and relevant failure cases. Use the active host's real question tool: Claude `AskUserQuestion`, Antigravity `ask_question`, Codex's available user-input tool, or ordinary parent chat. Subagents return unresolved questions to the parent. Never synthesize a human answer through tool input.
+5. Call `propose_task_contract` with the full contract and native `host`/`sessionId`. Retain complete question text, options, and answer, not an option letter alone. Show the proposed scope and the exact returned confirmation challenge. Native prompt hooks bind the user's response to this project, task, and revision. Unsupported hosts require explicit conversational/operator evidence and must not claim certified native confirmation. Assistant assertions of approval are insufficient.
+6. Call `get_task_readiness` with `stage:"requirements"` and `taskId`; resolve its `blockers`. Empty or old requirements documents do not satisfy readiness. If requirements change, propose a new revision and confirm it. Ordinary source edits do not revoke the user's approved intent.
+7. Call `prepare_task_context` with `taskId` to prepare and retrieve current implementation context. Inspect actual provider contribution and unknowns. If degraded, surface the exact reduced-context challenge. Native policy invokes no providers.
+8. Call `get_task_readiness` for implementation before preflight or edits. Lifecycle transitions, preflight, edit hooks and validation use this same service. `check_aidlc_gate` returns `missingPrerequisites` and `blockingQuestions`; inspect both.
 
-1. **Assess Clarity First**: Call `assess_prompt_clarity` on the user prompt before exploring or editing files.
-
-2. **Happy Path (Clear Prompt)**:
-   - If clarity score is **≥ 75** and no blocking architectural ambiguities are detected: proceed directly to the next pipeline step (impact analysis or implementation).
-   - No questions needed. Log `[CLARITY: passed, score=<N>]` in the impact report.
-
-3. **Halt on Ambiguity**:
-   - If clarity score is **below 75** or blocking architectural ambiguities are detected (e.g. unspecified auth strategy, payment processor, caching tier, or schema evolution strategy): **STOP execution**.
-   - Do NOT guess or assume the user's intent.
-
-4. **Present Concrete Trade-offs**:
-   - Present 2–4 targeted multiple-choice options highlighting trade-offs (e.g. Option A: JWT vs Option B: Server-side cookies).
-   - If 1–2 ambiguities exist: pose them inline in the response.
-   - If 3+ ambiguities exist: use `question-file-engine` to prompt all questions interactively in the IDE chat via the `ask_question` tool (which renders an interactive modal with selectable options). Do NOT write question files to disk.
-
-5. **Freeze Requirements in AI-DLC**:
-   - When the user answers with an option letter (A/B/C/D), map it to `selectedOptionId`.
-   - When the user answers with free-form text instead of a letter, populate the `customText` field.
-   - Call `freeze_clarified_requirements` with:
-     ```
-     {
-       topic: "<feature or initiative topic>",
-       decisions: [
-         { questionId: "Q1", selectedOptionId: "A" },
-         { questionId: "Q2", selectedOptionId: "B", customText: "user's elaboration" }
-       ]
-     }
-     ```
-     This writes decisions to `.graphward/aidlc/inception/requirements.md`.
-   - Call `update_aidlc_state` with `phase: "inception"`, `stage: "requirements-frozen"` to record the transition.
-   - Mark resolved items in `open-questions.md` as `status: resolved` (do not delete them).
-
-6. **Phase Gate Enforcement**:
-   - Call `check_aidlc_gate` with `phase: "inception"` before transitioning into Construction.
-   - If the gate returns `status: "blocked"`, read the `blockers` array, resolve each blocker, and re-run the gate. Construction is strictly blocked while unresolved blocking questions remain.
-
-## Configuration
-
-The clarity threshold is configurable via `.graphward/gw.config.json`:
-
-```json
-{
-  "clarityThreshold": 75
-}
-```
-
-| Value | Effect |
-|-------|--------|
-| `0` | Disables the gate entirely — all prompts pass |
-| `1-74` | Relaxed gate — only extremely vague prompts are stopped |
-| `75` (default) | Standard gate — prompts with unspecified architectural constraints are questioned |
-| `76-100` | Strict gate — more prompts trigger clarification questions |
-
-Power users who write precise, well-scoped prompts can lower the threshold to reduce friction.
-
-## Tools
-
-- `assess_prompt_clarity`: Assess prompt ambiguity, missing NFRs, and architectural trade-offs. Returns `{ isClear, score, ambiguities, options }`.
-- `freeze_clarified_requirements`: Lock user decisions into `inception/requirements.md`. Args: `topic` (string), `decisions` (array of `{ questionId, selectedOptionId, customText? }`).
-- `check_aidlc_gate`: Validate phase exit criteria. Args: `phase` (enum: `discovery`, `inception`, `construction`, `operations`).
-- `update_aidlc_state`: Transition lifecycle state. Args: `phase?`, `stage?`, `activeWorkflow?`, `activeHat?`, `activeUnit?`, `breadcrumb?`.
-
-## Cross-References
-
-- Depends on: `question-file-engine` (for 3+ ambiguities, prompts interactively via `ask_question`)
-- Deeper analysis: `socratic-stress-tester` (for high-risk architectural stress-testing after clarity is established)
-- Used by: `graphward` (Step 3), `graphward-skill` (Step 2), `engineering-orchestrator` (Pre-flight)
-- Related: `aidlc-lifecycle-engine` (phase model and gate definitions)
+Task decisions live independently under `.graphward/aidlc/tasks/`. Preserve human evidence and assurance honestly; hooks are guardrails with host-specific coverage limits. A declaration or generated file does not establish discovery, connectivity or enforcement.

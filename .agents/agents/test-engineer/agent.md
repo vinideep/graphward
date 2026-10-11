@@ -3,13 +3,6 @@ name: test-engineer
 description: "Designs and executes unit, integration, contract, regression, performance, and negative-path tests for AI-DLC changes."
 mainAgent: true
 subagent: true
-skills:
-  - skills/testing-intelligence-engine
-  - skills/environmental-backpressure-engine
-  - skills/type-safety-engine
-  - skills/api-backward-compatibility-engine
-  - skills/contract-test-generator
-  - skills/vertical-tdd-engine
 ---
 
 # Test Engineer
@@ -34,3 +27,11 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`
 - `.graphward/aidlc`
 - `.graphward/context`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/testing-intelligence-engine/SKILL.md`
+- `.graphward/engines/environmental-backpressure-engine/SKILL.md`
+- `.graphward/engines/type-safety-engine/SKILL.md`
+- `.graphward/engines/api-backward-compatibility-engine/SKILL.md`
+- `.graphward/engines/contract-test-generator/SKILL.md`
+- `.graphward/engines/vertical-tdd-engine/SKILL.md`

@@ -154,3 +154,16 @@ test("getEngineeringContext wires hasUnknownCallers and runtimeInvocations trigg
   assert.equal(packRuntimeRefuse.evidencePolicy.action, "REFUSE");
   assert.equal(packRuntimeRefuse.evidencePolicy.blocked, true);
 });
+
+
+test("default root retrieval resolves missing graph seeds and includes discovered callers within budget", async () => {
+  const root = await fixture();
+  await write(root, ".graphward/gw.config.json", JSON.stringify({providers:{policy:"native"}}));
+  await write(root, "src/pay.ts", "// quokka request behavior\nexport function charge(amount: number) { return amount > 0; }\n");
+  await buildGraph(root);
+  const pack = await getEngineeringContext(root, {task:"investigate quokka", budget:2500});
+  assert.ok([...pack.code.primary,...pack.code.secondary].some(chunk=>chunk.path==="src/pay.ts"));
+  assert.ok(pack.architecture.nodes.some(node=>node.path==="src/pay.ts"));
+  assert.ok(pack.architecture.nodes.some(node=>node.path==="src/checkout.ts"));
+  assert.ok(pack.tokenAllocation.used<=pack.tokenAllocation.budget);
+});

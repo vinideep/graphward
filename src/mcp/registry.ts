@@ -2,10 +2,13 @@ export type PropertySchema = {
   type: "string" | "number" | "boolean" | "array" | "object";
   description?: string;
   enum?: string[];
-  items?: { type: "string" };
-  properties?: Record<string, unknown>;
+  items?: PropertySchema;
+  properties?: Record<string, PropertySchema>;
   required?: string[];
   minimum?: number;
+  additionalProperties?: boolean;
+  minLength?: number;
+  minItems?: number;
 };
 
 export type JsonSchema = {
@@ -19,20 +22,24 @@ export interface RegisteredTool<TArgs extends Record<string, unknown> = Record<s
   name: string;
   description: string;
   inputSchema: JsonSchema;
-  handler: (args: TArgs) => Promise<unknown>;
+  handler: (args: TArgs, context?: { signal?: AbortSignal }) => Promise<unknown>;
 }
 
 function validateValue(name: string, value: unknown, schema: PropertySchema): void {
   if (schema.type === "object") {
     if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error(`${name} must be an object.`);
+    validateArguments({ type: "object", properties: schema.properties, required: schema.required, additionalProperties: schema.additionalProperties }, value);
     return;
   }
   if (schema.type === "array") {
     if (!Array.isArray(value)) throw new Error(`${name} must be an array.`);
-    if (schema.items?.type === "string" && !value.every((item) => typeof item === "string")) throw new Error(`${name} must contain only strings.`);
+    if (schema.minItems !== undefined && value.length < schema.minItems) throw new Error(`${name} must have at least ${schema.minItems} items.`);
+    if (schema.items) value.forEach((item, index) => validateValue(`${name}[${index}]`, item, schema.items!));
     return;
   }
   if (typeof value !== schema.type) throw new Error(`${name} must be a ${schema.type}.`);
+  if (schema.type === "number" && !Number.isFinite(value)) throw new Error(`${name} must be finite.`);
+  if (schema.type === "string" && schema.minLength !== undefined && (value as string).trim().length < schema.minLength) throw new Error(`${name} is empty.`);
   if (schema.type === "number" && schema.minimum !== undefined && (value as number) < schema.minimum) throw new Error(`${name} must be at least ${schema.minimum}.`);
   if (schema.enum && !schema.enum.includes(value as string)) throw new Error(`${name} must be one of: ${schema.enum.join(", ")}.`);
 }
@@ -68,10 +75,10 @@ export class McpToolRegistry {
     return [...this.tools.values()].map(({ name, description, inputSchema }) => ({ name, description, inputSchema }));
   }
 
-  async execute(name: string, input: unknown): Promise<unknown> {
+  async execute(name: string, input: unknown, context?: { signal?: AbortSignal }): Promise<unknown> {
     const tool = this.tools.get(name);
     if (!tool) throw new Error(`Unknown tool: ${name}`);
     const args = validateArguments(tool.inputSchema, input);
-    return tool.handler(args);
+    return tool.handler(args, context);
   }
 }

@@ -6,6 +6,7 @@ import { latestOpenFlight } from "../flight/index.js";
 import { loadOpenQuestions } from "./state.js";
 import { validateAllBacklogTickets } from "./backlog-graph.js";
 import type { Phase, GateCheckResult } from "./types.js";
+import { checkTaskReadiness } from "./task-contract.js";
 
 function aidlcDir(root: string): string {
   return path.join(root, ".graphward", "aidlc");
@@ -14,7 +15,7 @@ function aidlcDir(root: string): string {
 async function getBlockingOpenQuestions(root: string): Promise<string[]> {
   const items = await loadOpenQuestions(root);
   return items
-    .filter((q) => q.status !== "resolved" && q.priority === "blocking")
+    .filter((q) => q.status !== "resolved" && ["blocking", "p0"].includes(q.priority ?? ""))
     .map((q) => q.question);
 }
 
@@ -50,9 +51,11 @@ export async function checkDiscoveryExit(root: string): Promise<GateCheckResult>
   };
 }
 
-export async function checkInceptionExit(root: string): Promise<GateCheckResult> {
+export async function checkInceptionExit(root: string, taskId?: string): Promise<GateCheckResult> {
   const missing: string[] = [];
   const recs: string[] = [];
+  const readiness = await checkTaskReadiness(root, { taskId, stage: "requirements" });
+  if (!readiness.ready) missing.push(...readiness.blockers);
 
   const reqFile = path.join(aidlcDir(root), "inception", "requirements.md");
   const backlogFile = path.join(aidlcDir(root), "agile", "product-backlog.md");
@@ -150,12 +153,12 @@ export async function checkOperationsExit(root: string): Promise<GateCheckResult
   };
 }
 
-export async function checkPhaseGate(root: string, phase: Phase): Promise<GateCheckResult> {
+export async function checkPhaseGate(root: string, phase: Phase, taskId?: string): Promise<GateCheckResult> {
   switch (phase) {
     case "discovery":
       return checkDiscoveryExit(root);
     case "inception":
-      return checkInceptionExit(root);
+      return checkInceptionExit(root, taskId);
     case "construction":
       return checkConstructionExit(root);
     case "operations":

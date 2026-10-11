@@ -44,7 +44,7 @@ test("the user's own hooks survive the merge", () => {
   const merged = parseJsonOrEmpty(mergeHookConfig(theirs, OURS));
   const commands = merged.hooks.SessionStart.map((e) => e.hooks[0].command);
   assert.ok(commands.includes("echo mine"), "user hook must not be replaced");
-  assert.ok(commands.some((c) => c.includes("gw hook")), "ours is added");
+  assert.ok(commands.some((c) => c.includes("hook session-start")), "ours is added");
   assert.equal(merged.hooks.SessionStart.length, 2);
 });
 
@@ -57,9 +57,7 @@ test("merging is idempotent — re-installing never duplicates our entries", () 
 });
 
 test("unparseable user config is never destroyed by a bad parse", () => {
-  // Garbage in means we start from empty and write our keys; we must not throw.
-  const merged = mergeHookConfig("{ not json", OURS);
-  assert.ok(parseJsonOrEmpty(merged).hooks, "still produces a valid config");
+  assert.throws(() => mergeHookConfig("{ not json", OURS), /JSON/);
 });
 
 test("hasOurEntries detects present, missing, and partially-removed wiring", () => {
@@ -97,4 +95,9 @@ test("MCP registration merges beside other servers and is removed cleanly", () =
   const remaining = parseJsonOrEmpty(removeOurEntries(JSON.stringify(merged)));
   assert.ok(remaining.mcpServers["other-tool"], "the user's server survives uninstall");
   assert.ok(!remaining.mcpServers["graphward"], "ours is gone");
+});
+
+test('MCP argument arrays remain idempotent and user registration conflicts are preserved',()=>{
+ const incoming=mcpServerRegistration();const once=mergeHookConfig('{}',incoming);assert.equal(mergeHookConfig(once,incoming),once);
+ assert.throws(()=>mergeHookConfig(JSON.stringify({mcpServers:{graphward:{command:'my-custom-server',args:['--custom']}}}),incoming),/preserved/);
 });

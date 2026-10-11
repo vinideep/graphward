@@ -83,89 +83,28 @@ const ARCHITECTURAL_PATTERNS = [
   },
 ];
 
-export function assessPromptClarity(
-  prompt: string,
-  config?: { clarityThreshold?: number }
-): ClarityAssessment {
+export function assessPromptClarity(prompt: string, config?: { clarityThreshold?: number; knownDecisions?: Record<string, string> }): ClarityAssessment {
   const trimmed = prompt.trim();
   const ambiguities: AmbiguityItem[] = [];
   const questions: ClarificationQuestion[] = [];
-
-  let score = 100;
-
-  // 1. Penalty for excessively short / vague prompts
-  if (trimmed.length < 25) {
-    score -= 40;
-    ambiguities.push({
-      category: "scope",
-      description: `Prompt is very brief (${trimmed.length} characters) without declared boundaries.`,
-      whyItMatters: "Lacks sufficient detail to determine impacted files, contracts, or non-functional constraints.",
-    });
-  } else if (trimmed.length < 50) {
-    score -= 20;
-  }
-
-  // 2. Scan for architectural keywords with unspecified parameters
-  for (const pattern of ARCHITECTURAL_PATTERNS) {
-    if (pattern.regex.test(trimmed)) {
-      // Check if prompt already gave specific clarification (e.g. explicitly mentions "JWT", "session", "Stripe", etc.)
-      const hasSpecificDetails = pattern.options.some((opt) => {
-        const keyPhrase = opt.text.toLowerCase().slice(0, 15);
-        return trimmed.toLowerCase().includes(keyPhrase);
-      });
-
-      if (!hasSpecificDetails) {
-        score -= 25;
-        ambiguities.push({
-          category: pattern.category,
-          description: pattern.description,
-          whyItMatters: pattern.whyItMatters,
-        });
-
-        questions.push({
-          id: `Q${questions.length + 1}`,
-          question: pattern.question,
-          context: pattern.whyItMatters,
-          options: pattern.options,
-        });
-      }
-    }
-  }
-
-  // Fallback question if prompt is vague (< 25 chars) and no domain question matched
-  if (questions.length === 0 && trimmed.length < 25) {
-    questions.push({
-      id: "Q1",
-      question: "What is the primary architectural layer and scope for this change?",
-      context: "The prompt lacks a declared target component or subsystem.",
-      options: [
-        { id: "A", text: "Backend service logic and data layer", tradeoff: "Focuses on API and data correctness" },
-        { id: "B", text: "Frontend / CLI client interface", tradeoff: "Focuses on developer experience and inputs" },
-        { id: "C", text: "Full vertical-slice implementation (end-to-end)", tradeoff: "Comprehensive, touches multiple system layers" },
-      ],
+  const feature = /\b(add|create|build|implement|introduce|new feature|enable)\b/i.test(trimmed) && !/\b(fix|repair|typo|regression)\b/i.test(trimmed);
+  const preciseFix = /\b(fix|update|change|replace|remove|rename|correct)\b/i.test(trimmed) && /(?:[\w/-]+\.(?:tsx?|jsx?|py|go|rs|json|md|ya?ml)|\bJWT\b|\bfrom\s+.+\s+to\b)/i.test(trimmed);
+  const specified = [ /\b(jwt|bearer|oauth|oidc|http.only|sessions?)\b/i, /\b(stripe|paymentintents?|mock|simulated|paypal)\b/i, /\b(redis|lru|etag|cache.control|ttl|in.memory)\b/i, /\b(additive|backward.compatib|zero.downtime|postgres|mysql|sqlite|jsonb)\b/i, /\b(rest|graphql|rpc|openapi|existing|\/v\d+)\b/i ];
+  if (!preciseFix) {
+    ARCHITECTURAL_PATTERNS.forEach((pattern, index) => {
+      if (!pattern.regex.test(trimmed) || specified[index].test(trimmed) || config?.knownDecisions?.[pattern.category]) return;
+      ambiguities.push({ category: pattern.category, description: pattern.description, whyItMatters: pattern.whyItMatters });
+      questions.push({ id: `domain-${index}`, question: pattern.question, context: 'Inspect existing repository conventions first; ask only if this decision remains unresolved.', options: pattern.options });
     });
   }
-
-  // 3. Check if any file path or function is referenced
-  const hasFileOrSymbolReference = /\.(ts|js|py|go|rs|json|md)\b|[A-Z][a-zA-Z0-9]+Service|[a-zA-Z0-9]+Handler/i.test(trimmed);
-  if (!hasFileOrSymbolReference && score < 80) {
-    score -= 10;
-    ambiguities.push({
-      category: "scope",
-      description: "No specific files, modules, or symbol targets were mentioned.",
-      whyItMatters: "Agent must infer target blast radius using heuristics rather than declared scope.",
-    });
+  if (feature) {
+    ambiguities.push({ category: 'scope', description: 'New feature scope needs a requirements discussion and user confirmation.', whyItMatters: 'Prompt length and keyword matches cannot authorize implementation.' });
+    questions.push({ id: 'feature-scope', question: 'Confirm the intended users, behavior, non-goals, acceptance criteria and relevant failure cases for this feature.', context: 'Discover repository facts first. Reuse prior answers and already approved scope; ask only about unresolved decisions.', options: [{ id: 'confirm', text: 'Confirm the proposed scope' }, { id: 'revise', text: 'Revise the scope before implementation' }] });
+  } else if (!preciseFix && !questions.length) {
+    ambiguities.push({ category: 'scope', description: 'The desired behavior or affected component remains unresolved.', whyItMatters: 'Find the concrete failure and expected outcome before editing.' });
+    questions.push({ id: 'fix-scope', question: 'What behavior is incorrect, and what should happen instead?', context: 'Use a reproduction and repository evidence to narrow the change.', options: [{ id: 'reproduce', text: 'Use the supplied reproduction' }, { id: 'describe', text: 'Describe the expected behavior' }] });
   }
-
-  const finalScore = Math.max(0, Math.min(100, score));
-
-  return {
-    clarityScore: finalScore,
-    isClear: finalScore >= (config?.clarityThreshold ?? 75) && ambiguities.length === 0,
-    prompt: trimmed,
-    ambiguities,
-    questions,
-  };
+  return { clarityScore: Math.max(0, 100 - ambiguities.length * 25), isClear: !ambiguities.length, prompt: trimmed, ambiguities, questions };
 }
 
 import { loadRequirements, saveRequirements } from "./state.js";
@@ -175,6 +114,10 @@ export async function freezeRequirements(
   topic: string,
   decisions: UserDecision[],
 ): Promise<string> {
+  if (!topic.trim() || !decisions.length) throw new Error('Empty requirements cannot be frozen.');
+  for (const decision of decisions) {
+    if (!decision.question?.trim() || !decision.options?.length || !decision.options.some(option => option.id === decision.selectedOptionId)) throw new Error('Full question and matching options are required; an option letter is not a requirement.');
+  }
   const reqs = await loadRequirements(root);
   const timestamp = new Date().toISOString();
 
@@ -183,7 +126,7 @@ export async function freezeRequirements(
       id: `req-${Date.now().toString(36)}-${Math.floor(Math.random() * 1e4).toString(36)}`,
       topic,
       questionId: d.questionId,
-      decision: `Option ${d.selectedOptionId}`,
+      decision: `${d.question}: ${d.options?.find(option => option.id === d.selectedOptionId)?.text}`,
       rationale: d.customText || "Standard trade-off accepted",
       confirmedAt: d.confirmedAt || timestamp,
     });
@@ -206,11 +149,11 @@ export function assessGraphClarity(
   // 1. Count downstream consumers
   for (const file of changedFiles) {
     const nodes = graph.nodes.filter(n => n.path === file || n.id === file);
-    let totalConsumers = 0;
+    const consumers = new Set<string>();
     for (const node of nodes) {
-      const consumers = graph.edges.filter(e => e.to === node.id);
-      totalConsumers += consumers.length;
+      for (const edge of graph.edges.filter(e => e.to === node.id)) { const source = graph.nodes.find(item => item.id === edge.from); consumers.add(source?.path ?? edge.from); }
     }
+    const totalConsumers = consumers.size;
     if (totalConsumers > maxDownstream) {
       mustClarify = true;
       reasons.push({ rule: "downstream-consumers", detail: `File ${file} has ${totalConsumers} downstream consumers, exceeding max of ${maxDownstream}` });
@@ -224,7 +167,7 @@ export function assessGraphClarity(
     const parts = file.split(/[/\\]/);
     if (parts.length > 0 && parts[0]) {
       // Handle cases where the first segment is '.' or similar if paths are weird, but assume normalized
-      directories.add(parts[0]);
+      if (!/^(test|tests|__tests__)$/.test(parts[0])) directories.add(["src", "lib", "packages", "apps"].includes(parts[0]) && parts.length > 2 ? parts.slice(0, 2).join("/") : parts[0]);
     }
   }
   if (directories.size > 1) {

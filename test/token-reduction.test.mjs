@@ -209,16 +209,16 @@ test("commandcode adapter ships SKILL-BRIEF.md files (emitBriefs: true)", async 
   const paths = new Set(files.map(f => f.path));
 
   assert.ok(
-    paths.has(".commandcode/skills/graphward-skill/SKILL-BRIEF.md"),
+    paths.has(".graphward/engines/graphward-skill/SKILL-BRIEF.md"),
     "commandcode must ship graphward-skill/SKILL-BRIEF.md",
   );
   assert.ok(
-    paths.has(".commandcode/skills/aidlc-lifecycle-engine/SKILL-BRIEF.md"),
+    paths.has(".graphward/engines/aidlc-lifecycle-engine/SKILL-BRIEF.md"),
     "commandcode must ship aidlc-lifecycle-engine/SKILL-BRIEF.md",
   );
 
-  const brief = files.find(f => f.path === ".commandcode/skills/graphward-skill/SKILL-BRIEF.md");
-  const full  = files.find(f => f.path === ".commandcode/skills/graphward-skill/SKILL.md");
+  const brief = files.find(f => f.path === ".graphward/engines/graphward-skill/SKILL-BRIEF.md");
+  const full  = files.find(f => f.path === ".graphward/engines/graphward-skill/SKILL.md");
   const briefTokens = estimateTokens(brief.content);
   const fullTokens  = estimateTokens(full.content);
 

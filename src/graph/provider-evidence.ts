@@ -153,7 +153,9 @@ export async function reconcileGraphifyEvidence(root: string, nativeGraph: Depen
   } catch {
     return { graph: nativeGraph, acceptedNodes: 0, acceptedEdges: 0, corroboratedEdges: 0, contestedEdges: 0, staleEvidence: 0, rejectedEvidence: 0, available: false };
   }
-  if (manifest.schemaVersion !== 1 || manifest.provider !== "graphify") {
+  if (manifest.schemaVersion !== 1 || manifest.provider !== "graphify" ||
+      !manifest.projectRoot || toCanonicalPath(manifest.projectRoot) !== toCanonicalPath(root) ||
+      !manifest.graphHash || manifest.graphHash !== graphifyContentHash(await readFile(path.join(root, GRAPHIFY_GRAPH_PATH)))) {
     return { graph: { ...nativeGraph, unknowns: unique([...nativeGraph.unknowns, "Graphify evidence manifest is invalid and was ignored."]) }, acceptedNodes: 0, acceptedEdges: 0, corroboratedEdges: 0, contestedEdges: 0, staleEvidence: 0, rejectedEvidence: 1, available: true };
   }
 

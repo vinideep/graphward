@@ -3,7 +3,7 @@
 > **Token-saving routing layer.** Read this index first.
 > Identify the 1-3 skills relevant to the request.
 > Entry workflows select internal engines. Load only the selected `SKILL.md`; brief files are not installed for this provider.
-> Skill files live at `.agents/skills/<name>/`.
+> Skill files live at `.graphward/engines/<name>/`.
 
 | Internal engine | Use only when routed for | Do not select for |
 |---|---|---|

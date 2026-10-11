@@ -207,7 +207,7 @@ test("rendered Claude settings and default config are valid JSON with hook wirin
   const settings = JSON.parse(claudeCodeHookSettings());
   assert.ok(settings.hooks.SessionStart, "SessionStart wired");
   assert.ok(settings.hooks.Stop, "Stop wired");
-  assert.match(settings.hooks.PreToolUse[0].hooks[0].command, /gw hook pre-tool-use/);
+  assert.match(settings.hooks.PreToolUse[0].hooks[0].command, /index\.js['" ]+hook pre-tool-use/);
 
   const config = JSON.parse(defaultConfigFile());
   assert.equal(config.hooks.blockStaleEdits, false);
@@ -283,5 +283,5 @@ test("Cursor edits with no discoverable file path fail safe (no false block)", a
   // preToolUse without a resolvable file path → allow, never a spurious deny.
   const input = normalizeInput("cursor", JSON.stringify({ session_id: "x", hook_event_name: "preToolUse" }));
   const res = await runHook("pre-tool-use", root, input, "cursor");
-  assert.equal(res.stdout, undefined, "no file path → allow (fail-safe)");
+  assert.deepEqual(JSON.parse(res.stdout), { permission: "allow" });
 });

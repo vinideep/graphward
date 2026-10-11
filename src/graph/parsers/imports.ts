@@ -146,6 +146,10 @@ async function extractJSImports(filePath: string, root: string): Promise<ImportR
   // from|to|relation -> already emitted, so a type-only import is never also
   // counted as a runtime import (the old `[^'"]*` spanned `type { Foo }`).
   const seen = new Set<string>();
+  const { loadTypeScriptCompiler, discoverTsConfigs } = await import("./typescript-compiler.js");
+  const compiler = await loadTypeScriptCompiler(root);
+  const configs = compiler ? [...discoverTsConfigs(root, compiler).values()] : [];
+  const applicable = configs.filter(config => config.fileNames.includes(filePath)).sort((a, b) => b.configPath.length - a.configPath.length)[0];
 
   for (const { specifier, typeOnly, line, kind } of collectJSMatches(source)) {
     {
@@ -154,8 +158,11 @@ async function extractJSImports(filePath: string, root: string): Promise<ImportR
       let targetId: string;
       let targetNode: GraphNode;
 
-      if (specifier.startsWith(".")) {
-        const resolvedPath = await resolveRelative(specifier, filePath, root);
+      const compilerResolution = compiler?.resolveModuleName(specifier, filePath, applicable?.options ?? {}, compiler.sys).resolvedModule?.resolvedFileName;
+      const compilerRelative = compilerResolution ? path.relative(root, compilerResolution).replace(/\\/g, "/") : undefined;
+      const localResolution = compilerRelative && !compilerRelative.startsWith("../") && !compilerRelative.includes("node_modules/") ? compilerRelative : undefined;
+      if (specifier.startsWith(".") || localResolution) {
+        const resolvedPath = localResolution ?? await resolveRelative(specifier, filePath, root);
         if (resolvedPath) {
           const idPath = resolvedPath.replace(/\.(tsx?|jsx?|mjs|cjs|mts|cts)$/, "");
           targetId = `module:${idPath}`;
@@ -165,7 +172,7 @@ async function extractJSImports(filePath: string, root: string): Promise<ImportR
             label: path.basename(idPath),
             path: resolvedPath, // a real file — verified against disk
             confidence: "verified",
-            metadata: {},
+            metadata: { resolution: localResolution ? "typescript-compiler" : "filesystem" },
             evidence: [`${relFile}:${line}`],
           };
         } else {
@@ -509,48 +516,7 @@ export async function extractImports(filePath: string, root: string): Promise<Im
     return { nodes: [], edges: [] };
   }
 
-  const tsResult = await parseWithTreeSitter(filePath, content);
-  if (tsResult && tsResult.imports.length > 0) {
-    // Basic mapping from tree-sitter imports back to graph edges
-    const relWithExt = path.relative(root, filePath).replace(/\\/g, "/");
-    const idPath = relWithExt.replace(/\.(tsx?|jsx?|mjs|cjs|mts|cts|py|go|rs|rb|java|kt)$/, "");
-    const sourceNode: GraphNode = {
-      id: `module:${idPath}`,
-      kind: "module",
-      label: path.basename(idPath),
-      path: relWithExt,
-      confidence: "verified",
-      metadata: {},
-      evidence: [relWithExt],
-    };
-    const nodes: GraphNode[] = [sourceNode];
-    const edges: GraphEdge[] = [];
-    
-    for (const imp of tsResult.imports) {
-      const targetId = imp.source.startsWith(".") 
-        ? `module:${imp.source}` // This is a simplification; relative resolution needs full path logic. But the prompt just asks for the fallback.
-        : `pkg:${imp.source.split("/")[0]}`;
-      nodes.push({
-        id: targetId,
-        kind: imp.source.startsWith(".") ? "module" : "package",
-        label: path.basename(imp.source),
-        confidence: "verified",
-        metadata: {},
-        evidence: [`${relWithExt}`]
-      });
-      edges.push({
-        from: sourceNode.id,
-        to: targetId,
-        relation: "imports",
-        confidence: "verified",
-        metadata: {},
-        evidence: [`${relWithExt}`]
-      });
-    }
-    return { nodes, edges };
-  }
-
-  if ([".ts", ".tsx", ".js", ".mjs", ".cjs"].includes(ext)) {
+  if ([".ts", ".tsx", ".js", ".jsx", ".mts", ".cts", ".mjs", ".cjs"].includes(ext)) {
     return extractJSImports(filePath, root);
   }
   if (ext === ".py") {

@@ -20,11 +20,13 @@
  */
 
 import { createHash } from "node:crypto";
-import { mkdir, readFile, writeFile, readdir } from "node:fs/promises";
+import { mkdir, readFile, writeFile, readdir, realpath } from "node:fs/promises";
 import path from "node:path";
 import { runProcess } from "../process/index.js";
+import { parseGitStatusPaths } from "./git-paths.js";
 
-export const RECEIPT_SCHEMA_VERSION = 1;
+export const RECEIPT_SCHEMA_VERSION = 2;
+const MISSING_FILE_HASH = "missing";
 const RECEIPT_DIR = ".graphward/.verify";
 const RECORD_FILE = "verification-records.json";
 const LEGACY_RECEIPT_FILE = "receipts.json";
@@ -37,6 +39,10 @@ export interface CommandRun {
   durationMs: number;
   /** Tail of combined output, for the failure message. Truncated. */
   outputTail?: string;
+  timedOut?: boolean;
+  error?: string;
+  executable?: string;
+  args?: string[];
 }
 
 export interface VerificationRecord {
@@ -49,13 +55,19 @@ export interface VerificationRecord {
   files: Record<string, { hash: string; provenance?: 'human' | 'agent' | 'unknown' } | string>; // updated in task 5 later, keep compat string
   /**
    * False when git could not enumerate the change set, so `files` is not a
-   * complete record of what was verified. Coverage then degrades to an mtime
-   * comparison — weaker than hashing, and labelled as such rather than pretending.
+   * Git change set. Non-Git projects bind receipts to enumerated product files.
    */
   gitAvailable: boolean;
   verdict: "pass" | "fail";
   verificationHash?: string;
   provenance?: 'human' | 'agent' | 'unknown';
+  provenanceAssurance?: "declared";
+  mode?: "baseline" | "impact";
+  plannedCommands?: string[];
+  skippedCommands?: string[];
+  selectionReason?: string;
+  changedDuringChecks?: string[];
+  projectRoot?: string;
 }
 
 /** @deprecated Use VerificationRecord instead */
@@ -65,6 +77,7 @@ export interface VerifyOptions {
   /** Explicit commands to run. Overrides detection. */
   commands?: string[];
   timeoutMs?: number;
+  mode?: "baseline" | "impact";
   impactOnly?: boolean;
   changedFiles?: string[];
   provenance?: 'human' | 'agent' | 'unknown';
@@ -80,51 +93,34 @@ export function hashContent(content: string | Buffer): string {
 
 async function hashFile(root: string, relPath: string): Promise<string | null> {
   try {
-    return hashContent(await readFile(path.join(root, relPath)));
-  } catch {
-    return null; // deleted between detection and hashing
-  }
-}
-
-async function fileMtime(root: string, relPath: string): Promise<number | null> {
-  try {
-    const { stat } = await import("node:fs/promises");
-    return (await stat(path.join(root, relPath))).mtimeMs;
-  } catch {
-    return null;
+    const canonicalRoot = await realpath(root);
+    const target = await realpath(path.resolve(root, relPath));
+    const relative = path.relative(canonicalRoot, target);
+    if (path.isAbsolute(relative) || relative === ".." || relative.startsWith(`..${path.sep}`)) throw new Error(`Verification file resolves outside the project: ${relPath}`);
+    return hashContent(await readFile(target));
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    throw error;
   }
 }
 
 async function git(root: string, args: string[]): Promise<string | null> {
   const result = await runProcess({ command: "git", args, cwd: root, maxBuffer: 10 * 1024 * 1024 });
-  return result.exitCode === 0 ? result.stdout.trim() : null;
+  return result.exitCode === 0 ? result.stdout : null;
 }
 
 /**
- * Files modified relative to HEAD, including untracked. Porcelain v1 format:
- * `XY path` (rename entries carry ` -> `, where the post-rename path is what exists).
+ * Files modified relative to HEAD, including untracked. NUL porcelain preserves
+ * literal path bytes and includes both names in a rename.
  *
  * `-uall` is essential: the default collapses an untracked directory to a single
  * `src/` entry, so a brand-new source file would never be seen — and the gate
  * would pass a change it never verified.
  */
 export async function changedFiles(root: string): Promise<string[]> {
-  const out = await git(root, ["status", "--porcelain", "-uall"]);
-  if (out === null) return [];
-  const files: string[] = [];
-  for (const line of out.split("\n")) {
-    if (!line.trim()) continue;
-    let p = line.slice(3).trim();
-    const arrow = p.indexOf(" -> ");
-    if (arrow >= 0) p = p.slice(arrow + 4);
-    if (p.startsWith('"') && p.endsWith('"')) {
-      try { p = JSON.parse(p) as string; } catch { /* keep raw */ }
-    }
-    // Never record our own state in a receipt — it would invalidate itself.
-    if (p.startsWith(".graphward/")) continue;
-    files.push(p);
-  }
-  return files;
+  const porcelain = await git(root, ["status", "--porcelain=v1", "-z", "-uall"]);
+  if (porcelain === null) return [];
+  return parseGitStatusPaths(porcelain).filter((file) => file !== ".graphward" && !file.startsWith(".graphward/"));
 }
 
 // ---------------------------------------------------------------------------
@@ -174,14 +170,30 @@ function legacyReceiptPath(root: string): string {
   return path.join(root, RECEIPT_DIR, LEGACY_RECEIPT_FILE);
 }
 
+function validRecord(value: unknown): value is VerificationRecord {
+  if (!value || typeof value !== "object") return false;
+  const record = value as VerificationRecord;
+  if (record.schemaVersion === RECEIPT_SCHEMA_VERSION) {
+    const { verificationHash, ...payload } = record;
+    if (typeof verificationHash !== "string" || verificationHash !== hashContent(JSON.stringify(payload))) return false;
+    if (typeof record.projectRoot !== "string") return false;
+  }
+  return (record.schemaVersion === 1 || record.schemaVersion === RECEIPT_SCHEMA_VERSION)
+    && (record.verdict === "pass" || record.verdict === "fail")
+    && typeof record.createdAt === "string" && Number.isFinite(Date.parse(record.createdAt))
+    && record.files !== null && typeof record.files === "object" && !Array.isArray(record.files)
+    && Array.isArray(record.commands) && record.commands.every((run) => run && typeof run.command === "string" && Number.isInteger(run.exitCode))
+    && (record.verdict !== "pass" || (record.commands.length > 0 && record.commands.every((run) => run.exitCode === 0 && !run.timedOut && !run.error)));
+}
+
 export async function readRecords(root: string): Promise<VerificationRecord[]> {
   try {
     const parsed = JSON.parse(await readFile(recordPath(root), "utf8")) as unknown;
-    return Array.isArray(parsed) ? (parsed as VerificationRecord[]) : [];
+    return Array.isArray(parsed) ? parsed.filter(validRecord) : [];
   } catch {
     try {
       const parsed = JSON.parse(await readFile(legacyReceiptPath(root), "utf8")) as unknown;
-      return Array.isArray(parsed) ? (parsed as VerificationRecord[]) : [];
+      return Array.isArray(parsed) ? parsed.filter(validRecord) : [];
     } catch {
       return [];
     }
@@ -233,82 +245,27 @@ export interface CoverageResult {
  */
 export async function coverageFor(root: string, files: string[]): Promise<CoverageResult> {
   if (files.length === 0) return { covered: true, uncovered: [] };
-
   const current = new Map<string, string>();
-  for (const f of files) {
-    const h = await hashFile(root, f);
-    if (h) current.set(f, h);
-  }
-  if (current.size === 0) return { covered: true, uncovered: [] };
-
+  for (const file of files) current.set(file, (await hashFile(root, file)) ?? MISSING_FILE_HASH);
   const records = await readRecords(root);
-  for (const record of records) {
-    if (record.verdict !== "pass") continue;
-
-    if (record.gitAvailable === false) {
-      const verifiedAt = Date.parse(record.createdAt);
-      const mtimes = await Promise.all(files.map((f) => fileMtime(root, f)));
-      if (Number.isFinite(verifiedAt) && mtimes.every((m) => m !== null && m <= verifiedAt)) {
-        let agentOnly = false;
-        if (record.provenance === "agent") {
-          agentOnly = true;
-          for (const other of records) {
-            if (other !== record && other.verdict === "pass" && other.provenance === "human" && other.gitAvailable === false) {
-              const otherVerifiedAt = Date.parse(other.createdAt);
-              if (Number.isFinite(otherVerifiedAt) && mtimes.every((m) => m !== null && m <= otherVerifiedAt)) {
-                agentOnly = false;
-                break;
-              }
-            }
-          }
-        }
-        return { covered: true, uncovered: [], agentOnly, record, receipt: record };
-      }
-      continue;
-    }
-
-    const missing = [...current.entries()].filter(([f, h]) => {
-      const fData = record.files[f];
-      const hData = typeof fData === 'string' ? fData : fData?.hash;
-      return hData !== h;
-    }).map(([f]) => f);
-    
-    if (missing.length === 0) {
-      let agentOnly = false;
-      if (record.provenance === "agent") {
-        agentOnly = true;
-        for (const other of records) {
-          if (other !== record && other.verdict === "pass" && other.provenance === "human") {
-            let otherMissing = false;
-            for (const [f, h] of current.entries()) {
-              const fData = other.files[f];
-              const hData = typeof fData === 'string' ? fData : fData?.hash;
-              if (hData !== h) {
-                otherMissing = true;
-                break;
-              }
-            }
-            if (!otherMissing) {
-              agentOnly = false;
-              break;
-            }
-          }
-        }
-      }
-      return { covered: true, uncovered: [], agentOnly, record, receipt: record };
-    }
+  const canonicalRoot = await realpath(root);
+  const currentHead = (await git(root, ["rev-parse", "HEAD"]))?.trim() ?? null;
+  const matches = (record: VerificationRecord) => record.verdict === "pass"
+    && (record.schemaVersion !== RECEIPT_SCHEMA_VERSION || (record.projectRoot === canonicalRoot && record.head === currentHead))
+    && [...current].every(([file, hash]) => {
+    const value = record.files[file];
+    return (typeof value === "string" ? value : value?.hash) === hash;
+  });
+  const covering = records.filter(matches);
+  if (covering.length) {
+    const record = covering[0];
+    return { covered: true, uncovered: [], agentOnly: !covering.some((r) => r.provenance === "human"), record, receipt: record };
   }
-
-  // Report against the most recent passing receipt for a useful message.
-  const latestPass = (await readRecords(root)).find((r) => r.verdict === "pass");
-  const uncovered = [...current.entries()]
-    .filter(([f, h]) => {
-      if (!latestPass) return true;
-      const fData = latestPass.files[f];
-      const hData = typeof fData === 'string' ? fData : fData?.hash;
-      return hData !== h;
-    })
-    .map(([f]) => f);
+  const latest = records.find((record) => record.verdict === "pass");
+  const uncovered = [...current].filter(([file, hash]) => {
+    const value = latest?.files[file];
+    return (typeof value === "string" ? value : value?.hash) !== hash;
+  }).map(([file]) => file);
   return { covered: false, uncovered };
 }
 
@@ -316,7 +273,7 @@ export async function coverageFor(root: string, files: string[]): Promise<Covera
 // Running verification
 // ---------------------------------------------------------------------------
 
-async function runOne(root: string, command: string, timeoutMs: number): Promise<CommandRun> {
+async function runOne(root: string, command: string, timeoutMs: number, args?: string[]): Promise<CommandRun> {
   const started = Date.now();
   // Verification commands are explicitly configured project commands. Invoke
   // the platform shell as an argument-array process so all subprocesses still
@@ -324,10 +281,15 @@ async function runOne(root: string, command: string, timeoutMs: number): Promise
   const shell = process.platform === "win32"
     ? { command: process.env.ComSpec || "cmd.exe", args: ["/d", "/s", "/c", command], windowsVerbatimArguments: true }
     : { command: "/bin/sh", args: ["-c", command] };
-  const result = await runProcess({ ...shell, cwd: root, timeoutMs, maxBuffer: 20 * 1024 * 1024 });
+  const request = args ? { command: process.execPath, args } : shell;
+  const result = await runProcess({ ...request, cwd: root, timeoutMs, maxBuffer: 20 * 1024 * 1024 });
   return {
     command,
     exitCode: result.exitCode,
+    timedOut: result.timedOut,
+    error: result.error,
+    executable: result.command,
+    args: result.args,
     durationMs: Date.now() - started,
     outputTail: `${result.stdout}${result.stderr}`.slice(-800) || undefined,
   };
@@ -346,127 +308,82 @@ export interface VerifyResult {
  * exact bytes verified. Hashes are captured AFTER the commands run, so a receipt
  * always describes the tree the checks actually saw.
  */
-export async function runVerification(root: string, options: VerifyOptions = {}): Promise<VerifyResult> {
-  let commands = options.commands?.length ? options.commands : await detectCheckCommands(root);
-  const originalCommandsLength = commands.length;
-  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-  const impactOnly = options.impactOnly ?? true;
+async function nonGitFiles(root: string, relative = ""): Promise<string[]> {
+  const ignored = new Set([".git", ".graphward", "node_modules", "dist", "build", "coverage", ".venv", "__pycache__"]);
+  const out: string[] = [];
+  for (const entry of await readdir(path.join(root, relative), { withFileTypes: true })) {
+    const rel = relative ? `${relative}/${entry.name}` : entry.name;
+    if (entry.isDirectory() && !ignored.has(entry.name)) out.push(...await nonGitFiles(root, rel));
+    else if (entry.isFile()) out.push(rel);
+  }
+  return out;
+}
 
-  if (impactOnly && options.changedFiles) {
+export async function runVerification(root: string, options: VerifyOptions = {}): Promise<VerifyResult> {
+  const plannedCommands = options.commands ?? await detectCheckCommands(root);
+  let commands = [...plannedCommands];
+  const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
+  if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) throw new Error("Verification timeout must be positive and finite.");
+  let mode = options.mode ?? (options.impactOnly === true ? "impact" : "baseline");
+  if (mode !== "baseline" && mode !== "impact") throw new Error("Verification mode must be baseline or impact.");
+  const skippedCommands: string[] = [];
+  let selectedArgs: string[] | undefined;
+  let selectionReason = mode === "baseline" ? "Full configured baseline" : "Explicit impact selection";
+  if (mode === "impact") {
     try {
-      const graphData = await readFile(path.join(root, ".graphward", "graph", "dependency-graph.json"), "utf8");
-      const graph = JSON.parse(graphData);
+      const graph = JSON.parse(await readFile(path.join(root, ".graphward/graph/dependency-graph.json"), "utf8"));
+      const pkg = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
+      // Only the known Node test runner safely accepts graph-selected paths.
+      if (!options.changedFiles || !/^node --test(?:\s|$)/.test(pkg.scripts?.test ?? "") || /[;&|]/.test(pkg.scripts.test)) throw new Error("No supported impact test adapter");
       const { computeTestImpact } = await import("./impact.js");
-      const impact = computeTestImpact(options.changedFiles, graph);
-      if (impact.affectedTests.length > 0) {
-        // Replace npm test with direct node --test invocation using only
-        // affected files. npm test in many projects hardcodes a file list
-        // that can't be overridden via --, so we bypass it entirely.
-        commands = commands.map(cmd => {
-          if (cmd === "npm test" || cmd.startsWith("npm test ")) {
-            return `node --test ${impact.affectedTests.join(" ")}`;
-          }
-          return cmd;
-        });
-      } else {
-        commands = commands.filter(cmd => cmd !== "npm test");
+      const tests = computeTestImpact(options.changedFiles, graph).affectedTests;
+      if (tests.some((file) => path.isAbsolute(file) || file.startsWith("-") || path.relative(root, path.resolve(root, file)).startsWith("..") || !/\.(?:[cm]?js)$/.test(file))) throw new Error("Unsupported or unsafe selected test path");
+      if (commands.includes("npm test")) {
+        if (tests.length) selectedArgs = ["--test", ...tests];
+        else { commands = commands.filter((command) => command !== "npm test"); skippedCommands.push("npm test"); }
       }
-    } catch {
-      // ignore graph load failures
+      selectionReason = tests.length ? `Graph selected ${tests.length} Node test file(s)` : "Graph selected no tests; npm test skipped (no execution is not a pass)";
+    } catch (error) {
+      mode = "baseline";
+      selectionReason = `Impact selection unavailable; full baseline retained: ${error instanceof Error ? error.message : String(error)}`;
     }
   }
-
+  const inGitRepo = (await git(root, ["rev-parse", "--is-inside-work-tree"]))?.trim() === "true";
+  const scope = new Set([...(options.changedFiles ?? []), ...(inGitRepo ? await changedFiles(root) : await nonGitFiles(root))]);
+  const snapshot = async (files: Iterable<string>) => {
+    const hashes: Record<string, string> = {};
+    for (const file of files) {
+      const target = path.resolve(root, file);
+      const relative = path.relative(root, target);
+      if (path.isAbsolute(relative) || relative === ".." || relative.startsWith(`..${path.sep}`) || relative === ".graphward" || relative.startsWith(`.graphward${path.sep}`)) throw new Error(`Verification file escapes product scope: ${file}`);
+      hashes[file] = (await hashFile(root, file)) ?? MISSING_FILE_HASH;
+    }
+    return hashes;
+  };
+  const before = await snapshot(scope);
+  const head = (await git(root, ["rev-parse", "HEAD"]))?.trim() ?? null;
   const runs: CommandRun[] = [];
   for (const command of commands) {
-    const run = await runOne(root, command, timeoutMs);
+    const args = command === "npm test" ? selectedArgs : undefined;
+    const actualCommand = args ? `${process.execPath} ${args.map((arg) => JSON.stringify(arg)).join(" ")}` : command;
+    const run = await runOne(root, actualCommand, timeoutMs, args);
     runs.push(run);
-    if (run.exitCode !== 0) break; // stop at first failure — the tree is not verified
+    if (run.exitCode !== 0 || run.timedOut || run.error) break;
   }
-
-  const inGitRepo = (await git(root, ["rev-parse", "--is-inside-work-tree"])) === "true";
-  const files: Record<string, string> = {};
-  for (const rel of await changedFiles(root)) {
-    const h = await hashFile(root, rel);
-    if (h) files[rel] = h;
-  }
-
-  const head = await git(root, ["rev-parse", "HEAD"]);
-  
-  try {
-    const graphData = await readFile(path.join(root, ".graphward", "graph", "dependency-graph.json"), "utf8");
-    const graph = JSON.parse(graphData);
-    const { detectCoverageGaps, generateCharacterizationTests } = await import("../coverage-gap/index.js");
-    const changedFileList = Object.keys(files);
-    const gaps = detectCoverageGaps(changedFileList, graph);
-    if (gaps.length > 0) {
-      console.warn(`[Coverage Gap] Found ${gaps.length} uncovered exported symbols in verified files.`);
-      const tests = generateCharacterizationTests(gaps, root);
-      for (const test of tests) {
-        if (!process.env.TEST_ENV) {
-          try {
-             await readFile(path.join(root, test.testFile), "utf8");
-          } catch {
-             const { writeProtectedFile } = await import("../manifest/lock.js");
-             await writeProtectedFile(root, path.join(root, test.testFile), test.content);
-             console.warn(`[Coverage Gap] Generated characterization test: ${test.testFile}`);
-          }
-        }
-      }
-    }
-  } catch {
-    // ignore
-  }
-
-  const verificationHash = hashContent(JSON.stringify({
-    commands: runs.map(r => ({command: r.command, exitCode: r.exitCode})),
-    head
-  }));
-
-  let verdict: "pass" | "fail" = (originalCommandsLength > 0 && runs.every((r) => r.exitCode === 0)) ? "pass" : "fail";
-
-  if (verdict === "pass" && options.provenance === "agent") {
-    const currentFiles = Object.keys(files);
-    if (currentFiles.length > 0) {
-      let isAgentOnly = true;
-      const records = await readRecords(root);
-      for (const other of records) {
-        if (other.verdict === "pass" && other.provenance === "human") {
-          let otherMissing = false;
-          for (const [f, h] of Object.entries(files)) {
-            const fData = other.files[f];
-            const hData = typeof fData === 'string' ? fData : fData?.hash;
-            if (hData !== h) {
-              otherMissing = true;
-              break;
-            }
-          }
-          if (!otherMissing) {
-            isAgentOnly = false;
-            break;
-          }
-        }
-      }
-      if (isAgentOnly) {
-        verdict = "fail";
-        runs.push({ command: "agent-provenance", exitCode: 1, durationMs: 0, outputTail: "GraphWard: The verification record was generated solely by an agent (agentOnly). Agent-generated checks require human review/verification before proceeding." });
-      }
-    }
-  }
-
+  const afterScope = inGitRepo ? await changedFiles(root) : await nonGitFiles(root);
+  const files = await snapshot(new Set([...scope, ...afterScope]));
+  const changedDuringChecks = Object.keys(files).filter((file) => before[file] !== files[file]);
+  const headAfter = (await git(root, ["rev-parse", "HEAD"]))?.trim() ?? null;
+  const verdict = runs.length > 0 && runs.length === commands.length && runs.every((run) => run.exitCode === 0 && !run.timedOut && !run.error) && changedDuringChecks.length === 0 && headAfter === head ? "pass" : "fail";
   const record: VerificationRecord = {
-    schemaVersion: RECEIPT_SCHEMA_VERSION,
-    createdAt: new Date().toISOString(),
-    head,
-    commands: runs,
-    files,
-    gitAvailable: inGitRepo,
-    verdict,
-    verificationHash,
-    provenance: options.provenance ?? "human"
+    schemaVersion: RECEIPT_SCHEMA_VERSION, createdAt: new Date().toISOString(), head, projectRoot: await realpath(root),
+    commands: runs, plannedCommands, skippedCommands, files, gitAvailable: inGitRepo, verdict,
+    mode, selectionReason, changedDuringChecks,
+    provenance: options.provenance ?? "unknown", provenanceAssurance: "declared",
   };
-
+  record.verificationHash = hashContent(JSON.stringify(record));
   await writeRecord(root, record);
-  return { record, receipt: record, noCommands: originalCommandsLength === 0 };
+  return { record, receipt: record, noCommands: runs.length === 0 };
 }
 
 // ---------------------------------------------------------------------------

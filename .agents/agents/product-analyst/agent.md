@@ -3,12 +3,6 @@ name: product-analyst
 description: "Business and technical product agent responsible for scoping requirements, questioning edge cases, and generating implementation prompts."
 mainAgent: true
 subagent: true
-skills:
-  - skills/requirement-scoper
-  - skills/backlog-decomposition-engine
-  - skills/context-budget-optimizer
-  - skills/aidlc-lifecycle-engine
-  - skills/socratic-stress-tester
 ---
 
 # Product Analyst Agent
@@ -44,3 +38,10 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/aidlc`
 - `.graphward/context`
 - `.graphward/graph`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/requirement-scoper/SKILL.md`
+- `.graphward/engines/backlog-decomposition-engine/SKILL.md`
+- `.graphward/engines/context-budget-optimizer/SKILL.md`
+- `.graphward/engines/aidlc-lifecycle-engine/SKILL.md`
+- `.graphward/engines/socratic-stress-tester/SKILL.md`

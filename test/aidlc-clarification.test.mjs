@@ -37,13 +37,13 @@ test("freezeRequirements commits user decisions to inception/requirements.md", a
   const dir = mkdtempSync(path.join(os.tmpdir(), "ei-aidlc-"));
   try {
     const filePath = await freezeRequirements(dir, "Payment Processing", [
-      { questionId: "Q1", selectedOptionId: "A", customText: "Stripe with webhook signatures" },
+      { questionId: "Q1", question: "Which payment strategy?", options: [{ id: "A", text: "Stripe" }], selectedOptionId: "A", customText: "Stripe with webhook signatures" },
     ]);
 
     assert.ok(filePath.endsWith("requirements.md"));
     const content = readFileSync(filePath, "utf8");
     assert.ok(content.includes("Payment Processing"));
-    assert.ok(content.includes("Option A"));
+    assert.ok(content.includes("Which payment strategy?: Stripe"));
     assert.ok(content.includes("Stripe with webhook signatures"));
   } finally {
     rmSync(dir, { recursive: true, force: true });
@@ -79,7 +79,7 @@ test("checkDiscoveryExit and checkInceptionExit enforce required artifacts and o
     writeFileSync(path.join(dir, ".graphward", "aidlc", "agile", "product-backlog.md"), "# Backlog\n");
 
     const incep2 = await checkInceptionExit(dir);
-    assert.equal(incep2.status, "pass");
+    assert.equal(incep2.status, "blocked", "Empty documents cannot authorize implementation");
 
     // 5. Add a blocking question to open-questions.md -> should block inception
     writeFileSync(

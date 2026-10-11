@@ -3,3 +3,4 @@ export * from "./privacy-policy.js";
 export * from "./tracer.js";
 export * from "./execution-flow.js";
 export * from "./otlp-receiver.js";
+export * from "./invocation.js";

@@ -77,7 +77,7 @@ test("Shiplogic-style onboarding and incremental sync work through the real CLI"
   const settings = JSON.parse(await readFile(path.join(root, ".claude", "settings.json"), "utf8"));
   assert.deepEqual(settings.permissions, { allow: ["Bash(npm test)"] }, "project settings must survive installation");
   assert.equal(settings.model, "opus");
-  assert.ok(settings.hooks.SessionStart.some((entry) => entry.hooks.some((hook) => hook.command.includes("gw hook"))));
+  assert.ok(settings.hooks.SessionStart.some((entry) => entry.hooks.some((hook) => hook.command.includes("hook session-start"))));
 
   const doctor = cli(["doctor", root, "--json"], root);
   assert.equal(doctor.status, 0, doctor.stdout);
@@ -138,10 +138,11 @@ test("Shiplogic-style Antigravity onboarding installs agents and keeps workflow 
   const agent = await readFile(path.join(root, ".agents/agents/engineering-orchestrator/agent.md"), "utf8");
   assert.match(agent, /^---\nname: engineering-orchestrator\n/);
   assert.match(agent, /mainAgent: true/);
-  assert.match(agent, /skills\/session-handoff-engine/);
+  assert.match(agent, /\.graphward\/engines\/session-handoff-engine\/SKILL\.md/);
+  assert.doesNotMatch(agent, /^skills:/m);
   assert.match(agent, /\.graphward\/knowledge-base/);
   await readFile(path.join(root, ".agents/workflows/graphward.md"), "utf8");
-  await readFile(path.join(root, ".agents/skills/graphward-skill/SKILL.md"), "utf8");
+  await readFile(path.join(root, ".graphward/engines/graphward-skill/SKILL.md"), "utf8");
 
   const legacyAgentJson = path.join(root, ".agent/agents/engineering-orchestrator/agent.json");
   await assert.rejects(readFile(legacyAgentJson, "utf8"), "fresh installs must not emit legacy JSON agents");

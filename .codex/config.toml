@@ -1,0 +1,5 @@
+# graphward-codex-mcp:start
+[mcp_servers.graphward]
+command = "/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node"
+args = ["/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/mcp/cli.js","/Users/vinithr/personal/AI/engineering-intelligence-OS"]
+# graphward-codex-mcp:end

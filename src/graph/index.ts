@@ -58,7 +58,7 @@ export { ResourceGovernor, defaultGovernor } from "../governor/resource-governor
 export { HierarchicalGraphPartitioner, HierarchicalGraphPartitioner as HierarchicalPartitioner } from "./partitioning.js";
 export type { PartitionLevel, GlobalGraphSlice, PackageGraphSlice, CommunityGraphSlice, TaskGraphSlice } from "./partitioning.js";
 
-const SOURCE_EXT_RE = /\.(ts|tsx|js|mjs|cjs|py|go|rs|rb|java|kt)$/;
+const SOURCE_EXT_RE = /\.(ts|tsx|js|jsx|mts|cts|mjs|cjs|py|go|rs|rb|java|kt)$/;
 
 export interface BuildGraphOptions {
   update?: boolean;
@@ -81,9 +81,9 @@ function gitHead(root: string): string | undefined {
   return result.exitCode === 0 ? result.stdout.trim() || undefined : undefined;
 }
 
-async function graphWorkspaceHash(root: string): Promise<string> {
+export async function graphWorkspaceHash(root: string): Promise<string> {
   const policy = await ProjectFilePolicy.load(root);
-  const files = await collectProjectFiles(policy, { accept: (rel) => SOURCE_EXT_RE.test(rel) });
+  const files = await collectProjectFiles(policy, { accept: (rel) => SOURCE_EXT_RE.test(rel) || /(?:^|\/)tsconfig(?:\.[^/]+)?\.json$|(?:^|\/)package\.json$/.test(rel) });
   files.sort((a, b) => a.localeCompare(b));
   const hash = createHash("sha256");
   for (const file of files) {
@@ -122,7 +122,8 @@ export async function buildGraph(root: string, options: BuildGraphOptions = {}):
 
   // GraphWard remains canonical. Fresh Graphify output can corroborate or enrich the
   // native graph, while stale/out-of-scope provider evidence is rejected.
-  if (options.providerEvidence !== false) {
+  const { loadGwConfig } = await import("../config/index.js");
+  if (options.providerEvidence !== false && (await loadGwConfig(root)).providers.policy !== "native") {
     const reconciliation = await reconcileGraphifyEvidence(root, result.graph);
     result.graph = reconciliation.graph;
   }

@@ -3,13 +3,6 @@ name: release-engineer
 description: "Manages branch, commit, CI, versioning, and delivery gates for AI-DLC changes."
 mainAgent: true
 subagent: true
-skills:
-  - skills/git-intelligence-engine
-  - skills/pr-intelligence-engine
-  - skills/issue-tracker-sync-engine
-  - skills/operations-readiness-engine
-  - skills/api-backward-compatibility-engine
-  - skills/database-migration-safety-engine
 ---
 
 # Release Engineer
@@ -34,3 +27,11 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`
 - `.graphward/aidlc`
 - `.graphward/changes`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/git-intelligence-engine/SKILL.md`
+- `.graphward/engines/pr-intelligence-engine/SKILL.md`
+- `.graphward/engines/issue-tracker-sync-engine/SKILL.md`
+- `.graphward/engines/operations-readiness-engine/SKILL.md`
+- `.graphward/engines/api-backward-compatibility-engine/SKILL.md`
+- `.graphward/engines/database-migration-safety-engine/SKILL.md`

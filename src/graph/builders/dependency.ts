@@ -7,7 +7,7 @@ import { extractImports } from "../parsers/imports.js";
 import { extractSymbols, resolvePendingCalls, buildGlobalSymbolTable, type PendingCall } from "../parsers/symbols.js";
 import { collectProjectFiles, ProjectFilePolicy } from "../../project-files/index.js";
 
-const SOURCE_EXTS = new Set([".ts", ".tsx", ".js", ".mjs", ".cjs", ".py", ".go", ".rs", ".rb", ".java", ".kt"]);
+const SOURCE_EXTS = new Set([".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs", ".py", ".go", ".rs", ".rb", ".java", ".kt"]);
 
 function getGitChurn(root: string): Map<string, number> {
   const churn = new Map<string, number>();
@@ -190,9 +190,39 @@ export async function buildDependencyGraph(root: string, options: BuildOptions =
       : node.id;
     return !changedModuleIds.has(moduleId);
   });
-  const globalSymbols = buildGlobalSymbolTable([...unchangedSymbols, ...symbolNodes]);
+  const globalSymbols = buildGlobalSymbolTable([...unchangedSymbols.filter(node => node.metadata.extraction !== "typescript-compiler"), ...symbolNodes]);
   const callEdges = resolvePendingCalls(allPendingCalls, globalSymbols, importsByModule);
   allEdges.push(...callEdges);
+
+  // Compiler semantics augment the ordinary build when repository configuration
+  // is available. Lexical extraction remains explicitly labelled fallback.
+  const { TypeScriptCompilerResolver } = await import("../parsers/typescript-compiler.js");
+  const compiler = new TypeScriptCompilerResolver(root);
+  if (await compiler.initialize() && compiler.getDiscoveredConfigs().length) {
+    for (const file of sourceFiles.filter(file => /\.(?:[cm]?ts|tsx|js|jsx)$/.test(file))) {
+      const analysis = await compiler.analyzeFile(file);
+      const relative = path.relative(root, file).replace(/\\/g, "/");
+      for (const call of analysis.calls) {
+        const target = call.resolvedTarget;
+        if (target) {
+          // A compiler-resolved external/builtin call must not retain a lexical
+          // guess to an unrelated same-named project method.
+          for (let index = allEdges.length - 1; index >= 0; index--) {
+            const edge = allEdges[index];
+            if (edge.relation === "calls" && !edge.metadata.compilerResolved && edge.evidence.includes(`${relative}:${call.line}`)) allEdges.splice(index, 1);
+          }
+        }
+        if (!target || target.isExternal || !target.declarationFile || !(await policy.explainExisting(target.declarationFile)).included) continue;
+        const from = `symbol:${sourceKey(relative)}#${call.callerSymbol}`;
+        const to = `symbol:${sourceKey(target.declarationFile)}#${target.qualifiedName}`;
+        if (!allNodes.some(node => node.id === from)) continue;
+        if (!allNodes.some(node => node.id === to) && !unchangedSymbols.some(node => node.id === to)) allNodes.push({ id: to, kind: "symbol", label: target.qualifiedName, path: sourceKey(target.declarationFile), confidence: "verified", metadata: { extraction: "typescript-compiler" }, evidence: [`${target.declarationFile}:${target.declarationLine ?? 1}`] });
+        allEdges.push({ from, to, relation: "calls", confidence: "verified", metadata: { resolution: "typescript-compiler", compilerResolved: true, empiricalCalibration: "unmeasured" }, evidence: [`${relative}:${call.line}`] });
+      }
+      for (const call of analysis.dynamicCalls) parserUnknowns.push(`Dynamic call unresolved by compiler at ${relative}:${call.line}: ${call.reason}`);
+    }
+  } else parserUnknowns.push("Compiler semantic call analysis unavailable or repository compiler configuration missing; lexical call resolution is not compiler proof.");
+  for (const file of sourceFiles.filter(file => !/\.(?:[cm]?ts|tsx|js|jsx|mjs|cjs|py)$/.test(file))) parserUnknowns.push(`Symbol/call coverage unavailable for ${path.relative(root, file)}; import extraction only.`);
 
   // Mark dev dependency edges
   for (const edge of allEdges) {
@@ -214,7 +244,7 @@ export async function buildDependencyGraph(root: string, options: BuildOptions =
     if (node.kind === "module") {
       let churnCount = churnMap.get(relPath);
       if (churnCount === undefined) {
-        for (const ext of [".ts", ".tsx", ".js", ".mjs", ".cjs", ".py", ".go", ".rs", ".rb", ".java", ".kt"]) {
+        for (const ext of [".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs", ".py", ".go", ".rs", ".rb", ".java", ".kt"]) {
           churnCount = churnMap.get(`${relPath}${ext}`);
           if (churnCount !== undefined) break;
         }

@@ -3,7 +3,7 @@
 > **Read this before loading any skill files.**
 > Load each primary `SKILL.md` only after the entry workflow selects it; brief files are not installed for this provider.
 > Load **optional** skills only when the request explicitly requires that capability.
-> Skill files are in `.agents/skills/<name>/` (SKILL.md).
+> Skill files are in `.graphward/engines/<name>/` (SKILL.md).
 
 | Command | Mutates product | Primary Skills — load first | Optional Skills — load if needed |
 |---|---:|---|---|

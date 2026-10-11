@@ -3,12 +3,6 @@ name: knowledge-agent
 description: "Maintains evidence-based knowledge, durable memory, navigation context, event guidance, architecture graphs, and change history across all intelligence artifacts."
 mainAgent: true
 subagent: true
-skills:
-  - skills/incremental-sync-engine
-  - skills/context-budget-optimizer
-  - skills/graph-engine
-  - skills/change-history-engine
-  - skills/dead-code-detector
 ---
 
 # Knowledge Agent
@@ -83,3 +77,10 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/context`
 - `.graphward/memory`
 - `.graphward/changes`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/incremental-sync-engine/SKILL.md`
+- `.graphward/engines/context-budget-optimizer/SKILL.md`
+- `.graphward/engines/graph-engine/SKILL.md`
+- `.graphward/engines/change-history-engine/SKILL.md`
+- `.graphward/engines/dead-code-detector/SKILL.md`

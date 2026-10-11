@@ -119,10 +119,7 @@ test("records accumulate newest-first and are capped", async () => {
   assert.ok(records.length <= 20, "history is capped");
 });
 
-test("outside a git repo, coverage degrades to mtime and still expires on edit", async () => {
-  // Without git we cannot enumerate the change set, so a record cannot bind to
-  // bytes. It must still be usable (or non-git projects would block forever) and
-  // must still stop covering a file that is written afterwards.
+test("outside a git repo, receipts bind enumerated product bytes and expire on edit", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "ei-verify-nogit-"));
   await writeFile(path.join(root, "package.json"), JSON.stringify({ scripts: { test: 'node -e "0"' } }), "utf8");
   await mkdir(path.join(root, "src"), { recursive: true });
@@ -144,6 +141,6 @@ test("outside a git repo, coverage degrades to mtime and still expires on edit",
 test("coverage is vacuously true when nothing changed", async () => {
   const root = await repo();
   assert.equal((await coverageFor(root, [])).covered, true);
-  // A file that does not exist cannot be uncovered.
-  assert.equal((await coverageFor(root, ["src/ghost.ts"])).covered, true);
+  // A missing file requires a receipt for the deletion; absence is not proof.
+  assert.equal((await coverageFor(root, ["src/ghost.ts"])).covered, false);
 });

@@ -40,6 +40,7 @@ interface Options {
   intent?: string;
   id?: string;
   full?: boolean;
+  impactOnly?: boolean;
   transitive?: boolean;
   statement?: string;
   evidence?: string;
@@ -96,7 +97,7 @@ Usage:
   gw hook <event> [path]   (internal: driven by IDE lifecycle hooks)
   gw gate <name> [path] [--base <ref>] [--fail-on error|warning] [--json]
   gw snapshot capture|replay [path] --unit <name> --input <exchange.json> --files <response-source,...> [--volatile a,b] [--sensitive a,b]
-  gw verify [path] [--json]
+  gw verify [path] [--full|--impact] [--provenance human|agent|unknown] [--json]
   gw claims verify [path] [--json] [--strict]
   gw claims derive [path] [--json]
   gw claims add --statement "..." --evidence "src/a.ts:10-20,src/b.ts" --author "name" [path]
@@ -129,12 +130,14 @@ Advanced commands (the 4 verbs above orchestrate these; use directly if you want
 function parseArgs(args: string[]): Options {
   let command: Command = "install";
   const remaining = [...args];
-  if (remaining[0] && (COMMANDS as string[]).includes(remaining[0])) {
-    command = remaining.shift() as Command;
-  }
   if (remaining.includes("--help") || remaining.includes("-h")) {
     output.write(usage(remaining.includes("--all")));
     process.exit(0);
+  }
+  if (remaining[0] && (COMMANDS as string[]).includes(remaining[0])) {
+    command = remaining.shift() as Command;
+  } else if (remaining[0] && !remaining[0].startsWith("-")) {
+    throw new Error(`Unknown command "${remaining[0]}". Use graphward install <path> explicitly. Run graphward --help for supported commands.`);
   }
   const ides: IdeId[] = [];
   let target: string | undefined;
@@ -170,6 +173,7 @@ function parseArgs(args: string[]): Options {
   let intent: string | undefined;
   let id: string | undefined;
   let full = false;
+  let impactOnly = false;
   let transitive = false;
   let note: string | undefined;
   let targetIde: string | undefined;
@@ -228,6 +232,8 @@ function parseArgs(args: string[]): Options {
       json = true;
     } else if (arg === "--open") {
       openBrowser = true;
+    } else if (arg === "--impact") {
+      impactOnly = true;
     } else if (arg === "--full") {
       full = true;
     } else if (arg === "--transitive") {
@@ -411,6 +417,7 @@ function parseArgs(args: string[]): Options {
     intent,
     id,
     full,
+    impactOnly,
     transitive,
     statement,
     evidence,
@@ -479,6 +486,7 @@ function printResult(label: string, result: OperationResult, dryRun: boolean): v
   printActions(result.actions);
   const prefix = dryRun ? "Dry run:" : `${label}:`;
   output.write(`${prefix} ${result.changed} changed, ${result.conflicts} conflict(s).\n`);
+  if (!dryRun && result.actions.some(action => action.path === '.codex/hooks.json' && ['created', 'updated', 'unchanged'].includes(action.status))) output.write('Codex: review and trust the exact generated hook definitions with /hooks in a trusted project before relying on edit guardrails. Installation alone does not enable enforcement.\n');
 }
 
 async function readStdin(): Promise<string> {
@@ -521,6 +529,11 @@ export function createPromptOverwrite(
 }
 
 async function main(): Promise<void> {
+  if (process.argv.length === 2) { output.write(usage()); return; }
+  if (process.argv.length === 3 && process.argv[2] === "--version") {
+    output.write(`${await packageVersion()}\n`);
+    return;
+  }
   const options = parseArgs(process.argv.slice(2));
 
   if (options.command === "hook") {
@@ -741,9 +754,9 @@ async function main(): Promise<void> {
     const cf = await changedFiles(options.root);
     const { record, noCommands } = await runVerification(options.root, {
       commands: config.verifyCommands.length > 0 ? config.verifyCommands : undefined,
-      impactOnly: !options.full,
+      mode: options.impactOnly && !options.full ? "impact" : "baseline",
       changedFiles: cf,
-      provenance: options.provenance ?? "human",
+      provenance: options.provenance ?? "unknown",
     });
     if (options.json) {
       output.write(`${JSON.stringify(record, null, 2)}\n`);
@@ -1221,10 +1234,22 @@ async function main(): Promise<void> {
   if (options.command === "aidlc") {
     const { checkPhaseGate, assessPromptClarity, loadAidlcState, saveAidlcState } = await import("../aidlc/index.js");
     const subAction = options.positional || options.positionals[0] || "gate";
-    if (subAction === "gate") {
+    if (subAction === "confirm-task" || subAction === "accept-reduced-context") {
+      if (!options.id || !options.unit) throw new Error("Use --id <taskId> --host <host> --unit <native-session-id> for interactive operator confirmation.");
+      const { confirmTaskInteractively } = await import("../aidlc/task-contract.js");
+      const receipt = await confirmTaskInteractively(options.root, options.id, { host: options.host, sessionId: options.unit }, subAction === "accept-reduced-context");
+      output.write(JSON.stringify({ taskId: receipt.taskId, confirmationAssurance: receipt.confirmation?.assurance, degradedDecision: receipt.degradedDecision }) + "\n");
+    } else if (subAction === "prepare-task") {
+      const { prepareTaskContext } = await import("../context/preparation.js");
+      const { bindTaskContext } = await import("../aidlc/task-contract.js");
+      const receipt = await prepareTaskContext(options.root, { retry: options.force, onProgress: message => process.stderr.write(message + "\n") });
+      const context = options.id ? await bindTaskContext(options.root, options.id) : undefined;
+      output.write(JSON.stringify({ receipt, context }, null, 2) + "\n");
+      if (["blocked", "cancelled"].includes(receipt.status)) process.exitCode = 1;
+    } else if (subAction === "gate") {
       const validPhases = ["discovery", "inception", "construction", "operations"];
       const targetPhase = (options.positionals.find((p) => validPhases.includes(p)) || "inception") as any;
-      const result = await checkPhaseGate(options.root, targetPhase);
+      const result = await checkPhaseGate(options.root, targetPhase, options.id);
       if (options.json) {
         output.write(`${JSON.stringify(result, null, 2)}\n`);
       } else {

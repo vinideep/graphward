@@ -38,7 +38,8 @@ function isObject(value: unknown): value is Json {
  * (and on uninstall destroy) the user's own hooks sitting beside ours.
  */
 function isOurs(value: unknown): boolean {
-  return JSON.stringify(value ?? "").includes(OWNERSHIP_MARKER);
+  const text = JSON.stringify(value ?? "");
+  return text.includes(OWNERSHIP_MARKER) || /dist[\\/]cli[\\/]index\.js/.test(text) && /[\\"']hook[\\"']| hook /.test(text);
 }
 
 /** True for an OBJECT KEY that is ours: our entry inside an `mcpServers` map. */
@@ -64,77 +65,43 @@ export function parseJsonOrEmpty(source: string | undefined): Json {
  * so re-running install is idempotent and never duplicates.
  */
 export function mergeHookConfig(existingSource: string | undefined, oursSource: string): string {
+  if (existingSource?.trim()) {
+    const value = JSON.parse(existingSource);
+    if (!isObject(value)) throw new Error('Existing user configuration must be an object; preserved.');
+  }
   const existing = parseJsonOrEmpty(existingSource);
   const ours = parseJsonOrEmpty(oursSource);
-
-  const merged: Json = { ...existing };
-  for (const [topKey, ourValue] of Object.entries(ours)) {
-    const theirValue = existing[topKey];
-
-    // enabledMcpjsonServers: set-union merge so we add our entry without
-    // overwriting the user's existing approved servers.
-    if (topKey === ENABLED_MCP_JSON_KEY && Array.isArray(ourValue)) {
-      const base = Array.isArray(theirValue) ? [...theirValue] : [];
-      for (const entry of ourValue) {
-        if (!base.includes(entry)) base.push(entry);
-      }
-      merged[topKey] = base;
-      continue;
-    }
-
-    if (!isObject(ourValue) || !isObject(theirValue)) {
-      // `version`, or the user has nothing here yet — take ours wholesale.
-      merged[topKey] = ourValue;
-      continue;
-    }
-    const section: Json = { ...theirValue };
-    for (const [event, ourEntries] of Object.entries(ourValue)) {
-      const theirEntries = theirValue[event];
-      if (!Array.isArray(ourEntries)) {
-        section[event] = ourEntries;
-        continue;
-      }
-      const kept = Array.isArray(theirEntries) ? theirEntries.filter((e) => !isOurs(e)) : [];
-      section[event] = [...kept, ...ourEntries];
-    }
-    merged[topKey] = section;
+  if (isObject(existing.mcpServers) && isObject(ours.mcpServers) && existing.mcpServers.graphward && JSON.stringify(existing.mcpServers.graphward) !== JSON.stringify(ours.mcpServers.graphward)) {
+    const registration = existing.mcpServers.graphward as Json;
+    const args = Array.isArray(registration.args) ? registration.args.join(" ") : "";
+    if (!/dist[/\\]mcp[/\\](?:cli|index)\.js|\bgw-mcp\b|\bgraphward\s+mcp\b/.test(args)) throw new Error("Existing user GraphWard MCP registration conflicts and was preserved.");
   }
-  return `${JSON.stringify(merged, null, 2)}\n`;
+  const merge = (theirs: unknown, incoming: unknown, key?: string): unknown => {
+    if (key === ENABLED_MCP_JSON_KEY && Array.isArray(incoming)) return [...new Set([...(Array.isArray(theirs) ? theirs : []), ...incoming])];
+    if (key === "args" && Array.isArray(incoming)) return incoming;
+    if (Array.isArray(incoming)) return [...(Array.isArray(theirs) ? theirs.filter(item => !isOurs(item)) : []), ...incoming];
+    if (isObject(incoming)) {
+      const result: Json = isObject(theirs) ? { ...theirs } : {};
+      for (const [name, value] of Object.entries(incoming)) result[name] = merge(result[name], value, name);
+      return result;
+    }
+    // Preserve user-disabled integration instead of silently enabling it again.
+    if (key === 'enabled' && typeof theirs === 'boolean') return theirs;
+    return incoming;
+  };
+  return JSON.stringify(merge(existing, ours), null, 2) + '\n';
 }
 
 /** Every entry we own is present in the file on disk. */
 export function hasOurEntries(existingSource: string | undefined, oursSource: string): boolean {
   const existing = parseJsonOrEmpty(existingSource);
   const ours = parseJsonOrEmpty(oursSource);
-  for (const [topKey, ourValue] of Object.entries(ours)) {
-    // enabledMcpjsonServers: verify each of our entries is present.
-    if (topKey === ENABLED_MCP_JSON_KEY && Array.isArray(ourValue)) {
-      const theirValue = existing[topKey];
-      if (!Array.isArray(theirValue)) return false;
-      for (const entry of ourValue) {
-        if (!theirValue.includes(entry)) return false;
-      }
-      continue;
-    }
-    if (!isObject(ourValue)) continue;
-    const theirValue = existing[topKey];
-    if (!isObject(theirValue)) return false;
-    for (const [key, ourEntries] of Object.entries(ourValue)) {
-      // Object-keyed ownership (mcpServers.graphward).
-      if (isOurKey(topKey, key)) {
-        if (JSON.stringify(theirValue[key]) !== JSON.stringify(ourEntries)) return false;
-        continue;
-      }
-      if (!Array.isArray(ourEntries)) continue;
-      const theirEntries = theirValue[key];
-      if (!Array.isArray(theirEntries)) return false;
-      const theirOurs = JSON.stringify(theirEntries.filter((e) => isOurs(e)));
-      for (const entry of ourEntries) {
-        if (!theirOurs.includes(JSON.stringify(entry))) return false;
-      }
-    }
-  }
-  return true;
+  const contains = (theirs: unknown, incoming: unknown): boolean => {
+    if (Array.isArray(incoming)) return Array.isArray(theirs) && incoming.every(entry => theirs.some(item => contains(item, entry)));
+    if (isObject(incoming)) return isObject(theirs) && Object.entries(incoming).every(([key, value]) => contains(theirs[key], value));
+    return theirs === incoming;
+  };
+  return contains(existing, ours);
 }
 
 /**

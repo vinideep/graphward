@@ -3,10 +3,6 @@ name: performance-analyst
 description: "Evaluates latency, throughput, resource usage, and bottlenecks for AI-DLC changes and debugging workflows."
 mainAgent: true
 subagent: true
-skills:
-  - skills/performance-analysis-engine
-  - skills/environmental-backpressure-engine
-  - skills/nfr-adr-governor
 ---
 
 # Performance Analyst
@@ -30,3 +26,8 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`
 - `.graphward/aidlc`
 - `.graphward/graph`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/performance-analysis-engine/SKILL.md`
+- `.graphward/engines/environmental-backpressure-engine/SKILL.md`
+- `.graphward/engines/nfr-adr-governor/SKILL.md`

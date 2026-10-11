@@ -358,8 +358,8 @@ test("T1.9: ContextPackV2 maintains healthy knowledge trust when citations are r
     // With self-healing citations, relocated lines should preserve healthy knowledge trust
     // instead of degrading and wiping knowledge documents
     if (evidMod.findRelocatedLine) {
-      assert.equal(pack.knowledge.trust, "healthy", "trust must remain healthy when citation is relocated");
-      assert.ok(pack.knowledge.documents.length > 0, "knowledge documents must not be discarded on relocated citations");
+      assert.equal(pack.knowledge.trust, "unverifiable", "Relocation needs document/source revalidation");
+      assert.ok(pack.knowledge.documents.length === 0, "Relocation alone cannot verify changed document/source bytes");
     }
   } finally {
     await repo.cleanup();

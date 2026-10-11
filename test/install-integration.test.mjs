@@ -178,8 +178,8 @@ test("CLI installs enforcement hooks (settings.json + gw.config.json)", async ()
   assert.equal(result.status, 0, `CLI exited ${result.status}:\n${result.stderr}`);
 
   const settings = JSON.parse(await read(root, ".claude/settings.json"));
-  assert.match(settings.hooks.SessionStart[0].hooks[0].command, /gw hook session-start/);
-  assert.match(settings.hooks.Stop[0].hooks[0].command, /gw hook stop/);
+  assert.match(settings.hooks.SessionStart[0].hooks[0].command, /index\.js['" ]+hook session-start/);
+  assert.match(settings.hooks.Stop[0].hooks[0].command, /index\.js['" ]+hook stop/);
 
   const config = JSON.parse(await read(root, ".graphward/gw.config.json"));
   assert.equal(config.hooks.requireValidationOnStop, true, "completion validation is enforced by default");
@@ -215,7 +215,7 @@ test("installs into a repo that already owns .claude/settings.json", async () =>
   assert.equal(settings.model, "opus", "user model preserved");
   const starts = settings.hooks.SessionStart.map((e) => e.hooks[0].command);
   assert.ok(starts.includes("echo mine"), "user's own hook preserved");
-  assert.ok(starts.some((c) => c.includes("gw hook")), "our hook wired alongside");
+  assert.ok(starts.some((c) => c.includes("hook session-start")), "our hook wired alongside");
 
   // The MCP server is registered, so its tools are actually reachable.
   const mcp = JSON.parse(await read(root, ".mcp.json"));

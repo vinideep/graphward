@@ -14,6 +14,7 @@ This repository uses installed GraphWard workflows.
 - Base documentation claims on repository evidence and identify unknowns explicitly.
 - **Prefer persisted intelligence over re-exploration.** Before reading source files to understand the codebase, read the persisted knowledge base in `.graphward/knowledge-base/`, context maps in `.graphward/context/`, and architecture graphs in `.graphward/graph/`. Re-read source only for the specific files a task touches. Run `sync-graphward` to refresh these artifacts incrementally rather than re-deriving from scratch each session.
 - **Route before loading skills.** Consult the active provider's installed `WORKFLOW-ROUTING.md` and `SKILLS-INDEX.md` before opening an internal `SKILL.md`. Entry workflows are model-invocable; internal engines are loaded only through the selected route.
+- When Codex is the active provider and `.codex/agents/*.toml` is present, delegate non-trivial implementation work to the named `graphward` custom agent and wait for its result; use `engineering-orchestrator` for routing or decomposition. These are spawned agent sessions, not desktop slash commands.
 
 ## Tools (prefer these over reasoning by hand)
 
@@ -29,5 +30,5 @@ These run deterministically. Use them instead of inferring the answer from sourc
 - `assess_risk` — compute multi-dimensional risk profile and tiered verification plan
 - `slice_graph` — hierarchically slice monorepo graph at global, package, community, or task level
 
-CLI equivalents: `npx gw map|gate <name>|verify|freshness|context|claims verify|git-analysis .`. `gate` and `verify` exit non-zero on failure, so they work in CI too.
+CLI equivalents: `"/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node" "/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/cli/index.js" map|gate <name>|verify|freshness|context|claims verify|git-analysis .`. `gate` and `verify` exit non-zero on failure, so they work in CI too.
 <!-- graphward:end -->

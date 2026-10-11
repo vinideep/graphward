@@ -1,5 +1,5 @@
-const START = (id: string): string => `<!-- ${id}:start -->`;
-const END = (id: string): string => `<!-- ${id}:end -->`;
+const START = (id: string): string => id === "graphward-codex-mcp" ? `# ${id}:start` : `<!-- ${id}:start -->`;
+const END = (id: string): string => id === "graphward-codex-mcp" ? `# ${id}:end` : `<!-- ${id}:end -->`;
 
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

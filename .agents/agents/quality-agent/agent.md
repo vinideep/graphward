@@ -3,13 +3,6 @@ name: quality-agent
 description: "Validates engineering changes, regression risk, architecture effects, and documentation accuracy. Ensures honest quality reporting."
 mainAgent: true
 subagent: true
-skills:
-  - skills/engineering-change-review
-  - skills/knowledge-base-validator
-  - skills/testing-intelligence-engine
-  - skills/environmental-backpressure-engine
-  - skills/contract-test-generator
-  - skills/adr-compliance-checker
 ---
 
 # Quality Agent
@@ -79,3 +72,11 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`
 - `.graphward/aidlc`
 - `.graphward/context`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/engineering-change-review/SKILL.md`
+- `.graphward/engines/knowledge-base-validator/SKILL.md`
+- `.graphward/engines/testing-intelligence-engine/SKILL.md`
+- `.graphward/engines/environmental-backpressure-engine/SKILL.md`
+- `.graphward/engines/contract-test-generator/SKILL.md`
+- `.graphward/engines/adr-compliance-checker/SKILL.md`

@@ -384,8 +384,8 @@ test("T3.8: Self-Healing Citations + ContextPackV2 Knowledge Stability (F2 + Con
 
     assert.ok(pack);
     if (evidMod.findRelocatedLine) {
-      assert.equal(pack.knowledge.trust, "healthy", "trust must not degrade on harmless line shifts");
-      assert.ok(pack.knowledge.documents.length > 0, "knowledge documents must remain available");
+      assert.equal(pack.knowledge.trust, "unverifiable", "Line relocation is structural evidence, not semantic approval");
+      assert.equal(pack.knowledge.documents.length, 0, "Relocated citations need complete source revalidation");
     }
   } finally {
     await repo.cleanup();
@@ -654,8 +654,8 @@ test("T4.5: Scenario 5 — Repository-Wide Formatting and Citation Auto-Healing"
         files: ["src/mod1.ts"],
         budget: 3000,
       });
-      assert.equal(pack.knowledge.trust, "healthy");
-      assert.ok(pack.knowledge.documents.length > 0);
+      assert.equal(pack.knowledge.trust, "unverifiable");
+      assert.equal(pack.knowledge.documents.length, 0);
     }
   } finally {
     await repo.cleanup();

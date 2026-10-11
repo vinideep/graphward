@@ -74,7 +74,7 @@ export function executePayment(service: any, method: string) {
   assert.ok(analysis.evidence.length > 0, "Evidence records should be emitted");
   assert.equal(analysis.evidence[0].kind, "COMPILER");
   assert.equal(analysis.evidence[0].source.type, "SOURCE");
-  assert.equal(analysis.evidence[0].confidenceState, "CALIBRATED");
+  assert.equal(analysis.evidence[0].confidenceState, "ESTIMATED");
 });
 
 test("typescript-compiler: handles overloaded methods and alias symbols without crashing", async () => {

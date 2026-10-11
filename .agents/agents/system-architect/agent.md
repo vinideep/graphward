@@ -3,14 +3,6 @@ name: system-architect
 description: "Designs component boundaries, API contracts, NFR responses, and ADRs for AI-DLC construction."
 mainAgent: true
 subagent: true
-skills:
-  - skills/aidlc-lifecycle-engine
-  - skills/nfr-adr-governor
-  - skills/architecture-review-engine
-  - skills/graph-engine
-  - skills/adr-compliance-checker
-  - skills/socratic-stress-tester
-  - skills/interface-design-explorer
 ---
 
 # System Architect
@@ -43,3 +35,12 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/aidlc`
 - `.graphward/graph`
 - `.graphward/memory`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/aidlc-lifecycle-engine/SKILL.md`
+- `.graphward/engines/nfr-adr-governor/SKILL.md`
+- `.graphward/engines/architecture-review-engine/SKILL.md`
+- `.graphward/engines/graph-engine/SKILL.md`
+- `.graphward/engines/adr-compliance-checker/SKILL.md`
+- `.graphward/engines/socratic-stress-tester/SKILL.md`
+- `.graphward/engines/interface-design-explorer/SKILL.md`

@@ -1,68 +1,92 @@
-name: Publish to npm
-
+name: Publish qualified candidate
 on:
   pull_request:
     branches: [main]
   push:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
   id-token: write
-
 jobs:
-  build-and-verify:
-    name: Verify and Test
+  full-ci:
+    uses: ./.github/workflows/ci.yml
+  candidate:
+    needs: full-ci
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          registry-url: "https://registry.npmjs.org"
           cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run tests
-        run: npm test
-
-      - name: Verify package dry run
-        run: npm publish --dry-run
-
+      - run: npm ci
+      - run: mkdir candidate && npm pack --pack-destination candidate
+      - uses: actions/upload-artifact@v4
+        with:
+          name: exact-candidate
+          path: candidate/*.tgz
+  native-hosts:
+    if: vars.GRAPHWARD_NATIVE_QUALIFICATION == 'enabled' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: candidate
+    runs-on: [self-hosted, graphward-native-qualification]
+    strategy:
+      fail-fast: false
+      matrix:
+        host: [codex, claude-code, antigravity-cli]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/download-artifact@v4
+        with:
+          name: exact-candidate
+          path: candidate
+      - run: node scripts/native-host-canary.mjs --candidate candidate/*.tgz --host ${{ matrix.host }} --output qualification/${{ matrix.host }}.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qualification-${{ matrix.host }}
+          path: qualification/${{ matrix.host }}.json
+  external-evidence:
+    if: vars.GRAPHWARD_NATIVE_QUALIFICATION == 'enabled' && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: candidate
+    runs-on: [self-hosted, graphward-native-qualification]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node scripts/collect-qualification-evidence.mjs --directory "$GRAPHWARD_QUALIFICATION_DIR" --output qualification
+        env:
+          GRAPHWARD_QUALIFICATION_DIR: ${{ vars.GRAPHWARD_QUALIFICATION_DIR }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qualification-external
+          path: qualification/*.json
   publish:
-    name: Publish to npm
-    needs: build-and-verify
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: always() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && needs['full-ci'].result == 'success' && needs.candidate.result == 'success'
+    needs: [full-ci, candidate, native-hosts, external-evidence]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          registry-url: "https://registry.npmjs.org"
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build package
-        run: npm run build
-
-      - name: Publish to npm
-        run: |
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          NPM_VERSION=$(npm view graphward version 2>/dev/null || echo "")
-          if [ "$CURRENT_VERSION" = "$NPM_VERSION" ]; then
-            echo "Version $CURRENT_VERSION is already published on npm. Skipping publish."
-          else
-            npm publish --provenance --access public
-          fi
+          registry-url: https://registry.npmjs.org
+      - uses: actions/download-artifact@v4
+        with:
+          name: exact-candidate
+          path: candidate
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: qualification-*
+          path: qualification
+          merge-multiple: true
+      # IDE traces and held-out measurements must be supplied for this tarball.
+      # Absence blocks release; CLI evidence cannot stand in for IDE evidence.
+      - run: node scripts/qualify-release.mjs --candidate candidate/*.tgz --reports qualification --measurements qualification/measured-runs.json
+      - run: npm publish candidate/*.tgz --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

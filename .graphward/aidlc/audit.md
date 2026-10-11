@@ -49,3 +49,17 @@ Append-only chronological log of decisions, tool checks, and transitions.
 | Tracker resolution | GitHub remote detected (`vinideep/graphward`). |
 | Backlog scanned | 1 Epic (`EPIC-001`), 5 Features (`FEAT-001` to `FEAT-005`), 10 Tickets (`TKT-001` to `TKT-010`). |
 | Sync mapping | Recorded in `.graphward/aidlc/agile/backlog/sync/tracker-sync-map.md` (status: pending, 16 items ready for GitHub Issue publication). |
+
+## 2026-10-10 — explicit autorouter rollback and repair planning
+
+User requested reverting the last two commits and a complete reliability repair plan. IMP-010 recorded scope before mutation. Exact original dirty files and patch were preserved with verified hashes. Revert commits a602021 and a4a0ba1 restore the predecessor product tree. Clean build/default437 and integration16 checks pass. Scoped native graph/brief/derived-claim sync ran; 490/490 claims verify. Doctor still reports18 errors; direct launch remains0644; strict SDK MCP initialization and unknown-command rejection failed and are added to R5. The generated probe-only routing directory was cleaned. PLAN-011 defines R1–R6 and A0–A14; no repair completion, publication, provider index freshness or actual Codex acceptance is claimed. Detailed evidence: construction/autorouter-rollback/build-and-test/build-and-test-summary.md and reports/rollback-2026-10-10/.
+
+- 2026-10-11: User explicitly requested implementation of the complete A–F plan. Preserved preexisting changes; baseline 437/437; IMP-012 computed impact recorded. Started sequential construction through installed engineering-orchestrator.
+
+## 2026-10-11 — reliability implementation validation
+
+Root completed sequential A–F product changes after the installed orchestrator's delegated worker hit its account usage limit. Context remains bound to this checkout; exposed external-project CCE MCP tools were not used. Added independent task revisions and native confirmation observation, read-only retrieval, bounded preparation, fresh Graphify staging, exact runtime registration, compiler-backed resolution, per-document complete-source evidence, owned locks and measured-only evaluation. Full maintained regression and exact-candidate native qualification are in progress; no native discovery or accuracy is inferred from rendered files.
+
+### Final local verification and native review
+
+Final source-stable byte-bound verification passes 488/488. Actual pinned Graphify ancestor ignore pruning and default `.` context scope rejection were repaired and regressed. Both providers refreshed locally. Exact candidate Claude native canary passes all three scenarios with accepted provider contribution and denied unapproved Write. Following explicit user authorization, native Codex hooks/list confirms all five checkout hooks trusted and enabled; no trust or permission bypass used. Qualification explicitly fails on unavailable current-candidate Codex/Antigravity and held-out measurements. No publication, push, global settings or external-project edits.

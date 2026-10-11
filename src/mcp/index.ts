@@ -10,6 +10,7 @@ import { generateBrief, readBrief } from "../brief/index.js";
 import { shape, terseNode, terseEdge, packRows } from "./shaper.js";
 import { loadGwConfig } from "../config/index.js";
 import { packageVersion } from "../version.js";
+import { resolveRuntimeInvocation } from "../runtime/invocation.js";
 import { MCP_API_VERSION } from "../graph/schema.js";
 import { createConsolidatedRegistry } from "./consolidated.js";
 import type { ApiSnapshotExchange } from "../gates/api-snapshot.js";
@@ -333,13 +334,14 @@ export const MCP_TOOL_SUMMARY: ReadonlyArray<readonly [string, string]> = [
  * so the tools are actually reachable instead of requiring the user to register
  * the server by hand and then somehow know the tool names.
  */
-export function mcpServerRegistration(): string {
+export function mcpServerRegistration(projectRoot?: string): string {
+  const invocation = resolveRuntimeInvocation({ kind: "mcp", projectRoot });
   return JSON.stringify(
     {
       mcpServers: {
         "graphward": {
-          command: "npx",
-          args: ["-y", "graphward", "mcp"],
+          command: invocation.command,
+          args: invocation.args,
         },
       },
     },
@@ -360,8 +362,8 @@ function safeRegex(pattern: string | undefined): RegExp | undefined {
 export async function startMcpServer(projectRoot: string): Promise<void> {
   const consolidated = await createConsolidatedRegistry(projectRoot);
   const server = new Server(
-    { name: "graphward", version: MCP_API_VERSION },
-    { capabilities: { tools: {}, apiVersion: MCP_API_VERSION, experimental: { apiVersion: MCP_API_VERSION } } as any },
+    { name: "graphward", version: await packageVersion() },
+    { capabilities: { tools: {}, experimental: { graphward: { apiVersion: MCP_API_VERSION } } } },
   );
 
   // Advertise only the cohesive GraphWard control-plane surface. The legacy tools
@@ -370,13 +372,14 @@ export async function startMcpServer(projectRoot: string): Promise<void> {
   // orchestrate GraphWard, Graphify, and CCE primitives itself.
   server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: consolidated.list() }));
 
-  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
     const { name, arguments: args = {} } = request.params;
-    const root = (typeof args.root === "string" ? args.root : projectRoot);
     const text = (t: string, isError = false) => ({ content: [{ type: "text", text: t }], ...(isError ? { isError: true } : {}) });
-    const cfg = await loadBudgetConfig(root);
 
     try {
+      const root = toCanonicalPath(typeof args.root === "string" ? args.root : projectRoot);
+      if (root !== toCanonicalPath(projectRoot)) throw new Error("MCP connection is bound to another project; reconnect with the intended project root.");
+      const cfg = await loadBudgetConfig(root);
       if (consolidated.has(name)) {
         if (name === "who_calls") {
           const rawResult = (await consolidated.execute(name, { ...args, root })) as any;
@@ -390,7 +393,7 @@ export async function startMcpServer(projectRoot: string): Promise<void> {
             { budget: budgetOf(args, cfg, "who_calls", 1500), hints: { callers: { hint: "who_calls <caller> transitive=true (packed: {cols,rows})", mustKeep: true }, matched: { hint: "find_symbol <name>", mustKeep: true } } },
           ));
         }
-        return text(JSON.stringify(await consolidated.execute(name, { ...args, root }), null, 2));
+        return text(JSON.stringify(await consolidated.execute(name, { ...args, root }, { signal: extra.signal }), null, 2));
       }
       if (name === "get_brief") {
         await ensureFreshGraph(root);
@@ -608,3 +611,4 @@ export async function startMcpServer(projectRoot: string): Promise<void> {
   const transport = new StdioServerTransport();
   await server.connect(transport);
 }
+import { toCanonicalPath } from "../providers/workspace.js";

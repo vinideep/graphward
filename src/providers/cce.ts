@@ -1,5 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rename, writeFile, cp, mkdtemp, rm } from "node:fs/promises";
+import os from "node:os";
+import { constants } from "node:fs";
 import path from "node:path";
 import { collectProjectFiles, ProjectFilePolicy } from "../project-files/index.js";
 import { runProcess, type ProcessRunner } from "../process/index.js";
@@ -7,6 +9,7 @@ import { PROVIDER_COMPATIBILITY } from "./compatibility.js";
 import { defaultProviderHome, providerStatus } from "./manager.js";
 import { computeProviderSourceSnapshot, PROVIDER_DIR, syncProviderWorkspace, toCanonicalPath } from "./workspace.js";
 import type { ProviderStatus } from "./types.js";
+import { loadGwConfig } from "../config/index.js";
 
 export const CCE_DIR = `${PROVIDER_DIR}/cce`;
 export const CCE_RUN_PATH = `${CCE_DIR}/run.json`;
@@ -16,6 +19,7 @@ const SEARCHABLE_EXTENSIONS = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".c
 
 export interface CceRunManifest {
   schemaVersion: 1;
+  projectRoot?: string;
   provider: "cce";
   providerVersion: string;
   generatedAt: string;
@@ -53,6 +57,7 @@ export interface CodeRetrievalResult {
   staleRejected: number;
   scopeRejected: number;
   message: string;
+  invocation?: { command: string; args: string[]; indexGeneration?: string; binaryHash: string; invoked: boolean; exitCode: number; timedOut?: boolean };
 }
 
 function sha256(content: Buffer | string): string {
@@ -122,6 +127,8 @@ export async function runCceIndex(
     PYTHONUNBUFFERED: "1",
     CCE_EMBED_BACKEND: "fastembed",
     CCE_FASTEMBED_CACHE_PATH: modelCache,
+    HF_HUB_OFFLINE: "1",
+    TRANSFORMERS_OFFLINE: "1",
   };
   // Do not call `cce init`: upstream initialization installs its own hooks,
   // instructions, and MCP registration. GraphWard needs only the local index, so it
@@ -168,9 +175,13 @@ export async function runCceIndex(
   if (index.exitCode !== 0) {
     return { ok: false, degraded: true, status: { ...status, health: "error", message: `CCE indexing failed: ${(index.stderr || index.error || "unknown error").trim().slice(-1000)}` }, workspaceHash: workspace.workspaceHash, message: "CCE index was not refreshed; GraphWard native scoped retrieval remains active." };
   }
+  if ((await computeProviderSourceSnapshot(root)).workspaceHash !== workspace.workspaceHash) {
+    return { ok: false, degraded: true, status: { ...status, health: "error" }, message: "Source changed during CCE indexing; no current receipt was activated." };
+  }
   await writeAtomic(path.join(root, CCE_INITIALIZED), { providerVersion: PROVIDER_COMPATIBILITY.cce.version, initializedAt: new Date().toISOString(), mode: "index-only" });
   const manifest: CceRunManifest = {
     schemaVersion: 1,
+    projectRoot: canonicalRoot,
     provider: "cce",
     providerVersion: PROVIDER_COMPATIBILITY.cce.version,
     generatedAt: new Date().toISOString(),
@@ -244,7 +255,7 @@ function inApprovedScope(relative: string, approvedPaths: string[]): boolean {
   const normalized = relative.replace(/\\/g, "/");
   return approvedPaths.some((candidate) => {
     const scope = candidate.replace(/\\/g, "/").replace(/^\.\//, "").replace(/\/$/, "");
-    return normalized === scope || normalized.startsWith(`${scope}/`);
+    return scope === "." || scope === "" || normalized === scope || normalized.startsWith(`${scope}/`);
   });
 }
 
@@ -302,11 +313,16 @@ export async function searchCodeContext(
 ): Promise<CodeRetrievalResult> {
   const topK = Math.max(1, Math.min(options.topK ?? 5, 50));
   const runner = options.runner ?? runProcess;
+  const config = await loadGwConfig(root);
+  if (config.providers.policy === "native") {
+    return { chunks: await nativeScopedSearch(root, query, approvedPaths, topK), provider: "native", providerHealth: "disabled", fallbackUsed: false, staleRejected: 0, scopeRejected: 0, message: "Native lexical retrieval selected explicitly; no provider invoked." };
+  }
   const status = await providerStatus("cce", { runner, providerHome: options.providerHome });
   const manifest = await readJson<CceRunManifest>(path.join(root, CCE_RUN_PATH));
   const currentSnapshot = manifest ? await computeProviderSourceSnapshot(root) : undefined;
-  const currentIndex = manifest?.provider === "cce" && manifest.providerVersion === PROVIDER_COMPATIBILITY.cce.version && manifest.workspaceHash === currentSnapshot?.workspaceHash;
+  const currentIndex = manifest?.provider === "cce" && !!manifest.projectRoot && toCanonicalPath(manifest.projectRoot) === toCanonicalPath(root) && manifest.providerVersion === PROVIDER_COMPATIBILITY.cce.version && manifest.workspaceHash === currentSnapshot?.workspaceHash;
   if (status.health !== "healthy" || !status.executable || !currentIndex) {
+    if (config.providers.requireProviders) throw new Error("Required CCE context is unavailable or stale. Call prepare_task_context; native fallback is prohibited.");
     const chunks = await nativeScopedSearch(root, query, approvedPaths, topK);
     return { chunks, provider: "native", providerHealth: status.health, fallbackUsed: true, staleRejected: 0, scopeRejected: 0, message: manifest ? "CCE index is stale, incompatible, or unavailable; native scoped retrieval used." : "CCE index is unavailable; native scoped retrieval used." };
   }
@@ -315,10 +331,29 @@ export async function searchCodeContext(
   const cceProject = toCanonicalPath(path.join(canonicalRoot, CCE_PROJECT));
   const overfetch = Math.min(200, Math.max(topK * 4, 20));
   const modelCache = path.join(options.providerHome ?? defaultProviderHome(), "cce", "models");
-  const result = await runner({ command: status.executable, args: ["search", query, "--top-k", String(overfetch)], cwd: cceProject, env: { ...process.env, CI: "1", NO_COLOR: "1", CCE_EMBED_BACKEND: "fastembed", CCE_FASTEMBED_CACHE_PATH: modelCache }, timeoutMs: 2 * 60_000, maxBuffer: 20 * 1024 * 1024 });
+  const binaryHash = sha256(await readFile(status.executable));
+  // Pinned CCE search updates stats and opens writable caches. Query a disposable
+  // copy so retrieval leaves all project artifacts unchanged.
+  const queryProject = toCanonicalPath(await mkdtemp(path.join(os.tmpdir(), "gw-cce-query-")));
+  let result;
+  let providerInvoked = false;
+  try {
+    const queryStorage = path.join(queryProject, "storage");
+    await cp(manifest.storagePath, queryStorage, { recursive: true, mode: constants.COPYFILE_FICLONE });
+    const slug = (location: string) => `${path.basename(location).replace(/[^a-zA-Z0-9_-]/g, "-") || "project"}-${sha256(location).slice(0, 6)}`;
+    const oldPartition = path.join(queryStorage, slug(cceProject));
+    try { await rename(oldPartition, path.join(queryStorage, slug(queryProject))); } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
+    await writeFile(path.join(queryProject, ".context-engine.yaml"), `storage:\n  path: ${JSON.stringify(queryStorage)}\nembedding:\n  model: "BAAI/bge-small-en-v1.5"\n`);
+    providerInvoked = true;
+    result = await runner({ command: status.executable, args: ["search", query, "--top-k", String(overfetch)], cwd: queryProject, env: { ...process.env, CI: "1", NO_COLOR: "1", HF_HUB_OFFLINE: "1", TRANSFORMERS_OFFLINE: "1", CCE_EMBED_BACKEND: "fastembed", CCE_FASTEMBED_CACHE_PATH: modelCache }, timeoutMs: 2 * 60_000, maxBuffer: 20 * 1024 * 1024 });
+  } catch (error) {
+    result = { command: status.executable, args: ["search", query, "--top-k", String(overfetch)], exitCode: 1, stdout: "", stderr: "", error: String(error), timedOut: false };
+  } finally { await rm(queryProject, { recursive: true, force: true }); }
+  const invocation = { command: status.executable, args: ["search", query, "--top-k", String(overfetch)], indexGeneration: manifest.generatedAt, binaryHash, invoked: providerInvoked, exitCode: result.exitCode, timedOut: result.timedOut };
   if (result.exitCode !== 0) {
+    if (config.providers.requireProviders) throw new Error("Required CCE search failed; native fallback is prohibited.");
     const chunks = await nativeScopedSearch(root, query, approvedPaths, topK);
-    return { chunks, provider: "native", providerHealth: "error", fallbackUsed: true, staleRejected: 0, scopeRejected: 0, message: `CCE search failed; native scoped retrieval used: ${(result.stderr || result.error || "unknown error").trim().slice(-500)}` };
+    return { chunks, provider: "native", providerHealth: "error", fallbackUsed: true, staleRejected: 0, scopeRejected: 0, invocation, message: `CCE search failed; native scoped retrieval used: ${(result.stderr || result.error || "unknown error").trim().slice(-500)}` };
   }
   const policy = await ProjectFilePolicy.load(root);
   const chunks: RetrievedCodeChunk[] = [];
@@ -342,8 +377,9 @@ export async function searchCodeContext(
     if (chunk) chunks.push(chunk);
   }
   if (chunks.length === 0) {
+    if (config.providers.requireProviders) throw new Error("Required CCE returned no current in-scope evidence; native fallback is prohibited.");
     const fallback = await nativeScopedSearch(root, query, approvedPaths, topK);
-    return { chunks: fallback, provider: "native", providerHealth: status.health, fallbackUsed: true, staleRejected, scopeRejected, message: "CCE returned no current in-scope spans; native scoped retrieval used." };
+    return { chunks: fallback, provider: "native", providerHealth: status.health, fallbackUsed: true, staleRejected, scopeRejected, invocation, message: "CCE returned no current in-scope spans; native scoped retrieval used." };
   }
-  return { chunks, provider: "cce", providerHealth: status.health, fallbackUsed: false, staleRejected, scopeRejected, message: `CCE returned ${chunks.length} current source span(s) inside the GraphWard-approved scope.` };
+  return { chunks, provider: "cce", providerHealth: status.health, fallbackUsed: false, staleRejected, scopeRejected, invocation, message: `CCE returned ${chunks.length} current source span(s) inside the retrieval scope.` };
 }

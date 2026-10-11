@@ -36,6 +36,8 @@ export interface UserDecision {
   selectedOptionId: string;
   customText?: string;
   confirmedAt?: string;
+  question?: string;
+  options?: ClarificationOption[];
 }
 
 export interface GateCheckResult {

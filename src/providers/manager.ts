@@ -128,62 +128,8 @@ export async function providerStatus(name: ProviderName, options: { providerHome
 }
 
 async function withLock<T>(providerHome: string, work: () => Promise<T>, timeoutMs = 15_000): Promise<T> {
-  await mkdir(providerHome, { recursive: true });
-  const lockPath = path.join(providerHome, ".install.lock");
-  const checkDeadAndUnlink = async () => {
-    try {
-      const info = await stat(lockPath);
-      let isDead = false;
-      try {
-        const text = await readFile(lockPath, "utf8");
-        const content = JSON.parse(text) as { pid?: number };
-        if (typeof content.pid === "number") {
-          if (content.pid === process.pid) {
-            isDead = true;
-          } else {
-            try {
-              process.kill(content.pid, 0);
-            } catch (error) {
-              const err = error as NodeJS.ErrnoException;
-              if (err.code === "ESRCH") isDead = true;
-            }
-          }
-        } else {
-          isDead = true;
-        }
-      } catch {
-        isDead = true;
-      }
-      if (isDead || Date.now() - info.mtimeMs > LOCK_STALE_MS) {
-        await unlink(lockPath).catch(() => undefined);
-      }
-    } catch { /* no lock */ }
-  };
-
-  const startTime = Date.now();
-  let handle;
-  while (!handle) {
-    await checkDeadAndUnlink();
-    try {
-      handle = await open(lockPath, "wx");
-      await handle.writeFile(JSON.stringify({ pid: process.pid, createdAt: new Date().toISOString() }));
-      break;
-    } catch {
-      if (Date.now() - startTime > timeoutMs) {
-        throw new Error(`Another GraphWard provider operation holds ${lockPath}. Retry after it finishes.`);
-      }
-      await new Promise((resolve) => setTimeout(resolve, 200));
-    }
-  }
-
-  try {
-    return await work();
-  } finally {
-    if (handle) {
-      await handle.close().catch(() => undefined);
-      await unlink(lockPath).catch(() => undefined);
-    }
-  }
+  const { withLock: ownedLock } = await import("../manifest/lock.js");
+  return ownedLock(providerHome, work, { name: ".install.lock", timeoutMs });
 }
 
 function managedEnv(paths: ReturnType<typeof managedProviderPaths>): NodeJS.ProcessEnv {

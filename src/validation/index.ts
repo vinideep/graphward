@@ -166,7 +166,7 @@ export async function doctor(root: string, expectedPackageVersion?: string, stri
   const renderingErrors = await validateRender(manifest.adapters);
   // Needed to verify json-merge entries: we must know what we would write in
   // order to check that it is still present inside the user's own file.
-  const desired = await renderAdapters(manifest.adapters);
+  const desired = await renderAdapters(manifest.adapters, root);
   const desiredByPath = new Map(desired.map((f) => [f.path, f]));
   const manifestByPath = new Map(manifest.files.map((entry) => [entry.path, entry]));
   for (const rendered of desired) {

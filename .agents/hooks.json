@@ -1,0 +1,43 @@
+{
+  "graphward": {
+    "enabled": true,
+    "PreInvocation": [
+      {
+        "type": "command",
+        "command": "'/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node' '/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/cli/index.js' hook session-start --host antigravity",
+        "timeout": 30
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node' '/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/cli/index.js' hook pre-tool-use --host antigravity",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node' '/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/cli/index.js' hook post-tool-use --host antigravity",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "'/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node' '/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/cli/index.js' hook stop --host antigravity",
+        "timeout": 30
+      }
+    ]
+  }
+}

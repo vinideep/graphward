@@ -1,0 +1,61 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node' '/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/cli/index.js' hook session-start --host codex",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node' '/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/cli/index.js' hook user-prompt-submit --host codex",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node' '/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/cli/index.js' hook pre-tool-use --host codex",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node' '/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/cli/index.js' hook post-tool-use --host codex",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node' '/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/cli/index.js' hook stop --host codex",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

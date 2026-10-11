@@ -41,7 +41,7 @@ test('lock implementation', async (t) => {
     const lockFile = path.join(gwDir, '.lock');
     
     // Create a stale lock file
-    await fs.writeFile(lockFile, 'stale');
+    await fs.writeFile(lockFile, JSON.stringify({ pid: 2147483647, hostname: (await import('node:os')).hostname(), token: 'dead-owner' }));
     
     // Set mtime to 6 minutes ago
     const time = new Date(Date.now() - 6 * 60 * 1000);

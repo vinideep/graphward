@@ -84,7 +84,9 @@ async function applyRendered(
   }
 
   if (rendered.kind === "json-merge") {
-    const merged = mergeHookConfig(current, rendered.content);
+    let merged: string;
+    try { merged = mergeHookConfig(current, rendered.content); }
+    catch (error) { return { action: { path: rendered.path, status: "conflict", message: `Existing user configuration preserved: ${String(error)}` }, entry: prior }; }
     const status = current === undefined
       ? "created"
       : merged.trim() === current.trim()
@@ -125,6 +127,9 @@ async function applyRendered(
 
   const id = rendered.blockId!;
   const existingBlock = current === undefined ? undefined : readManagedBlock(current, id);
+  if (rendered.path === ".codex/config.toml" && current !== undefined && existingBlock === undefined && /\[\s*mcp_servers(?:\.graphward|\s*\])[\s\S]*?\bgraphward\s*=|\[\s*mcp_servers\.graphward(?:\]|\.)/.test(current)) {
+    return { action: { path: rendered.path, status: "conflict", message: "Existing GraphWard TOML registration preserved; reconcile duplicate server configuration explicitly." }, entry: prior };
+  }
   const existingHash = existingBlock === undefined ? undefined : hashContent(existingBlock.trimEnd());
   const isSafe =
     existingBlock === undefined ||
@@ -219,7 +224,7 @@ export async function install(
       changed: 0,
     };
   }
-  const desired = await renderAdapters(adapters);
+  const desired = await renderAdapters(adapters, root);
   const prior = priorByPath(priorManifest);
   const actions: FileAction[] = [];
   const entries: ManagedFileEntry[] = [];

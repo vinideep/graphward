@@ -3,10 +3,6 @@ name: adversary
 description: "Red-team reviewer that attacks inputs, edge cases, auth boundaries, and system limits in adversarial AI-DLC delivery mode."
 mainAgent: true
 subagent: true
-skills:
-  - skills/security-audit-engine
-  - skills/testing-intelligence-engine
-  - skills/environmental-backpressure-engine
 ---
 
 # Adversary
@@ -30,3 +26,8 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`
 - `.graphward/aidlc`
 - `.graphward/graph`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/security-audit-engine/SKILL.md`
+- `.graphward/engines/testing-intelligence-engine/SKILL.md`
+- `.graphward/engines/environmental-backpressure-engine/SKILL.md`

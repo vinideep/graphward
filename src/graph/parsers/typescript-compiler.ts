@@ -155,6 +155,7 @@ export class TypeScriptCompilerResolver {
   private configs: Map<string, TsConfigInfo> = new Map();
   private program: any = null;
   private checker: any = null;
+  private activeConfiguration?: string;
 
   constructor(projectRoot: string) {
     this.projectRoot = path.resolve(projectRoot);
@@ -194,6 +195,10 @@ export class TypeScriptCompilerResolver {
       primaryConfig = this.configs.values().next().value;
     }
 
+    // Use the configuration that owns the requested neighborhood, including
+    // referenced package projects rather than always choosing the root solution.
+    const target = targetFiles?.[0] ? path.resolve(this.projectRoot, targetFiles[0]) : undefined;
+    if (target) primaryConfig = [...this.configs.values()].filter(config => config.fileNames.includes(target)).sort((a, b) => b.configPath.length - a.configPath.length)[0] ?? primaryConfig;
     const options = primaryConfig?.options ?? {
       target: this.ts.ScriptTarget.ES2022,
       module: this.ts.ModuleKind.NodeNext,
@@ -202,6 +207,8 @@ export class TypeScriptCompilerResolver {
       skipLibCheck: true,
     };
 
+    const configuration = primaryConfig?.configPath ?? "default";
+    if (this.activeConfiguration !== configuration) { this.program = null; this.checker = null; this.activeConfiguration = configuration; }
     const configFiles = primaryConfig?.fileNames ?? [];
     const rootSet = new Set<string>(configFiles.map((f: string) => path.resolve(this.projectRoot, f)));
     if (targetFiles) {
@@ -594,7 +601,7 @@ export class TypeScriptCompilerResolver {
             scope: "PROJECT",
             source: { type: "SOURCE", file: relFile, startLine: line },
             confidence: resolvedTarget ? 0.98 : 0.80,
-            confidenceState: "CALIBRATED",
+            confidenceState: "ESTIMATED",
           });
         }
       }

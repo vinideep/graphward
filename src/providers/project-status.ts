@@ -2,7 +2,7 @@ import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { CCE_RUN_PATH, type CceRunManifest } from "./cce.js";
 import { PROVIDER_COMPATIBILITY } from "./compatibility.js";
-import { GRAPHIFY_GRAPH_PATH, GRAPHIFY_RUN_PATH, type GraphifyRunManifest } from "./graphify.js";
+import { GRAPHIFY_GRAPH_PATH, GRAPHIFY_RUN_PATH, graphifyContentHash, type GraphifyRunManifest } from "./graphify.js";
 import { computeProviderSourceSnapshot, PROVIDER_DIR, toCanonicalPath } from "./workspace.js";
 import type { ProviderName } from "./types.js";
 
@@ -35,6 +35,7 @@ async function graphifyState(root: string, workspaceHash: string): Promise<Proje
   if (manifest.schemaVersion !== 1 || manifest.provider !== "graphify" || manifest.providerVersion !== PROVIDER_COMPATIBILITY.graphify.version) {
     return { name: "graphify", health: "invalid", fallback: true, message: "Graphify extraction metadata is invalid or uses an untested version." };
   }
+  if (!manifest.projectRoot || toCanonicalPath(manifest.projectRoot) !== toCanonicalPath(root) || !manifest.graphHash) return { name: "graphify", health: "invalid", fallback: true, message: "Graphify receipt is unbound, incomplete, or belongs to another project. Prepare current task context." };
   if (manifest.workspaceHash !== workspaceHash) {
     return { name: "graphify", health: "stale", fallback: true, message: "Graphify evidence does not match the current approved source universe.", generatedAt: manifest.generatedAt, workspaceHash: manifest.workspaceHash };
   }
@@ -43,6 +44,7 @@ async function graphifyState(root: string, workspaceHash: string): Promise<Proje
     return { name: "graphify", health: "invalid", fallback: true, message: "Graphify output path escapes GraphWard's provider directory." };
   }
   const graph = await readJson<{ nodes?: unknown; edges?: unknown; links?: unknown }>(graphLocation);
+  if (graph && manifest.graphHash && manifest.graphHash !== graphifyContentHash(await readFile(graphLocation))) return { name: "graphify", health: "invalid", fallback: true, message: "Graphify output hash does not match its activated receipt." };
   if (!graph || !Array.isArray(graph.nodes) || (!Array.isArray(graph.edges) && !Array.isArray(graph.links))) {
     return { name: "graphify", health: "invalid", fallback: true, message: "Graphify output is missing or malformed." };
   }
@@ -55,6 +57,7 @@ async function cceState(root: string, workspaceHash: string): Promise<ProjectPro
   if (manifest.schemaVersion !== 1 || manifest.provider !== "cce" || manifest.providerVersion !== PROVIDER_COMPATIBILITY.cce.version) {
     return { name: "cce", health: "invalid", fallback: true, message: "CCE index metadata is invalid or uses an untested version." };
   }
+  if (!manifest.projectRoot || toCanonicalPath(manifest.projectRoot) !== toCanonicalPath(root)) return { name: "cce", health: "invalid", fallback: true, message: "CCE receipt is unbound or belongs to another project. Prepare current task context." };
   if (manifest.workspaceHash !== workspaceHash) {
     return { name: "cce", health: "stale", fallback: true, message: "CCE index does not match the current approved source universe.", generatedAt: manifest.generatedAt, workspaceHash: manifest.workspaceHash };
   }

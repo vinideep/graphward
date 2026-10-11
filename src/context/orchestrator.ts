@@ -3,8 +3,8 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { loadClaims, verifyClaims } from "../claims/index.js";
 import { checkEvidenceHashes } from "../evidence/index.js";
-import { analyzeImpact, ensureFreshGraph, findExecutionPaths, loadExistingGraph } from "../graph/index.js";
-import type { DependencyGraph, GraphEdge } from "../graph/schema.js";
+import { analyzeImpact, graphWorkspaceHash, findExecutionPaths, loadExistingGraph } from "../graph/index.js";
+import type { DependencyGraph, GraphEdge, GraphNode } from "../graph/schema.js";
 import { ProjectFilePolicy } from "../project-files/index.js";
 import { readProviderManifest } from "../providers/manager.js";
 import { searchCodeContext, type RetrievedCodeChunk } from "../providers/cce.js";
@@ -15,7 +15,9 @@ import { verifyKnowledge } from "../verify/index.js";
 import { loadExperiments } from "../experiment/ledger.js";
 import { generateCodeSkeleton } from "./skeleton.js";
 import { evaluateEvidencePolicy, type EvidencePolicyDecision } from "./evidence-policy.js";
-import { SqlitePartitionedStore } from "../storage/sqlite-store.js";
+import { readRuntimeObservations } from "../storage/sqlite-store.js";
+import { loadGwConfig } from "../config/index.js";
+import { computeProviderSourceSnapshot, toCanonicalPath } from "../providers/workspace.js";
 
 export interface NegativeConstraint {
   experimentId: string;
@@ -111,6 +113,11 @@ export interface ContextPackV2 {
   };
   evidencePolicy?: EvidencePolicyDecision;
   provenanceBadges?: Array<{ entityId: string; badge: string; source: string; confidence: string }>;
+  projectRoot?: string;
+  sourceGeneration?: string;
+  retrievalScope?: string[];
+  requiresDecision?: boolean;
+  providerContribution?: { cceAccepted: number; graphifyNodes: number; invocation?: unknown; invocations?: unknown[]; fallbackReason?: string; confidenceMethod: "heuristic" };
   markdown: string;
 }
 
@@ -190,7 +197,7 @@ async function loadKnowledge(root: string, task: string, requestedFiles: string[
     const allVerified: KnowledgeContextItem[] = [];
     for (const absolute of files) {
       const relative = path.relative(root, absolute).replace(/\\/g, "/");
-      if (brokenDocs.has(relative)) continue;
+      if (brokenDocs.has(relative) || !evidence.documents?.some(document => document.path === relative && document.verified)) continue;
       let content: string;
       try { content = await readFile(absolute, "utf8"); } catch { continue; }
       const item: KnowledgeContextItem = {
@@ -225,7 +232,7 @@ async function loadKnowledge(root: string, task: string, requestedFiles: string[
     if (taskWords.length > 0 && relevance(`${absolute}\n${content}`, taskWords) === 0) continue;
     decisions.push({ path: path.relative(root, absolute).replace(/\\/g, "/"), title: content.match(/^#\s+(.+)$/m)?.[1] ?? path.basename(absolute), excerpt: excerpt(content, 16), trust: "recorded" });
   }
-  const trust: KnowledgeTrust = files.length === 0 ? "empty" : verification.drift > 0 || evidence.stale > 0 ? "degraded" : evidence.checked === 0 ? "unverifiable" : "healthy";
+  const trust: KnowledgeTrust = files.length === 0 ? "empty" : verification.drift > 0 || evidence.stale > 0 ? "degraded" : !evidence.documents?.some(document => document.verified) ? "unverifiable" : evidence.documents.some(document => !document.verified) ? "degraded" : "healthy";
   return { trust, citationDrift: verification.drift, staleEvidence: evidence.stale, documents, decisions };
 }
 
@@ -262,9 +269,12 @@ interface ArchitectureNeighborhoodResult {
   graph: DependencyGraph | null;
 }
 
-async function architectureNeighborhood(root: string, task: string, requestedFiles: string[]): Promise<ArchitectureNeighborhoodResult> {
-  await ensureFreshGraph(root);
-  const graph = await loadExistingGraph(path.join(root, ".graphward", "graph", "dependency-graph.json"));
+async function architectureNeighborhood(root: string, task: string, requestedFiles: string[], nativeOnly = false): Promise<ArchitectureNeighborhoodResult> {
+  let graph = await loadExistingGraph(path.join(root, ".graphward", "graph", "dependency-graph.json"));
+  if (graph && nativeOnly) {
+    const native = (item: GraphNode | GraphEdge) => item.metadata.provider !== "graphify" || Array.isArray(item.metadata.providers) && item.metadata.providers.includes("native");
+    graph = { ...graph, nodes: graph.nodes.filter(native).map(node => ({ ...node, metadata: { ...node.metadata, provider: undefined, providers: undefined } })), edges: graph.edges.filter(native).map(edge => ({ ...edge, metadata: { ...edge.metadata, provider: undefined, providers: undefined } })) };
+  }
   if (!graph) return { seeds: [], nodes: [], edges: [], approvedScope: [], graph: null as DependencyGraph | null };
   const seeds = selectSeeds(graph, root, task, requestedFiles);
   const selected = new Set(seeds);
@@ -417,23 +427,27 @@ export async function getEngineeringContext(
   options: { runner?: ProcessRunner; providerHome?: string } = {},
 ): Promise<ContextPackV2> {
   if (!request.task.trim()) throw new Error("task is required");
+  root = toCanonicalPath(root);
+  const config = await loadGwConfig(root);
+  const snapshot = await computeProviderSourceSnapshot(root);
   const requestedFiles = request.files ?? [];
   const classification = classify(request.task, requestedFiles);
   const budget = request.budget && request.budget > 0 ? request.budget : dynamicBudget(classification);
   // Establish one current structural snapshot before claims and neighborhood
   // reads begin; otherwise concurrent derivation can race a graph refresh.
-  await ensureFreshGraph(root);
   const [knowledge, architecture, claimStore, claimReport, providerManifest, providerRuns] = await Promise.all([
     loadKnowledge(root, request.task, requestedFiles),
-    architectureNeighborhood(root, request.task, requestedFiles),
+    architectureNeighborhood(root, request.task, requestedFiles, config.providers.policy === "native"),
     loadClaims(root),
     verifyClaims(root),
     readProviderManifest(root),
-    inspectProjectProviderRuns(root),
+    inspectProjectProviderRuns(root, { disabled: config.providers.policy === "native" }),
   ]);
+  if (config.providers.requireProviders && providerRuns.some(run => run.fallback)) throw new Error("Required provider evidence is unavailable or stale; prepare_task_context is required.");
+  const graphCurrent = !!architecture.graph?.workspaceHash && architecture.graph.workspaceHash === await graphWorkspaceHash(root);
+  const policy = await ProjectFilePolicy.load(root);
   let approvedScope = architecture.approvedScope;
   if (approvedScope.length === 0) {
-    const policy = await ProjectFilePolicy.load(root);
     approvedScope = policy.configuredRoots();
   }
   const fullApprovedScope = approvedScope;
@@ -451,18 +465,34 @@ export async function getEngineeringContext(
   architecture.nodes = visibleArchitecture.nodes;
   architecture.edges = visibleArchitecture.edges;
   architecture.approvedScope = fullApprovedScope.filter((scope) => architecture.nodes.some((node) => node.path === scope) || requestedSet.has(scope)).slice(0, 50);
-  const architectureTokens = estimateTokens(JSON.stringify({ nodes: architecture.nodes, edges: architecture.edges }));
+  let architectureTokens = estimateTokens(JSON.stringify({ nodes: architecture.nodes, edges: architecture.edges }));
   const unusedArchitecture = Math.max(0, architectureBudget - architectureTokens);
 
   const baseCodeBudget = Math.max(0, Math.floor(budget * 0.55));
-  const codeBudget = baseCodeBudget + unusedKnowledge + unusedArchitecture;
+  let codeBudget = baseCodeBudget + unusedKnowledge + unusedArchitecture;
 
   let retrieval = await searchCodeContext(root, request.task, approvedScope, { topK: 5, runner: options.runner, providerHome: options.providerHome });
+  const retrievalInvocations: unknown[] = retrieval.invocation ? [retrieval.invocation] : [];
   const testsInitially = retrieval.chunks.filter((chunk) => /(?:^|\/)(?:test|tests|__tests__)(?:\/|\b)|\.(?:test|spec)\./i.test(chunk.path));
   const preliminary = Math.min(1, (architecture.nodes.length > 0 ? 0.25 : 0) + (retrieval.chunks.length > 0 ? 0.35 : 0) + (testsInitially.length > 0 ? 0.15 : 0) + (knowledge.trust === "healthy" ? 0.15 : 0));
-  if (preliminary < 0.85 && retrieval.chunks.length >= 5 && codeBudget > chunkTokens(retrieval.chunks)) {
+  if (preliminary < 0.85 && codeBudget > chunkTokens(retrieval.chunks)) {
+    approvedScope = [...new Set([...approvedScope, ...policy.configuredRoots()])];
     const expanded = await searchCodeContext(root, request.task, approvedScope, { topK: 10, runner: options.runner, providerHome: options.providerHome });
+    if (expanded.invocation) retrievalInvocations.push(expanded.invocation);
     retrieval = { ...expanded, chunks: dedupeChunks([...retrieval.chunks, ...expanded.chunks]) };
+  }
+  // A lexical/semantic hit may resolve a disconnected module or a request
+  // whose words did not match any graph label. Include its current callers and
+  // contracts without allowing missing graph edges to hide relevant code.
+  const retrievedPaths = [...new Set(retrieval.chunks.map(chunk => chunk.path))];
+  if (retrievedPaths.some(file => !architecture.nodes.some(node => node.path === file))) {
+    const expandedArchitecture = await architectureNeighborhood(root, request.task, [...requestedFiles, ...retrievedPaths], config.providers.policy === "native");
+    const visible = trimArchitecture(expandedArchitecture.nodes, expandedArchitecture.edges, expandedArchitecture.seeds, architectureBudget);
+    const expandedTokens = estimateTokens(JSON.stringify({ nodes: visible.nodes, edges: visible.edges }));
+    codeBudget = Math.max(0, codeBudget - Math.max(0, expandedTokens - architectureTokens));
+    architectureTokens = expandedTokens;
+    Object.assign(architecture, expandedArchitecture, { nodes: visible.nodes, edges: visible.edges });
+    architecture.approvedScope = expandedArchitecture.approvedScope.filter(scope => visible.nodes.some(node => node.path === scope) || requestedSet.has(scope)).slice(0, 50);
   }
   const trimmed = trimChunks(retrieval.chunks, codeBudget);
   const tests = trimmed.filter((chunk) => /(?:^|\/)(?:test|tests|__tests__)(?:\/|\b)|\.(?:test|spec)\./i.test(chunk.path));
@@ -508,6 +538,9 @@ export async function getEngineeringContext(
     ...(knowledge.trust === "degraded" ? [`GraphWard knowledge has ${knowledge.citationDrift} missing reference(s) and ${knowledge.staleEvidence} stale citation(s); affected prose was not loaded.`] : []),
     ...(knowledge.trust === "unverifiable" ? ["GraphWard knowledge has no recorded citation snapshot; prose was not promoted as verified context."] : []),
     ...graphUnknowns.slice(0, 20),
+    ...(!graphCurrent ? ["Canonical graph freshness is unverified or stale; call prepare_task_context before implementation."] : []),
+    ...(retrieval.fallbackUsed ? [retrieval.message] : []),
+    ...providerRuns.filter(run => run.fallback).map(run => `${run.name}: ${run.message}`),
     ...(retrieval.staleRejected > 0 ? [`CCE returned ${retrieval.staleRejected} stale span(s), which were rejected.`] : []),
     ...(retrieval.scopeRejected > 0 ? [`CCE returned ${retrieval.scopeRejected} out-of-scope span(s), which were rejected.`] : []),
   ];
@@ -520,7 +553,7 @@ export async function getEngineeringContext(
     "targeted tests",
   ].filter((value): value is string => Boolean(value));
   const testsToRun = [...new Set([...(impact?.testsToRun ?? []), ...tests.map((chunk) => chunk.path)])];
-  const confidence = Math.min(1,
+  const confidence = Math.min(graphCurrent && !retrieval.fallbackUsed ? 0.9 : 0.65,
     (architecture.nodes.length > 0 ? 0.25 : 0) +
     (trimmed.length > 0 ? 0.30 : 0) +
     (testsToRun.length > 0 ? 0.15 : 0) +
@@ -685,27 +718,12 @@ export async function getEngineeringContext(
     path.join(root, ".graphward", "store.db"),
   ]) {
     if (existsSync(dbPath)) {
-      let store: SqlitePartitionedStore | undefined;
       try {
-        store = new SqlitePartitionedStore(dbPath);
-        await store.initialize();
-        const observations = store.getRuntimeObservations();
+        const observations = await readRuntimeObservations(dbPath);
         for (const obs of observations) {
-          const matchesFrom = affectedNodeIds.has(obs.fromSymbol) || requestedFiles.some((f) => obs.fromSymbol.includes(f));
-          const matchesTo = affectedNodeIds.has(obs.toSymbol) || requestedFiles.some((f) => obs.toSymbol.includes(f));
-          if (matchesFrom || matchesTo) {
-            observedRuntimeInvocations += obs.count || 0;
-          }
+          if (affectedNodeIds.has(obs.fromSymbol) || affectedNodeIds.has(obs.toSymbol)) observedRuntimeInvocations += obs.count || 0;
         }
-      } catch {
-        // Non-fatal if store fails to open
-      } finally {
-        try {
-          store?.close();
-        } catch {
-          // Non-fatal
-        }
-      }
+      } catch { unknowns.push("Runtime observations could not be read without modifying the database."); }
       break;
     }
   }
@@ -720,7 +738,6 @@ export async function getEngineeringContext(
             const count = typeof node.metadata?.invocations === "number" ? node.metadata.invocations
               : typeof node.metadata?.observations === "number" ? node.metadata.observations
               : typeof node.metadata?.count === "number" ? node.metadata.count
-              : node.metadata?.hotness === "high" ? 1500
               : 0;
             observedRuntimeInvocations += count;
           }
@@ -770,22 +787,34 @@ export async function getEngineeringContext(
   for (const node of architecture.nodes) {
     provenanceBadges.push({
       entityId: node.id,
-      badge: node.trustState === "verified" ? "PROV:COMPILER-SEMANTIC" : "PROV:STRUCTURAL",
-      source: "COMPILER",
+      badge: "PROV:STRUCTURAL",
+      source: "RECORDED-GRAPH",
       confidence: node.confidence,
     });
   }
   for (const chunk of trimmed) {
     provenanceBadges.push({
       entityId: `${chunk.path}:${chunk.startLine}-${chunk.endLine}`,
-      badge: "PROV:STATIC-SOURCE",
-      source: "AST",
-      confidence: "CALIBRATED",
+      badge: "PROV:CURRENT-SOURCE",
+      source: chunk.provider === "cce" ? "CCE-RETRIEVAL" : "LEXICAL-RETRIEVAL",
+      confidence: "UNMEASURED",
     });
   }
 
   const base: Omit<ContextPackV2, "markdown"> = {
     schemaVersion: 2,
+    projectRoot: root,
+    sourceGeneration: snapshot.workspaceHash,
+    retrievalScope: approvedScope,
+    requiresDecision: retrieval.fallbackUsed || providerRuns.some(run => run.fallback) || !graphCurrent,
+    providerContribution: {
+      cceAccepted: trimmed.filter(chunk => chunk.provider === "cce").length,
+      graphifyNodes: architecture.nodes.filter(node => { const metadata = architecture.graph?.nodes.find(item => item.id === node.id)?.metadata; return metadata?.provider === "graphify" || Array.isArray(metadata?.providers) && metadata.providers.includes("graphify"); }).length,
+      invocation: retrieval.invocation,
+      invocations: retrievalInvocations,
+      fallbackReason: retrieval.fallbackUsed ? retrieval.message : undefined,
+      confidenceMethod: "heuristic",
+    },
     generatedAt: new Date().toISOString(),
     task: request.task,
     classification,

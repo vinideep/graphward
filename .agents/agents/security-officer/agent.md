@@ -3,12 +3,6 @@ name: security-officer
 description: "Threat models AI-DLC changes, validates security controls, and governs MCP/tool execution risk."
 mainAgent: true
 subagent: true
-skills:
-  - skills/security-audit-engine
-  - skills/mcp-security-governor
-  - skills/nfr-adr-governor
-  - skills/llm-prompt-injection-guard
-  - skills/environment-variable-auditor
 ---
 
 # Security Officer
@@ -34,3 +28,10 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`
 - `.graphward/aidlc`
 - `.graphward/graph`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/security-audit-engine/SKILL.md`
+- `.graphward/engines/mcp-security-governor/SKILL.md`
+- `.graphward/engines/nfr-adr-governor/SKILL.md`
+- `.graphward/engines/llm-prompt-injection-guard/SKILL.md`
+- `.graphward/engines/environment-variable-auditor/SKILL.md`

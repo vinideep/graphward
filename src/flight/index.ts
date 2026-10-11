@@ -1,6 +1,7 @@
 import { mkdir, writeFile, readFile, readdir, unlink } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { parseGitStatusPaths } from "../verify/git-paths.js";
 import { analyzeImpact } from "../graph/index.js";
 import { runProcessSync } from "../process/index.js";
 
@@ -74,16 +75,9 @@ function head(root: string): string | null {
 
 // Files with uncommitted (working tree + staged) modifications, source only.
 function dirtyFiles(root: string): string[] {
-  const porcelain = gitRaw(root, ["status", "--porcelain", "-uall"]);
+  const porcelain = gitRaw(root, ["status", "--porcelain=v1", "-z", "-uall"]);
   if (porcelain === null) return [];
-  const out: string[] = [];
-  for (const line of porcelain.split("\n")) {
-    const raw = line.slice(3).trim();
-    if (!raw) continue;
-    const f = raw.includes(" -> ") ? raw.split(" -> ")[1] : raw;
-    if (SOURCE_EXT_RE.test(f)) out.push(f);
-  }
-  return out;
+  return parseGitStatusPaths(porcelain).filter((file) => SOURCE_EXT_RE.test(file));
 }
 
 function norm(p: string): string {
@@ -99,9 +93,15 @@ function fileFromEvidence(ev: string | undefined): string | null {
 export interface PreflightOptions {
   intent: string;
   files?: string[];
+  taskId?: string;
 }
 
 export async function preflight(root: string, options: PreflightOptions): Promise<FlightRecord> {
+  if (options.taskId || existsSync(path.join(root, ".graphward/install-manifest.json"))) {
+    const { checkTaskReadiness } = await import("../aidlc/task-contract.js");
+    const readiness = await checkTaskReadiness(root, { taskId: options.taskId, files: options.files });
+    if (!readiness.ready) throw new Error(`Task is not ready: ${readiness.blockers.join(" ")}`);
+  }
   const declaredFiles = (options.files ?? []).map(norm);
 
   // Predict the blast radius from the graph for the declared files.
@@ -116,27 +116,7 @@ export async function preflight(root: string, options: PreflightOptions): Promis
       if (f) files.add(f);
     }
     predicted.files = [...files];
-    
-    try {
-      const graphData = await readFile(path.join(root, ".graphward", "graph", "dependency-graph.json"), "utf8");
-      const graph = JSON.parse(graphData);
-      const { detectCoverageGaps, generateCharacterizationTests } = await import("../coverage-gap/index.js");
-      const gaps = detectCoverageGaps(declaredFiles, graph);
-      if (gaps.length > 0) {
-        // We log or output them
-        console.warn(`[Coverage Gap] Found ${gaps.length} uncovered exported symbols in declared files.`);
-        const tests = generateCharacterizationTests(gaps, root);
-        for (const test of tests) {
-          if (!existsSync(path.join(root, test.testFile))) {
-             const { writeProtectedFile } = await import("../manifest/lock.js");
-             await writeProtectedFile(root, path.join(root, test.testFile), test.content);
-             console.warn(`[Coverage Gap] Generated characterization test: ${test.testFile}`);
-          }
-        }
-      }
-    } catch {
-      // ignore
-    }
+
   }
 
   const baselineDirtyList = dirtyFiles(root);

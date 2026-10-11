@@ -47,7 +47,7 @@ Record the depth on line 2 of the impact report header. For **Minimal** depth, l
 
 Before reading any project intelligence:
 
-1. Run `npx gw user-profile .` if the profile doesn't yet exist.
+1. Run `graphward user-profile .` if the profile doesn't yet exist.
 2. Resolve identity: `git config user.email` → `.graphward/memory/users/<slug>/user-intelligence.md`.
 3. Skip if CI environment detected (`$CI`, `$GITHUB_ACTIONS`, etc.).
 4. Load the **Active Predictions block only** (~50t) and apply immediately:
@@ -87,7 +87,7 @@ Before impact analysis or code edits:
 ### 2. Adaptive Pre-Flight Socratic Gauntlet
 
 Before finalizing the impact analysis and planning:
-- **Clarity Gate**: Call `assess_prompt_clarity` on the user prompt. If clarity score < 75 or blocking ambiguities exist, invoke `socratic-clarification-gate` to resolve them before proceeding. If score ≥ 75 and no blocking ambiguities, proceed directly.
+- **Clarity Gate**: Call `assess_prompt_clarity` on the user prompt. If unresolved task readiness blockers or blocking ambiguities exist, invoke `socratic-clarification-gate` to resolve them before proceeding. If confirmed current task scope and no blocking ambiguities, proceed directly.
 - **Trigger**: When the request is classified as `architecture`, `security`, cross-cutting (`high`/`critical` risk), or contains 3+ open ambiguities.
 - **Action**: Run `socratic-stress-tester` to challenge edge cases, failure/rollback modes, non-functional requirements, and blast radius.
 - **Output**: Record confirmed assumptions vs. verified facts (`[VERIFIED: path#lines]`) in the impact report before writing code.

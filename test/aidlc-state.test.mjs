@@ -98,7 +98,7 @@ test("gate blindness fix: gate recognizes blocking questions in markdown table f
 
     // Gate should now pass
     const passedResult = await checkInceptionExit(dir);
-    assert.equal(passedResult.status, "pass");
+    assert.equal(passedResult.status, "blocked", "Scope confirmation is still required");
     assert.equal(passedResult.blockingQuestions.length, 0);
   } finally {
     rmSync(dir, { recursive: true, force: true });
@@ -109,7 +109,7 @@ test("freezeRequirements writes requirements.json and updates requirements.md", 
   const dir = setupWorkspace();
   try {
     const reqPath = await freezeRequirements(dir, "Authentication", [
-      { questionId: "Q1", selectedOptionId: "B", customText: "Use OAuth 2.0 with PKCE" },
+      { questionId: "Q1", question: "Which authentication strategy?", options: [{ id: "B", text: "OAuth 2.0" }], selectedOptionId: "B", customText: "Use OAuth 2.0 with PKCE" },
     ]);
 
     assert.ok(existsSync(reqPath));
@@ -120,7 +120,7 @@ test("freezeRequirements writes requirements.json and updates requirements.md", 
     const reqs = await loadRequirements(dir);
     assert.equal(reqs.requirements.length, 1);
     assert.equal(reqs.requirements[0].topic, "Authentication");
-    assert.equal(reqs.requirements[0].decision, "Option B");
+    assert.equal(reqs.requirements[0].decision, "Which authentication strategy?: OAuth 2.0");
     assert.equal(reqs.requirements[0].rationale, "Use OAuth 2.0 with PKCE");
 
     const mdContent = readFileSync(reqPath, "utf8");

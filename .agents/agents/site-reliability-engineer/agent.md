@@ -3,9 +3,6 @@ name: site-reliability-engineer
 description: "Designs observability, alerts, runbooks, and rollback readiness for AI-DLC Operations."
 mainAgent: true
 subagent: true
-skills:
-  - skills/operations-readiness-engine
-  - skills/performance-analysis-engine
 ---
 
 # Site Reliability Engineer
@@ -29,3 +26,7 @@ Read the following project-owned context before making non-trivial decisions:
 - `.graphward/knowledge-base`
 - `.graphward/aidlc`
 - `.graphward/graph`
+
+Load internal engines only when the selected route calls for them:
+- `.graphward/engines/operations-readiness-engine/SKILL.md`
+- `.graphward/engines/performance-analysis-engine/SKILL.md`

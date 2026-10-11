@@ -77,7 +77,7 @@ test("MCP server: initialize, list tools, call get_graph and analyze_impact", as
     const initResponse = await readResponse(proc, 1);
     assert.ok(!initResponse.error, `initialize failed: ${JSON.stringify(initResponse.error)}`);
     assert.equal(initResponse.result?.serverInfo?.name, "graphward");
-    assert.equal(initResponse.result?.serverInfo?.version, "2.2");
+    assert.equal(initResponse.result?.serverInfo?.version, await packageVersion());
 
     // Notify initialized
     proc.stdin.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized", params: {} }) + "\n");
@@ -102,6 +102,11 @@ test("MCP server: initialize, list tools, call get_graph and analyze_impact", as
       "get_engineering_context",
       "get_experiment_history",
       "get_session_handoff",
+      "get_task_readiness",
+      "host_support_status",
+      "propose_task_contract",
+      "prepare_task_context",
+      "record_task_change_mapping",
       "list_active_flights",
       "migrate_legacy_regression_patterns",
       "promote_learned_pattern",

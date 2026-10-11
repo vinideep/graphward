@@ -1,10 +1,10 @@
 import { createHash, randomUUID } from "node:crypto";
-import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rename, writeFile, mkdtemp, rm } from "node:fs/promises";
 import path from "node:path";
 import { runProcess, type ProcessRunner } from "../process/index.js";
 import { providerStatus } from "./manager.js";
 import { PROVIDER_COMPATIBILITY } from "./compatibility.js";
-import { PROVIDER_DIR, syncProviderWorkspace } from "./workspace.js";
+import { PROVIDER_DIR, syncProviderWorkspace, computeProviderSourceSnapshot, toCanonicalPath } from "./workspace.js";
 import type { ProviderStatus } from "./types.js";
 
 export const GRAPHIFY_DIR = `${PROVIDER_DIR}/graphify`;
@@ -13,6 +13,8 @@ export const GRAPHIFY_RUN_PATH = `${GRAPHIFY_DIR}/run.json`;
 
 export interface GraphifyRunManifest {
   schemaVersion: 1;
+  projectRoot?: string;
+  graphHash?: string;
   provider: "graphify";
   providerVersion: string;
   generatedAt: string;
@@ -68,10 +70,15 @@ export async function runGraphifyExtraction(
   }
 
   options.onProgress?.("Syncing provider workspace for Graphify...");
-  const workspace = await syncProviderWorkspace(root);
-  const outputDir = path.join(root, GRAPHIFY_DIR);
+  await mkdir(path.join(root, GRAPHIFY_DIR), { recursive: true });
+  const staging = await mkdtemp(path.join(root, GRAPHIFY_DIR, ".staging-"));
+  try {
+  const workspace = await syncProviderWorkspace(root, path.relative(root, path.join(staging, "workspace")));
+  const outputDir = path.join(staging, "output");
   await mkdir(outputDir, { recursive: true });
-  const args = ["extract", workspace.path, "--code-only", "--out", outputDir];
+  // The policy-filtered mirror lives under a Git-ignored provider cache.
+  // Ignore ancestor Git rules here so Graphify traverses approved nested files.
+  const args = ["extract", workspace.path, "--code-only", "--no-gitignore", "--out", outputDir];
   options.onProgress?.("Extracting structural graph with Graphify...");
   const execution = await runner({
     command: status.executable,
@@ -92,7 +99,8 @@ export async function runGraphifyExtraction(
 
   const graphAbsolute = path.join(root, GRAPHIFY_GRAPH_PATH);
   const nestedGraphAbsolute = path.join(outputDir, "graphify-out", "graph.json");
-  const producedGraph = await exists(graphAbsolute) ? graphAbsolute : await exists(nestedGraphAbsolute) ? nestedGraphAbsolute : undefined;
+  const directGraphAbsolute = path.join(outputDir, "graph.json");
+  const producedGraph = await exists(nestedGraphAbsolute) ? nestedGraphAbsolute : await exists(directGraphAbsolute) ? directGraphAbsolute : undefined;
   if (!producedGraph) {
     return {
       ok: false,
@@ -116,7 +124,23 @@ export async function runGraphifyExtraction(
   // Graphify 0.9.x writes <out>/graphify-out/graph.json while older/fake
   // adapters write <out>/graph.json. Normalize both into GraphWard's stable ignored
   // provider path so reconciliation never depends on an upstream layout quirk.
-  if (producedGraph !== graphAbsolute) await writeAtomic(graphAbsolute, rawGraph);
+  const graph = rawGraph as { nodes?: unknown; edges?: unknown; links?: unknown };
+  if (!graph || !Array.isArray(graph.nodes) || (!Array.isArray(graph.edges) && !Array.isArray(graph.links))) {
+    return { ok: false, degraded: true, status: { ...status, health: "error" }, message: "Graphify graph schema was rejected." };
+  }
+  if ((await computeProviderSourceSnapshot(root)).workspaceHash !== workspace.workspaceHash) {
+    return { ok: false, degraded: true, status: { ...status, health: "error" }, message: "Source changed during Graphify extraction; output was not activated." };
+  }
+  // Persist project-relative paths before deleting the disposable mirror.
+  for (const item of [...graph.nodes, ...(Array.isArray(graph.edges) ? graph.edges : graph.links as unknown[])]) {
+    if (!item || typeof item !== "object") continue;
+    const record = item as Record<string, unknown>;
+    if (typeof record.source_file === "string" && path.isAbsolute(record.source_file)) {
+      const relative = path.relative(workspace.path, record.source_file);
+      if (!relative.startsWith("..") && !path.isAbsolute(relative)) record.source_file = relative.replace(/\\/g, "/");
+    }
+  }
+  await writeAtomic(graphAbsolute, rawGraph);
 
   const reportCandidates = ["GRAPH_REPORT.md", "graph_report.md", "report.md"];
   let reportPath: string | undefined;
@@ -125,7 +149,7 @@ export async function runGraphifyExtraction(
     const nested = path.join(outputDir, "graphify-out", candidate);
     const produced = await exists(direct) ? direct : await exists(nested) ? nested : undefined;
     if (produced) {
-      if (produced !== direct) await writeFile(direct, await readFile(produced, "utf8"), "utf8");
+      await writeFile(path.join(root, GRAPHIFY_DIR, candidate), await readFile(produced, "utf8"), "utf8");
       reportPath = path.posix.join(GRAPHIFY_DIR, candidate);
       break;
     }
@@ -133,6 +157,8 @@ export async function runGraphifyExtraction(
 
   const manifest: GraphifyRunManifest = {
     schemaVersion: 1,
+    projectRoot: toCanonicalPath(root),
+    graphHash: graphifyContentHash(await readFile(graphAbsolute)),
     provider: "graphify",
     generatedAt: new Date().toISOString(),
     providerVersion: status.detectedVersion ?? status.requiredVersion,
@@ -154,6 +180,7 @@ export async function runGraphifyExtraction(
     workspaceHash: workspace.workspaceHash,
     message: "Graphify code-only structural evidence is current and ready for GraphWard normalization.",
   };
+  } finally { await rm(staging, { recursive: true, force: true }); }
 }
 
 export function graphifyContentHash(value: Buffer | string): string {

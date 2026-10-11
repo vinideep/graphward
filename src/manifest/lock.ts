@@ -1,79 +1,51 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { randomUUID } from 'node:crypto';
+import { hostname } from 'node:os';
 
 export interface LockOptions {
   timeoutMs?: number;
+  name?: string;
   retryIntervalMs?: number;
 }
 
-export async function acquireLock(
-  root: string,
-  options?: LockOptions
-): Promise<() => Promise<void>> {
+export async function acquireLock(root: string, options?: LockOptions): Promise<() => Promise<void>> {
   const timeoutMs = options?.timeoutMs ?? 10000;
-  const retryIntervalMs = options?.retryIntervalMs ?? 100;
-  const staleThresholdMs = 5 * 60 * 1000; // 5 minutes
-
-  const gwDir = path.join(root, '.graphward');
-  const lockFile = path.join(gwDir, '.lock');
-  
-  // We need a unique temp file for atomic rename
-  const tempId = Math.random().toString(36).slice(2) + Date.now().toString(36);
-  const tempFile = path.join(gwDir, `.lock.${tempId}.tmp`);
-
-  await fs.mkdir(gwDir, { recursive: true });
-
-  const startTime = Date.now();
-
-  while (Date.now() - startTime < timeoutMs) {
+  const interval = options?.retryIntervalMs ?? 100;
+  const directory = path.join(root, '.graphward');
+  const lockFile = path.join(directory, options?.name ?? '.lock');
+  if (path.dirname(lockFile) !== directory) throw new Error('Lock name must be a basename.');
+  await fs.mkdir(directory, { recursive: true });
+  const token = randomUUID();
+  const owner = JSON.stringify({ pid: process.pid, hostname: hostname(), token });
+  const deadline = Date.now() + timeoutMs;
+  do {
     try {
-      // Check if lock file exists and is stale
+      const handle = await fs.open(lockFile, 'wx');
+      try { await handle.writeFile(owner); } finally { await handle.close(); }
+      return async () => {
+        // A delayed release must never remove a replacement owner's lock.
+        try { if (await fs.readFile(lockFile, 'utf8') === owner) await fs.unlink(lockFile); }
+        catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
+      };
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
       try {
-        const stat = await fs.stat(lockFile);
-        if (Date.now() - stat.mtimeMs > staleThresholdMs) {
-          // Stale lock, try to remove it
-          await fs.unlink(lockFile).catch(() => {});
+        const raw = await fs.readFile(lockFile, 'utf8');
+        const previous = JSON.parse(raw);
+        if (previous.hostname === hostname() && Number.isInteger(previous.pid) && previous.pid > 0 && typeof previous.token === 'string') {
+          let dead = false;
+          try { process.kill(previous.pid, 0); }
+          catch (probe) { dead = (probe as NodeJS.ErrnoException).code === 'ESRCH'; }
+          // Age alone cannot establish that an owner is dead.
+          if (dead && await fs.readFile(lockFile, 'utf8') === raw) await fs.unlink(lockFile);
         }
-      } catch (e: any) {
-        if (e.code !== 'ENOENT') {
-          throw e;
-        }
-      }
-
-      // Write temp file
-      await fs.writeFile(tempFile, process.pid.toString(), { flag: 'w' });
-
-      // Try atomic rename using hardlink then unlink, or just rename if we can guarantee it won't overwrite?
-      // Wait, fs.rename overwrites by default. 
-      // Instead, we can use fs.link (hardlink) which fails if target exists, then unlink temp.
-      
-      try {
-        await fs.link(tempFile, lockFile);
-        // Link succeeded, we have the lock
-        await fs.unlink(tempFile).catch(() => {});
-        
-        return async () => {
-          await fs.unlink(lockFile).catch(() => {});
-        };
-      } catch (linkError: any) {
-        if (linkError.code === 'EEXIST') {
-          // Lock already exists, clean up temp and retry
-          await fs.unlink(tempFile).catch(() => {});
-        } else {
-          // Some other error
-          await fs.unlink(tempFile).catch(() => {});
-          throw linkError;
-        }
-      }
-    } catch (e) {
-      // General error, maybe directory issues
-      throw e;
+      } catch { /* unknown owner is retained */ }
+      if (Date.now() >= deadline) break;
+      await new Promise(resolve => setTimeout(resolve, interval));
     }
-
-    await new Promise(resolve => setTimeout(resolve, retryIntervalMs));
-  }
-
-  throw new Error(`Timeout acquiring lock at ${lockFile}`);
+  } while (Date.now() <= deadline);
+  throw new Error(`Timeout acquiring lock at ${lockFile}; owner was not proven dead.`);
 }
 
 export async function withLock<T>(
@@ -104,6 +76,8 @@ export async function writeProtectedFile(
   
   await withLock(root, async () => {
     await fs.mkdir(path.dirname(filePath), { recursive: true });
-    await fs.writeFile(filePath, content, 'utf8');
+    const temporary = `${filePath}.tmp-${randomUUID()}`;
+    try { await fs.writeFile(temporary, content, 'utf8'); await fs.rename(temporary, filePath); }
+    finally { await fs.rm(temporary, { force: true }); }
   }, options);
 }

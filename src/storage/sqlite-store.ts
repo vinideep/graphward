@@ -870,3 +870,11 @@ export class SqlitePartitionedStore {
     }
   }
 }
+/** Open an existing store without creating directories, tables, or migrations. */
+export async function readRuntimeObservations(dbPath: string): Promise<Array<{ fromSymbol: string; toSymbol: string; count: number }>> {
+  const sqlite = await import("node:sqlite" as any);
+  const database = new sqlite.DatabaseSync(dbPath, { readOnly: true });
+  try {
+    return database.prepare("SELECT from_symbol, to_symbol, count FROM runtime_observations").all().map((row: any) => ({ fromSymbol: row.from_symbol, toSymbol: row.to_symbol, count: row.count }));
+  } finally { database.close(); }
+}

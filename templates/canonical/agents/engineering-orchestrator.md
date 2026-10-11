@@ -83,7 +83,7 @@ For non-trivial work, call `get_engineering_context` before direct file explorat
 
 ### Adaptive Implementation Pipeline
 
-1. **Pre-flight & Clarification**: Request ContextPackV2 and AI-DLC state → identify verified relevant context, provider fallback, conflicts, and unknowns. Run `socratic-clarification-gate` (`assess_prompt_clarity`); if clarity score < 75 or requirements are underspecified, halt and resolve trade-offs before writing code. Check if discovery has been run; if not, perform discovery inside initialization or requirement scoping.
+1. **Discover, clarify and confirm**: Retrieve context before source exploration. Discover repository facts, discuss every new feature and clarify fixes proportionally. Reuse previous answers and approved scope. Call `propose_task_contract` with full questions/answers, behavior, users, non-goals, scope and acceptance criteria; confirm the current revision through the parent's real question mechanism. Prompt scores never authorize implementation. Call `prepare_task_context` with the task ID and require `get_task_readiness` before edits. Disclose missing provider contribution; required-provider failure blocks and degraded context requires a decision. Do not let subagents approve their own scope.
 2. **Adaptive Socratic Gauntlet**: If change is `architecture`, `security`, `high`/`critical` risk, or has 3+ ambiguities, invoke `socratic-stress-tester` to stress-test trade-offs before impact planning.
 3. **Impact**: Run `impact-analysis-engine` → write impact report
 4. **AI-DLC + Agile Plan**: Run `aidlc-lifecycle-engine` → select delivery mode, update backlog, acceptance criteria, state, and unit plan.

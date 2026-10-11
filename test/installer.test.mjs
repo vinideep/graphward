@@ -26,28 +26,28 @@ function hash(content) {
 
 test("every adapter renders the complete canonical skill and workflow inventory it supports", async () => {
   const profiles = {
-    antigravity: { skills: ".agents/skills", workflows: ".agents/workflows", workflowKind: "file" },
-    "antigravity-cli": { skills: ".agents/skills", workflows: ".agents/workflows", workflowKind: "file" },
-    codex: { skills: ".agents/skills", workflows: ".agents/workflows", workflowKind: "file" },
-    generic: { skills: ".agents/skills", workflows: ".agents/workflows", workflowKind: "file" },
+    antigravity: { skills: ".graphward/engines", workflows: ".agents/workflows", workflowKind: "file" },
+    "antigravity-cli": { skills: ".graphward/engines", workflows: ".agents/workflows", workflowKind: "file" },
+    codex: { skills: ".graphward/engines", workflows: ".agents/workflows", workflowKind: "file" },
+    generic: { skills: ".graphward/engines", workflows: ".agents/workflows", workflowKind: "file" },
     "claude-code": { skills: ".claude/skills", workflows: ".claude/commands", workflowKind: "file" },
-    cursor: { skills: ".cursor/skills", workflows: ".cursor/commands", workflowKind: "file" },
-    "github-copilot": { skills: ".github/skills", workflows: ".github/prompts", workflowKind: "prompt" },
-    "gemini-cli": { skills: ".agents/skills", workflows: ".gemini/commands", workflowKind: "toml" },
-    commandcode: { skills: ".commandcode/skills", workflows: ".commandcode/commands", workflowKind: "file" },
+    cursor: { skills: ".graphward/engines", workflows: ".cursor/commands", workflowKind: "file" },
+    "github-copilot": { skills: ".graphward/engines", workflows: ".github/prompts", workflowKind: "prompt" },
+    "gemini-cli": { skills: ".graphward/engines", workflows: ".gemini/commands", workflowKind: "toml" },
+    commandcode: { skills: ".graphward/engines", workflows: ".commandcode/commands", workflowKind: "file" },
   };
 
   for (const [adapter, profile] of Object.entries(profiles)) {
     const paths = new Set((await renderAdapters([adapter])).map((entry) => entry.path));
     if (profile.skills) {
       for (const name of SKILL_NAMES) {
-        if (adapter === "codex" && name === "graphward-skill") {
+        if (false) {
           assert.ok(!paths.has(`${profile.skills}/${name}/SKILL.md`), "codex must hide the internal GraphWard engine");
           continue;
         }
         assert.ok(paths.has(`${profile.skills}/${name}/SKILL.md`), `${adapter} omitted skill ${name}`);
       }
-      if (adapter === "codex") assert.ok(paths.has(`${profile.skills}/graphward/SKILL.md`));
+      if (adapter === "codex") assert.ok(paths.has(`.agents/skills/graphward/SKILL.md`));
     }
     for (const name of WORKFLOW_NAMES) {
       const suffix = profile.workflowKind === "skill"
@@ -67,16 +67,16 @@ test("installs shared skills once for overlapping adapters", async () => {
   const result = await install(root, ["antigravity", "codex", "gemini-cli"], options);
   assert.equal(result.conflicts, 0);
   const manifest = JSON.parse(await readable(root, ".graphward/install-manifest.json"));
-  const shared = manifest.files.filter((entry) => entry.path === ".agents/skills/graphward-skill/SKILL.md");
+  const shared = manifest.files.filter((entry) => entry.path === ".graphward/engines/graphward-skill/SKILL.md");
   assert.equal(shared.length, 1);
-  assert.deepEqual(shared[0].owners, ["antigravity", "gemini-cli"]);
+  assert.deepEqual(shared[0].owners, ["antigravity", "codex", "gemini-cli"]);
   assert.match(await readable(root, ".agents/workflows/initialize-graphward.md"), /knowledge-base/);
   assert.match(await readable(root, ".agents/workflows/map-architecture.md"), /dependency-graph\.json/);
   assert.match(await readable(root, "AGENTS.md"), /delegate non-trivial implementation work to the named `graphward` custom agent/);
   assert.match(await readable(root, ".codex/agents/graphward.toml"), /^name = "graphward"/m);
   const launcher = await readable(root, ".agents/skills/graphward/SKILL.md");
-  assert.match(launcher, /custom agent type\/name `graphward`/);
-  assert.match(launcher, /`fork_turns: "none"`/);
+  assert.match(launcher, /propose_task_contract/);
+  assert.match(launcher, /prepare_task_context/);
   assert.match(await readable(root, ".codex/agents/engineering-orchestrator.toml"), /^name = "engineering-orchestrator"/m);
   assert.match(await readable(root, ".gemini/commands/graphward.toml"), /User supplied scope or request/);
 });
@@ -85,7 +85,7 @@ test("installs CommandCode native project skills and commands", async () => {
   const root = await project();
   const result = await install(root, ["commandcode"], options);
   assert.equal(result.conflicts, 0);
-  assert.match(await readable(root, ".commandcode/skills/graphward-skill/SKILL.md"), /GraphWard Implementation/);
+  assert.match(await readable(root, ".graphward/engines/graphward-skill/SKILL.md"), /GraphWard Implementation/);
   assert.match(await readable(root, ".commandcode/commands/graphward.md"), /\$ARGUMENTS/);
   assert.match(await readable(root, ".commandcode/commands/scope-requirement.md"), /\$ARGUMENTS/);
   assert.doesNotMatch(await readable(root, ".commandcode/commands/map-architecture.md"), /\$ARGUMENTS/);
@@ -121,7 +121,7 @@ test("update preserves locally modified managed files unless forced", async () =
 test("doctor reports legacy folders and locally edited managed content", async () => {
   const root = await project();
   await install(root, ["generic"], options);
-  await writeFile(path.join(root, ".agents/skills/graphward-skill/SKILL.md"), "changed\n");
+  await writeFile(path.join(root, ".graphward/engines/graphward-skill/SKILL.md"), "changed\n");
   await writeFile(path.join(root, ".agent"), "legacy marker");
   const actions = await doctor(root);
   assert.ok(actions.some((action) => action.path === ".agent" && action.status === "warning"));
@@ -258,7 +258,7 @@ test("update upgrades a V1-shaped installation with V2 graph and impact assets",
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   const result = await update(root, options);
   assert.equal(result.conflicts, 0);
-  assert.ok(result.actions.some((action) => action.path === ".agents/skills/graph-engine/SKILL.md" && action.status === "created"));
+  assert.ok(result.actions.some((action) => action.path === ".graphward/engines/graph-engine/SKILL.md" && action.status === "created"));
   assert.ok(result.actions.some((action) => action.path === ".agents/workflows/analyze-impact.md" && action.status === "created"));
   const updatedManifest = JSON.parse(await readFile(manifestPath, "utf8"));
   assert.equal(updatedManifest.templateVersion, "5.0.0");
@@ -269,7 +269,7 @@ test("upgrade installs new V2 files while preserving edited managed instructions
   await install(root, ["generic"], options);
   const manifestPath = path.join(root, ".graphward/install-manifest.json");
   const manifest = JSON.parse(await readFile(manifestPath, "utf8"));
-  const graphEntry = manifest.files.find((entry) => entry.path === ".agents/skills/graph-engine/SKILL.md");
+  const graphEntry = manifest.files.find((entry) => entry.path === ".graphward/engines/graph-engine/SKILL.md");
   manifest.files = manifest.files.filter((entry) => entry !== graphEntry);
   await unlink(path.join(root, graphEntry.path));
   await writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
@@ -293,13 +293,13 @@ test("uninstall removes templates but preserves runtime graph and report artifac
   assert.equal(result.conflicts, 0);
   assert.equal(await readable(root, graph), '{"schemaVersion":1}\n');
   assert.equal(await readable(root, report), "# Impact\n");
-  await assert.rejects(access(path.join(root, ".agents/skills/graph-engine/SKILL.md")));
+  await assert.rejects(access(path.join(root, ".graphward/engines/graph-engine/SKILL.md")));
 });
 
 test("update prompts to overwrite and respects user choice on conflict", async () => {
   const root = await project();
   await install(root, ["generic"], options);
-  const relative = ".agents/skills/graph-engine/SKILL.md";
+  const relative = ".graphward/engines/graph-engine/SKILL.md";
   await writeFile(path.join(root, relative), "locally modified skill content\n");
 
   // Case 1: user declines to overwrite (promptOverwrite returns false)
@@ -374,8 +374,8 @@ test("update with createPromptOverwrite resolves multiple conflicts with Accept 
   const root = await project();
   await install(root, ["generic"], options);
 
-  const file1 = ".agents/skills/graph-engine/SKILL.md";
-  const file2 = ".agents/skills/change-detection-engine/SKILL.md";
+  const file1 = ".graphward/engines/graph-engine/SKILL.md";
+  const file2 = ".graphward/engines/change-detection-engine/SKILL.md";
   await writeFile(path.join(root, file1), "local edit 1\n");
   await writeFile(path.join(root, file2), "local edit 2\n");
 

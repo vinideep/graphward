@@ -5,7 +5,7 @@ import path from "node:path";
 import { collectProjectFiles, ProjectFilePolicy } from "../project-files/index.js";
 
 export function toCanonicalPath(p: string): string {
-  if (process.platform === "win32") {
+  {
     try {
       if (existsSync(p)) {
         const real = realpathSync.native ? realpathSync.native(p) : realpathSync(p);

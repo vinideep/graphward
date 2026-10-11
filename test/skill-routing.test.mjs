@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { routeRequest, WORKFLOW_CATALOG, workflowCatalogErrors } from "../dist/routing/catalog.js";
 import { renderAdapters } from "../dist/adapters/index.js";
+import { SKILL_NAMES } from "../dist/templates.js";
 import { GATE_NAMES } from "../dist/gates/index.js";
 
 const CORPUS = [
@@ -27,20 +28,14 @@ test("routing corpus reaches at least 95% precision and preserves read-only safe
   assert.deepEqual([...WORKFLOW_CATALOG.graphward.requiredGates].sort(), [...GATE_NAMES].sort(), "advertised implementation gates must equal the executable registry");
 });
 
-test("provider bundles expose workflows once and internal engines are route-only", async () => {
+test("provider bundles expose entry skills and host-supported internal resources", async () => {
   for (const ide of ["claude-code", "cursor", "github-copilot", "gemini-cli", "codex"]) {
     const files = await renderAdapters([ide]);
-    const skills = files.filter((file) => /\/skills\/[^/]+\/SKILL\.md$/.test(file.path));
-    assert.equal(skills.length, 48, `${ide} must expose exactly 48 internal engines`);
-    if (ide === "codex") {
-      const launcher = skills.find((file) => file.path.endsWith("/skills/graphward/SKILL.md"));
-      assert.ok(launcher, "codex must expose the GraphWard custom-agent launcher");
-      assert.ok(!skills.some((file) => file.path.endsWith("/skills/graphward-skill/SKILL.md")));
-      assert.ok(skills.filter((file) => file !== launcher).every((file) => /disable-model-invocation: true/.test(file.content)));
-    } else {
-      assert.ok(skills.every((file) => /disable-model-invocation: true/.test(file.content)));
-      assert.ok(!skills.some((file) => /\/skills\/(graphward|analyze-impact|tdd)\/SKILL\.md$/.test(file.path)));
-    }
+    const internal = files.filter(file => /(?:skills|engines)\/[^/]+\/SKILL\.md$/.test(file.path) && SKILL_NAMES.some(name => file.path.endsWith(`/${name}/SKILL.md`)));
+    assert.equal(internal.length, SKILL_NAMES.length);
+    assert.ok(files.some(file => /\/skills\/graphward\/SKILL\.md$/.test(file.path)));
+    if (ide === "claude-code") assert.ok(internal.every(file => /disable-model-invocation: true/.test(file.content)));
+    else assert.ok(internal.every(file => file.path.startsWith(".graphward/engines/") && !/disable-model-invocation: true/.test(file.content)));
   }
 });
 

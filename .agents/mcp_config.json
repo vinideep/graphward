@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "graphward": {
+      "command": "/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node",
+      "args": [
+        "/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/mcp/cli.js",
+        "/Users/vinithr/personal/AI/engineering-intelligence-OS"
+      ]
+    }
+  }
+}

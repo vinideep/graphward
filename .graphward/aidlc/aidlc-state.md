@@ -1,66 +1,37 @@
 # AI-DLC State
-<!-- freshness: last_checked=2026-09-21 -->
+<!-- freshness: last_checked=2026-10-11 -->
 
 ## Current Position
 
 | Field | Value |
 |---|---|
-| Phase | Construction |
-| Stage | Codex native agent surface validated and synchronized |
+| Phase | construction |
+| Stage | Approved repair A–F: integrated validation and exact candidate qualification |
 | Active workflow | `graphward` |
-| Active hat | Quality Agent |
-| Active unit | IMP-006 Codex native agent surface |
-| Completion status | Complete locally |
-
-## Workspace Classification
-
-**Brownfield.** The current package is version 4.2.0. EI's approved provider workspace contains 192 files across 59 TypeScript and 32 JavaScript source files; generated adapters, build output, caches and fixtures are excluded from production intelligence. (evidence: package.json:3, .graphward/context/initialization-evidence.json)
-
-## Reverse Engineering Outputs (this initialization)
-
-| Artifact | Status |
-|---|---|
-| `$EIknowledge-base/00-15` | Written (16 documents) |
-| `$EImemory/*.md` | Written (5 documents) |
-| `$EIcontext/*.md` | Written (6 documents) |
-| `$EIevents/*.md` | Written (5 documents) |
-| `$EIgraph/*.json` + architecture-map.md | Written (4 JSON graphs + Mermaid map) |
-| `$AIDLCdiscovery/vision.md`, `technical-environment.md` | Written |
-| `$AIDLCinception/requirements.md` | Written (N/A — no feature requirements yet; this record documents the initialization scope) |
-| `$AIDLCagile/*.md` | Written (product-backlog, sprint-plan, acceptance-criteria, DoR, DoD, retrospective — seeded, empty/placeholder where no active feature work exists) |
-| `$AIDLCconstruction/cross-unit-discoveries.md` | Written (empty log, ready for future construction units) |
-| `$EIchanges/CHG-000-initialization.md` | Historical initialization record retained |
-| `$EIchanges/CHG-001-context-orchestrator.md` | Written with implementation and validation evidence |
-| `$EIchanges/CHG-002-e2e-validation-and-simple-sync.md` | Written with implementation, parity, and release evidence |
-
-## Progress Breadcrumb
-
-```
-AI-DLC: Construction -> Codex native agent surface -> Complete locally; provider UI refresh remains required
-```
+| Active hat | Engineering Orchestrator |
+| Active unit | IMP-012 A–F |
+| Completion status | in-progress |
 
 ## Active Delivery
 
-EPIC-001 and FEAT-001 through FEAT-005 remain implemented and locally validated. IMP-005 aligned skill routing, provider bundles, executable gates, learning ownership, and enforcement truth. The pre-existing cross-platform provider matrix remains a separate release qualification item.
+User approved the full reliability and accuracy implementation plan. Runtime, explicit provider preparation/read-only context, versioned task decisions, native capability profiles and edit checks, compiler/evidence/lock accuracy, and measured evaluation/release qualification are implemented locally. Existing changes are preserved under reports/approved-repair-2026-10-11; the model router remains reverted.
 
-## Unknowns
+## Evidence and open gates
 
-- Remote CI execution state is unavailable from this local workspace. Do not infer those jobs passed from the workflow definition.
-- Strict environment doctor reports 46 errors and 5 warnings from pre-existing machine-global skills under `/Users/vinithr/.agents/skills/`. Repository-managed provider bundles are current and clean; user-level cleanup was not performed automatically.
+- Pre-change maintained baseline: 437/437 passed. Final byte-bound repaired suite: 488/488 passed with zero skips, failures or changed files. Missing-seed context follow-up: 16/16 focused checks passed. The final byte-bound run is recorded in reports/approved-repair-2026-10-11/final-verification.json.
+- Source build and installed `gw --help` succeed. Actual MCP SDK initialization, discovery and read-only calls pass. Failed builds preserve the linked runtime; packaged executability and offline behavior are tested.
+- Installed migration preserves user settings/conflicts. Task approval is the explicit parent plan approval with conversational assurance; native hook assurance is not asserted.
+- Final deterministic change validation passes with current task readiness, complete mapping, 545/545 verified claims and 41/41 current citations. Both root providers refreshed locally. Graphify inherited ancestor Git ignores and omitted nested source; documented mirror-only `--no-gitignore` corrected actual extraction.
+- Claude Code exact-candidate native canary passed ordinary feature, entry feature and mutation guard scenarios with actual CCE and Graphify contribution. The user-approved Codex checkout review reports all five exact hooks trusted and enabled. Full current-candidate Codex/Antigravity qualification, IDE interaction, held-out measured accuracy and remote CI remain open. Failed and unavailable stages block release; generated integration does not count as qualification.
+- Existing-project review reproduced custom-ignore loss and malformed-config replacement during update. These additional preservation gaps need fixes/regressions before rollout; previous passes cover only executed cases. Details: reports/approved-repair-2026-10-11/EXISTING-PROJECT-UPGRADE-REVIEW.md.
+- Detailed unit delivery and task trace: reports/approved-repair-2026-10-11/IMPLEMENTATION-REPORT.md. No publication or external project changes occurred.
 
-## Current Validation Unit
+## Parallel inception scope: CLI-UX-001
 
-IMP-006 is locally complete: the Codex adapter emits native `.codex/agents/*.toml`
-for GraphWard and its specialists, and the target `algo-trading` workspace has
-been reconciled with 16 managed agent files and zero conflicts. The
-`.agents/skills/graphward-skill` artifact remains intentionally present as the
-desktop slash-picker route; the native TOML projection is consumed when Codex
-delegates work to a custom agent. The generated `AGENTS.md` explicitly requests
-that Codex delegate non-trivial implementation work to the named `graphward`
-agent, matching the current Codex custom-agent trigger contract.
+The human selected a guided home with setup/update wizards, current-project setup/updates/diagnostics, and both CCE/Graphify recommended with downloads reviewed first. Requirements and a simulated concept are prepared; detailed implementation approval is pending. See `knowledge-base/19-requirements.md` and `reports/PLAN-013-guided-cli-onboarding.md`. The two reproduced preservation defects are prerequisite U0. This inception record does not replace the active A–F qualification unit or its open release gates.
 
-IMP-005 is locally complete: provider outputs are dependency-closed, entry workflows
-do not collide with internal engines inside the repository bundle, advertised gates
-are executable, durable learning has a single writer, and semantic regression tests
-cover the pre-change failures. Machine-global collision cleanup remains an explicit
-environment operation rather than an implicit repository edit.
+## Progress Breadcrumb
+
+The user-authorized documentation unit IMP-014 completed on 2026-10-12: README explains current installation, task/provider/host contracts, migration blockers and planned CLI. Syntax/links and actual CLI help/version were checked; onboarding knowledge and change records were synchronized. No product implementation or new release qualification is claimed. The A–F release gates and CLI-UX-001 implementation-review status remain unchanged.
+
+AI-DLC: Construction -> Reliability validation and qualification -> In progress

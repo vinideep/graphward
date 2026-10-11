@@ -57,4 +57,28 @@ and `.graphward/changes/CHG-004-agent-accuracy-enforcement.md`. Machine-global l
 skill cleanup remains intentionally unexecuted because it is destructive and outside
 the repository-managed bundle.
 
-No product implementation unit remains open locally. A release cannot be called fully handled until action 1 passes in CI.
+That historical unit has no remaining local implementation. A release cannot be called fully handled until action 1 passes in CI.
+
+## Current unit: autorouter rollback and agent reliability repairs (2026-10-10)
+
+User request: revert the last two commits and prepare a complete repair plan for launcher and coding-agent failures. Local history-preserving revert identities: `a602021` and `a4a0ba1`. Uncommitted package/CLI files and their full patch were saved separately; the router-dependent edits were not reapplied.
+
+Implementation-ready design and acceptance matrix: [PLAN-011-agent-reliability-repair.md](/Users/vinithr/personal/AI/engineering-intelligence-OS/.graphward/reports/PLAN-011-agent-reliability-repair.md). R0 is rollback; The table below records the earlier plan; current implementation and remaining qualification are updated under IMP-012. Local checks are recorded in the rollback construction summary. Publication, global installation repair, external project updates and actual provider acceptance remain separate actions.
+
+| Unit | Depends on | Scope | Status |
+| --- | --- | --- | --- |
+| R0 rollback | — | Exact two-commit scope; backups; clean output | Reverted locally |
+| R1 launcher lifecycle | R0 | Package build/finalizer; installed/link tests | Implemented locally |
+| R2 verification truth | R0 | Verification, change parsing, receipts/processes | Implemented locally |
+| R3 runtime identity | R1 | Shared invocation contract, adapters/hooks/MCP | Implemented locally |
+| R4 readiness | R1, R3 | Doctor/install/health and hook diagnostics | Implemented locally |
+| R5 agent contracts | R2, R3, R4 | Canonical routes and provider loading | Implemented locally |
+| R6 qualification | R1–R5 | Exact package/platform/host checks, CI/docs/sync | Local and Claude checks pass; remaining native/platform/held-out gates open |
+
+## Approved implementation: IMP-012 (2026-10-11)
+
+Documentation follow-up IMP-014 (2026-10-12): user requested the full README guide. Scope limited to text and affected onboarding/delivery records. Context and computed README impact inspected; unsupported guarantees/examples removed; source/profile checks, syntax/links, actual CLI help/version and independent review completed. No source implementation, provider rebuild, publication or external migration. A–F qualification and PLAN-013 approval status remain separate.
+
+The user approved the full reliability/requirements/accuracy plan. Execute sequentially: A runtime and verification → B provider context → C task contracts → D native adapters/hooks → E/F integrated accuracy and release qualification. IMP-012 defines ownership, dependencies and acceptance. Baseline: 437/437. Native host/remote qualification remains separate from local evidence.
+
+Final local verification passed 488/488 with unchanged bytes during checks. Claude native qualification passed against candidate 222cd268ee8202c93c8f272ee6aeb867b018aebfaf7aab00347f294dd51cad87. Codex checkout exact-hook trust is reviewed. Release-qualification.json fails closed on missing current-candidate Codex/Antigravity and held-out measurements.

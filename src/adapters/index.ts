@@ -7,9 +7,11 @@ import {
   generateWorkflowRouting,
   prepareRendered,
 } from "../token-optimizer.js";
-import { claudeCodeHookSettings, cursorHookSettings, defaultConfigFile } from "../hooks/index.js";
+import { claudeCodeHookSettings, cursorHookSettings, codexHookSettings, antigravityHookSettings, defaultConfigFile } from "../hooks/index.js";
 import { MCP_TOOL_SUMMARY, mcpServerRegistration } from "../mcp/index.js";
 import { IDE_IDS, type IdeId, type RenderedFile } from "../types.js";
+import { HOST_PROFILES } from "./capabilities.js";
+import { resolveRuntimeInvocation } from "../runtime/invocation.js";
 import { invocationPolicyDescription, invocationPolicyMarkdown, type SkillName } from "../routing/catalog.js";
 
 const BLOCK_ID = "graphward";
@@ -85,9 +87,9 @@ function providerInstructions(options: {
     : "- This provider has no installed custom-agent surface; route non-trivial work through a GraphWard entry workflow.";
   const routingLine = `- **Route before loading skills.** Consult \`${options.routingPath}\` and \`${options.indexPath}\` before opening an internal \`SKILL.md\`. Entry workflows are model-invocable; internal engines are loaded only through the selected route.`;
   return sharedInstructions
-    .replace(/- When the \.agents\/agents\/ directory[^\n]+/, agentLine)
+    .replace(/- When a provider-installed custom-agent directory[^\n]+/, agentLine)
     .replace(/- \*\*Route before loading skills\.\*\*[^\n]+/, routingLine)
-    + `\n- ${options.nativeHooks ? "Native lifecycle hooks enforce configured completion checks." : "This provider has no GraphWard runtime hooks; run `gw verify` and applicable `gw gate` commands in CI before completion."}\n`;
+    + `\n- ${options.nativeHooks ? "Native hook integration is generated. Discovery, connection and enforcement require separate host qualification; hooks are guardrails with documented bypasses." : "This provider has no GraphWard runtime hooks; run `gw verify` and applicable `gw gate` commands in CI before completion."}\n`;
 }
 
 /**
@@ -140,8 +142,8 @@ function jsonMerge(path: string, content: string, owner: IdeId): RenderedFile {
   return { path, content, kind: "json-merge", owners: [owner] };
 }
 
-function block(path: string, content: string, owner: IdeId): RenderedFile {
-  return { path, content, kind: "block", blockId: BLOCK_ID, owners: [owner] };
+function block(path: string, content: string, owner: IdeId, blockId = BLOCK_ID): RenderedFile {
+  return { path, content, kind: "block", blockId, owners: [owner] };
 }
 
 async function skillsAt(
@@ -155,9 +157,8 @@ async function skillsAt(
       const raw = `${await readTemplate("skills", name)}\n\n${invocationPolicyMarkdown(skillName)}\n`
         .replace(/^description:\s*.+$/m, `description: ${JSON.stringify(invocationPolicyDescription(skillName))}`);
       return file(
-        `${directory}/${name}/SKILL.md`,
-        prepareRendered(raw)
-          .replace(/^---\n/, "---\ndisable-model-invocation: true\n"),
+        `${owner === "claude-code" ? directory : ".graphward/engines"}/${name}/SKILL.md`,
+        owner === "claude-code" ? prepareRendered(raw).replace(/^---\n/, "---\ndisable-model-invocation: true\n") : prepareRendered(raw),
         owner,
       );
     }),
@@ -237,17 +238,18 @@ interface SkillBundleProfile {
 
 async function skillBundle(owner: IdeId, p: SkillBundleProfile): Promise<RenderedFile[]> {
   const skillNames = p.skillNames ?? SKILL_NAMES;
+  const resourceDirectory = owner === "claude-code" ? p.skillsDir : ".graphward/engines";
   const [index, skills, briefs] = await Promise.all([
     // Shared `.agents` indexes must remain byte-identical when Codex is
     // installed alongside Antigravity or Gemini. The index describes the
     // canonical engine inventory; `skillNames` only controls provider-visible
     // files, allowing Codex to replace one engine with its launcher.
-    generateSkillsIndex(SKILL_NAMES, p.skillsDir, undefined, p.emitBriefs),
+    generateSkillsIndex(SKILL_NAMES, resourceDirectory, undefined, p.emitBriefs),
     skillsAt(p.skillsDir, owner, skillNames),
     p.emitBriefs ? generateAllSkillBriefs(skillNames).then((generated) =>
-      skillNames.map((name) => file(`${p.skillsDir}/${name}/SKILL-BRIEF.md`, generated.get(name) ?? "", owner))) : Promise.resolve([]),
+      skillNames.map((name) => file(`${resourceDirectory}/${name}/SKILL-BRIEF.md`, generated.get(name) ?? "", owner))) : Promise.resolve([]),
   ]);
-  const routing = generateWorkflowRouting(p.skillsDir, p.emitBriefs);
+  const routing = generateWorkflowRouting(resourceDirectory, p.emitBriefs);
   return [
     file(p.indexPath, index, owner),
     file(p.routingPath, routing, owner),
@@ -376,9 +378,8 @@ async function agentsAsMarkdownAt(directory: string, owner: IdeId): Promise<Rend
       `description: ${quoteYaml(description)}`,
       "mainAgent: true",
       "subagent: true",
-      ...(extra.skills?.length
-        ? ["skills:", ...extra.skills.map((skill) => `  - skills/${skill}`)]
-        : []),
+      // Internal engines are referenced resources, not native discoverable
+      // skills. Preloading the removed native paths prevents agent startup.
       "---",
     ].join("\n");
     const runtimeContext = [
@@ -386,6 +387,7 @@ async function agentsAsMarkdownAt(directory: string, owner: IdeId): Promise<Rend
       "",
       "Read the following project-owned context before making non-trivial decisions:",
       ...extra.context.map((location) => "- `" + location + "`"),
+      ...(extra.skills?.length ? ["", "Load internal engines only when the selected route calls for them:", ...extra.skills.map(skill => `- \`.graphward/engines/${skill}/SKILL.md\``)] : []),
       ...(extra.agents?.length
         ? [
             "",
@@ -521,7 +523,7 @@ implementation request:
   );
 }
 
-async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
+async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedFile[]> {
   switch (ide) {
     case "antigravity": {
       const ruleContent = prepareRendered(await readTemplate("rules", "graphward"));
@@ -542,7 +544,7 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
         ...bundle,
         ...agents,
         ...workflows,
-        file(".agents/rules/graphward.md", ruleContent, ide),
+        file(".agents/rules/graphward.md", `---\ntrigger: always_on\n---\n\n${ruleContent}`, ide),
       ];
     }
     case "antigravity-cli": {
@@ -564,7 +566,7 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
       ];
     }
     case "codex": {
-      const codexSkillNames = SKILL_NAMES.filter((name): name is SkillName => name !== "graphward-skill");
+      const codexSkillNames = SKILL_NAMES;
       const [bundle, agents, workflows, codexAgents] = await Promise.all([
         skillBundle(ide, {
           skillsDir: ".agents/skills",
@@ -582,7 +584,7 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
         ...agents,
         ...workflows,
         ...codexAgents,
-        codexGraphwardLauncherAt(".agents/skills", ide),
+
         block("AGENTS.md", sharedInstructions, ide),
       ];
     }
@@ -614,7 +616,7 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
         ...agents,
         ...commands,
         jsonMerge(".claude/settings.json", claudeCodeHookSettings(), ide),
-        jsonMerge(".mcp.json", mcpServerRegistration(), ide),
+        jsonMerge(".mcp.json", mcpServerRegistration(projectRoot), ide),
         seed(".graphward/gw.config.json", defaultConfigFile(), ide),
         block("CLAUDE.md", providerInstructions({ agentsPath: ".claude/agents/", routingPath: ".claude/WORKFLOW-ROUTING.md", indexPath: ".claude/skills/SKILLS-INDEX.md", nativeHooks: true }) + claudeCodeInstructions, ide),
       ];
@@ -636,7 +638,7 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
         file(".cursor/rules/graphward.mdc", rule, ide),
         ...commands,
         jsonMerge(".cursor/hooks.json", cursorHookSettings(), ide),
-        jsonMerge(".cursor/mcp.json", mcpServerRegistration(), ide),
+        jsonMerge(".cursor/mcp.json", mcpServerRegistration(projectRoot), ide),
         seed(".graphward/gw.config.json", defaultConfigFile(), ide),
       ];
     }
@@ -746,7 +748,7 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
       return [
         ...bundle,
         file(".roo/rules/graphward.md", finalRule, ide),
-        jsonMerge(".roo/mcp.json", mcpServerRegistration(), ide),
+        jsonMerge(".roo/mcp.json", mcpServerRegistration(projectRoot), ide),
       ];
     }
     case "cline": {
@@ -772,6 +774,30 @@ async function renderAdapter(ide: IdeId): Promise<RenderedFile[]> {
 function toGeminiCommand(description: string, prompt: string): string {
   const escaped = prompt.replaceAll('"""', '\\"\\"\\"');
   return `description = ${JSON.stringify(description)}\nprompt = """\n${escaped}\n"""\n`;
+}
+
+async function hostIntegration(ide: IdeId, projectRoot: string): Promise<RenderedFile[]> {
+  const profile = HOST_PROFILES[ide];
+  const outputs: RenderedFile[] = [file(`.graphward/providers/hosts/${ide}.json`, JSON.stringify(profile, null, 2) + "\n", ide)];
+  const directory = ide === "claude-code" ? ".claude/skills" : ide === "cursor" ? ".cursor/skills" : ide === "cline" ? ".cline/skills" : ide === "roo-code" ? ".roo/skills" : ide === "github-copilot" ? ".github/skills" : ide === "commandcode" ? ".commandcode/skills" : ".agents/skills";
+  for (const name of WORKFLOW_NAMES) {
+    const workflow = await readTemplate("workflows", name);
+    outputs.push(file(`${directory}/${name}/SKILL.md`, prepareRendered(workflow) + `\n\nRead the active host capability profile under .graphward/providers/hosts/. Use its native question tool, or ask in the parent conversation. Subagents return unresolved questions to the parent. For every feature, discover repository facts, discuss requirements, confirm scope, prepare implementation context, then implement and validate. Prompt scores never authorize edits. Internal engines live in ${ide === "claude-code" ? ".claude/skills" : ".graphward/engines"}. Preserve configured model and reasoning settings.\n`, ide));
+  }
+  if (ide === "codex") {
+    const invocation = resolveRuntimeInvocation({ kind: "mcp", projectRoot });
+    outputs.push(block(".codex/config.toml", `[mcp_servers.graphward]\ncommand = ${JSON.stringify(invocation.command)}\nargs = ${JSON.stringify(invocation.args)}\n`, ide, "graphward-codex-mcp"));
+    outputs.push(jsonMerge(".codex/hooks.json", codexHookSettings(), ide));
+    for (const name of WORKFLOW_NAMES) outputs.push(file(`${directory}/${name}/agents/openai.yaml`, "policy:\n  allow_implicit_invocation: true\n", ide));
+    outputs.push(seed(".graphward/gw.config.json", defaultConfigFile(), ide));
+  }
+  if (ide === "antigravity" || ide === "antigravity-cli") {
+    outputs.push(jsonMerge(".agents/mcp_config.json", mcpServerRegistration(projectRoot), ide));
+    outputs.push(jsonMerge(".agents/hooks.json", antigravityHookSettings(ide), ide));
+    outputs.push(seed(".graphward/gw.config.json", defaultConfigFile(), ide));
+  }
+  if (ide === "cursor") outputs.push(...await agentsAt(".cursor/agents", ide));
+  return outputs;
 }
 
 // KV-cache pinned files sort first across ALL IDEs so routing artifacts form
@@ -810,8 +836,14 @@ export function isIdeId(input: string): input is IdeId {
   return (IDE_IDS as readonly string[]).includes(input);
 }
 
-export async function renderAdapters(ides: IdeId[]): Promise<RenderedFile[]> {
+export async function renderAdapters(ides: IdeId[], projectRoot = process.cwd()): Promise<RenderedFile[]> {
   const unique = [...new Set(ides)];
-  const outputs = await Promise.all(unique.map(renderAdapter));
-  return mergeRenderedFiles(outputs.flat());
+  const { createConsolidatedRegistry } = await import("../mcp/consolidated.js");
+  const toolContracts = (await createConsolidatedRegistry(projectRoot)).list();
+  const outputs = await Promise.all(unique.map(async ide => [...await renderAdapter(ide, projectRoot), ...await hostIntegration(ide, projectRoot)]));
+  const invocation = resolveRuntimeInvocation();
+  const quote = (value: string) => `"${value.replaceAll('"', '\\"')}"`;
+  const command = [invocation.command, ...invocation.args].map(quote).join(' ');
+  const files = mergeRenderedFiles([...outputs.flat(), { path: ".graphward/providers/tool-contracts.json", content: JSON.stringify({ schemaVersion: 1, tools: toolContracts }, null, 2) + "\n", kind: "file", owners: unique }]);
+  return files.map(item => ({ ...item, content: item.content.replace(/npx gw\b/g, command).replace(/npx graphward\b/g, command).replace(/(?<![\w/])graphward (?=verify|aidlc|providers|map|health|context|gate)/g, command + " ") }));
 }

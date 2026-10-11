@@ -145,11 +145,11 @@ test("project provider run status detects current and stale source snapshots", a
   await writeFile(path.join(root, "src", "main.ts"), source);
   await writeFile(path.join(provider, "graphify", "graph.json"), JSON.stringify({ nodes: [], edges: [] }));
   await writeFile(path.join(provider, "graphify", "run.json"), JSON.stringify({
-    schemaVersion: 1, provider: "graphify", providerVersion: "0.9.29", generatedAt: new Date().toISOString(),
+    schemaVersion: 1, projectRoot: await import("../dist/providers/workspace.js").then(m=>m.toCanonicalPath(root)), graphHash: digest(JSON.stringify({ nodes: [], edges: [] })), provider: "graphify", providerVersion: "0.9.29", generatedAt: new Date().toISOString(),
     workspaceHash, sourceHashes: { "src/main.ts": sourceHash }, command: [], graphPath: ".graphward/providers/graphify/graph.json",
   }));
   await writeFile(path.join(provider, "cce", "run.json"), JSON.stringify({
-    schemaVersion: 1, provider: "cce", providerVersion: "0.4.25", generatedAt: new Date().toISOString(),
+    schemaVersion: 1, projectRoot: await import("../dist/providers/workspace.js").then(m=>m.toCanonicalPath(root)), provider: "cce", providerVersion: "0.4.25", generatedAt: new Date().toISOString(),
     workspaceHash, sourceHashes: { "src/main.ts": sourceHash },
     indexedPath: path.join(provider, "cce", "project", "workspace"), storagePath: path.join(provider, "cce", "project", "storage"),
   }));
