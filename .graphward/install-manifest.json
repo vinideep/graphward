@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "packageVersion": "1.2.8",
+  "packageVersion": "1.3.1",
   "templateVersion": "5.0.0",
   "adapters": [
     "antigravity",
@@ -1660,7 +1660,7 @@
     {
       "path": ".claude/skills/socratic-clarification-gate/SKILL.md",
       "kind": "file",
-      "hash": "8ce7ef5b3a62c2b7db1c9e2089fbc44367da7375304cdbae1468f7b948b594f4",
+      "hash": "f79243c9d08a939f69086af5b176d736574ed34db57f17db6b30c2fc68bb23ad",
       "owners": [
         "claude-code"
       ]
@@ -2335,7 +2335,7 @@
     {
       "path": ".graphward/engines/socratic-clarification-gate/SKILL.md",
       "kind": "file",
-      "hash": "24bf5a873c6ed4c5cbccf208f6a9d97046fd3a414f289b156056b49355a689c3",
+      "hash": "7178c238e2b0e2de9dc1fd5d578f4b976975357cd34956ecdecc3a677bacdc17",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2448,7 +2448,7 @@
     {
       "path": ".graphward/providers/tool-contracts.json",
       "kind": "file",
-      "hash": "ba17a8f2b84e692cbf0ccf224f8603ee457b164df673088849b3787e891f1817",
+      "hash": "c53ac38c473de188cc6c6bb74ec78579a077a0b0aa80b191f8b083c3bf69fc99",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2477,7 +2477,7 @@
     {
       "path": "CLAUDE.md",
       "kind": "block",
-      "hash": "6d38207268a0d6600b02d2b8685fcf4397ae1e8c06837fc74725d9793a7e0c77",
+      "hash": "5ddbd3d7cd6625876e73736fc4e346b422c138dae1d4e3db0f3725696ceb3f1d",
       "blockId": "graphward",
       "owners": [
         "claude-code"
@@ -2485,5 +2485,5 @@
     }
   ],
   "installedAt": "2026-07-13T08:35:35.436Z",
-  "updatedAt": "2026-10-11T01:42:14.821Z"
+  "updatedAt": "2026-10-14T12:10:58.679Z"
 }

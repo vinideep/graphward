@@ -215,3 +215,39 @@ test("api-diff: passes when only additive changes exist", async () => {
   assert.equal(result.status, "pass");
   assert.ok(result.findings.some((f) => f.severity === "info" && /POST \/y/.test(f.message)));
 });
+
+test("dead-exports: a namespace or dynamic import of dir/index.js counts as using that module", async () => {
+  const root = await tmp();
+  await write(root, "package.json", JSON.stringify({ main: "src/main.ts" }));
+  await write(root, "src/main.ts", "const { run } = await import('./feature/index.js');\nimport * as tools from './tools/index.js';\nrun(); tools.go();\n");
+  await write(root, "src/feature/index.ts", "export function run() { return 1; }\n");
+  await write(root, "src/tools/index.ts", "export function go() { return 2; }\n");
+  await write(root, "src/lonely.ts", "export function orphan() { return 3; }\n");
+  const messages = (await runGate("dead-exports", root)).findings.map((f) => f.message);
+  assert.ok(!messages.some((m) => /'run'|'go'/.test(m)), messages.join("\n"));
+  assert.ok(messages.some((m) => /orphan/.test(m)), "a genuinely unused export is still reported");
+});
+
+test("env-vars: ignores comments, platform variables and test fixtures; reads mixed-case names whole", async () => {
+  const root = await tmp();
+  await write(root, "src/app.ts", [
+    "// usage example: process.env.EXAMPLE_ONLY",
+    "const shell = process.env.ComSpec || process.env.PATH;",
+    "const home = process.env.MY_HOME; // e.g. process.env.ALSO_EXAMPLE",
+    "const camel = process.env.featureFlag;",
+  ].join("\n"));
+  await write(root, "src/app.test.ts", "const fake = process.env.TEST_ONLY_KEY;\n");
+  await write(root, ".env.example", "MY_HOME=\n");
+  const warnings = (await runGate("env-vars", root)).findings.filter((f) => f.severity === "warning").map((f) => f.message);
+  assert.deepEqual(warnings.map((m) => m.match(/variable (\S+)/)[1]), ["featureFlag"]);
+});
+
+test("dead-exports: files run by package.json scripts are entry points", async () => {
+  const root = await tmp();
+  await write(root, "package.json", JSON.stringify({ scripts: { bench: "npm run build && node --experimental-strip-types bench/run.ts" } }));
+  await write(root, "bench/run.ts", "export const BENCH_RESULT = 1;\n");
+  await write(root, "src/lib.ts", "export const unusedLib = 1;\n");
+  const messages = (await runGate("dead-exports", root)).findings.map((f) => f.message);
+  assert.ok(!messages.some((m) => /BENCH_RESULT/.test(m)));
+  assert.ok(messages.some((m) => /unusedLib/.test(m)));
+});

@@ -97,3 +97,66 @@ test("a genuinely stale cited document does drive the drift decision", async () 
   assert.ok(doc.score < 60, `an old doc with a dangling citation should score low, got ${doc.score}`);
   assert.notEqual(report.driftDecision, "Proceed", "real staleness must still surface");
 });
+
+test("backtick file:line citations are checkable like (evidence: ...) annotations", async () => {
+  const root = await repoWithDocs(
+    { "04-backtick.md": "<!-- freshness: last_checked=2099-01-01 -->\n\nGate lives at `src/gate.ts:3` and `src/gone.ts:1`.\n" },
+    { "src/gate.ts": "export const a = 1;\nexport const b = 2;\nexport const gate = 3;\n" },
+  );
+  const doc = score(await computeFreshness(root), "04-backtick.md");
+  assert.notEqual(doc.status, "unverifiable");
+  assert.deepEqual(doc.deletedSources, ["src/gone.ts"]);
+});
+
+test("machine-maintained state files are not scored as documentation", async () => {
+  const root = await repoWithDocs({ ".evidence-hashes.json": "{}", "05-real.md": "# Real\n" });
+  for (const [dir, name] of [["context", "preparation.json"], ["context", "initialization-evidence.json"], ["graph", "dependency-graph.json"]]) {
+    await mkdir(path.join(root, ".graphward", dir), { recursive: true });
+    await writeFile(path.join(root, ".graphward", dir, name), "{}", "utf8");
+  }
+  const docs = (await computeFreshness(root)).scores.map((s) => s.docPath);
+  assert.deepEqual(docs.filter((d) => /evidence-hashes|preparation|initialization-evidence|dependency-graph/.test(d)), []);
+  assert.ok(docs.some((d) => d.endsWith("05-real.md")));
+});
+
+test("recorded source bytes outrank commit dates; real content changes still count", async () => {
+  const { recordEvidenceHashes } = await import("../dist/evidence/index.js");
+  const root = await repoWithDocs(
+    { "06-dated.md": "<!-- freshness: last_checked=2000-01-01 -->\n\nGate behavior (evidence: src/gate.ts).\n" },
+    { "src/gate.ts": "export const gate = 1;\n" },
+  );
+  const before = score(await computeFreshness(root), "06-dated.md");
+  assert.equal(before.staleSources.length, 1, "without a recording, a later commit counts as drift");
+
+  await recordEvidenceHashes(root);
+  const recorded = score(await computeFreshness(root), "06-dated.md");
+  assert.deepEqual(recorded.staleSources, [], "unchanged bytes since verification are not drift");
+
+  await writeFile(path.join(root, "src/gate.ts"), "export const gate = 2;\n", "utf8");
+  execFileSync("git", ["commit", "-qam", "change"], { cwd: root });
+  assert.equal(score(await computeFreshness(root), "06-dated.md").staleSources.length, 1, "changed bytes are drift again");
+});
+
+test("citing mode scores only documents that cite the given file", async () => {
+  const root = await repoWithDocs(
+    { "07-a.md": "A (evidence: src/a.ts).\n", "08-b.md": "B (evidence: src/b.ts).\n" },
+    { "src/a.ts": "export const a = 1;\n", "src/b.ts": "export const b = 1;\n" },
+  );
+  const docs = (await computeFreshness(root, 60, { citing: "src/a.ts" })).scores.map((s) => s.docPath);
+  assert.deepEqual(docs, [".graphward/knowledge-base/07-a.md"]);
+});
+
+test("model-authored graph JSON is checkable through its evidence arrays and updatedAt", async () => {
+  const root = await repoWithDocs({}, { "src/flow.ts": "export function run() {}\n" });
+  const graphDir = path.join(root, ".graphward", "graph");
+  await mkdir(graphDir, { recursive: true });
+  await writeFile(path.join(graphDir, "runtime-graph.json"), JSON.stringify({ updatedAt: "2099-01-01T00:00:00.000Z", nodes: [{ id: "a", evidence: ["src/flow.ts:1-1", "src/gone.ts:3"] }] }));
+  await mkdir(path.join(root, ".graphward", "context"), { recursive: true });
+  await writeFile(path.join(root, ".graphward", "context", "KNOWLEDGE-GENERATION-BRIEF.md"), "# brief\n");
+  const report = await computeFreshness(root);
+  const graph = score(report, "runtime-graph.json");
+  assert.notEqual(graph.status, "unverifiable");
+  assert.deepEqual(graph.deletedSources, ["src/gone.ts"]);
+  assert.equal(graph.docLastUpdated, "2099-01-01T00:00:00.000Z");
+  assert.ok(!report.scores.some((s) => s.docPath.endsWith("KNOWLEDGE-GENERATION-BRIEF.md")), "generated brief is machine state");
+});

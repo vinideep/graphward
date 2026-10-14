@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased - Agent workflow reliability (IMP-015)
+- **Task gate**: proposals return `howToConfirm`; Claude `AskUserQuestion` approval accepts the challenge as the selected label or an `Approve scope (Recommended)` label; scope entries accept globs (`src/**`); in-scope edits keep bound context valid (per-file baseline), out-of-scope drift still blocks; file edits outside the project are not gated.
+- **Discovery**: quote-aware read-only shell classifier allows pipelines/lists of `ls`, `cat`, `rg`, `grep`, `find`, `git log|diff|show`, `sed -n 'N,Mp'`; writing flags and substitution still require a task.
+- **Context budgets**: `prepare_task_context` (MCP and `gw aidlc prepare-task`) returns a compact receipt; `get_engineering_context` gains `format` (`json` default, `markdown`, `full`); skeleton outlines and claims are charged to the token budget; per-node provenance badges removed (data already on nodes).
+- **Freshness**: content-hash first (sources unchanged since `gw evidence-record` are not drift), backtick and JSON `"evidence"` citations checked, machine state excluded, edit hook scores only documents citing the edited file (~2.0s → ~0.3s per edit).
+- **Gates**: dead-exports no longer misses `dir/index.js` namespace/dynamic imports and exempts npm-script entry files; env-vars ignores comments, platform variables and test fixtures and reads mixed-case names.
+- **CLI**: a flag-only invocation implies `install` only for install options; `gw --json` and similar now fail without writing.
+- **Hooks**: event log rotates at 1 MB.
+- **Dependencies**: `@modelcontextprotocol/sdk` 1.32.1; `npm audit` clean.
+- **Source hygiene**: removed a literal NUL byte from `src/evidence/index.ts`.
+- Note: entries for 1.1.0–1.3.1 were never recorded here.
+
 ## 1.0.4 - Hardening & Verification Release
 - **Coverage-gap detector**: Automatically generates preflight characterization tests for un-tested code paths.
 - **Clarification gate**: Deterministic graph-based boundary and consumer checks instead of LLM self-assessment.

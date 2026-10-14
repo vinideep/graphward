@@ -75,15 +75,15 @@
     "@types/node": "^22.15.0"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.29.0",
+    "@modelcontextprotocol/sdk": "1.32.1",
     "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "tree-sitter": ">=0.20.0",
-    "tree-sitter-typescript": ">=0.20.0",
-    "tree-sitter-python": ">=0.20.0",
     "tree-sitter-go": ">=0.20.0",
-    "tree-sitter-rust": ">=0.20.0"
+    "tree-sitter-python": ">=0.20.0",
+    "tree-sitter-rust": ">=0.20.0",
+    "tree-sitter-typescript": ">=0.20.0"
   },
   "peerDependenciesMeta": {
     "tree-sitter": {

@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { toCanonicalPath, computeProviderSourceSnapshot } from "../providers/workspace.js";
+import { toCanonicalPath, computeProviderSourceSnapshot, type ProviderSourceSnapshot } from "../providers/workspace.js";
 import { withLock } from "../manifest/lock.js";
 import { getEngineeringContext } from "../context/orchestrator.js";
 import { readContextPreparation } from "../context/preparation.js";
@@ -31,6 +31,47 @@ const digest = (value: string) => createHash("sha256").update(value).digest("hex
 const identifier = (value: string) => { if (!/^[a-zA-Z0-9_-]{1,100}$/.test(value)) throw new Error("Invalid task ID."); return value; };
 const taskPath = (root: string, id: string) => path.join(root, ".graphward/aidlc/tasks", `${identifier(id)}.json`);
 const bindingPath = (root: string, host: string, session: string) => path.join(root, ".graphward/aidlc/tasks/sessions", `${digest(`${host}:${session}`)}.json`);
+/** Per-file source hashes captured when context is bound, so readiness can tell the task's own in-scope edits from external drift. */
+const baselinePath = (root: string, id: string) => path.join(root, ".graphward/aidlc/tasks/baselines", `${identifier(id)}.json`);
+interface ContextBaseline { taskId: string; preparationId: string; sourceGeneration: string; sourceHashes: Record<string, string> }
+
+function globToRegExp(glob: string): RegExp {
+  let pattern = "";
+  for (let index = 0; index < glob.length; index++) {
+    const char = glob[index];
+    if (char === "*" && glob[index + 1] === "*") {
+      index++;
+      if (glob[index + 1] === "/") { index++; pattern += "(?:.*/)?"; } else pattern += ".*";
+    } else if (char === "*") pattern += "[^/]*";
+    else if (char === "?") pattern += "[^/]";
+    else pattern += char.replace(/[.+^${}()|[\]\\]/g, "\\$&");
+  }
+  return new RegExp(`^${pattern}$`);
+}
+/** Scope entries are directory/file prefixes (`src`, `src/`, `README.md`) or globs (`src/**`, `**\/*.md`). */
+export function scopeMatches(scope: string, relative: string): boolean {
+  const entry = scope.trim().replace(/\\/g, "/").replace(/^\.\//, "");
+  if (!entry) return false;
+  if (/[*?]/.test(entry)) return globToRegExp(entry).test(relative);
+  const base = entry.replace(/\/+$/, "");
+  return relative === base || relative.startsWith(`${base}/`);
+}
+const inScope = (task: TaskDecisionReceipt, relative: string) => task.contract.scope.some(scope => scopeMatches(scope, relative));
+
+/** Option labels accepted as approval when the question text carries the exact challenge. */
+const APPROVAL_LABELS = new Set(["approve scope", "confirm scope", "approve", "confirm"]);
+const normalizeLabel = (label: string) => label.trim().replace(/\s*\(recommended\)\s*$/i, "").toLowerCase();
+
+/** Returned with every unconfirmed proposal so agents can discover the host-observable confirmation paths. */
+export function confirmationInstructions(challenge: string): string[] {
+  return [
+    "Show the full contract to the user. Approval must come from the user; assistant statements never count.",
+    `Claude Code: call AskUserQuestion with the exact challenge inside the question text and an option labelled "Approve scope" (an option whose label is the exact challenge also works). Challenge: ${challenge}`,
+    "Hosts with a user-prompt hook (Claude Code, Codex): the user may instead send the challenge text exactly as their message.",
+    "Hosts without prompt/question hooks: the operator runs `gw aidlc confirm-task --id <taskId> --host <host> --unit <sessionId>` in an interactive terminal.",
+    "Then call prepare_task_context with taskId, and get_task_readiness before editing. Edits inside the confirmed scope keep the prepared context valid.",
+  ];
+}
 
 function strings(value: unknown, field: string, required = false): string[] {
   if (!Array.isArray(value) || value.some(item => typeof item !== "string" || !item.trim())) throw new Error(`${field} must contain nonempty strings.`);
@@ -86,13 +127,15 @@ export async function proposeTask(root: string, input: unknown, options: { taskI
     const task: TaskDecisionReceipt = previous?.revisionHash === revisionHash ? previous : { schemaVersion: 1, taskId, projectRoot: root, revision: (previous?.revision ?? 0) + 1, revisionHash, contract, updatedAt: new Date().toISOString() };
     await atomic(taskPath(root, taskId), task);
     if (options.host && options.sessionId) await atomic(bindingPath(root, options.host, options.sessionId), { taskId, projectRoot: root });
-    return { task, challenge: confirmationChallenge(task), status: task.confirmation ? "confirmed" : "confirmation-required" };
+    const challenge = confirmationChallenge(task);
+    return { task, challenge, status: task.confirmation ? "confirmed" : "confirmation-required", ...(task.confirmation ? {} : { howToConfirm: confirmationInstructions(challenge) }) };
   }, { name: ".task-contract.lock" });
 }
 export async function resolveSessionTask(root: string, host: string, sessionId: string): Promise<TaskDecisionReceipt | undefined> {
   try { const binding = JSON.parse(await readFile(bindingPath(root, host, sessionId), "utf8")); return await loadTask(root, binding.taskId); }
   catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined; throw error; }
 }
+const reducedContextChallenge = (task: TaskDecisionReceipt, generation: string | undefined) => `Accept reduced context for GraphWard task ${task.taskId} ${task.revisionHash} generation ${generation}`;
 /** Only native hook adapters call this; it is deliberately absent from MCP tools. */
 export async function observeUserPrompt(root: string, host: string, sessionId: string, prompt: string) {
   if (!host || !sessionId || !prompt) return { confirmed: false };
@@ -104,8 +147,7 @@ export async function observeUserPrompt(root: string, host: string, sessionId: s
       await atomic(taskPath(root, task.taskId), task); return { confirmed: true, taskId: task.taskId };
     }
     const preparation = await readContextPreparation(root);
-    const challenge = `Accept reduced context for GraphWard task ${task.taskId} ${task.revisionHash} generation ${preparation?.sourceGeneration}`;
-    if (preparation && (preparation.status === "degraded" || task.context?.requiresDecision) && prompt.trim() === challenge) {
+    if (preparation && (preparation.status === "degraded" || task.context?.requiresDecision) && prompt.trim() === reducedContextChallenge(task, preparation.sourceGeneration)) {
       task.degradedDecision = { sourceGeneration: preparation.sourceGeneration, eventHash: digest(prompt), acceptedAt: new Date().toISOString() };
       await atomic(taskPath(root, task.taskId), task); return { confirmed: false, degradedAccepted: true };
     }
@@ -121,30 +163,58 @@ export async function bindTaskContext(root: string, taskId: string) {
     const latest = await loadTask(root, taskId);
     if (!latest || latest.revisionHash !== task.revisionHash || (await computeProviderSourceSnapshot(root)).workspaceHash !== source.workspaceHash) throw new Error("Task revision or source changed during retrieval.");
     latest.context = { preparationId: preparation.id, sourceGeneration: source.workspaceHash, retrievedAt: context.generatedAt, contribution: context.providerContribution, unknowns: context.unknowns, requiresDecision: context.requiresDecision === true };
+    const baseline: ContextBaseline = { taskId, preparationId: preparation.id, sourceGeneration: source.workspaceHash, sourceHashes: source.sourceHashes };
+    await atomic(baselinePath(root, taskId), baseline);
     await atomic(taskPath(root, taskId), latest); return { task: latest, context };
   }, { name: ".task-contract.lock" });
 }
+
+/**
+ * Files whose bytes differ from the bound baseline and fall outside the confirmed scope.
+ * Returns undefined when no usable baseline exists (older receipts), so callers fall back
+ * to requiring fresh preparation.
+ */
+async function outOfScopeDrift(root: string, task: TaskDecisionReceipt, current: ProviderSourceSnapshot): Promise<string[] | undefined> {
+  let baseline: ContextBaseline;
+  try { baseline = JSON.parse(await readFile(baselinePath(root, task.taskId), "utf8")); } catch { return undefined; }
+  if (baseline.taskId !== task.taskId || baseline.preparationId !== task.context?.preparationId || baseline.sourceGeneration !== task.context?.sourceGeneration || !baseline.sourceHashes || typeof baseline.sourceHashes !== "object") return undefined;
+  const changed = new Set<string>();
+  for (const [file, hash] of Object.entries(current.sourceHashes)) if (baseline.sourceHashes[file] !== hash) changed.add(file);
+  for (const file of Object.keys(baseline.sourceHashes)) if (!(file in current.sourceHashes)) changed.add(file);
+  return [...changed].filter(file => !inScope(task, file)).sort();
+}
+
 export async function checkTaskReadiness(root: string, options: { taskId?: string; host?: string; sessionId?: string; stage?: "requirements" | "implementation"; files?: string[] } = {}) {
   const blockers: string[] = [];
   const task = options.taskId ? await loadTask(root, options.taskId) : options.host && options.sessionId ? await resolveSessionTask(root, options.host, options.sessionId) : undefined;
-  if (!task) return { ready: false, blockers: ["No task contract is bound to this task/session."], confirmationAssurance: "unavailable" };
+  if (!task) return { ready: false, blockers: ["No task contract is bound to this task/session. Call propose_task_contract (with host and sessionId) and follow its howToConfirm steps."], confirmationAssurance: "unavailable" };
   if (!task.confirmation || task.confirmation.revisionHash !== task.revisionHash || !task.confirmation.quote || task.confirmation.eventHash !== digest(task.confirmation.quote) || !["host-user-prompt", "host-question-response", "operator-conversation"].includes(task.confirmation.source) ||
       task.confirmation.source === "host-user-prompt" && (task.confirmation.assurance !== "host-observed" || task.confirmation.quote.trim() !== confirmationChallenge(task)) ||
       task.confirmation.source === "host-question-response" && (task.confirmation.assurance !== "host-observed" || task.confirmation.host !== "claude-code" || !task.confirmation.quote.includes(confirmationChallenge(task))) ||
-      task.confirmation.source === "operator-conversation" && task.confirmation.assurance !== "conversational") blockers.push("Current scope requires a recorded user confirmation; assistant assertions do not authorize work.");
+      task.confirmation.source === "operator-conversation" && task.confirmation.assurance !== "conversational") blockers.push(`Current scope requires a recorded user confirmation; assistant assertions do not authorize work. ${confirmationInstructions(confirmationChallenge(task))[1]}`);
   if (task.contract.questions.some(question => !question.answer)) blockers.push("Requirements questions remain unanswered.");
   if (task.contract.kind === "feature" && !task.contract.questions.length) blockers.push("Every new feature requires a requirements discussion, including confirmation of a fully specified scope.");
   for (const file of options.files ?? []) {
     const relative = path.relative(toCanonicalPath(root), path.resolve(root, file)).replace(/\\/g, "/");
-    if (relative.startsWith("../") || path.isAbsolute(relative) || !task.contract.scope.some(scope => relative === scope || relative.startsWith(`${scope.replace(/\/$/, "")}/`))) blockers.push(`File is outside confirmed authorization scope: ${file}`);
+    if (relative.startsWith("../") || path.isAbsolute(relative) || !inScope(task, relative)) blockers.push(`File is outside confirmed authorization scope: ${file} (scope: ${task.contract.scope.join(", ")})`);
   }
   if (options.stage !== "requirements") {
-    const preparation = await readContextPreparation(root); const generation = (await computeProviderSourceSnapshot(root)).workspaceHash;
+    const preparation = await readContextPreparation(root); const snapshot = await computeProviderSourceSnapshot(root); const generation = snapshot.workspaceHash;
     const config = await loadGwConfig(root);
+    const prepareHint = "Call prepare_task_context with taskId to prepare and retrieve current task context.";
     if (preparation?.policy !== config.providers.policy || preparation?.requireProviders !== config.providers.requireProviders) blockers.push("Provider policy changed; prepare and retrieve context under the current policy.");
-    if (!preparation || preparation.projectRoot !== task.projectRoot || preparation.sourceGeneration !== generation || !task.context || task.context.sourceGeneration !== generation || task.context.preparationId !== preparation.id) blockers.push("Prepare and retrieve current task context before implementation; ordinary edits do not revoke scope confirmation.");
+    const bound = !!preparation && preparation.projectRoot === task.projectRoot && !!task.context && task.context.preparationId === preparation.id && task.context.sourceGeneration === preparation.sourceGeneration;
+    if (!bound) blockers.push(`Prepare and retrieve current task context before implementation. ${prepareHint}`);
+    else if (preparation.sourceGeneration !== generation) {
+      // The task's own edits inside its confirmed scope keep the bound context valid;
+      // anything else that changed since binding means the context no longer describes the code.
+      const drift = await outOfScopeDrift(root, task, snapshot);
+      if (drift === undefined) blockers.push(`Source changed since context was prepared. ${prepareHint}`);
+      else if (drift.length) blockers.push(`Files outside the confirmed scope changed since context was prepared: ${drift.slice(0, 5).join(", ")}${drift.length > 5 ? ` and ${drift.length - 5} more` : ""}. ${prepareHint}`);
+    }
     if (preparation?.status === "blocked" || preparation?.status === "cancelled") blockers.push(`Context preparation is ${preparation.status}.`);
-    if ((preparation?.requiresDecision || task.context?.requiresDecision) && task.degradedDecision?.sourceGeneration !== generation) blockers.push(`Reduced coverage requires a user decision: Accept reduced context for GraphWard task ${task.taskId} ${task.revisionHash} generation ${generation}`);
+    const decisionGeneration = preparation?.sourceGeneration ?? generation;
+    if ((preparation?.requiresDecision || task.context?.requiresDecision) && task.degradedDecision?.sourceGeneration !== decisionGeneration) blockers.push(`Reduced coverage requires a user decision: ${reducedContextChallenge(task, decisionGeneration)}`);
   }
   return { ready: !blockers.length, taskId: task.taskId, revision: task.revision, revisionHash: task.revisionHash, blockers, confirmationAssurance: task.confirmation?.assurance ?? "unavailable" };
 }
@@ -155,7 +225,7 @@ export async function confirmTaskInteractively(root: string, taskId: string, ses
   const task = await loadTask(root, taskId); if (!task) throw new Error("Unknown task.");
   if (task.contract.questions.some(question => !question.answer)) throw new Error("Answer unresolved requirements questions before confirmation.");
   const preparation = await readContextPreparation(root);
-  const challenge = reduced ? `Accept reduced context for GraphWard task ${taskId} ${task.revisionHash} generation ${preparation?.sourceGeneration}` : confirmationChallenge(task);
+  const challenge = reduced ? reducedContextChallenge(task, preparation?.sourceGeneration) : confirmationChallenge(task);
   const { createInterface } = await import("node:readline/promises");
   const terminal = createInterface({ input: process.stdin, output: process.stdout });
   let response: string;
@@ -196,9 +266,15 @@ export async function observeNativeQuestionResponse(root: string, host: string, 
     const task = await resolveSessionTask(root, host, sessionId); if (!task || task.contract.questions.some(question => !question.answer)) return { confirmed: false };
     const challenge = confirmationChallenge(task);
     for (const question of questions) {
-      if (!question || typeof question.question !== 'string' || !question.question.includes(challenge) || !Array.isArray(question.options)) continue;
+      if (!question || typeof question.question !== 'string' || !Array.isArray(question.options)) continue;
       const answer = answers[question.question];
-      if (!['Approve scope', 'Confirm scope'].includes(answer) || !question.options.some((option: any) => option.label === answer)) continue;
+      if (typeof answer !== 'string') continue;
+      // Either the question carries the challenge and the user picked an approval option,
+      // or the option the user picked is the challenge itself.
+      const selectedOption = question.options.some((option: any) => typeof option?.label === 'string' && option.label === answer);
+      const approvedByLabel = question.question.includes(challenge) && selectedOption && APPROVAL_LABELS.has(normalizeLabel(answer));
+      const approvedByChallenge = answer.trim() === challenge;
+      if (!approvedByLabel && !approvedByChallenge) continue;
       const quote = `${question.question}\nAnswer: ${answer}`;
       task.confirmation = { source: 'host-question-response', assurance: 'host-observed', host, sessionId, quote, eventHash: digest(quote), confirmedAt: new Date().toISOString(), revisionHash: task.revisionHash };
       await atomic(taskPath(root, task.taskId), task); return { confirmed: true, taskId: task.taskId };

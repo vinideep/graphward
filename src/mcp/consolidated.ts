@@ -56,14 +56,30 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
     handler: async (args, context) => {
       const root = rootOf(args, projectRoot);
       const preparation = await prepareTaskContext(root, { retry: args.retry === true, timeoutMs: args.timeoutMs as number | undefined, signal: context?.signal });
-      return args.taskId && !["blocked", "cancelled"].includes(preparation.status) ? { preparation, ...(await bindTaskContext(root, args.taskId as string)) } : preparation;
+      // The bound context pack is persisted on the task; returning it whole here
+      // overflowed agent tool-result limits (100K+ chars). Return the decision-relevant receipt.
+      const summary = { id: preparation.id, status: preparation.status, requiresDecision: preparation.requiresDecision, sourceGeneration: preparation.sourceGeneration, policy: preparation.policy, providers: preparation.providers.map(run => ({ name: run.name, health: run.health, fallback: run.fallback })), unknowns: preparation.unknowns };
+      if (!args.taskId || ["blocked", "cancelled"].includes(preparation.status)) return summary;
+      const bound = await bindTaskContext(root, args.taskId as string);
+      return {
+        preparation: summary,
+        task: { taskId: bound.task.taskId, revision: bound.task.revision, revisionHash: bound.task.revisionHash, scope: bound.task.contract.scope },
+        context: { classification: bound.context.classification, risk: bound.context.risk, overallConfidence: bound.context.overallConfidence, stopReason: bound.context.stopReason, requiresDecision: bound.context.requiresDecision === true, unknowns: bound.context.unknowns, conflicts: bound.context.conflicts, tokenAllocation: bound.context.tokenAllocation },
+        next: "Context is bound to this task. Call get_task_readiness, then get_engineering_context with a focused task/files for code evidence. Edits inside the confirmed scope keep this context valid.",
+      };
     },
   });
   registry.register({
     name: "get_engineering_context",
-    description: "Build ContextPackV2 from verified GraphWard knowledge, the canonical normalized graph, and current scoped code evidence. Use this before direct file exploration.",
-    inputSchema: { type: "object", required: ["task"], additionalProperties: false, properties: { root: rootProperty, task: { type: "string" }, files: filesProperty, budget: { type: "number", minimum: 1 } } },
-    handler: async (args) => getEngineeringContext(rootOf(args, projectRoot), { task: args.task as string, files: args.files as string[] | undefined, budget: args.budget as number | undefined }),
+    description: "Build ContextPackV2 from verified GraphWard knowledge, the canonical normalized graph, and current scoped code evidence. Use this before direct file exploration. format: \"json\" (default, structured pack), \"markdown\" (rendered summary plus unknowns/risk), or \"full\" (both).",
+    inputSchema: { type: "object", required: ["task"], additionalProperties: false, properties: { root: rootProperty, task: { type: "string" }, files: filesProperty, budget: { type: "number", minimum: 1 }, format: { type: "string", enum: ["json", "markdown", "full"] } } },
+    handler: async (args) => {
+      const pack = await getEngineeringContext(rootOf(args, projectRoot), { task: args.task as string, files: args.files as string[] | undefined, budget: args.budget as number | undefined });
+      if (args.format === "full") return pack;
+      if (args.format === "markdown") return { markdown: pack.markdown, risk: pack.risk, unknowns: pack.unknowns, conflicts: pack.conflicts, requiresDecision: pack.requiresDecision === true, stopReason: pack.stopReason, tokenAllocation: pack.tokenAllocation };
+      const { markdown: _rendered, ...structured } = pack;
+      return structured;
+    },
   });
   registry.register({
     name: "analyze_change_impact",

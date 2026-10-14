@@ -81,6 +81,7 @@ export interface ContextPackV2 {
     trust: KnowledgeTrust;
     citationDrift: number;
     staleEvidence: number;
+    documentDrift?: number;
     documents: KnowledgeContextItem[];
     decisions: KnowledgeContextItem[];
     constraints: string[];
@@ -232,8 +233,11 @@ async function loadKnowledge(root: string, task: string, requestedFiles: string[
     if (taskWords.length > 0 && relevance(`${absolute}\n${content}`, taskWords) === 0) continue;
     decisions.push({ path: path.relative(root, absolute).replace(/\\/g, "/"), title: content.match(/^#\s+(.+)$/m)?.[1] ?? path.basename(absolute), excerpt: excerpt(content, 16), trust: "recorded" });
   }
-  const trust: KnowledgeTrust = files.length === 0 ? "empty" : verification.drift > 0 || evidence.stale > 0 ? "degraded" : !evidence.documents?.some(document => document.verified) ? "unverifiable" : evidence.documents.some(document => !document.verified) ? "degraded" : "healthy";
-  return { trust, citationDrift: verification.drift, staleEvidence: evidence.stale, documents, decisions };
+  // Uncited documents are never promoted (see above) and are not drift: only cited
+  // knowledge whose recorded evidence no longer matches degrades trust.
+  const documentDrift = evidence.documentDrift ?? 0;
+  const trust: KnowledgeTrust = files.length === 0 ? "empty" : verification.drift > 0 || evidence.stale > 0 ? "degraded" : !evidence.documents?.some(document => document.verified) ? "unverifiable" : documentDrift > 0 ? "degraded" : "healthy";
+  return { trust, citationDrift: verification.drift, staleEvidence: evidence.stale, documentDrift, documents, decisions };
 }
 
 function safeTrust(metadata: Record<string, unknown>): string {
@@ -511,9 +515,14 @@ export async function getEngineeringContext(
 
   const skeletons: Array<{ path: string; outline: string; tokenSavings: number }> = [];
   const skeletonizedPaths = new Set<string>();
+  // Outlines spend the code budget that full chunks left unused; they are not free.
+  let skeletonBudget = Math.max(0, codeBudget - chunkTokens(trimmed));
   for (const chunk of droppedSecondaryChunks) {
     if (skeletonizedPaths.has(chunk.path)) continue;
     const skel = generateCodeSkeleton(chunk.content, chunk.path);
+    const cost = estimateTokens(`${chunk.path}\n${skel.skeleton}`);
+    if (cost > skeletonBudget) continue;
+    skeletonBudget -= cost;
     skeletons.push({
       path: chunk.path,
       outline: skel.skeleton,
@@ -535,7 +544,7 @@ export async function getEngineeringContext(
   ];
   const graphUnknowns = architecture.graph?.unknowns ?? [];
   const unknowns = [
-    ...(knowledge.trust === "degraded" ? [`GraphWard knowledge has ${knowledge.citationDrift} missing reference(s) and ${knowledge.staleEvidence} stale citation(s); affected prose was not loaded.`] : []),
+    ...(knowledge.trust === "degraded" ? [`GraphWard knowledge has ${knowledge.citationDrift} missing reference(s), ${knowledge.staleEvidence} stale citation(s) and ${knowledge.documentDrift ?? 0} document(s) whose cited source changed; affected prose was not loaded. Re-verify and run \`gw evidence-record .\`.`] : []),
     ...(knowledge.trust === "unverifiable" ? ["GraphWard knowledge has no recorded citation snapshot; prose was not promoted as verified context."] : []),
     ...graphUnknowns.slice(0, 20),
     ...(!graphCurrent ? ["Canonical graph freshness is unverified or stale; call prepare_task_context before implementation."] : []),
@@ -568,7 +577,7 @@ export async function getEngineeringContext(
   const graphify = statuses.find((status) => status.name === "graphify");
   const cce = statuses.find((status) => status.name === "cce");
   const graphifyRun = providerRuns.find((status) => status.name === "graphify");
-  const codeTokens = chunkTokens(trimmed);
+  const codeTokens = chunkTokens(trimmed) + skeletons.reduce((total, item) => total + estimateTokens(`${item.path}\n${item.outline}`), 0);
 
   let negativeConstraints: NegativeConstraint[] = [];
   try {
@@ -783,15 +792,9 @@ export async function getEngineeringContext(
     runtimeInvocations: observedRuntimeInvocations > 0 ? observedRuntimeInvocations : undefined,
   });
 
+  // Graph nodes already carry confidence and trust state; repeating them as one badge per
+  // node doubled the architecture payload outside the budget. Badges cover code spans only.
   const provenanceBadges: Array<{ entityId: string; badge: string; source: string; confidence: string }> = [];
-  for (const node of architecture.nodes) {
-    provenanceBadges.push({
-      entityId: node.id,
-      badge: "PROV:STRUCTURAL",
-      source: "RECORDED-GRAPH",
-      confidence: node.confidence,
-    });
-  }
   for (const chunk of trimmed) {
     provenanceBadges.push({
       entityId: `${chunk.path}:${chunk.startLine}-${chunk.endLine}`,
@@ -800,6 +803,22 @@ export async function getEngineeringContext(
       confidence: "UNMEASURED",
     });
   }
+
+  // Claims spend whatever the knowledge/architecture/code sections left unused, most
+  // relevant first (requested files, then retrieved spans), so the pack honours its budget.
+  const claimRank = (claim: (typeof claims)[number]) => claim.evidence.some((item) => requestedSet.has(item.replace(/:\d+-\d+$/, ""))) ? 0 : claim.evidence.some((item) => trimmed.some((chunk) => item.startsWith(chunk.path))) ? 1 : 2;
+  let claimBudget = Math.max(0, budget - knowledgeTokens - architectureTokens - codeTokens);
+  const budgetedClaims: typeof claims = [];
+  for (const claim of [...claims].sort((a, b) => claimRank(a) - claimRank(b))) {
+    const cost = estimateTokens(JSON.stringify(claim));
+    if (cost > claimBudget) continue;
+    claimBudget -= cost;
+    budgetedClaims.push(claim);
+  }
+  const claimTokens = budgetedClaims.reduce((total, claim) => total + estimateTokens(JSON.stringify(claim)), 0);
+  if (budgetedClaims.length < claims.length) unknowns.push(`${claims.length - budgetedClaims.length} verified claim(s) omitted to fit the ${budget}-token budget; raise budget or narrow files to include them.`);
+  const visibleIds = new Set(architecture.nodes.map((node) => node.id));
+  const visibleSeeds = architecture.seeds.filter((seed) => visibleIds.has(seed));
 
   const base: Omit<ContextPackV2, "markdown"> = {
     schemaVersion: 2,
@@ -828,7 +847,7 @@ export async function getEngineeringContext(
       ],
     },
     architecture: {
-      seeds: architecture.seeds,
+      seeds: visibleSeeds,
       nodes: architecture.nodes,
       edges: architecture.edges,
       approvedScope,
@@ -841,12 +860,12 @@ export async function getEngineeringContext(
       skeletons: skeletons.length > 0 ? skeletons : undefined,
     },
     evidence: trimmed.map((chunk) => ({ path: chunk.path, lines: [chunk.startLine, chunk.endLine], hash: chunk.contentHash, provider: chunk.provider, current: true })),
-    claims,
+    claims: budgetedClaims,
     conflicts,
     negativeConstraints,
     unknowns: [...new Set(unknowns)],
     risk: { level: classification.risk, requiredGates, testsToRun },
-    tokenAllocation: { budget, knowledge: knowledgeTokens, architecture: architectureTokens, code: codeTokens, reserve: Math.max(0, budget - knowledgeTokens - architectureTokens - codeTokens), used: knowledgeTokens + architectureTokens + codeTokens },
+    tokenAllocation: { budget, knowledge: knowledgeTokens + claimTokens, architecture: architectureTokens, code: codeTokens, reserve: Math.max(0, budget - knowledgeTokens - claimTokens - architectureTokens - codeTokens), used: knowledgeTokens + claimTokens + architectureTokens + codeTokens },
     overallConfidence: confidence,
     stopReason,
     providers: {

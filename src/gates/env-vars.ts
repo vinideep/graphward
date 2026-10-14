@@ -10,6 +10,7 @@ import path from "node:path";
 import {
   type GateFinding,
   type GateResult,
+  isTestFile,
   statusFromFindings,
   walkFiles,
 } from "./index.js";
@@ -18,9 +19,9 @@ const SOURCE_EXTS = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".py"
 
 // Per-language patterns capturing the variable name in group 1.
 const REFERENCE_PATTERNS: RegExp[] = [
-  /process\.env\.([A-Z_][A-Z0-9_]*)/g,               // JS/TS: process.env.FOO
-  /process\.env\[\s*['"]([A-Z_][A-Z0-9_]*)['"]\s*\]/g, // JS/TS: process.env['FOO']
-  /import\.meta\.env\.([A-Z_][A-Z0-9_]*)/g,          // Vite: import.meta.env.FOO
+  /process\.env\.([A-Za-z_][A-Za-z0-9_]*)/g,               // JS/TS: process.env.FOO (ComSpec, not "C")
+  /process\.env\[\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]\s*\]/g, // JS/TS: process.env['FOO']
+  /import\.meta\.env\.([A-Za-z_][A-Za-z0-9_]*)/g,          // Vite: import.meta.env.FOO
   /os\.environ(?:\.get)?\[?\(?\s*['"]([A-Z_][A-Z0-9_]*)['"]/g, // Python: os.environ[/get(
   /os\.getenv\(\s*['"]([A-Z_][A-Z0-9_]*)['"]/g,      // Python: os.getenv('FOO')
   /os\.Getenv\(\s*"([A-Z_][A-Z0-9_]*)"/g,            // Go: os.Getenv("FOO")
@@ -35,14 +36,22 @@ interface Reference {
   line: number;
 }
 
+/** Provided by the OS/shell/CI, never project configuration to document. */
+const PLATFORM_VARS = new Set(["PATH", "HOME", "USER", "USERNAME", "USERPROFILE", "SHELL", "TMPDIR", "TEMP", "TMP", "PWD", "LANG", "TERM", "ComSpec", "COMSPEC", "SystemRoot", "APPDATA", "LOCALAPPDATA", "CI"]);
+
 function extractReferences(content: string, relPath: string): Reference[] {
   const refs: Reference[] = [];
   const lines = content.split("\n");
   for (let i = 0; i < lines.length; i++) {
+    // Usage examples in comments (`// process.env.FOO`) are not references.
+    const trimmed = lines[i].trim();
+    if (/^(?:\/\/|\*|\/\*|#)/.test(trimmed)) continue;
+    const code = lines[i].replace(/(^|\s)(?:\/\/|#\s).*$/, "$1");
     for (const pattern of REFERENCE_PATTERNS) {
       pattern.lastIndex = 0;
       let m: RegExpExecArray | null;
-      while ((m = pattern.exec(lines[i])) !== null) {
+      while ((m = pattern.exec(code)) !== null) {
+        if (PLATFORM_VARS.has(m[1])) continue;
         refs.push({ name: m[1], file: relPath, line: i + 1 });
       }
     }
@@ -62,7 +71,8 @@ function parseDeclared(content: string): Set<string> {
 }
 
 export async function envVarsGate(root: string): Promise<GateResult> {
-  const files = await walkFiles(root, (rel) => SOURCE_EXTS.has(path.extname(rel).toLowerCase()));
+  // Test fixtures reference fake variables on purpose; they are not runtime configuration.
+  const files = await walkFiles(root, (rel) => SOURCE_EXTS.has(path.extname(rel).toLowerCase()) && !isTestFile(rel));
 
   const references = new Map<string, Reference>(); // name → first reference site
   for (const file of files) {

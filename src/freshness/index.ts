@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { runProcessSync } from "../process/index.js";
+import { ANNOTATED_DOC_DIRS, extractAnnotatedPaths, hashSourceFile, listIntelligenceDocuments, readEvidenceSnapshot, type EvidenceSnapshot } from "../evidence/index.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -43,11 +44,21 @@ function tryGit(args: string[], cwd: string): string {
   return result.exitCode === 0 ? result.stdout.trim() : "";
 }
 
-function gitLastModified(filePath: string, root: string): Date | null {
+function gitLastModified(filePath: string, root: string, cache?: Map<string, Date | null>): Date | null {
+  const cached = cache?.get(filePath);
+  if (cached !== undefined) return cached;
   const iso = tryGit(["log", "-1", "--format=%cI", "--", filePath], root);
-  if (!iso) return null;
-  const d = new Date(iso);
-  return isNaN(d.getTime()) ? null : d;
+  const d = iso ? new Date(iso) : null;
+  const value = d && !isNaN(d.getTime()) ? d : null;
+  cache?.set(filePath, value);
+  return value;
+}
+
+/** Shared per-run lookups: many documents cite the same sources. */
+interface ScoringContext {
+  snapshot?: EvidenceSnapshot;
+  gitDates: Map<string, Date | null>;
+  sourceHashes: Map<string, Promise<string | undefined>>;
 }
 
 function fileExists(filePath: string): boolean {
@@ -58,13 +69,17 @@ function fileExists(filePath: string): boolean {
 // Document parsing
 // ---------------------------------------------------------------------------
 
-const EVIDENCE_PATTERN = /\(evidence:\s*([^)]+)\)/g;
+// The evidence-hash format (src/evidence) cites `path.ext:line`; accept it here too so
+// documents written in either citation style are checkable.
+const BACKTICK_CITATION = /`([^`\s]+\.(?:ts|tsx|js|jsx|mts|cts|mjs|cjs|py|go|rs|rb|java|kt|json|ya?ml|md|sh|toml)):\d+(?:-\d+)?`/g;
 const FRESHNESS_COMMENT = /<!--\s*freshness:[^>]*last_checked=([^\s,>]+)/;
 const LAST_UPDATED = /^Last updated:\s*(.+)$/m;
 const FRONTMATTER_DATE = /^updated_at:\s*(.+)$/m;
+const JSON_UPDATED = /"updatedAt"\s*:\s*"([^"]+)"/;
+const JSON_GENERATED = /"generatedAt"\s*:\s*"([^"]+)"/;
 
 function extractDocTimestamp(content: string): Date | null {
-  for (const pattern of [FRESHNESS_COMMENT, LAST_UPDATED, FRONTMATTER_DATE]) {
+  for (const pattern of [FRESHNESS_COMMENT, LAST_UPDATED, FRONTMATTER_DATE, JSON_UPDATED, JSON_GENERATED]) {
     const m = content.match(pattern);
     if (m?.[1]) {
       const d = new Date(m[1].trim());
@@ -75,19 +90,9 @@ function extractDocTimestamp(content: string): Date | null {
 }
 
 function extractEvidencePaths(content: string): string[] {
-  const paths = new Set<string>();
-  let match: RegExpExecArray | null;
-  const re = new RegExp(EVIDENCE_PATTERN.source, "g");
-  while ((match = re.exec(content)) !== null) {
-    // An annotation may cite several sources: (evidence: a.ts, b.ts:12-40, prose note)
-    for (const raw of match[1].split(",")) {
-      const token = raw.trim().replace(/`/g, "").replace(/:L?\d[\d,-]*$/, "").trim();
-      // keep only path-like tokens; evidence lists often carry prose fragments
-      if (!token || /\s/.test(token)) continue;
-      if (!token.includes("/") && !/\.\w+$/.test(token)) continue;
-      paths.add(token);
-    }
-  }
+  // An annotation may cite several sources: (evidence: a.ts, b.ts:12-40, prose note)
+  const paths = new Set(extractAnnotatedPaths(content));
+  for (const cited of content.matchAll(new RegExp(BACKTICK_CITATION.source, "g"))) paths.add(cited[1].replace(/\\/g, "/"));
   return [...paths];
 }
 
@@ -115,15 +120,15 @@ function actionFromStatus(status: FreshnessStatus): FreshnessAction {
   return "manual-review";
 }
 
-async function scoreDocument(docPath: string, root: string): Promise<DocumentScore> {
-  const absPath = path.join(root, docPath);
-  let content = "";
-  try { content = await readFile(absPath, "utf8"); } catch {
-    return { docPath, score: 0, status: "obsolete", docLastUpdated: null, staleSources: [], deletedSources: [], action: "manual-review" };
-  }
-
+async function scoreDocument(docPath: string, root: string, content: string, context: ScoringContext): Promise<DocumentScore> {
   const docLastUpdated = extractDocTimestamp(content);
   const evidencePaths = extractEvidencePaths(content);
+  const recorded = { ...context.snapshot?.documents?.find((document) => document.path === docPath)?.sourceHashes, ...context.snapshot?.annotationHashes?.[docPath] };
+  const currentHash = (file: string) => {
+    let pending = context.sourceHashes.get(file);
+    if (!pending) { pending = hashSourceFile(root, file); context.sourceHashes.set(file, pending); }
+    return pending;
+  };
 
   // A document with no evidence citations cannot be checked against anything.
   // Previously it kept the full 100 and reported "fresh", so a placeholder
@@ -153,7 +158,10 @@ async function scoreDocument(docPath: string, root: string): Promise<DocumentSco
       deletedSources.push(evPath);
       continue;
     }
-    const fileModified = gitLastModified(evPath, root);
+    // Content first: a source whose bytes match what was recorded when this document
+    // was last verified has not drifted, whatever its commit dates say.
+    if (recorded[evPath] && recorded[evPath] === await currentHash(evPath)) continue;
+    const fileModified = gitLastModified(evPath, root, context.gitDates);
     if (fileModified && docLastUpdated && fileModified > docLastUpdated) {
       const days = daysBetween(docLastUpdated, fileModified);
       const penalty = Math.min(30, Math.round(days * 3));
@@ -187,34 +195,13 @@ async function scoreDocument(docPath: string, root: string): Promise<DocumentSco
 // Discovery — find all knowledge documents
 // ---------------------------------------------------------------------------
 
-async function listMarkdownFiles(dir: string): Promise<string[]> {
-  const { readdir } = await import("node:fs/promises");
-  try {
-    const entries = await readdir(dir, { withFileTypes: true });
-    const files: string[] = [];
-    for (const e of entries) {
-      if (e.isFile() && (e.name.endsWith(".md") || e.name.endsWith(".json"))) {
-        files.push(path.join(dir, e.name));
-      }
-    }
-    return files;
-  } catch {
-    return [];
-  }
-}
-
+// Machine-maintained state files (preparation receipts, the generated dependency graph,
+// the evidence snapshot) are excluded by listIntelligenceDocuments: scoring them as prose
+// produced permanent score-0 "unverifiable" noise in every report and hook.
 async function discoverDocuments(root: string): Promise<string[]> {
-  const gwDir = path.join(root, ".graphward");
-  const dirs = [
-    path.join(gwDir, "knowledge-base"),
-    path.join(gwDir, "memory"),
-    path.join(gwDir, "context"),
-    path.join(gwDir, "graph"),
-  ];
   const all: string[] = [];
-  for (const d of dirs) {
-    const files = await listMarkdownFiles(d);
-    for (const f of files) all.push(path.relative(root, f));
+  for (const dir of ANNOTATED_DOC_DIRS) {
+    for (const file of await listIntelligenceDocuments(path.join(root, ".graphward", dir))) all.push(path.relative(root, file));
   }
   return all;
 }
@@ -310,9 +297,19 @@ ${actionItems}
 // Public API
 // ---------------------------------------------------------------------------
 
-export async function computeFreshness(root: string, threshold = 60): Promise<FreshnessReport> {
-  const docs = await discoverDocuments(root);
-  const scores = await Promise.all(docs.map((d) => scoreDocument(d, root)));
+export async function computeFreshness(root: string, threshold = 60, options: { citing?: string } = {}): Promise<FreshnessReport> {
+  const context: ScoringContext = { snapshot: await readEvidenceSnapshot(root), gitDates: new Map(), sourceHashes: new Map() };
+  const scores: DocumentScore[] = [];
+  for (const docPath of await discoverDocuments(root)) {
+    let content: string;
+    try { content = await readFile(path.join(root, docPath), "utf8"); } catch {
+      scores.push({ docPath, score: 0, status: "obsolete", docLastUpdated: null, staleSources: [], deletedSources: [], action: "manual-review" });
+      continue;
+    }
+    // Scoped mode (edit hooks): only documents that cite the file being changed matter.
+    if (options.citing && !extractEvidencePaths(content).includes(options.citing)) continue;
+    scores.push(await scoreDocument(docPath, root, content, context));
+  }
 
   return {
     generatedAt: new Date().toISOString(),

@@ -13,13 +13,14 @@
  * managed mutation errors deny the operation. Host-specific coverage limits remain explicit.
  */
 
-import { mkdir, readFile, writeFile, appendFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile, appendFile, rename, stat } from "node:fs/promises";
 import path from "node:path";
 import { existsSync } from "node:fs";
 import { resolveRuntimeInvocation } from "../runtime/invocation.js";
 import { checkTaskReadiness, observeUserPrompt, observeNativeQuestionResponse } from "../aidlc/task-contract.js";
 import { computeFreshness } from "../freshness/index.js";
 import { defaultGwConfig, loadGwConfig } from "../config/index.js";
+import { toCanonicalPath } from "../providers/workspace.js";
 
 export type HookEvent = "session-start" | "user-prompt-submit" | "pre-tool-use" | "post-tool-use" | "stop";
 
@@ -182,18 +183,119 @@ function editPaths(input: HookInput): string[] {
   for (const match of patch.matchAll(/^\*\*\* (?:Add File|Update File|Delete File|Move to): (.+)$/gm)) paths.push(match[1]);
   return [...new Set(paths)];
 }
+/** Resolve symlinks through the nearest existing ancestor, so a new file written via an
+ *  aliased path (e.g. macOS /var -> /private/var) cannot look like it is outside the project. */
+function canonicalTarget(file: string): string {
+  let current = path.resolve(file);
+  const missing: string[] = [];
+  while (!existsSync(current)) {
+    const parent = path.dirname(current);
+    if (parent === current) break;
+    missing.unshift(path.basename(current));
+    current = parent;
+  }
+  return path.join(toCanonicalPath(current), ...missing);
+}
+
+function isInsideProject(root: string, file: string): boolean {
+  const relative = path.relative(toCanonicalPath(root), canonicalTarget(path.resolve(root, file)));
+  return relative === "" || !relative.startsWith("..") && !path.isAbsolute(relative);
+}
+
 function isDiscoveryTool(input: HookInput): boolean {
   const tool = input.tool_name ?? "";
   if (/^(Read|Glob|Grep|AskUserQuestion|ExitPlanMode|request_user_input|request_user_input_async|ask_question|Agent|Task|spawn_agent|invoke_subagent|view_file|list_dir|find_by_name|grep_search|search_web|read_url_content)$/.test(tool)) return true;
-  if (/^mcp__graphward__(get_engineering_context|prepare_task_context|propose_task_contract|get_task_readiness|record_task_change_mapping|host_support_status|provider_status|analyze_change_impact|check_aidlc_gate|assess_prompt_clarity|get_aidlc_state|find_symbol|who_calls|read_knowledge)$/.test(tool)) return true;
+  if (/^mcp__graphward__(get_engineering_context|prepare_task_context|propose_task_contract|get_task_readiness|record_task_change_mapping|host_support_status|provider_status|analyze_change_impact|check_aidlc_gate|assess_prompt_clarity|get_aidlc_state|find_symbol|who_calls|read_knowledge|query_project_memory|list_active_flights|get_session_handoff|get_experiment_history|slice_graph)$/.test(tool)) return true;
   if (!/^(Bash|PowerShell|run_command|exec_command)$/.test(tool)) return false;
   const command = input.tool_input?.command ?? input.tool_input?.cmd;
-  if (typeof command !== "string" || /[;&|><`$\n\r]/.test(command)) return false;
-  const runtime = runtimeCommand();
-  if (command.startsWith(runtime + ' ')) return /^(?:verify|context|providers status|aidlc (?:prepare-task|assess|gate))\b/.test(command.slice(runtime.length + 1));
-  if (/^(?:pwd|ls|cat|head|tail|wc)(?:\s|$)/.test(command)) return !/\s(?:--output|-o)\b/.test(command);
-  if (/^rg(?:\s|$)/.test(command)) return !/\s--(?:pre|pre-glob|hostname-bin|no-ignore|hidden|follow)\b/.test(command);
-  return /^git\s+(?:status|diff|log|show|ls-files|rev-parse)(?:\s|$)/.test(command) && !/--(?:output|ext-diff|textconv)|\s-c\b/.test(command);
+  return typeof command === "string" && isReadOnlyShellCommand(command);
+}
+
+/**
+ * Split a shell command into pipeline/list segments of unquoted words. Returns null for
+ * anything this conservative parser cannot prove harmless: command/process substitution,
+ * backgrounding, multi-line scripts, or redirects other than to /dev/null or fd duplication.
+ */
+function splitShellSegments(command: string): string[][] | null {
+  const segments: string[][] = [];
+  let words: string[] = [];
+  let word = "";
+  let hasWord = false;
+  let quote: "'" | '"' | null = null;
+  const pushWord = () => { if (hasWord) words.push(word); word = ""; hasWord = false; };
+  const endSegment = (): boolean => { pushWord(); if (!words.length) return false; segments.push(words); words = []; return true; };
+  for (let index = 0; index < command.length; index++) {
+    const char = command[index];
+    const next = command[index + 1] ?? "";
+    if (quote === "'") { if (char === "'") quote = null; else word += char; continue; }
+    if (quote === '"') {
+      if (char === '"') { quote = null; continue; }
+      if (char === "`" || char === "$" && /[({]/.test(next)) return null;
+      if (char === "\\" && next) { word += next; index++; continue; }
+      word += char; continue;
+    }
+    if (char === "'" || char === '"') { quote = char; hasWord = true; continue; }
+    if (char === "\\") { if (!next || next === "\n") return null; word += next; hasWord = true; index++; continue; }
+    if (char === "\n" || char === "\r" || char === "`" || char === "(" || char === ")") return null;
+    if (char === "$" && /[({]/.test(next)) return null;
+    if (char === " " || char === "\t") { pushWord(); continue; }
+    if (char === "<") return null;
+    if (char === ">") {
+      const redirect = /^>(?:&\d|\s*\/dev\/null)(?=\s|$|[;|&])/.exec(command.slice(index));
+      if (!redirect) return null;
+      if (hasWord && /^\d$/.test(word)) { word = ""; hasWord = false; } // fd prefix such as 2>
+      index += redirect[0].length - 1; continue;
+    }
+    if (char === "&") {
+      if (next === "&") { if (!endSegment()) return null; index++; continue; }
+      const redirect = /^&>\s*\/dev\/null(?=\s|$|[;|&])/.exec(command.slice(index));
+      if (!redirect) return null; // background job
+      index += redirect[0].length - 1; continue;
+    }
+    if (char === "|") { if (next === "|") index++; if (!endSegment()) return null; continue; }
+    if (char === ";") { if (!endSegment()) return null; continue; }
+    word += char; hasWord = true;
+  }
+  if (quote || !endSegment()) return null;
+  return segments;
+}
+
+const READ_ONLY_COMMANDS = new Set(["pwd", "ls", "cat", "head", "tail", "wc", "stat", "file", "du", "tree", "basename", "dirname", "realpath", "which", "echo", "printf", "true", "cut", "tr", "nl", "column", "grep", "egrep", "fgrep", "jq", "diff", "cd"]);
+const READ_ONLY_GIT = new Set(["status", "diff", "log", "show", "ls-files", "rev-parse", "blame", "grep", "cat-file", "ls-tree", "shortlog", "describe", "merge-base"]);
+const FIND_WRITES = new Set(["-exec", "-execdir", "-ok", "-okdir", "-delete", "-fprint", "-fprint0", "-fprintf", "-fls"]);
+
+function isReadOnlySegment(words: string[]): boolean {
+  if (/^[A-Za-z_][A-Za-z0-9_]*=/.test(words[0])) return false; // env assignment prefix
+  const invocation = resolveRuntimeInvocation();
+  const runtime = [invocation.command, ...invocation.args];
+  const cliArgs = runtime.every((part, index) => words[index] === part) ? words.slice(runtime.length)
+    : words[0] === "gw" || words[0] === "graphward" ? words.slice(1) : undefined;
+  if (cliArgs) return /^(?:verify|context|providers status|aidlc (?:prepare-task|assess|gate))(?:\s|$)/.test(cliArgs.join(" "));
+  const [name, ...args] = words;
+  if (READ_ONLY_COMMANDS.has(name)) return !args.some(arg => arg === "--output" || /^--output=/.test(arg));
+  switch (name) {
+    case "sort": return !args.some(arg => arg === "-o" || /^--output/.test(arg) || /^-[A-Za-z]*o/.test(arg));
+    case "uniq": return args.filter(arg => !arg.startsWith("-")).length <= 1; // a second operand is an output file
+    case "find": return !args.some(arg => FIND_WRITES.has(arg));
+    case "rg": return !args.some(arg => /^--(?:pre|pre-glob|hostname-bin)(?:=|$)/.test(arg));
+    case "sed": {
+      // Only `sed -n '<line-range>p' [files]`; the first operand is the script and must be a pure print.
+      const operands = args.filter(arg => arg !== "-n");
+      return args.includes("-n") && operands.every(arg => !arg.startsWith("-")) && /^(?:\d+|\$)(?:,(?:\d+|\$))?p$/.test(operands[0] ?? "");
+    }
+    case "git": {
+      let rest = args;
+      while (rest[0] === "-C" || rest[0] === "--no-pager") rest = rest[0] === "-C" ? rest.slice(2) : rest.slice(1);
+      return READ_ONLY_GIT.has(rest[0] ?? "") && !rest.some(arg => arg === "-c" || /^--(?:output|ext-diff|textconv|exec)/.test(arg));
+    }
+    default: return false;
+  }
+}
+
+/** True when every segment of a shell command (pipelines and && / ; lists included) is read-only. */
+export function isReadOnlyShellCommand(command: string): boolean {
+  const segments = splitShellSegments(command.trim());
+  return !!segments && segments.every(isReadOnlySegment);
 }
 
 /** The default config file the installer seeds. Exported so the adapter renders it. */
@@ -259,6 +361,7 @@ interface SessionState {
 }
 
 const STATE_DIR = ".graphward/.hooks-state";
+const EVENT_LOG_MAX_BYTES = 1024 * 1024;
 
 function sessionId(input: HookInput): string {
   const raw = input.session_id ?? "default";
@@ -375,55 +478,64 @@ async function onSessionStart(root: string, input: HookInput, config: HookConfig
     );
   }
 
-  const stale = report.scores.filter((s) => s.action !== "none").sort((a, b) => a.score - b.score);
+  // Uncited documents are missing evidence, not proven drift; list them separately so the
+  // agent sees which artifacts actually disagree with current source.
+  const stale = report.scores.filter((s) => s.action !== "none" && s.status !== "unverifiable").sort((a, b) => a.score - b.score);
+  const uncited = report.scores.filter((s) => s.status === "unverifiable");
   const lines = [
     `GraphWard — freshness: ${report.driftDecision} (threshold ${report.threshold}).`,
-    `${report.scores.length} intelligence docs; ${stale.length} need attention.`,
+    `${report.scores.length} intelligence docs; ${stale.length} stale against current source${uncited.length ? `, ${uncited.length} without checkable citations` : ""}.`,
   ];
   if (stale.length > 0) {
     const top = stale.slice(0, 5).map((s) => `  - ${s.docPath} (score ${s.score}, ${s.action})`);
     lines.push("Stale artifacts:", ...top);
-    lines.push("Run `sync-graphward` to refresh before relying on these.");
+    lines.push("Verify these against source before relying on them; run `sync-graphward` to refresh.");
   } else {
-    lines.push("All intelligence is fresh — prefer it over re-reading source.");
+    lines.push("All checkable intelligence is fresh — prefer it over re-reading source.");
   }
   return context(lines.join("\n"));
 }
 
 async function onPreToolUse(root: string, input: HookInput, config: HookConfig, host: HookHost): Promise<HookDecision> {
   if (config.requireTaskReadiness && existsSync(path.join(root, '.graphward/install-manifest.json')) && !isDiscoveryTool(input)) {
-    const { toCanonicalPath } = await import("../providers/workspace.js");
     const toolCwd = input.tool_input?.Cwd ?? input.tool_input?.cwd;
     if (input.cwd && toCanonicalPath(input.cwd) !== toCanonicalPath(root) || typeof toolCwd === "string" && toCanonicalPath(toolCwd) !== toCanonicalPath(root)) return deny("Hook payload belongs to another project; reconnect with the intended project root.");
-    const paths = editPaths(input);
+    const allPaths = editPaths(input);
+    // GraphWard governs this project only. File edits that target nothing inside the
+    // project root (agent memory, scratch files, other repos) are left to the host's
+    // own permission system instead of being denied as "outside confirmed scope".
+    const paths = allPaths.filter(file => isInsideProject(root, file));
+    if (allPaths.length > 0 && paths.length === 0) return context(`GraphWard: ${allPaths.join(", ")} is outside this project; not governed by the task gate.`);
     const readiness = await checkTaskReadiness(root, { host, sessionId: input.session_id, files: paths });
     if (!readiness.ready) return deny(`GraphWard task readiness blocked this mutation: ${readiness.blockers.join(' ')}. Discover → clarify → confirm scope → prepare_task_context → implement → validate.`);
     if (!paths.length && !input.tool_input?.command && !input.tool_name?.startsWith('mcp__')) return deny('Mutation payload does not expose a supported target.');
   }
 
   const targetPath = input.tool_input?.file_path;
-  if (!targetPath) return ALLOW;
+  if (!targetPath || !isInsideProject(root, targetPath)) return ALLOW;
   const rel = path.relative(root, path.resolve(root, targetPath)).replace(/\\/g, "/");
   if (!isSourceFile(rel)) return ALLOW; // editing docs/config/intelligence is always fine
 
-  const report = await computeFreshness(root, config.freshnessThreshold);
+  // Non-strict mode only reports documents describing this file, so only score those;
+  // the full scan (one git lookup per cited source per document) cost ~2s per edit.
+  const report = await computeFreshness(root, config.freshnessThreshold, config.blockStaleEdits ? {} : { citing: rel });
   if (report.scores.length === 0 || report.driftDecision === "Proceed") return ALLOW;
 
-  const stale = report.scores
-    .filter((s) => s.action !== "none")
-    .sort((a, b) => a.score - b.score)
-    .slice(0, 5)
-    .map((s) => `  - ${s.docPath} (score ${s.score})`);
+  const stale = report.scores.filter((s) => s.action !== "none" && s.status !== "unverifiable").sort((a, b) => a.score - b.score);
+  // Only interrupt with documents that actually describe the file being edited;
+  // repeating the global stale list on every edit is noise the agent learns to ignore.
+  const relevant = stale.filter((s) => s.staleSources.some((source) => source.file === rel) || s.deletedSources.includes(rel));
+  const strict = config.blockStaleEdits && report.driftDecision === "Block implementation";
+  const listed = strict && relevant.length === 0 ? stale : relevant;
+  if (listed.length === 0) return ALLOW;
   const detail = [
-    `GraphWard flags stale documentation (${report.driftDecision}).`,
+    strict ? `GraphWard flags stale documentation (${report.driftDecision}).` : `GraphWard: documentation describing ${rel} is stale; verify it against source before relying on it.`,
     "Affected artifacts:",
-    ...stale,
-    `Sync with \`sync-graphward\` (or \`${runtimeCommand()} freshness .\`) so this change is guided by accurate intelligence.`,
+    ...listed.slice(0, 5).map((s) => `  - ${s.docPath} (score ${s.score})`),
+    `Sync with \`sync-graphward\` (or \`${runtimeCommand()} freshness .\`) after this change.`,
   ].join("\n");
 
-  if (config.blockStaleEdits && report.driftDecision === "Block implementation") {
-    return deny(detail);
-  }
+  if (strict) return deny(detail);
   return context(detail);
 }
 
@@ -602,7 +714,10 @@ export async function runHook(event: HookEvent, root: string, input: HookInput, 
     if (event === 'session-start' && decision.kind === 'context') decision.message += `\nGraphWard native host: ${host}; parent session ID: ${input.session_id ?? 'unavailable'}. Bind propose_task_contract to this host/session. Task APIs are documented in .graphward/providers/tool-contracts.json.`;
     if (existsSync(path.join(root, '.graphward/install-manifest.json'))) {
       await mkdir(path.join(root, '.graphward/.hooks-state'), { recursive: true });
-      await appendFile(path.join(root, '.graphward/.hooks-state/events.jsonl'), JSON.stringify({ recordedAt: new Date().toISOString(), host, sessionId: input.session_id, event, tool: input.tool_name, decision: decision.kind, processId: process.pid, parentProcessId: process.ppid }) + "\n");
+      const eventLog = path.join(root, '.graphward/.hooks-state/events.jsonl');
+      // One line per tool call adds up; keep the current log plus one rotated generation.
+      try { if ((await stat(eventLog)).size > EVENT_LOG_MAX_BYTES) await rename(eventLog, `${eventLog}.1`); } catch { /* absent or raced */ }
+      await appendFile(eventLog, JSON.stringify({ recordedAt: new Date().toISOString(), host, sessionId: input.session_id, event, tool: input.tool_name, decision: decision.kind, processId: process.pid, parentProcessId: process.ppid }) + "\n");
     }
     return formatDecision(host, event, decision);
   } catch (error) {

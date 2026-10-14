@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-11T06:01:30.137Z",
+  "generatedAt": "2026-10-14T12:15:36.298Z",
   "claims": [
     {
       "id": "CLM-D0001",
@@ -18,7 +18,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0002",
@@ -36,7 +36,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0003",
@@ -54,7 +54,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0004",
@@ -72,7 +72,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0005",
@@ -90,7 +90,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0006",
@@ -108,7 +108,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0007",
@@ -126,7 +126,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0008",
@@ -144,7 +144,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0009",
@@ -162,7 +162,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0010",
@@ -180,7 +180,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0011",
@@ -198,7 +198,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0012",
@@ -216,7 +216,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0013",
@@ -234,7 +234,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0014",
@@ -248,11 +248,11 @@
       "evidence": [
         {
           "path": "src/adapters/index.ts",
-          "contentHash": "29db9e64801318b0"
+          "contentHash": "6c84daddf496d932"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0015",
@@ -270,7 +270,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0016",
@@ -288,7 +288,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0017",
@@ -302,11 +302,11 @@
       "evidence": [
         {
           "path": "src/hooks/index.ts",
-          "contentHash": "b6e7218eb5ef1474"
+          "contentHash": "c0a0efc0d57c4f80"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0018",
@@ -324,7 +324,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0019",
@@ -342,7 +342,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0020",
@@ -360,7 +360,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0021",
@@ -374,11 +374,11 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0022",
@@ -396,7 +396,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0023",
@@ -414,7 +414,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0024",
@@ -432,7 +432,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0025",
@@ -450,7 +450,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0026",
@@ -468,7 +468,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0027",
@@ -486,7 +486,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0028",
@@ -504,7 +504,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0029",
@@ -522,7 +522,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0030",
@@ -540,7 +540,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0031",
@@ -558,7 +558,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0032",
@@ -576,7 +576,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0033",
@@ -594,7 +594,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0034",
@@ -612,7 +612,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0035",
@@ -626,11 +626,11 @@
       "evidence": [
         {
           "path": "src/aidlc/task-contract.ts",
-          "contentHash": "f7f69691620f85f9"
+          "contentHash": "8bf17ddaab2c032b"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0036",
@@ -648,7 +648,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0037",
@@ -666,7 +666,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0038",
@@ -680,11 +680,11 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0039",
@@ -702,7 +702,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0040",
@@ -720,7 +720,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0041",
@@ -738,7 +738,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0042",
@@ -756,7 +756,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0043",
@@ -774,7 +774,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0044",
@@ -792,7 +792,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0045",
@@ -806,11 +806,11 @@
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0046",
@@ -828,7 +828,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0047",
@@ -846,7 +846,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0048",
@@ -864,7 +864,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0049",
@@ -882,7 +882,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0050",
@@ -900,7 +900,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0051",
@@ -918,7 +918,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0052",
@@ -936,7 +936,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0053",
@@ -954,7 +954,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0054",
@@ -972,7 +972,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0055",
@@ -986,11 +986,11 @@
       "evidence": [
         {
           "path": "src/evidence/index.ts",
-          "contentHash": "e76a23d52b98b6de"
+          "contentHash": "0919d88e955f7ddd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0056",
@@ -1008,7 +1008,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0057",
@@ -1022,11 +1022,11 @@
       "evidence": [
         {
           "path": "src/freshness/index.ts",
-          "contentHash": "281d61a2b8c322b9"
+          "contentHash": "cfe22376137d2609"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0058",
@@ -1044,7 +1044,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0059",
@@ -1062,7 +1062,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0060",
@@ -1080,7 +1080,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0061",
@@ -1098,7 +1098,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0062",
@@ -1116,7 +1116,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0063",
@@ -1134,7 +1134,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0064",
@@ -1152,7 +1152,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0065",
@@ -1170,7 +1170,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0066",
@@ -1188,7 +1188,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0067",
@@ -1206,7 +1206,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0068",
@@ -1224,7 +1224,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0069",
@@ -1242,7 +1242,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0070",
@@ -1260,7 +1260,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0071",
@@ -1278,7 +1278,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0072",
@@ -1296,7 +1296,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0073",
@@ -1314,7 +1314,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0074",
@@ -1332,7 +1332,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0075",
@@ -1350,7 +1350,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0076",
@@ -1368,7 +1368,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0077",
@@ -1386,7 +1386,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0078",
@@ -1404,7 +1404,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0079",
@@ -1422,7 +1422,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0080",
@@ -1440,7 +1440,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0081",
@@ -1458,7 +1458,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0082",
@@ -1476,7 +1476,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0083",
@@ -1494,7 +1494,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0084",
@@ -1512,7 +1512,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0085",
@@ -1530,7 +1530,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0086",
@@ -1548,7 +1548,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0087",
@@ -1562,11 +1562,11 @@
       "evidence": [
         {
           "path": "src/gates/dead-exports.ts",
-          "contentHash": "ffca01ec1280553a"
+          "contentHash": "566fcf22df838595"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0088",
@@ -1580,11 +1580,11 @@
       "evidence": [
         {
           "path": "src/gates/env-vars.ts",
-          "contentHash": "bbf41091a60c3bfe"
+          "contentHash": "7e13b171eb0ebef7"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0089",
@@ -1602,7 +1602,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0090",
@@ -1620,7 +1620,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0091",
@@ -1638,7 +1638,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0092",
@@ -1656,7 +1656,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0093",
@@ -1674,7 +1674,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0094",
@@ -1692,7 +1692,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0095",
@@ -1710,7 +1710,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0096",
@@ -1728,7 +1728,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0097",
@@ -1746,7 +1746,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0098",
@@ -1764,7 +1764,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0099",
@@ -1782,7 +1782,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0100",
@@ -1800,7 +1800,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0101",
@@ -1818,7 +1818,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0102",
@@ -1836,7 +1836,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0103",
@@ -1854,7 +1854,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0104",
@@ -1872,7 +1872,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0105",
@@ -1890,7 +1890,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0106",
@@ -1908,7 +1908,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0107",
@@ -1926,7 +1926,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0108",
@@ -1944,7 +1944,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0109",
@@ -1962,7 +1962,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0110",
@@ -1980,7 +1980,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0111",
@@ -1998,7 +1998,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0112",
@@ -2016,7 +2016,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0113",
@@ -2034,7 +2034,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0114",
@@ -2052,7 +2052,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0115",
@@ -2070,7 +2070,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0116",
@@ -2088,7 +2088,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0117",
@@ -2106,7 +2106,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0118",
@@ -2124,7 +2124,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0119",
@@ -2142,7 +2142,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0120",
@@ -2160,7 +2160,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0121",
@@ -2178,7 +2178,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0122",
@@ -2196,7 +2196,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0123",
@@ -2214,7 +2214,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0124",
@@ -2232,7 +2232,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0125",
@@ -2250,7 +2250,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0126",
@@ -2268,7 +2268,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0127",
@@ -2286,7 +2286,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0128",
@@ -2304,7 +2304,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0129",
@@ -2322,7 +2322,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0130",
@@ -2340,7 +2340,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0131",
@@ -2358,7 +2358,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0132",
@@ -2376,7 +2376,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0133",
@@ -2394,7 +2394,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0134",
@@ -2412,7 +2412,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0135",
@@ -2430,7 +2430,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0136",
@@ -2448,7 +2448,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0137",
@@ -2466,7 +2466,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0138",
@@ -2484,7 +2484,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0139",
@@ -2502,7 +2502,7 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0140",
@@ -2520,10 +2520,28 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0141",
+      "kind": "derived",
+      "fact": {
+        "type": "source-file",
+        "path": "test/cli-args.test.mjs",
+        "evidence": "test/cli-args.test.mjs"
+      },
+      "statement": "Source module `test/cli-args.test.mjs` is in GraphWard's approved project scope.",
+      "evidence": [
+        {
+          "path": "test/cli-args.test.mjs",
+          "contentHash": "afa7f3e449c5bc89"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-10-14T12:15:36.186Z"
+    },
+    {
+      "id": "CLM-D0142",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2538,10 +2556,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0142",
+      "id": "CLM-D0143",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2556,10 +2574,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0143",
+      "id": "CLM-D0144",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2574,10 +2592,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0144",
+      "id": "CLM-D0145",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2592,10 +2610,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0145",
+      "id": "CLM-D0146",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2610,10 +2628,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0146",
+      "id": "CLM-D0147",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2628,10 +2646,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0147",
+      "id": "CLM-D0148",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2646,10 +2664,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0148",
+      "id": "CLM-D0149",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2664,10 +2682,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0149",
+      "id": "CLM-D0150",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2682,10 +2700,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0150",
+      "id": "CLM-D0151",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2700,10 +2718,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0151",
+      "id": "CLM-D0152",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2718,10 +2736,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0152",
+      "id": "CLM-D0153",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2736,10 +2754,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0153",
+      "id": "CLM-D0154",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2754,10 +2772,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0154",
+      "id": "CLM-D0155",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2768,14 +2786,14 @@
       "evidence": [
         {
           "path": "test/freshness.test.mjs",
-          "contentHash": "61202b49bf805c5b"
+          "contentHash": "0b89e58f0582c6cd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0155",
+      "id": "CLM-D0156",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2786,14 +2804,14 @@
       "evidence": [
         {
           "path": "test/gates.test.mjs",
-          "contentHash": "35dc84538f37a952"
+          "contentHash": "1ba7f1cec0570b10"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0156",
+      "id": "CLM-D0157",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2808,10 +2826,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0157",
+      "id": "CLM-D0158",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2826,10 +2844,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0158",
+      "id": "CLM-D0159",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2844,10 +2862,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0159",
+      "id": "CLM-D0160",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2862,10 +2880,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0160",
+      "id": "CLM-D0161",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2876,14 +2894,14 @@
       "evidence": [
         {
           "path": "test/hooks.test.mjs",
-          "contentHash": "0b4e5ad43c43e470"
+          "contentHash": "d9e8012b129ad925"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0161",
+      "id": "CLM-D0162",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2898,10 +2916,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0162",
+      "id": "CLM-D0163",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2916,10 +2934,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0163",
+      "id": "CLM-D0164",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2934,10 +2952,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0164",
+      "id": "CLM-D0165",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2952,10 +2970,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0165",
+      "id": "CLM-D0166",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2970,10 +2988,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0166",
+      "id": "CLM-D0167",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -2988,10 +3006,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0167",
+      "id": "CLM-D0168",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3006,10 +3024,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0168",
+      "id": "CLM-D0169",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3024,10 +3042,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0169",
+      "id": "CLM-D0170",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3042,10 +3060,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0170",
+      "id": "CLM-D0171",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3060,10 +3078,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0171",
+      "id": "CLM-D0172",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3078,10 +3096,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0172",
+      "id": "CLM-D0173",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3096,10 +3114,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0173",
+      "id": "CLM-D0174",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3114,10 +3132,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0174",
+      "id": "CLM-D0175",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3132,10 +3150,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0175",
+      "id": "CLM-D0176",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3150,10 +3168,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0176",
+      "id": "CLM-D0177",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3168,10 +3186,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0177",
+      "id": "CLM-D0178",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3186,10 +3204,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0178",
+      "id": "CLM-D0179",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3204,10 +3222,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0179",
+      "id": "CLM-D0180",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3222,10 +3240,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0180",
+      "id": "CLM-D0181",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3240,10 +3258,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0181",
+      "id": "CLM-D0182",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3258,10 +3276,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0182",
+      "id": "CLM-D0183",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3276,10 +3294,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0183",
+      "id": "CLM-D0184",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3294,10 +3312,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0184",
+      "id": "CLM-D0185",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3312,10 +3330,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0185",
+      "id": "CLM-D0186",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3330,10 +3348,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0186",
+      "id": "CLM-D0187",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3348,10 +3366,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0187",
+      "id": "CLM-D0188",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3366,10 +3384,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0188",
+      "id": "CLM-D0189",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3384,10 +3402,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0189",
+      "id": "CLM-D0190",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3398,14 +3416,14 @@
       "evidence": [
         {
           "path": "test/task-contract-reliability.test.mjs",
-          "contentHash": "ce44f62fbdf77a4e"
+          "contentHash": "db05b3ae846f52fc"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0190",
+      "id": "CLM-D0191",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3420,10 +3438,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0191",
+      "id": "CLM-D0192",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3438,10 +3456,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0192",
+      "id": "CLM-D0193",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3456,10 +3474,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0193",
+      "id": "CLM-D0194",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3474,10 +3492,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0194",
+      "id": "CLM-D0195",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3492,10 +3510,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0195",
+      "id": "CLM-D0196",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3510,10 +3528,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0196",
+      "id": "CLM-D0197",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3528,10 +3546,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0197",
+      "id": "CLM-D0198",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3546,10 +3564,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0198",
+      "id": "CLM-D0199",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3564,10 +3582,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0199",
+      "id": "CLM-D0200",
       "kind": "derived",
       "fact": {
         "type": "source-file",
@@ -3582,10 +3600,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0200",
+      "id": "CLM-D0201",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3597,14 +3615,14 @@
       "evidence": [
         {
           "path": "src/adapters/index.ts",
-          "contentHash": "29db9e64801318b0"
+          "contentHash": "6c84daddf496d932"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0201",
+      "id": "CLM-D0202",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3616,14 +3634,14 @@
       "evidence": [
         {
           "path": "src/adapters/index.ts",
-          "contentHash": "29db9e64801318b0"
+          "contentHash": "6c84daddf496d932"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0202",
+      "id": "CLM-D0203",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3635,14 +3653,14 @@
       "evidence": [
         {
           "path": "src/adapters/index.ts",
-          "contentHash": "29db9e64801318b0"
+          "contentHash": "6c84daddf496d932"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0203",
+      "id": "CLM-D0204",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3654,14 +3672,14 @@
       "evidence": [
         {
           "path": "src/adapters/index.ts",
-          "contentHash": "29db9e64801318b0"
+          "contentHash": "6c84daddf496d932"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0204",
+      "id": "CLM-D0205",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3673,14 +3691,14 @@
       "evidence": [
         {
           "path": "src/adapters/index.ts",
-          "contentHash": "29db9e64801318b0"
+          "contentHash": "6c84daddf496d932"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0205",
+      "id": "CLM-D0206",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3692,14 +3710,14 @@
       "evidence": [
         {
           "path": "src/adapters/index.ts",
-          "contentHash": "29db9e64801318b0"
+          "contentHash": "6c84daddf496d932"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0206",
+      "id": "CLM-D0207",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3711,14 +3729,14 @@
       "evidence": [
         {
           "path": "src/adapters/index.ts",
-          "contentHash": "29db9e64801318b0"
+          "contentHash": "6c84daddf496d932"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0207",
+      "id": "CLM-D0208",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3730,33 +3748,33 @@
       "evidence": [
         {
           "path": "src/adapters/index.ts",
-          "contentHash": "29db9e64801318b0"
+          "contentHash": "6c84daddf496d932"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0208",
+      "id": "CLM-D0209",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
         "from": "src/adapters/index.ts",
         "to": "src/mcp/consolidated.ts",
-        "evidence": "src/adapters/index.ts:841"
+        "evidence": "src/adapters/index.ts:842"
       },
       "statement": "Module `src/adapters/index.ts` imports `src/mcp/consolidated.ts`.",
       "evidence": [
         {
           "path": "src/adapters/index.ts",
-          "contentHash": "29db9e64801318b0"
+          "contentHash": "6c84daddf496d932"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0209",
+      "id": "CLM-D0210",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3772,10 +3790,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0210",
+      "id": "CLM-D0211",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3791,10 +3809,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0211",
+      "id": "CLM-D0212",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3810,10 +3828,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0212",
+      "id": "CLM-D0213",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3829,10 +3847,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0213",
+      "id": "CLM-D0214",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3848,10 +3866,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0214",
+      "id": "CLM-D0215",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3867,10 +3885,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0215",
+      "id": "CLM-D0216",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3886,10 +3904,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0216",
+      "id": "CLM-D0217",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3905,10 +3923,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0217",
+      "id": "CLM-D0218",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3924,10 +3942,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0218",
+      "id": "CLM-D0219",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3943,10 +3961,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0219",
+      "id": "CLM-D0220",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3962,10 +3980,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0220",
+      "id": "CLM-D0221",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -3981,10 +3999,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0221",
+      "id": "CLM-D0222",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4000,10 +4018,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0222",
+      "id": "CLM-D0223",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4019,10 +4037,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0223",
+      "id": "CLM-D0224",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4038,10 +4056,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0224",
+      "id": "CLM-D0225",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4057,10 +4075,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0225",
+      "id": "CLM-D0226",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4076,10 +4094,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0226",
+      "id": "CLM-D0227",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4095,10 +4113,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0227",
+      "id": "CLM-D0228",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4114,10 +4132,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0228",
+      "id": "CLM-D0229",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4129,14 +4147,14 @@
       "evidence": [
         {
           "path": "src/aidlc/task-contract.ts",
-          "contentHash": "f7f69691620f85f9"
+          "contentHash": "8bf17ddaab2c032b"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0229",
+      "id": "CLM-D0230",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4148,14 +4166,14 @@
       "evidence": [
         {
           "path": "src/aidlc/task-contract.ts",
-          "contentHash": "f7f69691620f85f9"
+          "contentHash": "8bf17ddaab2c032b"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0230",
+      "id": "CLM-D0231",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4167,14 +4185,14 @@
       "evidence": [
         {
           "path": "src/aidlc/task-contract.ts",
-          "contentHash": "f7f69691620f85f9"
+          "contentHash": "8bf17ddaab2c032b"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0231",
+      "id": "CLM-D0232",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4186,14 +4204,14 @@
       "evidence": [
         {
           "path": "src/aidlc/task-contract.ts",
-          "contentHash": "f7f69691620f85f9"
+          "contentHash": "8bf17ddaab2c032b"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0232",
+      "id": "CLM-D0233",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4205,14 +4223,14 @@
       "evidence": [
         {
           "path": "src/aidlc/task-contract.ts",
-          "contentHash": "f7f69691620f85f9"
+          "contentHash": "8bf17ddaab2c032b"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0233",
+      "id": "CLM-D0234",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4228,10 +4246,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0234",
+      "id": "CLM-D0235",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4247,10 +4265,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0235",
+      "id": "CLM-D0236",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4266,10 +4284,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0236",
+      "id": "CLM-D0237",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4285,10 +4303,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0237",
+      "id": "CLM-D0238",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4300,14 +4318,14 @@
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0238",
+      "id": "CLM-D0239",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4319,14 +4337,14 @@
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0239",
+      "id": "CLM-D0240",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4338,14 +4356,14 @@
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0240",
+      "id": "CLM-D0241",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4357,14 +4375,14 @@
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0241",
+      "id": "CLM-D0242",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4376,14 +4394,14 @@
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0242",
+      "id": "CLM-D0243",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4395,30 +4413,11 @@
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
-    },
-    {
-      "id": "CLM-D0243",
-      "kind": "derived",
-      "fact": {
-        "type": "module-imports",
-        "from": "src/cli/index.ts",
-        "to": "src/orchestrators/setup.ts",
-        "evidence": "src/cli/index.ts:458"
-      },
-      "statement": "Module `src/cli/index.ts` imports `src/orchestrators/setup.ts`.",
-      "evidence": [
-        {
-          "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
-        }
-      ],
-      "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0244",
@@ -4426,18 +4425,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/hooks/index.ts",
-        "evidence": "src/cli/index.ts:540"
+        "to": "src/orchestrators/setup.ts",
+        "evidence": "src/cli/index.ts:464"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/hooks/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/orchestrators/setup.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0245",
@@ -4445,18 +4444,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/providers/index.ts",
-        "evidence": "src/cli/index.ts:567"
+        "to": "src/hooks/index.ts",
+        "evidence": "src/cli/index.ts:546"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/providers/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/hooks/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0246",
@@ -4464,18 +4463,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/config/index.ts",
-        "evidence": "src/cli/index.ts:568"
+        "to": "src/providers/index.ts",
+        "evidence": "src/cli/index.ts:573"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/config/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/providers/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0247",
@@ -4483,18 +4482,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/orchestrators/initialize.ts",
-        "evidence": "src/cli/index.ts:619"
+        "to": "src/config/index.ts",
+        "evidence": "src/cli/index.ts:574"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/orchestrators/initialize.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/config/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0248",
@@ -4502,18 +4501,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/orchestrators/ask.ts",
-        "evidence": "src/cli/index.ts:664"
+        "to": "src/orchestrators/initialize.ts",
+        "evidence": "src/cli/index.ts:625"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/orchestrators/ask.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/orchestrators/initialize.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0249",
@@ -4521,18 +4520,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/flight/index.ts",
-        "evidence": "src/cli/index.ts:679"
+        "to": "src/orchestrators/ask.ts",
+        "evidence": "src/cli/index.ts:670"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/flight/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/orchestrators/ask.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0250",
@@ -4540,18 +4539,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/graph/index.ts",
-        "evidence": "src/cli/index.ts:684"
+        "to": "src/flight/index.ts",
+        "evidence": "src/cli/index.ts:685"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/graph/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/flight/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0251",
@@ -4559,18 +4558,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/evidence/index.ts",
-        "evidence": "src/cli/index.ts:688"
+        "to": "src/graph/index.ts",
+        "evidence": "src/cli/index.ts:690"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/evidence/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/graph/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0252",
@@ -4578,18 +4577,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/orchestrators/health.ts",
-        "evidence": "src/cli/index.ts:715"
+        "to": "src/evidence/index.ts",
+        "evidence": "src/cli/index.ts:694"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/orchestrators/health.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/evidence/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0253",
@@ -4597,18 +4596,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/freshness/index.ts",
-        "evidence": "src/cli/index.ts:732"
+        "to": "src/orchestrators/health.ts",
+        "evidence": "src/cli/index.ts:721"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/freshness/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/orchestrators/health.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0254",
@@ -4616,18 +4615,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/verify/index.ts",
-        "evidence": "src/cli/index.ts:751"
+        "to": "src/freshness/index.ts",
+        "evidence": "src/cli/index.ts:738"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/verify/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/freshness/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0255",
@@ -4635,18 +4634,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/gates/index.ts",
-        "evidence": "src/cli/index.ts:782"
+        "to": "src/verify/index.ts",
+        "evidence": "src/cli/index.ts:757"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/gates/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/verify/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0256",
@@ -4654,18 +4653,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/gates/api-snapshot.ts",
-        "evidence": "src/cli/index.ts:819"
+        "to": "src/gates/index.ts",
+        "evidence": "src/cli/index.ts:788"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/gates/api-snapshot.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/gates/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0257",
@@ -4673,18 +4672,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/claims/index.ts",
-        "evidence": "src/cli/index.ts:832"
+        "to": "src/gates/api-snapshot.ts",
+        "evidence": "src/cli/index.ts:825"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/claims/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/gates/api-snapshot.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0258",
@@ -4692,18 +4691,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/context/orchestrator.ts",
-        "evidence": "src/cli/index.ts:877"
+        "to": "src/claims/index.ts",
+        "evidence": "src/cli/index.ts:838"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/context/orchestrator.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/claims/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0259",
@@ -4711,18 +4710,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/telemetry/index.ts",
-        "evidence": "src/cli/index.ts:897"
+        "to": "src/context/orchestrator.ts",
+        "evidence": "src/cli/index.ts:883"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/telemetry/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/context/orchestrator.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0260",
@@ -4730,18 +4729,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/git-analysis/index.ts",
-        "evidence": "src/cli/index.ts:905"
+        "to": "src/telemetry/index.ts",
+        "evidence": "src/cli/index.ts:903"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/git-analysis/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/telemetry/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0261",
@@ -4749,18 +4748,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/user-profile/index.ts",
-        "evidence": "src/cli/index.ts:919"
+        "to": "src/git-analysis/index.ts",
+        "evidence": "src/cli/index.ts:911"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/user-profile/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/git-analysis/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0262",
@@ -4768,18 +4767,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/learning/index.ts",
-        "evidence": "src/cli/index.ts:1105"
+        "to": "src/user-profile/index.ts",
+        "evidence": "src/cli/index.ts:925"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/learning/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/user-profile/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0263",
@@ -4787,18 +4786,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/experiment/ledger.ts",
-        "evidence": "src/cli/index.ts:1180"
+        "to": "src/learning/index.ts",
+        "evidence": "src/cli/index.ts:1111"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/experiment/ledger.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/learning/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0264",
@@ -4806,18 +4805,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/governor/resource-governor.ts",
-        "evidence": "src/cli/index.ts:1192"
+        "to": "src/experiment/ledger.ts",
+        "evidence": "src/cli/index.ts:1186"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/governor/resource-governor.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/experiment/ledger.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0265",
@@ -4825,18 +4824,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/experiment/index.ts",
-        "evidence": "src/cli/index.ts:1204"
+        "to": "src/governor/resource-governor.ts",
+        "evidence": "src/cli/index.ts:1198"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/experiment/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/governor/resource-governor.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0266",
@@ -4844,18 +4843,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/aidlc/index.ts",
-        "evidence": "src/cli/index.ts:1235"
+        "to": "src/experiment/index.ts",
+        "evidence": "src/cli/index.ts:1210"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/aidlc/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/experiment/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0267",
@@ -4863,18 +4862,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/aidlc/task-contract.ts",
-        "evidence": "src/cli/index.ts:1239"
+        "to": "src/aidlc/index.ts",
+        "evidence": "src/cli/index.ts:1241"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/aidlc/task-contract.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/aidlc/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0268",
@@ -4882,18 +4881,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/context/preparation.ts",
-        "evidence": "src/cli/index.ts:1243"
+        "to": "src/aidlc/task-contract.ts",
+        "evidence": "src/cli/index.ts:1245"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/context/preparation.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/aidlc/task-contract.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0269",
@@ -4901,18 +4900,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/aidlc/clarification.ts",
-        "evidence": "src/cli/index.ts:1275"
+        "to": "src/context/preparation.ts",
+        "evidence": "src/cli/index.ts:1249"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/aidlc/clarification.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/context/preparation.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0270",
@@ -4920,18 +4919,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/mcp/index.ts",
-        "evidence": "src/cli/index.ts:1359"
+        "to": "src/aidlc/clarification.ts",
+        "evidence": "src/cli/index.ts:1283"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/mcp/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/aidlc/clarification.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0271",
@@ -4939,18 +4938,18 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
-        "to": "src/process/index.ts",
-        "evidence": "src/cli/index.ts:1384"
+        "to": "src/mcp/index.ts",
+        "evidence": "src/cli/index.ts:1367"
       },
-      "statement": "Module `src/cli/index.ts` imports `src/process/index.ts`.",
+      "statement": "Module `src/cli/index.ts` imports `src/mcp/index.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
       "id": "CLM-D0272",
@@ -4958,21 +4957,40 @@
       "fact": {
         "type": "module-imports",
         "from": "src/cli/index.ts",
+        "to": "src/process/index.ts",
+        "evidence": "src/cli/index.ts:1392"
+      },
+      "statement": "Module `src/cli/index.ts` imports `src/process/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/cli/index.ts",
+          "contentHash": "89de3ac2175a0dfd"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-10-14T12:15:36.186Z"
+    },
+    {
+      "id": "CLM-D0273",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/cli/index.ts",
         "to": "src/orchestrators/change.ts",
-        "evidence": "src/cli/index.ts:1418"
+        "evidence": "src/cli/index.ts:1426"
       },
       "statement": "Module `src/cli/index.ts` imports `src/orchestrators/change.ts`.",
       "evidence": [
         {
           "path": "src/cli/index.ts",
-          "contentHash": "4049d367446582c7"
+          "contentHash": "89de3ac2175a0dfd"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0273",
+      "id": "CLM-D0274",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -4988,10 +5006,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0274",
+      "id": "CLM-D0275",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5007,10 +5025,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0275",
+      "id": "CLM-D0276",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5026,10 +5044,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0276",
+      "id": "CLM-D0277",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5045,10 +5063,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0277",
+      "id": "CLM-D0278",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5060,14 +5078,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0278",
+      "id": "CLM-D0279",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5079,14 +5097,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0279",
+      "id": "CLM-D0280",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5098,14 +5116,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0280",
+      "id": "CLM-D0281",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5117,14 +5135,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0281",
+      "id": "CLM-D0282",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5136,14 +5154,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0282",
+      "id": "CLM-D0283",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5155,14 +5173,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0283",
+      "id": "CLM-D0284",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5174,14 +5192,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0284",
+      "id": "CLM-D0285",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5193,14 +5211,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0285",
+      "id": "CLM-D0286",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5212,14 +5230,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0286",
+      "id": "CLM-D0287",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5231,14 +5249,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0287",
+      "id": "CLM-D0288",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5250,14 +5268,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0288",
+      "id": "CLM-D0289",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5269,14 +5287,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0289",
+      "id": "CLM-D0290",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5288,14 +5306,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0290",
+      "id": "CLM-D0291",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5307,14 +5325,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0291",
+      "id": "CLM-D0292",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5326,14 +5344,14 @@
       "evidence": [
         {
           "path": "src/context/orchestrator.ts",
-          "contentHash": "8ecc86c6f5834227"
+          "contentHash": "538aef8f6dec42d1"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0292",
+      "id": "CLM-D0293",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5349,10 +5367,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0293",
+      "id": "CLM-D0294",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5368,10 +5386,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0294",
+      "id": "CLM-D0295",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5387,10 +5405,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0295",
+      "id": "CLM-D0296",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5406,10 +5424,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0296",
+      "id": "CLM-D0297",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5425,10 +5443,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0297",
+      "id": "CLM-D0298",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5444,10 +5462,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0298",
+      "id": "CLM-D0299",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5463,10 +5481,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0299",
+      "id": "CLM-D0300",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5482,10 +5500,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0300",
+      "id": "CLM-D0301",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5501,10 +5519,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0301",
+      "id": "CLM-D0302",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5520,10 +5538,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0302",
+      "id": "CLM-D0303",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5539,10 +5557,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0303",
+      "id": "CLM-D0304",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5558,10 +5576,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0304",
+      "id": "CLM-D0305",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5577,10 +5595,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0305",
+      "id": "CLM-D0306",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5596,10 +5614,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0306",
+      "id": "CLM-D0307",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5615,10 +5633,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0307",
+      "id": "CLM-D0308",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5634,10 +5652,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0308",
+      "id": "CLM-D0309",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5653,10 +5671,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0309",
+      "id": "CLM-D0310",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5672,10 +5690,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0310",
+      "id": "CLM-D0311",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5691,10 +5709,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0311",
+      "id": "CLM-D0312",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5710,10 +5728,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0312",
+      "id": "CLM-D0313",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5729,10 +5747,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0313",
+      "id": "CLM-D0314",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5748,10 +5766,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0314",
+      "id": "CLM-D0315",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5767,10 +5785,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0315",
+      "id": "CLM-D0316",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5786,10 +5804,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0316",
+      "id": "CLM-D0317",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5805,10 +5823,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0317",
+      "id": "CLM-D0318",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5824,10 +5842,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0318",
+      "id": "CLM-D0319",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5843,10 +5861,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0319",
+      "id": "CLM-D0320",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5862,10 +5880,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0320",
+      "id": "CLM-D0321",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5881,10 +5899,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0321",
+      "id": "CLM-D0322",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5900,10 +5918,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0322",
+      "id": "CLM-D0323",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5919,10 +5937,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0323",
+      "id": "CLM-D0324",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5938,10 +5956,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0324",
+      "id": "CLM-D0325",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5957,10 +5975,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0325",
+      "id": "CLM-D0326",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5976,10 +5994,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0326",
+      "id": "CLM-D0327",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -5995,10 +6013,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0327",
+      "id": "CLM-D0328",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6010,14 +6028,33 @@
       "evidence": [
         {
           "path": "src/freshness/index.ts",
-          "contentHash": "281d61a2b8c322b9"
+          "contentHash": "cfe22376137d2609"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0328",
+      "id": "CLM-D0329",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/freshness/index.ts",
+        "to": "src/evidence/index.ts",
+        "evidence": "src/freshness/index.ts:5"
+      },
+      "statement": "Module `src/freshness/index.ts` imports `src/evidence/index.ts`.",
+      "evidence": [
+        {
+          "path": "src/freshness/index.ts",
+          "contentHash": "cfe22376137d2609"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-10-14T12:15:36.186Z"
+    },
+    {
+      "id": "CLM-D0330",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6033,10 +6070,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0329",
+      "id": "CLM-D0331",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6048,14 +6085,14 @@
       "evidence": [
         {
           "path": "src/gates/dead-exports.ts",
-          "contentHash": "ffca01ec1280553a"
+          "contentHash": "566fcf22df838595"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0330",
+      "id": "CLM-D0332",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6067,14 +6104,14 @@
       "evidence": [
         {
           "path": "src/gates/env-vars.ts",
-          "contentHash": "bbf41091a60c3bfe"
+          "contentHash": "7e13b171eb0ebef7"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0331",
+      "id": "CLM-D0333",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6090,10 +6127,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0332",
+      "id": "CLM-D0334",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6109,10 +6146,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0333",
+      "id": "CLM-D0335",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6128,10 +6165,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0334",
+      "id": "CLM-D0336",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6147,10 +6184,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0335",
+      "id": "CLM-D0337",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6166,10 +6203,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0336",
+      "id": "CLM-D0338",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6185,10 +6222,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0337",
+      "id": "CLM-D0339",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6204,10 +6241,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0338",
+      "id": "CLM-D0340",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6223,10 +6260,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0339",
+      "id": "CLM-D0341",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6242,10 +6279,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0340",
+      "id": "CLM-D0342",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6261,10 +6298,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0341",
+      "id": "CLM-D0343",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6280,10 +6317,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0342",
+      "id": "CLM-D0344",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6299,10 +6336,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0343",
+      "id": "CLM-D0345",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6318,10 +6355,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0344",
+      "id": "CLM-D0346",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6337,10 +6374,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0345",
+      "id": "CLM-D0347",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6356,10 +6393,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0346",
+      "id": "CLM-D0348",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6375,10 +6412,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0347",
+      "id": "CLM-D0349",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6394,10 +6431,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0348",
+      "id": "CLM-D0350",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6413,10 +6450,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0349",
+      "id": "CLM-D0351",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6432,10 +6469,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0350",
+      "id": "CLM-D0352",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6451,10 +6488,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0351",
+      "id": "CLM-D0353",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6470,10 +6507,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0352",
+      "id": "CLM-D0354",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6489,10 +6526,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0353",
+      "id": "CLM-D0355",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6508,10 +6545,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0354",
+      "id": "CLM-D0356",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6527,10 +6564,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0355",
+      "id": "CLM-D0357",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6546,10 +6583,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0356",
+      "id": "CLM-D0358",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6565,10 +6602,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0357",
+      "id": "CLM-D0359",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6584,10 +6621,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0358",
+      "id": "CLM-D0360",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6603,10 +6640,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0359",
+      "id": "CLM-D0361",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6622,10 +6659,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0360",
+      "id": "CLM-D0362",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6641,10 +6678,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0361",
+      "id": "CLM-D0363",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6660,10 +6697,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0362",
+      "id": "CLM-D0364",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6679,10 +6716,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0363",
+      "id": "CLM-D0365",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6698,10 +6735,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0364",
+      "id": "CLM-D0366",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6717,10 +6754,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0365",
+      "id": "CLM-D0367",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6736,10 +6773,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0366",
+      "id": "CLM-D0368",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6755,10 +6792,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0367",
+      "id": "CLM-D0369",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6774,10 +6811,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0368",
+      "id": "CLM-D0370",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6793,10 +6830,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0369",
+      "id": "CLM-D0371",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6812,10 +6849,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0370",
+      "id": "CLM-D0372",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6831,10 +6868,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0371",
+      "id": "CLM-D0373",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6850,10 +6887,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0372",
+      "id": "CLM-D0374",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6869,10 +6906,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0373",
+      "id": "CLM-D0375",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6888,10 +6925,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0374",
+      "id": "CLM-D0376",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6907,10 +6944,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0375",
+      "id": "CLM-D0377",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6922,14 +6959,14 @@
       "evidence": [
         {
           "path": "src/hooks/index.ts",
-          "contentHash": "b6e7218eb5ef1474"
+          "contentHash": "c0a0efc0d57c4f80"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0376",
+      "id": "CLM-D0378",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6941,14 +6978,14 @@
       "evidence": [
         {
           "path": "src/hooks/index.ts",
-          "contentHash": "b6e7218eb5ef1474"
+          "contentHash": "c0a0efc0d57c4f80"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0377",
+      "id": "CLM-D0379",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6960,14 +6997,14 @@
       "evidence": [
         {
           "path": "src/hooks/index.ts",
-          "contentHash": "b6e7218eb5ef1474"
+          "contentHash": "c0a0efc0d57c4f80"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0378",
+      "id": "CLM-D0380",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -6979,52 +7016,71 @@
       "evidence": [
         {
           "path": "src/hooks/index.ts",
-          "contentHash": "b6e7218eb5ef1474"
+          "contentHash": "c0a0efc0d57c4f80"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0379",
+      "id": "CLM-D0381",
+      "kind": "derived",
+      "fact": {
+        "type": "module-imports",
+        "from": "src/hooks/index.ts",
+        "to": "src/providers/workspace.ts",
+        "evidence": "src/hooks/index.ts:23"
+      },
+      "statement": "Module `src/hooks/index.ts` imports `src/providers/workspace.ts`.",
+      "evidence": [
+        {
+          "path": "src/hooks/index.ts",
+          "contentHash": "c0a0efc0d57c4f80"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-10-14T12:15:36.186Z"
+    },
+    {
+      "id": "CLM-D0382",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
         "from": "src/hooks/index.ts",
         "to": "src/telemetry/index.ts",
-        "evidence": "src/hooks/index.ts:466"
+        "evidence": "src/hooks/index.ts:578"
       },
       "statement": "Module `src/hooks/index.ts` imports `src/telemetry/index.ts`.",
       "evidence": [
         {
           "path": "src/hooks/index.ts",
-          "contentHash": "b6e7218eb5ef1474"
+          "contentHash": "c0a0efc0d57c4f80"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0380",
+      "id": "CLM-D0383",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
         "from": "src/hooks/index.ts",
         "to": "src/verify/index.ts",
-        "evidence": "src/hooks/index.ts:475"
+        "evidence": "src/hooks/index.ts:587"
       },
       "statement": "Module `src/hooks/index.ts` imports `src/verify/index.ts`.",
       "evidence": [
         {
           "path": "src/hooks/index.ts",
-          "contentHash": "b6e7218eb5ef1474"
+          "contentHash": "c0a0efc0d57c4f80"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0381",
+      "id": "CLM-D0384",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7040,10 +7096,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0382",
+      "id": "CLM-D0385",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7059,10 +7115,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0383",
+      "id": "CLM-D0386",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7078,10 +7134,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0384",
+      "id": "CLM-D0387",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7097,10 +7153,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0385",
+      "id": "CLM-D0388",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7116,10 +7172,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0386",
+      "id": "CLM-D0389",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7135,10 +7191,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0387",
+      "id": "CLM-D0390",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7154,10 +7210,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0388",
+      "id": "CLM-D0391",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7173,10 +7229,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0389",
+      "id": "CLM-D0392",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7192,10 +7248,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0390",
+      "id": "CLM-D0393",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7211,10 +7267,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0391",
+      "id": "CLM-D0394",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7226,14 +7282,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0392",
+      "id": "CLM-D0395",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7245,14 +7301,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0393",
+      "id": "CLM-D0396",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7264,14 +7320,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0394",
+      "id": "CLM-D0397",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7283,14 +7339,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0395",
+      "id": "CLM-D0398",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7302,14 +7358,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0396",
+      "id": "CLM-D0399",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7321,14 +7377,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0397",
+      "id": "CLM-D0400",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7340,14 +7396,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0398",
+      "id": "CLM-D0401",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7359,14 +7415,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0399",
+      "id": "CLM-D0402",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7378,14 +7434,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0400",
+      "id": "CLM-D0403",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7397,14 +7453,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0401",
+      "id": "CLM-D0404",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7416,14 +7472,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0402",
+      "id": "CLM-D0405",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7435,14 +7491,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0403",
+      "id": "CLM-D0406",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7454,14 +7510,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0404",
+      "id": "CLM-D0407",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7473,14 +7529,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0405",
+      "id": "CLM-D0408",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7492,14 +7548,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0406",
+      "id": "CLM-D0409",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7511,14 +7567,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0407",
+      "id": "CLM-D0410",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7530,14 +7586,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0408",
+      "id": "CLM-D0411",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7549,14 +7605,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0409",
+      "id": "CLM-D0412",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7568,14 +7624,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0410",
+      "id": "CLM-D0413",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7587,14 +7643,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0411",
+      "id": "CLM-D0414",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7606,14 +7662,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0412",
+      "id": "CLM-D0415",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7625,14 +7681,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0413",
+      "id": "CLM-D0416",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7644,14 +7700,14 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0414",
+      "id": "CLM-D0417",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7663,33 +7719,33 @@
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0415",
+      "id": "CLM-D0418",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
         "from": "src/mcp/consolidated.ts",
         "to": "src/aidlc/clarification.ts",
-        "evidence": "src/mcp/consolidated.ts:202"
+        "evidence": "src/mcp/consolidated.ts:218"
       },
       "statement": "Module `src/mcp/consolidated.ts` imports `src/aidlc/clarification.ts`.",
       "evidence": [
         {
           "path": "src/mcp/consolidated.ts",
-          "contentHash": "a612b07af8d22382"
+          "contentHash": "1bd7042fff9ba3a8"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0416",
+      "id": "CLM-D0419",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7705,10 +7761,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0417",
+      "id": "CLM-D0420",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7724,10 +7780,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0418",
+      "id": "CLM-D0421",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7743,10 +7799,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0419",
+      "id": "CLM-D0422",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7762,10 +7818,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0420",
+      "id": "CLM-D0423",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7781,10 +7837,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0421",
+      "id": "CLM-D0424",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7800,10 +7856,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0422",
+      "id": "CLM-D0425",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7819,10 +7875,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0423",
+      "id": "CLM-D0426",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7838,10 +7894,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0424",
+      "id": "CLM-D0427",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7857,10 +7913,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0425",
+      "id": "CLM-D0428",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7876,10 +7932,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0426",
+      "id": "CLM-D0429",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7895,10 +7951,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0427",
+      "id": "CLM-D0430",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7914,10 +7970,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0428",
+      "id": "CLM-D0431",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7933,10 +7989,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0429",
+      "id": "CLM-D0432",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7952,10 +8008,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0430",
+      "id": "CLM-D0433",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7971,10 +8027,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0431",
+      "id": "CLM-D0434",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -7990,10 +8046,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0432",
+      "id": "CLM-D0435",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8009,10 +8065,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0433",
+      "id": "CLM-D0436",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8028,10 +8084,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0434",
+      "id": "CLM-D0437",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8047,10 +8103,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0435",
+      "id": "CLM-D0438",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8066,10 +8122,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0436",
+      "id": "CLM-D0439",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8085,10 +8141,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0437",
+      "id": "CLM-D0440",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8104,10 +8160,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0438",
+      "id": "CLM-D0441",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8123,10 +8179,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0439",
+      "id": "CLM-D0442",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8142,10 +8198,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0440",
+      "id": "CLM-D0443",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8161,10 +8217,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0441",
+      "id": "CLM-D0444",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8180,10 +8236,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0442",
+      "id": "CLM-D0445",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8199,10 +8255,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0443",
+      "id": "CLM-D0446",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8218,10 +8274,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0444",
+      "id": "CLM-D0447",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8237,10 +8293,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0445",
+      "id": "CLM-D0448",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8256,10 +8312,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0446",
+      "id": "CLM-D0449",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8275,10 +8331,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0447",
+      "id": "CLM-D0450",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8294,10 +8350,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0448",
+      "id": "CLM-D0451",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8313,10 +8369,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0449",
+      "id": "CLM-D0452",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8332,10 +8388,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0450",
+      "id": "CLM-D0453",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8351,10 +8407,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0451",
+      "id": "CLM-D0454",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8370,10 +8426,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0452",
+      "id": "CLM-D0455",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8389,10 +8445,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0453",
+      "id": "CLM-D0456",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8408,10 +8464,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0454",
+      "id": "CLM-D0457",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8427,10 +8483,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0455",
+      "id": "CLM-D0458",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8446,10 +8502,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0456",
+      "id": "CLM-D0459",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8465,10 +8521,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0457",
+      "id": "CLM-D0460",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8484,10 +8540,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0458",
+      "id": "CLM-D0461",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8503,10 +8559,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0459",
+      "id": "CLM-D0462",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8522,10 +8578,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0460",
+      "id": "CLM-D0463",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8541,10 +8597,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0461",
+      "id": "CLM-D0464",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8560,10 +8616,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0462",
+      "id": "CLM-D0465",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8579,10 +8635,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0463",
+      "id": "CLM-D0466",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8598,10 +8654,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0464",
+      "id": "CLM-D0467",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8617,10 +8673,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0465",
+      "id": "CLM-D0468",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8636,10 +8692,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0466",
+      "id": "CLM-D0469",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8655,10 +8711,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0467",
+      "id": "CLM-D0470",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8674,10 +8730,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0468",
+      "id": "CLM-D0471",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8693,10 +8749,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0469",
+      "id": "CLM-D0472",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8712,10 +8768,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0470",
+      "id": "CLM-D0473",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8731,10 +8787,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0471",
+      "id": "CLM-D0474",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8750,10 +8806,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0472",
+      "id": "CLM-D0475",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8769,10 +8825,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0473",
+      "id": "CLM-D0476",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8788,10 +8844,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0474",
+      "id": "CLM-D0477",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8807,10 +8863,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0475",
+      "id": "CLM-D0478",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8826,10 +8882,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0476",
+      "id": "CLM-D0479",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8845,10 +8901,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0477",
+      "id": "CLM-D0480",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8864,10 +8920,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0478",
+      "id": "CLM-D0481",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8883,10 +8939,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0479",
+      "id": "CLM-D0482",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8902,10 +8958,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0480",
+      "id": "CLM-D0483",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8921,10 +8977,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0481",
+      "id": "CLM-D0484",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8940,10 +8996,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0482",
+      "id": "CLM-D0485",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8959,10 +9015,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0483",
+      "id": "CLM-D0486",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8978,10 +9034,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0484",
+      "id": "CLM-D0487",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -8997,10 +9053,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0485",
+      "id": "CLM-D0488",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9016,10 +9072,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0486",
+      "id": "CLM-D0489",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9035,10 +9091,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0487",
+      "id": "CLM-D0490",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9054,10 +9110,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0488",
+      "id": "CLM-D0491",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9073,10 +9129,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0489",
+      "id": "CLM-D0492",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9092,10 +9148,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0490",
+      "id": "CLM-D0493",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9111,10 +9167,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0491",
+      "id": "CLM-D0494",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9130,10 +9186,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0492",
+      "id": "CLM-D0495",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9149,10 +9205,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0493",
+      "id": "CLM-D0496",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9168,10 +9224,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0494",
+      "id": "CLM-D0497",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9187,10 +9243,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0495",
+      "id": "CLM-D0498",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9206,10 +9262,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0496",
+      "id": "CLM-D0499",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9225,10 +9281,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0497",
+      "id": "CLM-D0500",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9244,10 +9300,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0498",
+      "id": "CLM-D0501",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9263,10 +9319,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0499",
+      "id": "CLM-D0502",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9282,10 +9338,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0500",
+      "id": "CLM-D0503",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9301,10 +9357,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0501",
+      "id": "CLM-D0504",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9320,10 +9376,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0502",
+      "id": "CLM-D0505",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9339,10 +9395,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0503",
+      "id": "CLM-D0506",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9358,10 +9414,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0504",
+      "id": "CLM-D0507",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9377,10 +9433,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0505",
+      "id": "CLM-D0508",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9396,10 +9452,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0506",
+      "id": "CLM-D0509",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9415,10 +9471,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0507",
+      "id": "CLM-D0510",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9434,10 +9490,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0508",
+      "id": "CLM-D0511",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9453,10 +9509,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0509",
+      "id": "CLM-D0512",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9472,10 +9528,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0510",
+      "id": "CLM-D0513",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9491,10 +9547,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0511",
+      "id": "CLM-D0514",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9510,10 +9566,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0512",
+      "id": "CLM-D0515",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9529,10 +9585,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0513",
+      "id": "CLM-D0516",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9548,10 +9604,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0514",
+      "id": "CLM-D0517",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9567,10 +9623,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0515",
+      "id": "CLM-D0518",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9586,10 +9642,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0516",
+      "id": "CLM-D0519",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9605,10 +9661,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0517",
+      "id": "CLM-D0520",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9624,10 +9680,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0518",
+      "id": "CLM-D0521",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9643,10 +9699,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0519",
+      "id": "CLM-D0522",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9662,10 +9718,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0520",
+      "id": "CLM-D0523",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9681,10 +9737,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0521",
+      "id": "CLM-D0524",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9700,10 +9756,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0522",
+      "id": "CLM-D0525",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9719,10 +9775,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0523",
+      "id": "CLM-D0526",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9738,10 +9794,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0524",
+      "id": "CLM-D0527",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9757,10 +9813,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0525",
+      "id": "CLM-D0528",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9776,10 +9832,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0526",
+      "id": "CLM-D0529",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9795,10 +9851,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0527",
+      "id": "CLM-D0530",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9814,10 +9870,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0528",
+      "id": "CLM-D0531",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9833,10 +9889,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0529",
+      "id": "CLM-D0532",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9852,10 +9908,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0530",
+      "id": "CLM-D0533",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9871,10 +9927,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0531",
+      "id": "CLM-D0534",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9890,10 +9946,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0532",
+      "id": "CLM-D0535",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9909,10 +9965,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0533",
+      "id": "CLM-D0536",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9928,10 +9984,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0534",
+      "id": "CLM-D0537",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9947,10 +10003,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0535",
+      "id": "CLM-D0538",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9966,10 +10022,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0536",
+      "id": "CLM-D0539",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -9985,10 +10041,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0537",
+      "id": "CLM-D0540",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -10004,10 +10060,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0538",
+      "id": "CLM-D0541",
       "kind": "derived",
       "fact": {
         "type": "module-imports",
@@ -10023,10 +10079,10 @@
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0539",
+      "id": "CLM-D0542",
       "kind": "derived",
       "fact": {
         "type": "package-dependency",
@@ -10037,14 +10093,14 @@
       "evidence": [
         {
           "path": "package.json",
-          "contentHash": "360fd937ca76b6c6"
+          "contentHash": "e4b48602f897e553"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0540",
+      "id": "CLM-D0543",
       "kind": "derived",
       "fact": {
         "type": "package-dependency",
@@ -10055,14 +10111,14 @@
       "evidence": [
         {
           "path": "package.json",
-          "contentHash": "360fd937ca76b6c6"
+          "contentHash": "e4b48602f897e553"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0541",
+      "id": "CLM-D0544",
       "kind": "derived",
       "fact": {
         "type": "package-dependency",
@@ -10073,50 +10129,14 @@
       "evidence": [
         {
           "path": "package.json",
-          "contentHash": "360fd937ca76b6c6"
+          "contentHash": "e4b48602f897e553"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0542",
-      "kind": "derived",
-      "fact": {
-        "type": "package-dependency",
-        "name": "tree-sitter-typescript",
-        "evidence": "package.json"
-      },
-      "statement": "`tree-sitter-typescript` is a declared package dependency.",
-      "evidence": [
-        {
-          "path": "package.json",
-          "contentHash": "360fd937ca76b6c6"
-        }
-      ],
-      "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
-    },
-    {
-      "id": "CLM-D0543",
-      "kind": "derived",
-      "fact": {
-        "type": "package-dependency",
-        "name": "tree-sitter-python",
-        "evidence": "package.json"
-      },
-      "statement": "`tree-sitter-python` is a declared package dependency.",
-      "evidence": [
-        {
-          "path": "package.json",
-          "contentHash": "360fd937ca76b6c6"
-        }
-      ],
-      "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
-    },
-    {
-      "id": "CLM-D0544",
+      "id": "CLM-D0545",
       "kind": "derived",
       "fact": {
         "type": "package-dependency",
@@ -10127,14 +10147,32 @@
       "evidence": [
         {
           "path": "package.json",
-          "contentHash": "360fd937ca76b6c6"
+          "contentHash": "e4b48602f897e553"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     },
     {
-      "id": "CLM-D0545",
+      "id": "CLM-D0546",
+      "kind": "derived",
+      "fact": {
+        "type": "package-dependency",
+        "name": "tree-sitter-python",
+        "evidence": "package.json"
+      },
+      "statement": "`tree-sitter-python` is a declared package dependency.",
+      "evidence": [
+        {
+          "path": "package.json",
+          "contentHash": "e4b48602f897e553"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-10-14T12:15:36.186Z"
+    },
+    {
+      "id": "CLM-D0547",
       "kind": "derived",
       "fact": {
         "type": "package-dependency",
@@ -10145,11 +10183,29 @@
       "evidence": [
         {
           "path": "package.json",
-          "contentHash": "360fd937ca76b6c6"
+          "contentHash": "e4b48602f897e553"
         }
       ],
       "confidence": "verified",
-      "lastVerified": "2026-10-11T06:01:30.025Z"
+      "lastVerified": "2026-10-14T12:15:36.186Z"
+    },
+    {
+      "id": "CLM-D0548",
+      "kind": "derived",
+      "fact": {
+        "type": "package-dependency",
+        "name": "tree-sitter-typescript",
+        "evidence": "package.json"
+      },
+      "statement": "`tree-sitter-typescript` is a declared package dependency.",
+      "evidence": [
+        {
+          "path": "package.json",
+          "contentHash": "e4b48602f897e553"
+        }
+      ],
+      "confidence": "verified",
+      "lastVerified": "2026-10-14T12:15:36.186Z"
     }
   ]
 }

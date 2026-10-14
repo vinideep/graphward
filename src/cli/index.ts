@@ -138,6 +138,12 @@ function parseArgs(args: string[]): Options {
     command = remaining.shift() as Command;
   } else if (remaining[0] && !remaining[0].startsWith("-")) {
     throw new Error(`Unknown command "${remaining[0]}". Use graphward install <path> explicitly. Run graphward --help for supported commands.`);
+  } else if (remaining.length > 0) {
+    // An omitted command means install only when every flag is an install flag; a stray
+    // `gw --json` or a mistyped option must not silently write adapters into the project.
+    const installFlags = new Set(["--ide", "--yes", "-y", "--dry-run", "--force"]);
+    const unexpected = remaining.find((arg, index) => arg.startsWith("-") && !installFlags.has(arg) && !arg.startsWith("--ide=") && !(remaining[index - 1] === "--ide"));
+    if (unexpected) throw new Error(`No command given and "${unexpected}" is not an install option. Name the command explicitly (e.g. graphward install . ${remaining.join(" ")}). Run graphward --help for supported commands.`);
   }
   const ides: IdeId[] = [];
   let target: string | undefined;
@@ -1243,7 +1249,9 @@ async function main(): Promise<void> {
       const { prepareTaskContext } = await import("../context/preparation.js");
       const { bindTaskContext } = await import("../aidlc/task-contract.js");
       const receipt = await prepareTaskContext(options.root, { retry: options.force, onProgress: message => process.stderr.write(message + "\n") });
-      const context = options.id ? await bindTaskContext(options.root, options.id) : undefined;
+      const bound = options.id ? await bindTaskContext(options.root, options.id) : undefined;
+      // The full context pack is retrievable with `gw context`; printing it here produced 100K+ of output.
+      const context = bound ? { taskId: bound.task.taskId, revision: bound.task.revision, risk: bound.context.risk, overallConfidence: bound.context.overallConfidence, stopReason: bound.context.stopReason, requiresDecision: bound.context.requiresDecision === true, unknowns: bound.context.unknowns, tokenAllocation: bound.context.tokenAllocation } : undefined;
       output.write(JSON.stringify({ receipt, context }, null, 2) + "\n");
       if (["blocked", "cancelled"].includes(receipt.status)) process.exitCode = 1;
     } else if (subAction === "gate") {

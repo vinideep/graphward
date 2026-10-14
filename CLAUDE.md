@@ -33,6 +33,7 @@ These run deterministically. Use them instead of inferring the answer from sourc
 CLI equivalents: `"/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node" "/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/cli/index.js" map|gate <name>|verify|freshness|context|claims verify|git-analysis .`. `gate` and `verify` exit non-zero on failure, so they work in CI too.
 
 - Native hook integration is generated. Discovery, connection and enforcement require separate host qualification; hooks are guardrails with documented bypasses.
+- **Task gate.** Until a task is confirmed, hooks allow only discovery: file reads, GraphWard read tools, and read-only shell commands (`ls`, `cat`, `rg`, `grep`, `find`, `git log/diff/show`, `sed -n 'N,Mp'`, pipelines of these). To edit: `propose_task_contract` (pass host and sessionId; scope accepts prefixes or globs) → follow its `howToConfirm` (Claude Code: `AskUserQuestion` containing the exact challenge with an `Approve scope` option) → `prepare_task_context` with taskId → `get_task_readiness`. Edits inside the confirmed scope keep context valid; file edits outside this project are not gated; finish with `gw verify .`.
 
 ## Token-Efficient Skill Loading (Claude Code)
 

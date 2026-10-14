@@ -89,7 +89,8 @@ function providerInstructions(options: {
   return sharedInstructions
     .replace(/- When a provider-installed custom-agent directory[^\n]+/, agentLine)
     .replace(/- \*\*Route before loading skills\.\*\*[^\n]+/, routingLine)
-    + `\n- ${options.nativeHooks ? "Native hook integration is generated. Discovery, connection and enforcement require separate host qualification; hooks are guardrails with documented bypasses." : "This provider has no GraphWard runtime hooks; run `gw verify` and applicable `gw gate` commands in CI before completion."}\n`;
+    + `\n- ${options.nativeHooks ? "Native hook integration is generated. Discovery, connection and enforcement require separate host qualification; hooks are guardrails with documented bypasses." : "This provider has no GraphWard runtime hooks; run `gw verify` and applicable `gw gate` commands in CI before completion."}\n`
+    + (options.nativeHooks ? "- **Task gate.** Until a task is confirmed, hooks allow only discovery: file reads, GraphWard read tools, and read-only shell commands (`ls`, `cat`, `rg`, `grep`, `find`, `git log/diff/show`, `sed -n 'N,Mp'`, pipelines of these). To edit: `propose_task_contract` (pass host and sessionId; scope accepts prefixes or globs) → follow its `howToConfirm` (Claude Code: `AskUserQuestion` containing the exact challenge with an `Approve scope` option) → `prepare_task_context` with taskId → `get_task_readiness`. Edits inside the confirmed scope keep context valid; file edits outside this project are not gated; finish with `gw verify .`.\n" : "");
 }
 
 /**

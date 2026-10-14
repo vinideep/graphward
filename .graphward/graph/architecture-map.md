@@ -1,12 +1,15 @@
 # Architecture Map
-<!-- freshness: last_checked=2026-09-03 -->
+<!-- freshness: last_checked=2026-10-13 -->
 
-This summary is derived from EI's normalized dependency graph. Provider JSON/report files are evidence inputs and must not be edited into a competing canonical graph. (evidence: .graphward/graph/dependency-graph.json, src/graph/provider-evidence.ts)
+This summary is derived from GraphWard's normalized dependency graph. Provider JSON/report files are evidence inputs and must not be edited into a competing canonical graph. (evidence: src/graph/provider-evidence.ts, src/graph/index.ts)
 
 ```mermaid
 flowchart TD
-    User[User or AI IDE] --> EI[GraphWard CLI / MCP control plane]
-    GraphWard --> Policy[ProjectFilePolicy]
+    User[User or AI IDE] --> GW[GraphWard CLI / MCP control plane]
+    User --> Hooks[Host lifecycle hooks]
+    Hooks --> Gate[Task gate: confirmation, scope, bound context]
+    Gate --> GW
+    GW --> Policy[ProjectFilePolicy]
     Policy --> Native[GraphWard native graph]
     Policy --> Graphify[Graphify code-only evidence]
     Native --> Reconcile[GraphWard reconciliation]

@@ -27,6 +27,7 @@ import {
   claudeCodeHookSettings,
   cursorHookSettings,
   defaultConfigFile,
+  isReadOnlyShellCommand,
 } from "../dist/hooks/index.js";
 import { runVerification } from "../dist/verify/index.js";
 
@@ -284,4 +285,55 @@ test("Cursor edits with no discoverable file path fail safe (no false block)", a
   const input = normalizeInput("cursor", JSON.stringify({ session_id: "x", hook_event_name: "preToolUse" }));
   const res = await runHook("pre-tool-use", root, input, "cursor");
   assert.deepEqual(JSON.parse(res.stdout), { permission: "allow" });
+});
+
+test("discovery classifier allows read-only pipelines and quoted metacharacters, rejects writes and execution", () => {
+  const allowed = [
+    "ls -la",
+    "rg -n \"foo|bar\" src",
+    "git -C /repo log -5 --format=%h·%s",
+    "git status --short && git diff --stat",
+    "grep -rn 'a;b' src | head -20",
+    "find src -name '*.ts' | wc -l",
+    "sed -n '1,80p' src/web.ts",
+    "cat package.json 2>/dev/null",
+    "cd src && ls",
+    "sort -u list.txt | uniq -c",
+  ];
+  for (const command of allowed) assert.equal(isReadOnlyShellCommand(command), true, command);
+  const rejected = [
+    "touch src/index.ts",
+    "ls > out.txt",
+    "cat a | tee b",
+    "echo $(rm -rf x)",
+    "echo `id`",
+    "find . -name x -delete",
+    "find . -exec rm {} \;",
+    "sed -i 's/a/b/' f",
+    "sed -n '1p;w out' f",
+    "sort -o out.txt in.txt",
+    "uniq in.txt out.txt",
+    "git -c core.pager=sh log",
+    "git branch new-branch",
+    "rg --pre ./script x",
+    "sleep 1 &",
+    "FOO=1 ls",
+    "ls\nrm x",
+    "cat 'unterminated",
+    "ls &&",
+  ];
+  for (const command of rejected) assert.equal(isReadOnlyShellCommand(command), false, command);
+});
+
+test("hook event log rotates instead of growing without bound", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "ei-hooks-rotate-"));
+  const state = path.join(root, ".graphward", ".hooks-state");
+  await mkdir(state, { recursive: true });
+  await writeFile(path.join(root, ".graphward", "install-manifest.json"), "{}");
+  await writeFile(path.join(state, "events.jsonl"), "x".repeat(1024 * 1024 + 1));
+  await runHook("post-tool-use", root, { session_id: "s", tool_name: "Read", tool_input: {} });
+  const rotated = await readFile(path.join(state, "events.jsonl.1"), "utf8");
+  const current = await readFile(path.join(state, "events.jsonl"), "utf8");
+  assert.equal(rotated.length, 1024 * 1024 + 1);
+  assert.equal(current.trim().split("\n").length, 1);
 });

@@ -24,8 +24,10 @@ interface ExportSite {
   line: number;
 }
 
+// Must normalize exactly like resolveModuleId (including the `/index` strip); otherwise a
+// namespace/dynamic import of `./dir/index.js` never matches the exporting file's id.
 function moduleId(root: string, absFile: string): string {
-  const rel = path.relative(root, absFile).replace(/\\/g, "/").replace(/\.(tsx?|jsx?|mjs|cjs)$/, "");
+  const rel = path.relative(root, absFile).replace(/\\/g, "/").replace(/\.(tsx?|jsx?|mjs|cjs)$/, "").replace(/\/index$/, "");
   return `module:${rel}`;
 }
 
@@ -73,9 +75,13 @@ export async function deadExportsGate(root: string): Promise<GateResult> {
   const entryModules = new Set<string>();
   try {
     const pkg = JSON.parse(await readFile(path.join(root, "package.json"), "utf8")) as {
-      main?: string; bin?: string | Record<string, string>; exports?: unknown;
+      main?: string; bin?: string | Record<string, string>; exports?: unknown; scripts?: Record<string, string>;
     };
     const entryPaths: string[] = [];
+    // Files run directly by npm scripts (`node bench/x.ts`) are entry points too.
+    for (const script of Object.values(pkg.scripts ?? {})) {
+      for (const match of String(script).matchAll(/(?:^|\s)(\.?\/?[\w./-]+\.(?:tsx?|jsx?|mjs|cjs))(?=\s|$)/g)) entryPaths.push(match[1]);
+    }
     if (typeof pkg.main === "string") entryPaths.push(pkg.main);
     if (typeof pkg.bin === "string") entryPaths.push(pkg.bin);
     else if (pkg.bin && typeof pkg.bin === "object") entryPaths.push(...Object.values(pkg.bin));
@@ -94,7 +100,7 @@ export async function deadExportsGate(root: string): Promise<GateResult> {
 
     for (const p of entryPaths) {
       entryModules.add(moduleId(root, path.resolve(root, p.replace(/^\.\//, "").replace(/^dist\//, "src/"))));
-      entryModules.add(`module:${p.replace(/\.(tsx?|jsx?|mjs|cjs)$/, "").replace(/^\.\//, "")}`);
+      entryModules.add(`module:${p.replace(/\.(tsx?|jsx?|mjs|cjs)$/, "").replace(/^\.\//, "").replace(/\/index$/, "")}`);
     }
   } catch { /* no package.json */ }
 
