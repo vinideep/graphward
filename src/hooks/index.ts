@@ -584,13 +584,13 @@ async function onStop(root: string, input: HookInput, config: HookConfig): Promi
   // A repeated Stop attempt is not validation evidence. The host may set
   // stop_hook_active after a block; keep evaluating the deterministic record.
 
-  const { changedFiles, coverageFor, detectCheckCommands } = await import("../verify/index.js");
+  const { changedFiles, coverageFor, detectCheckCommands, isGitWorkTree } = await import("../verify/index.js");
 
   // Derive the change set from git, not from what the tool matcher happened to see.
-  // Fall back to hook-tracked edits when git is unavailable (e.g. no repo).
+  // Fall back to hook-tracked edits only when git is unavailable (e.g. no repo); a clean
+  // Git tree means everything was committed, not that the change set is unknown.
   const state = await readState(root, input);
-  const fromGit = await changedFiles(root);
-  const candidates = (fromGit.length > 0 ? fromGit : state.changedFiles).filter(isSourceFile);
+  const candidates = (await isGitWorkTree(root) ? await changedFiles(root) : state.changedFiles).filter(isSourceFile);
   if (candidates.length === 0) return ALLOW; // no source changed
 
   const coverage = await coverageFor(root, candidates);
@@ -610,6 +610,7 @@ async function onStop(root: string, input: HookInput, config: HookConfig): Promi
     ...coverage.uncovered.slice(0, 8).map((f) => `  - ${f}`),
   ];
   if (coverage.uncovered.length > 8) reason.push(`  …and ${coverage.uncovered.length - 8} more`);
+  if (coverage.uncovered.length === 0) reason.push("  (none by content — every file matches the last passing record, but that record was made at a different commit or project root; records are bound to HEAD, so re-run verification after committing or switching branches.)");
 
   if (lastFailed && records[0] === lastFailed) {
     const failing = lastFailed.commands.find((c) => c.exitCode !== 0);

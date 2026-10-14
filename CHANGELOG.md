@@ -7,7 +7,7 @@
 - **Freshness**: content-hash first (sources unchanged since `gw evidence-record` are not drift), backtick and JSON `"evidence"` citations checked, machine state excluded, edit hook scores only documents citing the edited file (~2.0s → ~0.3s per edit).
 - **Gates**: dead-exports no longer misses `dir/index.js` namespace/dynamic imports and exempts npm-script entry files; env-vars ignores comments, platform variables and test fixtures and reads mixed-case names.
 - **CLI**: a flag-only invocation implies `install` only for install options; `gw --json` and similar now fail without writing.
-- **Hooks**: event log rotates at 1 MB.
+- **Hooks**: event log rotates at 1 MB; Stop no longer blocks on a clean Git tree after committing verified work, and explains HEAD-bound verification records.
 - **Dependencies**: `@modelcontextprotocol/sdk` 1.32.1; `npm audit` clean.
 - **Source hygiene**: removed a literal NUL byte from `src/evidence/index.ts`.
 - Note: entries for 1.1.0–1.3.1 were never recorded here.

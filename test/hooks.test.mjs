@@ -337,3 +337,18 @@ test("hook event log rotates instead of growing without bound", async () => {
   assert.equal(rotated.length, 1024 * 1024 + 1);
   assert.equal(current.trim().split("\n").length, 1);
 });
+
+test("Stop allows a clean Git tree even when the session tracked edits that were since committed", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "ei-hooks-committed-"));
+  const git = (...args) => execFileSync("git", args, { cwd: root, stdio: "pipe" });
+  git("init", "-q"); git("config", "user.email", "t@t.co"); git("config", "user.name", "t");
+  await mkdir(path.join(root, "src"), { recursive: true });
+  await writeFile(path.join(root, "src", "app.ts"), "export const a = 1;\n");
+  await writeFile(path.join(root, "package.json"), JSON.stringify({ scripts: { test: "node -e 0" } }));
+  await runHook("post-tool-use", root, { session_id: "s", tool_name: "Edit", tool_input: { file_path: path.join(root, "src", "app.ts") } });
+  const dirty = await runHook("stop", root, { session_id: "s" });
+  assert.match(dirty.stdout ?? "", /no passing verification record/, "uncommitted, unverified source still blocks");
+  git("add", "-A"); git("commit", "-qm", "work");
+  const clean = await runHook("stop", root, { session_id: "s" });
+  assert.equal(clean.stdout, undefined, "nothing uncommitted remains to verify");
+});

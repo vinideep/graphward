@@ -4,7 +4,7 @@
 <!-- freshness derives from the current graph and package manifest evidence below. -->
 (evidence: .graphward/graph/dependency-graph.json, package.json)
 
-- **Scale**: 200 source modules, 1198 symbols, 11 external packages, 4610 edges.
+- **Scale**: 200 source modules, 1200 symbols, 11 external packages, 4613 edges.
 - **Languages**: TypeScript (125), JavaScript (75).
 - **Entry points**: bin `graphward`: `./dist/cli/index.js`; bin `gw-mcp`: `./dist/mcp/cli.js`; bin `gw`: `./dist/cli/index.js`.
 
@@ -22,14 +22,14 @@ These are the load-bearing files — changes here ripple widest.
 - `src/token-optimizer` (9 importers)
 
 ## Hotspots (highest churn, last 90 days)
-- `src/cli/index.ts` (33 changes/90d)
-- `src/adapters/index.ts` (25 changes/90d)
+- `src/cli/index.ts` (34 changes/90d)
+- `src/adapters/index.ts` (26 changes/90d)
 - `src/mcp/index.ts` (24 changes/90d)
 - `test/adapters.test.mjs` (18 changes/90d)
 - `src/graph/index.ts` (15 changes/90d)
 - `test/mcp.test.mjs` (15 changes/90d)
 - `src/token-optimizer.ts` (13 changes/90d)
-- `src/hooks/index.ts` (12 changes/90d)
+- `src/hooks/index.ts` (13 changes/90d)
 
 ## Tests
 70 test module(s), concentrated in: `test/` (70).

@@ -158,7 +158,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/freshness/index.ts:327-349"
+        "src/freshness/index.ts:300-322"
       ]
     },
     {

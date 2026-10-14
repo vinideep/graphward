@@ -117,6 +117,11 @@ async function git(root: string, args: string[]): Promise<string | null> {
  * `src/` entry, so a brand-new source file would never be seen — and the gate
  * would pass a change it never verified.
  */
+/** True when `root` is inside a Git work tree, so an empty change set means "clean", not "unknown". */
+export async function isGitWorkTree(root: string): Promise<boolean> {
+  return (await git(root, ["rev-parse", "--is-inside-work-tree"]))?.trim() === "true";
+}
+
 export async function changedFiles(root: string): Promise<string[]> {
   const porcelain = await git(root, ["status", "--porcelain=v1", "-z", "-uall"]);
   if (porcelain === null) return [];
