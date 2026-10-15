@@ -12,6 +12,10 @@ import { runHook, normalizeInput } from '../dist/hooks/index.js';
 import { acquireLock } from '../dist/manifest/lock.js';
 import { recordEvidenceHashes, checkEvidenceHashes } from '../dist/evidence/index.js';
 import { buildGraph, loadExistingGraph } from '../dist/graph/index.js';
+import { checkPhaseGate } from '../dist/aidlc/gates.js';
+import { validateChange } from '../dist/orchestrators/change.js';
+import { compactReport } from '../dist/mcp/compact-report.js';
+import { verifyKnowledge } from '../dist/verify/index.js';
 const contract = () => ({ kind: 'feature', request: 'Create a searchable project index', intendedUsers: ['developers'], behavior: ['Search indexes current source'], nonGoals: ['Cloud sync'], acceptanceCriteria: ['Current files appear in search'], scope: ['src', 'test'], constraints: ['Local only'], questions: [{id:'scope', question:'Confirm developer search with local source and no cloud sync?', options:[], answer:'Yes'}] });
 async function fixture(t) { const root=await realpath(await mkdtemp(path.join(tmpdir(),'gw-task-test-')));t.after(()=>rm(root,{recursive:true,force:true}));await mkdir(path.join(root,'.graphward'),{recursive:true});await mkdir(path.join(root,'src'));await writeFile(path.join(root,'src/index.ts'),'export const searchable = true;\n');await writeFile(path.join(root,'.graphward/gw.config.json'),JSON.stringify({providers:{policy:'native'}}));return root; }
 const propose = (root, taskId='search', sessionId='conversation') => proposeTask(root,contract(),{taskId,host:'codex',sessionId});
@@ -77,9 +81,79 @@ test('empty/letter-only requirements and forged confirmation assurance cannot au
 });
 test('change mapping covers every requirement and rejects unrelated additions',async t=>{
  const root=await fixture(t);const task=await propose(root);await observeUserPrompt(root,'codex','conversation',task.challenge);
- await assert.rejects(recordTaskChangeMapping(root,'search',[]),/Every acceptance/);
+ await assert.rejects(recordTaskChangeMapping(root,'search',[]),/at least one entry/);
  await assert.rejects(recordTaskChangeMapping(root,'search',[{criterion:contract().acceptanceCriteria[0],files:['outside.ts'],tests:['npm test'],rationale:'Speculative change'}]),/outside/);
  assert.ok((await recordTaskChangeMapping(root,'search',[{criterion:contract().acceptanceCriteria[0],files:['src/index.ts'],tests:['npm test'],rationale:'Search current source'}])).changeMapping);
+});
+test('change mapping accepts criteria incrementally and merges by criterion',async t=>{
+ const root=await fixture(t);const spec=contract();spec.acceptanceCriteria=['Current files appear in search','Search results rank by relevance'];
+ const task=await proposeTask(root,spec,{taskId:'search',host:'codex',sessionId:'conversation'});await observeUserPrompt(root,'codex','conversation',task.challenge);
+ const first=await recordTaskChangeMapping(root,'search',[{criterion:spec.acceptanceCriteria[0],files:['src/index.ts'],tests:['npm test'],rationale:'Index current source'}]);
+ assert.deepEqual(first.unmappedCriteria,[spec.acceptanceCriteria[1]],'a partial mapping is recorded and reports what is still unmapped');
+ const second=await recordTaskChangeMapping(root,'search',[{criterion:spec.acceptanceCriteria[1],files:['src/index.ts'],tests:['npm test'],rationale:'Rank results'},{criterion:spec.acceptanceCriteria[0],files:['src/index.ts','test/index.test.ts'],tests:['npm test'],rationale:'Index and test current source'}]);
+ assert.deepEqual(second.unmappedCriteria,[]);
+ const stored=(await loadTask(root,'search')).changeMapping;
+ assert.equal(stored.length,2,'re-mapping a criterion replaces its earlier entry');
+ assert.deepEqual(stored.find(entry=>entry.criterion===spec.acceptanceCriteria[0]).files,['src/index.ts','test/index.test.ts']);
+});
+test('oversized files excluded from provider indexing only need a decision when they are in scope',async t=>{
+ const root=await fixture(t);await mkdir(path.join(root,'_archive'));await writeFile(path.join(root,'_archive/raw.json'),'x'.repeat(3*1024*1024));
+ const task=await propose(root);await observeUserPrompt(root,'codex','conversation',task.challenge);
+ const preparation=await prepareTaskContext(root);
+ assert.equal(preparation.status,'ready','an out-of-band data file is a coverage note, not a degradation');
+ assert.deepEqual(preparation.excludedFiles,['_archive/raw.json']);assert.deepEqual(preparation.unknowns,[]);
+ await bindTaskContext(root,'search');assert.equal((await checkTaskReadiness(root,{taskId:'search'})).ready,true);
+ const spec=contract();spec.scope=['src','test','_archive'];const widened=await proposeTask(root,spec,{taskId:'search'});await observeUserPrompt(root,'codex','conversation',widened.challenge);await bindTaskContext(root,'search');
+ const blocked=await checkTaskReadiness(root,{taskId:'search'});
+ assert.equal(blocked.ready,false);assert.ok(blocked.blockers.some(blocker=>/Reduced coverage requires a user decision/.test(blocker)&&blocker.includes('_archive/raw.json')));
+ const accept=blocked.blockers.find(blocker=>/Reduced coverage/.test(blocker)).split(': ').pop();
+ assert.equal((await observeUserPrompt(root,'codex','conversation',accept)).degradedAccepted,true);
+ assert.equal((await checkTaskReadiness(root,{taskId:'search'})).ready,true);
+});
+test('Codex namespaced agent and clock tools pass the task gate; local code execution stays gated',async t=>{
+ const root=await fixture(t);await writeFile(path.join(root,'.graphward/install-manifest.json'),'{}');
+ const decide=async tool_name=>{const result=await runHook('pre-tool-use',root,{session_id:'conversation',cwd:root,tool_name,tool_input:{agent_type:'engineering-orchestrator',message:'initialize'}},'codex');return result.stdout?JSON.parse(result.stdout).hookSpecificOutput?.permissionDecision??'allow':'allow';};
+ for(const tool of ['collaborationspawn_agent','collaboration.spawn_agent','collaboration__wait_agent','spawn_agent','send_input','close_agent','clocksleep','list_mcp_resources','update_plan']) assert.equal(await decide(tool),'allow',tool);
+ assert.equal(await decide('collaborationfuture_tool'),'allow','an unknown host tool with no file target or command is not gated');
+ const run=async (tool_name,tool_input)=>{const result=await runHook('pre-tool-use',root,{session_id:'conversation',cwd:root,tool_name,tool_input},'codex');return result.stdout?JSON.parse(result.stdout).hookSpecificOutput?.permissionDecision??'allow':'allow';};
+ assert.equal(await run('mcp__node_repl__js',{code:"require('fs').writeFileSync('src/index.ts','')"}),'deny','local code execution stays gated');
+});
+test('construction exit ignores flights that predate the task and pre-existing gate findings outside the change',async t=>{
+ const root=await fixture(t);await writeFile(path.join(root,'prune.sql'),'TRUNCATE stock_snapshot;\n');
+ const task=await propose(root);await observeUserPrompt(root,'codex','conversation',task.challenge);
+ const flight=(id,createdAt)=>({schemaVersion:1,id,createdAt,intent:'earlier work',declaredFiles:[],baselineCommit:null,baselineDirty:[],predictedRadius:{direct:[],indirect:[],files:[]},status:'open'});
+ await mkdir(path.join(root,'.graphward/flight'),{recursive:true});await writeFile(path.join(root,'.graphward/flight/flt-old.json'),JSON.stringify(flight('flt-old','2020-01-01T00:00:00.000Z')));
+ const scoped=await checkPhaseGate(root,'construction','search');
+ assert.ok(!scoped.missingPrerequisites.some(item=>/flt-old/.test(item)),'a flight from before the task does not block it');
+ assert.ok(scoped.recommendations.some(item=>/stale flight flt-old/.test(item)));
+ assert.ok(!scoped.missingPrerequisites.some(item=>/migration-lint/.test(item)),'an untouched TRUNCATE script is not this change');
+ assert.ok((await checkPhaseGate(root,'construction')).missingPrerequisites.some(item=>/flt-old/.test(item)),'without a task the open flight still blocks');
+ await writeFile(path.join(root,'.graphward/flight/flt-new.json'),JSON.stringify(flight('flt-new',new Date(Date.now()+1000).toISOString())));
+ assert.ok((await checkPhaseGate(root,'construction','search')).missingPrerequisites.some(item=>/flt-new/.test(item)),'a flight opened during the task still blocks');
+});
+test('validate_change treats GraphWard artifacts as low risk and MCP reports list only non-passing rows',async t=>{
+ const root=await fixture(t);await mkdir(path.join(root,'.graphward/knowledge-base'),{recursive:true});await writeFile(path.join(root,'.graphward/knowledge-base/mcp-security-schema.md'),'# Notes\n');
+ const report=await validateChange(root,['.graphward/knowledge-base/mcp-security-schema.md']);
+ assert.equal(report.risk,'low');assert.ok(!report.impact.unknowns.some(item=>item.includes('.graphward')));
+ const claims={total:3,verified:2,refuted:0,unverified:0,stale:1,missing:0,results:[{id:'a',status:'verified'},{id:'b',status:'stale'},{id:'c',status:'verified'}]};
+ const findings=Array.from({length:40},(_,i)=>({severity:i===39?'error':'warning',message:`m${i}`}));
+ const compact=compactReport({claims,gates:[{gate:'dead-exports',status:'fail',findings}],evidence:{checked:2,ok:1,stale:1,relocated:0,results:[{citation:'x',status:'ok'},{citation:'y',status:'stale'}],documents:[{path:'a.md',verified:true},{path:'b.md',verified:false,reason:'r'}],documentDrift:1}});
+ assert.equal(compact.claims.total,3);assert.equal(compact.claims.results,undefined);assert.deepEqual(compact.claims.notVerified.map(claim=>claim.id),['b']);
+ assert.equal(compact.gates[0].findings.length,25);assert.equal(compact.gates[0].findingsTotal,40);assert.equal(compact.gates[0].findings[0].severity,'error','errors are listed before warnings');
+ const impact=compactReport({impact:{direct:[],details:Array.from({length:30},(_,i)=>({id:i}))}}).impact;assert.equal(impact.details.length,25);assert.equal(impact.detailsTotal,30);
+ assert.deepEqual(compact.evidence.results.map(result=>result.citation),['y']);assert.deepEqual(compact.evidence.documents.map(document=>document.path),['b.md']);assert.equal(compact.evidence.documentsVerified,1);
+});
+test('knowledge references resolve inside child repositories of a multi-repo parent',async t=>{
+ const root=await fixture(t);await mkdir(path.join(root,'backend/app/research'),{recursive:true});await writeFile(path.join(root,'backend/app/research/sizing.py'),'x = 1\n');
+ await mkdir(path.join(root,'.graphward/knowledge-base'),{recursive:true});await writeFile(path.join(root,'.graphward/knowledge-base/backend.md'),'Sizing lives in `app/research/sizing.py` and `app/research/missing.py`.\n');
+ const report=await verifyKnowledge(root);
+ assert.deepEqual(report.details.map(detail=>detail.reference),['app/research/missing.py']);
+});
+test('unverified knowledge documents state the specific reason',async t=>{
+ const root=await fixture(t);await mkdir(path.join(root,'.graphward/knowledge-base'),{recursive:true});
+ await writeFile(path.join(root,'.graphward/knowledge-base/uncited.md'),'# No citations\n');
+ const reasons=Object.fromEntries((await checkEvidenceHashes(root)).documents.map(document=>[document.path,document.reason]));
+ assert.match(reasons['.graphward/knowledge-base/uncited.md'],/no evidence snapshot.*evidence-record/);
 });
 test('old live locks cannot be stolen and delayed release preserves a replacement owner',async t=>{
  const root=await fixture(t);const release=await acquireLock(root);const location=path.join(root,'.graphward/.lock');await utimes(location,1,1);await assert.rejects(acquireLock(root,{timeoutMs:20,retryIntervalMs:5}),/not proven dead/);
@@ -140,11 +214,15 @@ test('switching provider policy invalidates context without revoking approved in
  const readiness=await checkTaskReadiness(root,{taskId:'search'});assert.equal(readiness.ready,false);assert.ok(readiness.blockers.some(blocker=>/policy changed/.test(blocker)));assert.ok((await loadTask(root,'search')).confirmation);
 });
 
-test('Antigravity wrapped GraphWard reads pass discovery while mutating MCP calls remain gated',async t=>{
+test('Antigravity wrapped GraphWard reads pass while third-party MCP writes into the project remain gated',async t=>{
  const root=await fixture(t);await writeFile(path.join(root,'.graphward/install-manifest.json'),'{}');
  const input=normalizeInput('antigravity',JSON.stringify({conversationId:'conversation',workspacePaths:[root],toolCall:{name:'call_mcp_tool',args:{ServerName:'graphward',ToolName:'get_engineering_context',Arguments:{task:'Inspect source'}}}}));
- assert.equal(input.tool_name,'mcp__graphward__get_engineering_context');assert.equal(input.tool_input.task,'Inspect source');assert.equal((await runHook('pre-tool-use',root,input,'antigravity')).stdout,undefined);
- const mutation=normalizeInput('antigravity',JSON.stringify({conversationId:'conversation',workspacePaths:[root],toolCall:{name:'call_mcp_tool',args:{ServerName:'external',ToolName:'mutate',Arguments:{}}}}));assert.equal(JSON.parse((await runHook('pre-tool-use',root,mutation,'antigravity')).stdout).decision,'deny');
+ assert.equal(input.tool_name,'mcp__graphward__get_engineering_context');assert.equal(input.tool_input.task,'Inspect source');assert.deepEqual(JSON.parse((await runHook('pre-tool-use',root,input,'antigravity')).stdout),{decision:'allow'},'Antigravity requires an explicit decision');
+ const mcp=(ServerName,ToolName,Arguments)=>normalizeInput('antigravity',JSON.stringify({conversationId:'conversation',workspacePaths:[root],toolCall:{name:'call_mcp_tool',args:{ServerName,ToolName,Arguments}}}));
+ const decide=async input=>JSON.parse((await runHook('pre-tool-use',root,input,'antigravity')).stdout).decision;
+ assert.equal(await decide(mcp('filesystem','write_file',{path:path.join(root,'src/index.ts'),content:''})),'deny','a third-party write into the project stays gated');
+ assert.equal(await decide(mcp('github','search_code',{query:'x'})),'allow','a third-party read is not gated');
+ assert.equal(await decide(mcp('external','mutate',{})),'allow','a tool with no project target cannot change project files');
 });
 
 test('MCP context responses stay compact: no duplicated rendering by default, compact preparation receipt',async t=>{

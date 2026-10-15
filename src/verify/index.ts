@@ -20,7 +20,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { mkdir, readFile, writeFile, readdir, realpath } from "node:fs/promises";
+import { mkdir, readFile, writeFile, readdir, realpath, stat } from "node:fs/promises";
 import path from "node:path";
 import { runProcess } from "../process/index.js";
 import { parseGitStatusPaths } from "./git-paths.js";
@@ -402,6 +402,25 @@ export interface KnowledgeVerificationReport {
   details: Array<{ file: string; reference: string; exists: boolean }>;
 }
 
+/**
+ * Directories a reference may be relative to: the project root, then each top-level child
+ * directory. A parent folder holding several repositories (backend/, frontend/) documents
+ * `app/x.py` relative to the child repo it lives in, not to the parent.
+ */
+async function referenceBases(root: string): Promise<string[]> {
+  const bases = [root];
+  try {
+    for (const entry of await readdir(root, { withFileTypes: true })) {
+      if (entry.isDirectory() && !entry.name.startsWith(".") && entry.name !== "node_modules") bases.push(path.join(root, entry.name));
+    }
+  } catch { /* unreadable root: root itself only */ }
+  return bases;
+}
+
+async function isFile(target: string): Promise<boolean> {
+  try { return (await stat(target)).isFile(); } catch { return false; }
+}
+
 export async function verifyKnowledge(root: string): Promise<KnowledgeVerificationReport> {
   const kb = path.join(root, ".graphward", "knowledge-base");
   let files: string[] = [];
@@ -417,6 +436,7 @@ export async function verifyKnowledge(root: string): Promise<KnowledgeVerificati
   let drift = 0;
   const details: Array<{ file: string; reference: string; exists: boolean }> = [];
   const checkedRefs = new Set<string>();
+  const bases = await referenceBases(root);
 
   for (const f of files) {
     try {
@@ -428,13 +448,9 @@ export async function verifyKnowledge(root: string): Promise<KnowledgeVerificati
         if (checkedRefs.has(refPath)) continue;
         checkedRefs.add(refPath);
         referencesChecked++;
-        const targetPath = path.resolve(root, refPath);
         let exists = false;
-        try {
-          await readFile(targetPath);
-          exists = true;
-        } catch {
-          exists = false;
+        for (const base of bases) {
+          if (await isFile(path.resolve(base, refPath))) { exists = true; break; }
         }
         if (!exists) {
           drift++;

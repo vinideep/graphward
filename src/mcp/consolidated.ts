@@ -19,6 +19,7 @@ import { assessPromptClarity, checkPhaseGate, freezeRequirements, loadAidlcState
 import { createSessionHandoff, getSessionHandoff, listActiveFlights } from "../flight/index.js";
 import { migrateLegacyRegressionPatterns, promoteLearnedPattern, queryProjectMemory, recordLearnedPattern } from "../learning/index.js";
 import { packRows } from "./shaper.js";
+import { compactReport } from "./compact-report.js";
 import { McpToolRegistry } from "./registry.js";
 import { prepareTaskContext } from "../context/preparation.js";
 import { toCanonicalPath } from "../providers/workspace.js";
@@ -29,6 +30,7 @@ import type { PropertySchema } from "./registry.js";
 
 const rootProperty = { type: "string" as const };
 const filesProperty = { type: "array" as const, items: { type: "string" as const } };
+const detailProperty = { type: "string" as const, enum: ["summary", "full"], description: "summary (default) keeps every count but lists only non-passing claims, citations and capped gate findings; full returns every row." };
 
 function rootOf(args: Record<string, unknown>, projectRoot: string): string {
   const root = toCanonicalPath(typeof args.root === "string" ? args.root : projectRoot);
@@ -47,7 +49,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
   };
   registry.register({ name: "host_support_status", description: "Separate generated configuration from actual host discovery, enabled state, connection, invocation and enforcement qualification. Report potential global skill conflicts.", inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, host: { type: "string", enum: [...IDE_IDS] } } }, handler: async args => hostSupportStatus(rootOf(args, projectRoot), args.host as IdeId | undefined) });
   registry.register({ name: "propose_task_contract", description: "Record complete scope/questions/answers under an independent task revision. This cannot approve itself. Show the contract and exact confirmation challenge to the user, reuse previous decisions, and bind the native host/session.", inputSchema: { type: "object", additionalProperties: false, required: ["contract"], properties: { root: rootProperty, taskId: string, host: string, sessionId: string, contract } }, handler: async args => proposeTask(rootOf(args, projectRoot), args.contract, { taskId: args.taskId as string | undefined, host: args.host as string | undefined, sessionId: args.sessionId as string | undefined }) });
-  registry.register({ name: "record_task_change_mapping", description: "Record requirement-to-change-to-test evidence, including rationale. Does not claim tests passed.", inputSchema: { type: "object", additionalProperties: false, required: ["taskId", "entries"], properties: { root: rootProperty, taskId: string, entries: { type: "array", minItems: 1, items: { type: "object", additionalProperties: false, required: ["criterion", "files", "tests", "rationale"], properties: { criterion: string, files: { ...strings, minItems: 1 }, tests: { ...strings, minItems: 1 }, rationale: string } } } } }, handler: async args => recordTaskChangeMapping(rootOf(args, projectRoot), args.taskId as string, args.entries as any) });
+  registry.register({ name: "record_task_change_mapping", description: "Record requirement-to-change-to-test evidence, including rationale. Entries merge by criterion, so criteria can be mapped incrementally; the result lists criteria still unmapped. Does not claim tests passed.", inputSchema: { type: "object", additionalProperties: false, required: ["taskId", "entries"], properties: { root: rootProperty, taskId: string, entries: { type: "array", minItems: 1, items: { type: "object", additionalProperties: false, required: ["criterion", "files", "tests", "rationale"], properties: { criterion: string, files: { ...strings, minItems: 1 }, tests: { ...strings, minItems: 1 }, rationale: string } } } } }, handler: async args => recordTaskChangeMapping(rootOf(args, projectRoot), args.taskId as string, args.entries as any) });
   registry.register({ name: "get_task_readiness", description: "Check task/project/revision confirmation, scope and current prepared context. Prompt scores and empty documents cannot authorize edits.", inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, taskId: string, host: string, sessionId: string, files: filesProperty, stage: { type: "string", enum: ["requirements", "implementation"] } } }, handler: async args => checkTaskReadiness(rootOf(args, projectRoot), args as any) });
   registry.register({
     name: "prepare_task_context",
@@ -94,14 +96,20 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
   registry.register({
     name: "validate_change",
     description: "Run deterministic change validation: impact, all built-in safety gates, claims, knowledge references, and citation freshness.",
-    inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, taskId: string, files: filesProperty, base: { type: "string" } } },
-    handler: async (args) => validateChange(rootOf(args, projectRoot), args.files as string[] | undefined, typeof args.base === "string" ? args.base : "HEAD", { taskId: args.taskId as string | undefined }),
+    inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, taskId: string, files: filesProperty, base: { type: "string" }, detail: detailProperty } },
+    handler: async (args) => {
+      const report = await validateChange(rootOf(args, projectRoot), args.files as string[] | undefined, typeof args.base === "string" ? args.base : "HEAD", { taskId: args.taskId as string | undefined });
+      return args.detail === "full" ? report : compactReport(report);
+    },
   });
   registry.register({
     name: "sync_engineering_knowledge",
     description: "Post-edit synchronization for GraphWard's graph, provider indexes, derived claims, and knowledge health. Canonical prose is flagged for model synthesis rather than silently rewritten.",
-    inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, files: filesProperty } },
-    handler: async (args) => syncEngineeringKnowledge(rootOf(args, projectRoot), args.files as string[] | undefined),
+    inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, files: filesProperty, detail: detailProperty } },
+    handler: async (args) => {
+      const report = await syncEngineeringKnowledge(rootOf(args, projectRoot), args.files as string[] | undefined);
+      return args.detail === "full" ? report : compactReport(report);
+    },
   });
   registry.register({
     name: "provider_status",

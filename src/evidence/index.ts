@@ -313,14 +313,22 @@ export async function checkEvidenceHashes(root: string): Promise<EvidenceReport>
   for (const file of await walkMarkdown(kbDir(root))) {
     const relative = path.relative(root, file).replace(/\\/g, "/");
     const recordedDoc = snapshot?.documents?.find(item => item.path === relative);
-    let verified = !!recordedDoc && recordedDoc.citations.length > 0 && recordedDoc.hash === createHash("sha256").update(await readFile(file)).digest("hex");
-    if (recordedDoc) for (const citation of recordedDoc.citations) {
+    // The first failing check names the reason, so the fix is obvious: record, cite, or re-verify.
+    let reason: string | undefined;
+    if (!recordedDoc) reason = "Document has no evidence snapshot; run `gw evidence-record .` after verifying it.";
+    else if (recordedDoc.citations.length === 0) reason = "Document cites no source lines, so nothing can verify it.";
+    else if (recordedDoc.hash !== createHash("sha256").update(await readFile(file)).digest("hex")) reason = "Document changed since its snapshot; re-verify it and run `gw evidence-record .`.";
+    if (recordedDoc && !reason) for (const citation of recordedDoc.citations) {
       const result = results.find(item => item.citation === citation);
-      if (!result || result.status !== "ok" || !recordedDoc.sourceHashes?.[result.file]) { verified = false; continue; }
-      try { if (recordedDoc.sourceHashes[result.file] !== createHash("sha256").update(await readFile(path.resolve(root, result.file))).digest("hex")) verified = false; } catch { verified = false; }
+      if (!result || result.status !== "ok") { reason = `Citation ${citation} is ${result?.status ?? "missing"}.`; break; }
+      if (!recordedDoc.sourceHashes?.[result.file]) { reason = `Snapshot lacks a hash for cited source ${result.file}; run \`gw evidence-record .\`.`; break; }
+      let current: string | undefined;
+      try { current = createHash("sha256").update(await readFile(path.resolve(root, result.file))).digest("hex"); } catch {}
+      if (recordedDoc.sourceHashes[result.file] !== current) { reason = `Cited source ${result.file} changed since the snapshot.`; break; }
     }
+    const verified = !reason;
     if (recordedDoc && recordedDoc.citations.length > 0 && !verified) documentDrift++;
-    documents.push({ path: relative, verified, ...(!verified ? { reason: "Document or complete cited source bytes lack a current snapshot." } : {}) });
+    documents.push({ path: relative, verified, ...(reason ? { reason } : {}) });
   }
   return { checked: results.length, ok, stale, relocated, results, documents, documentDrift };
 }

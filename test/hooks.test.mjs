@@ -255,15 +255,15 @@ test("normalizeInput maps Cursor field names and granular events to the neutral 
   assert.equal(claude.tool_name, "Write");
 });
 
-test("runHook formats output in Cursor's contract (agent_message / followup_message / permission)", async () => {
+test("runHook formats output in Cursor's contract (additional_context / followup_message / permission)", async () => {
   const root = await tmpRoot({ requireValidationOnStop: true, blockStaleEdits: true });
   await writeFile(path.join(root, "package.json"), JSON.stringify({ scripts: { test: "node --test" } }), "utf8");
   const sid = "cur";
 
-  // session-start → Cursor uses agent_message, not Claude's hookSpecificOutput.
+  // session-start → Cursor's documented sessionStart output is additional_context.
   const start = await runHook("session-start", root, { session_id: sid }, "cursor");
   const startOut = JSON.parse(start.stdout);
-  assert.ok("agent_message" in startOut, "cursor session-start should use agent_message");
+  assert.ok("additional_context" in startOut, "cursor session-start should use additional_context");
   assert.ok(!("hookSpecificOutput" in startOut));
 
   // Record a source change (Cursor afterFileEdit → Edit), then stop must block via followup_message.

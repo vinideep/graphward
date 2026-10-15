@@ -127,6 +127,80 @@ test("migration-lint: passes a clean tree", async () => {
   assert.equal(result.status, "pass");
 });
 
+test("migration-lint: rollback bodies are not destructive findings", async () => {
+  const root = await tmp();
+  await write(root, "alembic/versions/001_add_orders.py", [
+    "def upgrade():",
+    "    op.create_table('orders')  # op.drop_table in a comment is ignored",
+    "",
+    "def downgrade():",
+    "    op.drop_index('ix_orders')",
+    "",
+    "    op.drop_table('orders')",
+  ].join("\n"));
+  await write(root, "db/migrate/001_add_orders.rb", [
+    "class AddOrders < ActiveRecord::Migration[7.0]",
+    "  def up",
+    "    create_table :orders",
+    "  end",
+    "  def down",
+    "    drop_table :orders",
+    "  end",
+    "end",
+  ].join("\n"));
+  await write(root, "migrations/001_orders.js", [
+    "exports.up = knex => knex.schema.createTable('orders', t => { t.increments(); });",
+    "exports.down = knex => knex.schema.dropTable('orders');",
+    "export async function down(queryInterface) {",
+    "  await queryInterface.dropTable('legacy');",
+    "}",
+  ].join("\n"));
+  const result = await runGate("migration-lint", root);
+  assert.deepEqual(result.findings, [], "dropping what upgrade created is how reversible migrations are written");
+
+  await write(root, "alembic/versions/002_drop_legacy.py", "def upgrade():\n    op.drop_table('legacy')\n");
+  const destructive = await runGate("migration-lint", root);
+  assert.equal(destructive.status, "fail", "a drop in upgrade() is still destructive");
+  assert.ok(destructive.findings.every((f) => f.file === "alembic/versions/002_drop_legacy.py"));
+});
+
+test("migration-lint: supplied changedFiles scope the lint to those files", async () => {
+  const root = await tmp();
+  await write(root, "scripts/maintenance/prune.sql", "TRUNCATE stock_snapshot;\n");
+  await write(root, "db/migrations/002_ok.sql", "ALTER TABLE t ADD COLUMN c int;\n");
+  const unrelated = await runGate("migration-lint", root, { changedFiles: [".graphward/knowledge-base/overview.md", "db/migrations/002_ok.sql"] });
+  assert.equal(unrelated.status, "pass", "a pre-existing TRUNCATE elsewhere must not fail an unrelated change");
+  const none = await runGate("migration-lint", root, { changedFiles: [] });
+  assert.equal(none.status, "pass");
+  const touched = await runGate("migration-lint", root, { changedFiles: ["scripts/maintenance/prune.sql"] });
+  assert.equal(touched.status, "fail");
+  const audit = await runGate("migration-lint", root);
+  assert.equal(audit.status, "fail", "without changedFiles the gate still audits the whole tree");
+});
+
+test("migration-lint: tooling that merely mentions migrations is not linted as one", async () => {
+  const root = await tmp();
+  await write(root, "src/gates/migration-lint.ts", "const RULE = /drop table/; // DROP TABLE users;\nexport const message = 'DROP TABLE removes data';\n");
+  await write(root, "app/migration_utils.py", "SQL = 'DROP TABLE users;'\n");
+  await write(root, "src/db/migrations/0002_drop.ts", "await db.query('DROP TABLE legacy;');\n");
+  await write(root, "db/migrate/20240101_drop.rb", "execute 'DROP TABLE legacy;'\n");
+  await write(root, "src/db/cleanup_migration.ts", "await db.query('DROP TABLE tmp;');\n");
+  const result = await runGate("migration-lint", root);
+  assert.deepEqual([...new Set(result.findings.map((f) => f.file))].sort(), ["db/migrate/20240101_drop.rb", "src/db/cleanup_migration.ts", "src/db/migrations/0002_drop.ts"]);
+});
+
+test("dead-exports: framework convention exports are not reported", async () => {
+  const root = await tmp();
+  await write(root, "frontend/app/api/orders/route.ts", "export async function GET() {}\nexport async function POST() {}\nexport const dynamic = 'force-dynamic';\nexport function unusedHelper() {}\n");
+  await write(root, "frontend/app/layout.tsx", "export const metadata = { title: 'x' };\nexport default function RootLayout() { return null; }\n");
+  await write(root, "frontend/pages/legacy.tsx", "export async function getServerSideProps() { return { props: {} }; }\n");
+  await write(root, "frontend/middleware.ts", "export function middleware() {}\nexport const config = { matcher: [] };\n");
+  await write(root, "frontend/next.config.mjs", "export const images = {};\n");
+  const result = await runGate("dead-exports", root);
+  const names = result.findings.map((f) => f.message.match(/'([^']+)'/)?.[1]);
+  assert.deepEqual(names, ["unusedHelper"], "only the genuinely unused helper is reported");
+});
+
 test("extractApiSurface: parses framework routes, decorators, and OpenAPI JSON", () => {
   // Route-call syntax is only trusted in a file that actually uses a server
   // framework — otherwise an HTTP client wrapper reads as a router.

@@ -136,6 +136,8 @@ export async function resolveSessionTask(root: string, host: string, sessionId: 
   catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined; throw error; }
 }
 const reducedContextChallenge = (task: TaskDecisionReceipt, generation: string | undefined) => `Accept reduced context for GraphWard task ${task.taskId} ${task.revisionHash} generation ${generation}`;
+/** Provider-excluded (oversized) files the task is authorized to touch; only these reduce its coverage. */
+const excludedInScope = (task: TaskDecisionReceipt, preparation: { excludedFiles?: string[] } | undefined) => (preparation?.excludedFiles ?? []).filter(file => inScope(task, file));
 /** Only native hook adapters call this; it is deliberately absent from MCP tools. */
 export async function observeUserPrompt(root: string, host: string, sessionId: string, prompt: string) {
   if (!host || !sessionId || !prompt) return { confirmed: false };
@@ -147,7 +149,7 @@ export async function observeUserPrompt(root: string, host: string, sessionId: s
       await atomic(taskPath(root, task.taskId), task); return { confirmed: true, taskId: task.taskId };
     }
     const preparation = await readContextPreparation(root);
-    if (preparation && (preparation.status === "degraded" || task.context?.requiresDecision) && prompt.trim() === reducedContextChallenge(task, preparation.sourceGeneration)) {
+    if (preparation && (preparation.status === "degraded" || task.context?.requiresDecision || excludedInScope(task, preparation).length) && prompt.trim() === reducedContextChallenge(task, preparation.sourceGeneration)) {
       task.degradedDecision = { sourceGeneration: preparation.sourceGeneration, eventHash: digest(prompt), acceptedAt: new Date().toISOString() };
       await atomic(taskPath(root, task.taskId), task); return { confirmed: false, degradedAccepted: true };
     }
@@ -214,7 +216,8 @@ export async function checkTaskReadiness(root: string, options: { taskId?: strin
     }
     if (preparation?.status === "blocked" || preparation?.status === "cancelled") blockers.push(`Context preparation is ${preparation.status}.`);
     const decisionGeneration = preparation?.sourceGeneration ?? generation;
-    if ((preparation?.requiresDecision || task.context?.requiresDecision) && task.degradedDecision?.sourceGeneration !== decisionGeneration) blockers.push(`Reduced coverage requires a user decision: ${reducedContextChallenge(task, decisionGeneration)}`);
+    const excluded = excludedInScope(task, preparation);
+    if ((preparation?.requiresDecision || task.context?.requiresDecision || excluded.length) && task.degradedDecision?.sourceGeneration !== decisionGeneration) blockers.push(`Reduced coverage requires a user decision${excluded.length ? ` (in-scope files excluded from provider indexing: ${excluded.slice(0, 5).join(", ")}${excluded.length > 5 ? ` and ${excluded.length - 5} more` : ""})` : ""}: ${reducedContextChallenge(task, decisionGeneration)}`);
   }
   return { ready: !blockers.length, taskId: task.taskId, revision: task.revision, revisionHash: task.revisionHash, blockers, confirmationAssurance: task.confirmation?.assurance ?? "unavailable" };
 }
@@ -247,13 +250,19 @@ export async function confirmTaskInteractively(root: string, taskId: string, ses
 export async function recordTaskChangeMapping(root: string, taskId: string, entries: NonNullable<TaskDecisionReceipt["changeMapping"]>) {
   return withLock(root, async () => {
     const task = await loadTask(root, taskId); if (!task?.confirmation) throw new Error("Confirmed task required.");
+    if (!entries.length) throw new Error("Mapping needs at least one entry.");
     for (const entry of entries) {
       if (!task.contract.acceptanceCriteria.includes(entry.criterion) || !entry.rationale?.trim() || !strings(entry.files, "files", true).length || !strings(entry.tests, "tests", true).length) throw new Error("Mapping needs a known criterion, changed files, tests/checks and rationale.");
       const readiness = await checkTaskReadiness(root, { taskId, stage: "requirements", files: entry.files });
       if (!readiness.ready) throw new Error(readiness.blockers.join(" "));
     }
-    if (task.contract.acceptanceCriteria.some(criterion => !entries.some(entry => entry.criterion === criterion))) throw new Error("Every acceptance criterion needs a change and test mapping.");
-    task.changeMapping = entries; await atomic(taskPath(root, taskId), task); return task;
+    // Mappings accumulate as work lands: a later entry replaces the earlier one for its criterion.
+    // Completeness is enforced where it matters, by validate_change's mapping gaps.
+    const updated = new Set(entries.map(entry => entry.criterion));
+    task.changeMapping = [...(task.changeMapping ?? []).filter(entry => !updated.has(entry.criterion)), ...entries];
+    await atomic(taskPath(root, taskId), task);
+    const unmapped = task.contract.acceptanceCriteria.filter(criterion => !task.changeMapping!.some(entry => entry.criterion === criterion));
+    return { ...task, unmappedCriteria: unmapped };
   }, { name: ".task-contract.lock" });
 }
 

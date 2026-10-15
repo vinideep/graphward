@@ -83,6 +83,13 @@ export function mergeHookConfig(existingSource: string | undefined, oursSource: 
     if (isObject(incoming)) {
       const result: Json = isObject(theirs) ? { ...theirs } : {};
       for (const [name, value] of Object.entries(incoming)) result[name] = merge(result[name], value, name);
+      // An event we no longer install (e.g. Antigravity PreInvocation, replaced by
+      // SessionStart) would otherwise keep running our old entry forever.
+      for (const [name, value] of Object.entries(result)) {
+        if (name in incoming || !Array.isArray(value) || !value.some(isOurs)) continue;
+        const kept = value.filter(item => !isOurs(item));
+        if (kept.length) result[name] = kept; else delete result[name];
+      }
       return result;
     }
     // Preserve user-disabled integration instead of silently enabling it again.

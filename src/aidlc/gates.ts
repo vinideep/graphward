@@ -6,7 +6,8 @@ import { latestOpenFlight } from "../flight/index.js";
 import { loadOpenQuestions } from "./state.js";
 import { validateAllBacklogTickets } from "./backlog-graph.js";
 import type { Phase, GateCheckResult } from "./types.js";
-import { checkTaskReadiness } from "./task-contract.js";
+import { checkTaskReadiness, loadTask } from "./task-contract.js";
+import { changedFiles } from "../verify/index.js";
 
 function aidlcDir(root: string): string {
   return path.join(root, ".graphward", "aidlc");
@@ -96,21 +97,27 @@ export async function checkInceptionExit(root: string, taskId?: string): Promise
   };
 }
 
-export async function checkConstructionExit(root: string): Promise<GateCheckResult> {
+export async function checkConstructionExit(root: string, taskId?: string): Promise<GateCheckResult> {
   const missing: string[] = [];
   const recs: string[] = [];
 
-  // 1. Check active open flights
+  // 1. Check active open flights. A flight opened before the task was confirmed belongs to
+  // earlier work: it still deserves closing, but it does not describe this task's changes.
   const openFlight = await latestOpenFlight(root);
-  if (openFlight) {
+  const confirmedAt = taskId ? (await loadTask(root, taskId))?.confirmation?.confirmedAt : undefined;
+  if (openFlight && confirmedAt && openFlight.createdAt < confirmedAt) {
+    recs.push(`Close stale flight ${openFlight.id} (opened before this task) with postflight, or discard it`);
+  } else if (openFlight) {
     missing.push(`Active unclosed flight: ${openFlight.id}`);
     recs.push(`Call postflight to verify scope and close flight ${openFlight.id}`);
   }
 
-  // 2. Check the same deterministic registry used by validate_change.
+  // 2. Check the same deterministic registry used by validate_change, scoped to the
+  // working-tree changes, so pre-existing findings elsewhere do not block this exit.
+  const changed = await changedFiles(root);
   for (const gate of GATE_NAMES) {
     try {
-      const res = await runGate(gate, root, { risk: "medium" });
+      const res = await runGate(gate, root, { risk: "medium", changedFiles: changed });
       if (res.status === "fail" || (res.status === "unavailable" && res.required)) {
         missing.push(`Safety gate failed: ${gate} (${res.summary})`);
         recs.push(`Fix ${gate} findings before exiting construction`);
@@ -160,7 +167,7 @@ export async function checkPhaseGate(root: string, phase: Phase, taskId?: string
     case "inception":
       return checkInceptionExit(root, taskId);
     case "construction":
-      return checkConstructionExit(root);
+      return checkConstructionExit(root, taskId);
     case "operations":
       return checkOperationsExit(root);
     default:

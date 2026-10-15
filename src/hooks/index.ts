@@ -127,7 +127,8 @@ export function claudeCodeHookSettings(): string {
         UserPromptSubmit: [{ hooks: [{ type: "command", command: hookCommand("user-prompt-submit") }] }],
         SessionStart: [{ hooks: [{ type: "command", command: hookCommand("session-start") }] }],
         PreToolUse: [
-          { matcher: "Edit|Write|NotebookEdit|MultiEdit|Bash|PowerShell|mcp__.*", hooks: [{ type: "command", command: hookCommand("pre-tool-use"), onFailure: "block" }] },
+          // Anchored: an unanchored regex matcher also fires on TodoWrite, BashOutput, etc.
+          { matcher: "^(Edit|Write|NotebookEdit|MultiEdit|Bash|PowerShell|mcp__.*)$", hooks: [{ type: "command", command: hookCommand("pre-tool-use"), onFailure: "block" }] },
         ],
         PostToolUse: [
           { matcher: "Edit|Write|NotebookEdit|MultiEdit|Bash|PowerShell|AskUserQuestion|ExitPlanMode", hooks: [{ type: "command", command: hookCommand("post-tool-use") }] },
@@ -172,14 +173,15 @@ export function codexHookSettings(): string {
 export function antigravityHookSettings(host: "antigravity" | "antigravity-cli"): string {
   // Shared IDE/CLI directory must emit identical configuration when co-installed.
   const handler = (event: HookEvent) => ({ type: "command", command: hookCommand(event, "antigravity"), timeout: 30 });
-  return JSON.stringify({ graphward: { enabled: true, PreInvocation: [handler("session-start")], PreToolUse: [{ matcher: ".*", hooks: [handler("pre-tool-use")] }], PostToolUse: [{ matcher: ".*", hooks: [handler("post-tool-use")] }], Stop: [handler("stop")] } }, null, 2) + "\n";
+  // SessionStart, not PreInvocation: PreInvocation fires on every turn and would reset session state.
+  return JSON.stringify({ graphward: { enabled: true, SessionStart: [handler("session-start")], PreToolUse: [{ matcher: ".*", hooks: [handler("pre-tool-use")] }], PostToolUse: [{ matcher: ".*", hooks: [handler("post-tool-use")] }], Stop: [handler("stop")] } }, null, 2) + "\n";
 }
 
 function editPaths(input: HookInput): string[] {
   const args = input.tool_input ?? {};
-  const paths = [args.file_path, args.path, args.TargetFile].filter((value): value is string => typeof value === "string");
+  const paths = [args.file_path, args.path, args.TargetFile, args.filePath, args.target_file].filter((value): value is string => typeof value === "string");
   if (Array.isArray(args.edits)) for (const edit of args.edits) if (edit && typeof edit === "object" && typeof (edit as any).file_path === "string") paths.push((edit as any).file_path);
-  const patch = typeof args.command === "string" && input.tool_name === "apply_patch" ? args.command : typeof args.patch === "string" ? args.patch : "";
+  const patch = typeof args.command === "string" && baseToolName(input.tool_name ?? "") === "apply_patch" ? args.command : typeof args.patch === "string" ? args.patch : "";
   for (const match of patch.matchAll(/^\*\*\* (?:Add File|Update File|Delete File|Move to): (.+)$/gm)) paths.push(match[1]);
   return [...new Set(paths)];
 }
@@ -202,13 +204,117 @@ function isInsideProject(root: string, file: string): boolean {
   return relative === "" || !relative.startsWith("..") && !path.isAbsolute(relative);
 }
 
-function isDiscoveryTool(input: HookInput): boolean {
-  const tool = input.tool_name ?? "";
-  if (/^(Read|Glob|Grep|AskUserQuestion|ExitPlanMode|request_user_input|request_user_input_async|ask_question|Agent|Task|spawn_agent|invoke_subagent|view_file|list_dir|find_by_name|grep_search|search_web|read_url_content)$/.test(tool)) return true;
-  if (/^mcp__graphward__(get_engineering_context|prepare_task_context|propose_task_contract|get_task_readiness|record_task_change_mapping|host_support_status|provider_status|analyze_change_impact|check_aidlc_gate|assess_prompt_clarity|get_aidlc_state|find_symbol|who_calls|read_knowledge|query_project_memory|list_active_flights|get_session_handoff|get_experiment_history|slice_graph)$/.test(tool)) return true;
-  if (!/^(Bash|PowerShell|run_command|exec_command)$/.test(tool)) return false;
-  const command = input.tool_input?.command ?? input.tool_input?.cmd;
-  return typeof command === "string" && isReadOnlyShellCommand(command);
+/**
+ * Codex groups built-in tools into namespaces and reports them to hooks as namespace+name
+ * (`collaborationspawn_agent`, `clocksleep`), with or without a separator. Strip the
+ * namespace so the tool classifies by its own name.
+ */
+function baseToolName(tool: string): string {
+  return tool.replace(/^(?:collaboration|clock)(?:[._:/]|__)?(?=[a-z])/, "");
+}
+
+// ---------------------------------------------------------------------------
+// Tool effects
+//
+// The task gate exists to stop unconfirmed changes to THIS project's files. Hosts name
+// their tools differently and add new ones often, so the gate classifies a call by what it
+// can do rather than by a list of names it happens to know: anything that cannot change
+// project files passes, whatever the host or tool.
+//
+//   Claude Code  Edit/Write/NotebookEdit, Bash/PowerShell, mcp__<server>__<tool>
+//   Codex        apply_patch, Bash (shell and exec_command), mcp__<server>__<tool>,
+//                namespaced locals (collaborationspawn_agent)
+//   Cursor       Write/Delete, Shell, MCP:<tool>
+//   Antigravity  write_to_file/replace_file_content/multi_replace_file_content, run_command,
+//                call_mcp_tool (normalized to mcp__<server>__<tool>) or mcp_<server>_<tool>
+// ---------------------------------------------------------------------------
+
+/** What a tool call can do to the project. */
+type ToolEffect =
+  | { kind: "none" }                   // cannot change project files: never gated
+  | { kind: "edit"; paths: string[] }  // writes these files (empty: target not exposed)
+  | { kind: "shell"; command?: string } // runs a local command; read-only commands pass
+  | { kind: "execute" };               // runs local code that cannot be inspected
+
+const FILE_EDIT_TOOLS = /^(Edit|Write|MultiEdit|NotebookEdit|Delete|apply_patch|write_to_file|replace_file_content|multi_replace_file_content)$/;
+const SHELL_TOOLS = /^(Bash|PowerShell|Shell|Monitor|run_command|exec_command|shell|local_shell|container\.exec)$/;
+
+/** GraphWard's own MCP tools. They write only `.graphward/` state and enforce their own
+ *  preconditions, so the gate must never stand between an agent and validation or sync. */
+const GRAPHWARD_TOOLS = new Set([
+  "analyze_change_impact", "analyze_impact", "assess_prompt_clarity", "assess_risk", "capture_api_snapshot", "check_aidlc_gate",
+  "create_session_handoff", "derive_claims", "evaluate_counterfactual", "evaluate_experiment_step", "find_symbol",
+  "freeze_clarified_requirements", "generate_experiment_candidates", "get_aidlc_state", "get_brief", "get_context",
+  "get_engineering_context", "get_experiment_history", "get_graph", "get_session_handoff", "get_task_readiness", "graphward",
+  "host_support_status", "list_active_flights", "map_dependencies", "migrate_legacy_regression_patterns", "postflight",
+  "preflight", "prepare_task_context", "promote_learned_pattern", "propose_task_contract", "provider_cce_retrieval",
+  "provider_graphify_evidence", "provider_status", "query_project_memory", "read_knowledge", "record_learned_pattern",
+  "record_task_change_mapping", "replay_api_snapshot", "run_gate", "simulate_change_intent", "slice_graph",
+  "sync_engineering_knowledge", "update_aidlc_state", "validate_change", "verify_claims", "who_calls",
+]);
+/** The one GraphWard tool that applies a patch to product code. */
+const GRAPHWARD_CODE_TOOLS = new Set(["evaluate_experiment_step"]);
+
+const MUTATING_VERB = /(^|[_-])(write|edit|create|delete|remove|rm|move|rename|copy|patch|apply|replace|insert|update|append|save|mkdir|upload|put|modify|overwrite|truncate)(?=[_-]|$)/i;
+const EXECUTOR_NAME = /(^|[_-])(exec|execute|run|shell|terminal|bash|command|cmd|process|eval|repl|python|js|javascript|script)(?=[_-]|$)/i;
+/** Browser automation runs JavaScript in a page, not on the project. */
+const BROWSER_SERVER = /chrome|browser|playwright|puppeteer|devtools|selenium/i;
+const PATH_KEY = /^(path|paths|file|files|file_?path|filepath|target_?file|targetfile|source|destination|dest|directory|dir|absolute_?path|relative_?path|uri)$/i;
+
+function mcpTool(name: string): { server?: string; tool: string } | undefined {
+  const qualified = /^mcp__(.+?)__(.+)$/.exec(name);
+  if (qualified) return { server: qualified[1], tool: qualified[2] };
+  const cursor = /^MCP:(.+)$/.exec(name);
+  if (cursor) return { tool: cursor[1] };
+  // Antigravity may flatten to mcp_<server>_<tool>; server names can contain underscores,
+  // so only a known GraphWard suffix can be split reliably.
+  const flat = /^mcp_(.+)$/.exec(name);
+  if (flat) {
+    const known = [...GRAPHWARD_TOOLS].find(tool => flat[1].endsWith(`_${tool}`));
+    return known ? { server: flat[1].slice(0, -known.length - 1), tool: known } : { tool: flat[1] };
+  }
+  return undefined;
+}
+
+/** String paths in an argument object (one level, plus arrays and array elements' path keys). */
+function argumentPaths(args: Record<string, unknown>): string[] {
+  const paths: string[] = [];
+  const add = (value: unknown) => { if (typeof value === "string" && value) paths.push(value.replace(/^file:\/\//, "")); };
+  for (const [key, value] of Object.entries(args)) {
+    if (!PATH_KEY.test(key)) continue;
+    if (Array.isArray(value)) for (const item of value) {
+      if (item && typeof item === "object") for (const [inner, nested] of Object.entries(item)) { if (PATH_KEY.test(inner)) add(nested); }
+      else add(item);
+    }
+    else add(value);
+  }
+  return [...new Set(paths)];
+}
+
+function toolEffect(input: HookInput): ToolEffect {
+  const raw = input.tool_name ?? "";
+  // No tool name is a malformed payload: treat it as an edit whose target is unknown.
+  if (!raw) return { kind: "edit", paths: [] };
+  const tool = baseToolName(raw);
+  const args = (input.tool_input ?? {}) as Record<string, unknown>;
+  const command = typeof args.command === "string" ? args.command : typeof args.cmd === "string" ? args.cmd : undefined;
+  if (FILE_EDIT_TOOLS.test(tool)) return { kind: "edit", paths: editPaths(input) };
+  if (SHELL_TOOLS.test(tool)) return { kind: "shell", command };
+  const mcp = mcpTool(raw);
+  if (mcp && GRAPHWARD_TOOLS.has(mcp.tool)) return GRAPHWARD_CODE_TOOLS.has(mcp.tool) ? { kind: "execute" } : { kind: "none" };
+  if (mcp?.server && BROWSER_SERVER.test(mcp.server)) return { kind: "none" };
+  // Any other tool — third-party MCP or a host tool this version has never seen — is gated
+  // only when it demonstrably runs local commands/code or writes a path.
+  const name = mcp?.tool ?? tool;
+  if (EXECUTOR_NAME.test(name) || /repl/i.test(mcp?.server ?? "")) {
+    if (command !== undefined) return { kind: "shell", command };
+    if (["code", "script", "source"].some(key => typeof args[key] === "string")) return { kind: "execute" };
+  }
+  if (MUTATING_VERB.test(name)) {
+    const paths = argumentPaths(args);
+    if (paths.length) return { kind: "edit", paths };
+  }
+  return { kind: "none" };
 }
 
 /**
@@ -260,12 +366,43 @@ function splitShellSegments(command: string): string[][] | null {
   return segments;
 }
 
-const READ_ONLY_COMMANDS = new Set(["pwd", "ls", "cat", "head", "tail", "wc", "stat", "file", "du", "tree", "basename", "dirname", "realpath", "which", "echo", "printf", "true", "cut", "tr", "nl", "column", "grep", "egrep", "fgrep", "jq", "diff", "cd"]);
-const READ_ONLY_GIT = new Set(["status", "diff", "log", "show", "ls-files", "rev-parse", "blame", "grep", "cat-file", "ls-tree", "shortlog", "describe", "merge-base"]);
+const READ_ONLY_COMMANDS = new Set([
+  "pwd", "ls", "cat", "head", "tail", "wc", "stat", "file", "du", "tree", "basename", "dirname", "realpath", "which", "echo", "printf", "true", "cut", "tr", "nl", "column", "grep", "egrep", "fgrep", "jq", "diff", "cd",
+  "date", "whoami", "id", "uname", "hostname", "uptime", "df", "free", "ps", "pgrep", "lsof", "printenv", "less", "more", "sleep", "seq",
+  "sha256sum", "sha1sum", "shasum", "md5", "md5sum", "cksum", "hexdump", "od", "strings",
+]);
+const READ_ONLY_GIT = new Set(["status", "diff", "log", "show", "ls-files", "rev-parse", "blame", "grep", "cat-file", "ls-tree", "shortlog", "describe", "merge-base", "rev-list", "for-each-ref", "name-rev", "count-objects", "fetch"]);
+/** Environment prefixes that only change formatting; anything else (PAGER, GIT_EXTERNAL_DIFF,
+ *  LD_PRELOAD, BASH_ENV...) can make a "read" command execute arbitrary code. */
+const SAFE_ENV = /^(TZ|LANG|LANGUAGE|LC_[A-Z]+|NO_COLOR|FORCE_COLOR|TERM|COLUMNS|LINES|CLICOLOR)=/;
+/** Toolchains whose version probe is a read. */
+const VERSION_PROBES = new Set(["node", "npm", "npx", "pnpm", "yarn", "bun", "deno", "python", "python3", "pip", "pip3", "uv", "go", "cargo", "rustc", "java", "ruby", "gem", "dotnet", "docker", "kubectl", "terraform", "tsc", "git", "gh", "gw", "graphward"]);
+const VERSION_FLAGS = new Set(["--version", "-v", "-V", "version"]);
+/** curl flags that write local files or send local files. */
+const CURL_WRITES = /^--(?:output|output-dir|remote-name|remote-name-all|dump-header|cookie-jar|upload-file|config|create-dirs|libcurl|trace|trace-ascii|stderr|form|form-string)(?:=|$)/;
+
+function readOnlyGitSubcommand(sub: string, args: string[]): boolean {
+  switch (sub) {
+    case "branch": return args.every(arg => /^(-a|-r|-v|-vv|--all|--remotes|--verbose|--show-current|--list|-l|--no-color|--color)$/.test(arg)) || args[0] === "--list" || args[0] === "-l";
+    case "remote": return args.length === 0 || args.every(arg => arg === "-v" || arg === "--verbose") || args[0] === "show" || args[0] === "get-url";
+    case "tag": return args.length === 0 || args[0] === "-l" || args[0] === "--list";
+    case "stash": return args[0] === "list" || args[0] === "show";
+    case "config": return args.some(arg => /^(--get|--get-all|--get-regexp|--list|-l)$/.test(arg));
+    case "worktree": return args[0] === "list";
+    case "reflog": return args.length === 0 || args[0] === "show";
+    default: return READ_ONLY_GIT.has(sub);
+  }
+}
 const FIND_WRITES = new Set(["-exec", "-execdir", "-ok", "-okdir", "-delete", "-fprint", "-fprint0", "-fprintf", "-fls"]);
 
 function isReadOnlySegment(words: string[]): boolean {
-  if (/^[A-Za-z_][A-Za-z0-9_]*=/.test(words[0])) return false; // env assignment prefix
+  let index = 0;
+  while (index < words.length && /^[A-Za-z_][A-Za-z0-9_]*=/.test(words[index])) {
+    if (!SAFE_ENV.test(words[index])) return false;
+    index++;
+  }
+  if (index === words.length) return true; // a formatting variable assignment alone
+  words = words.slice(index);
   const invocation = resolveRuntimeInvocation();
   const runtime = [invocation.command, ...invocation.args];
   const cliArgs = runtime.every((part, index) => words[index] === part) ? words.slice(runtime.length)
@@ -273,6 +410,7 @@ function isReadOnlySegment(words: string[]): boolean {
   if (cliArgs) return /^(?:verify|context|providers status|aidlc (?:prepare-task|assess|gate))(?:\s|$)/.test(cliArgs.join(" "));
   const [name, ...args] = words;
   if (READ_ONLY_COMMANDS.has(name)) return !args.some(arg => arg === "--output" || /^--output=/.test(arg));
+  if (VERSION_PROBES.has(name) && args.length === 1 && VERSION_FLAGS.has(args[0])) return true;
   switch (name) {
     case "sort": return !args.some(arg => arg === "-o" || /^--output/.test(arg) || /^-[A-Za-z]*o/.test(arg));
     case "uniq": return args.filter(arg => !arg.startsWith("-")).length <= 1; // a second operand is an output file
@@ -286,8 +424,15 @@ function isReadOnlySegment(words: string[]): boolean {
     case "git": {
       let rest = args;
       while (rest[0] === "-C" || rest[0] === "--no-pager") rest = rest[0] === "-C" ? rest.slice(2) : rest.slice(1);
-      return READ_ONLY_GIT.has(rest[0] ?? "") && !rest.some(arg => arg === "-c" || /^--(?:output|ext-diff|textconv|exec)/.test(arg));
+      return readOnlyGitSubcommand(rest[0] ?? "", rest.slice(1)) && !rest.some(arg => arg === "-c" || /^--(?:output|ext-diff|textconv|exec|upload-pack)/.test(arg));
     }
+    case "env": return args.length === 0 || args.every(arg => arg === "-0" || arg === "--null");
+    case "npm": case "pnpm": case "yarn": return ["ls", "list", "view", "info", "outdated", "why", "explain"].includes(args[0] ?? "") && !args.includes("--fix");
+    case "docker": return ["ps", "images", "logs", "inspect", "version", "info", "stats"].includes(args[0] ?? "") && !args.includes("--follow-unsafe");
+    case "kubectl": return ["get", "describe", "logs", "version", "top", "explain"].includes(args[0] ?? "") || args[0] === "config" && args[1] === "view";
+    case "curl":
+      // Network reads print to stdout; anything that writes or uploads a local file is gated.
+      return !args.some(arg => CURL_WRITES.test(arg) || /^-[A-Za-z]*[oODcTKF]/.test(arg) && !arg.startsWith("--") || arg.startsWith("@") || /=@/.test(arg));
     default: return false;
   }
 }
@@ -413,11 +558,16 @@ const block = (message: string): HookDecision => ({ kind: "block", message });
 
 /** Translate a neutral decision into the concrete hook output contract of the host. */
 function formatDecision(host: HookHost, event: HookEvent, decision: HookDecision): HookResult {
-  if (decision.kind === "allow") return host === 'cursor' && event === 'pre-tool-use' ? { exitCode: 0, stdout: JSON.stringify({ permission: 'allow' }) } : { exitCode: 0 };
   if (host === 'antigravity' || host === 'antigravity-cli') {
-    if (decision.kind === 'context') return { exitCode: 0, stdout: JSON.stringify(event === 'session-start' ? { injectSteps: [{ ephemeralMessage: decision.message }] } : {}) };
-    return { exitCode: 0, stdout: JSON.stringify({ decision: decision.kind === 'block' ? 'continue' : 'deny', reason: decision.message }) };
+    // Antigravity requires `decision` on every PreToolUse answer and treats a failed hook as a
+    // block, so even "allow" is spelled out. PostToolUse answers `{}`; Stop continues only on
+    // `decision: "continue"`; SessionStart injects steps.
+    if (event === 'pre-tool-use') return { exitCode: 0, stdout: JSON.stringify(decision.kind === 'deny' ? { decision: 'deny', reason: decision.message } : { decision: 'allow' }) };
+    if (decision.kind === 'block') return { exitCode: 0, stdout: JSON.stringify({ decision: 'continue', reason: decision.message }) };
+    if (decision.kind === 'context' && event === 'session-start') return { exitCode: 0, stdout: JSON.stringify({ injectSteps: [{ ephemeralMessage: decision.message }] }) };
+    return { exitCode: 0, stdout: '{}' };
   }
+  if (decision.kind === "allow") return host === 'cursor' && event === 'pre-tool-use' ? { exitCode: 0, stdout: JSON.stringify({ permission: 'allow' }) } : { exitCode: 0 };
   const message = decision.message ?? "";
 
   if (host === "cursor") {
@@ -426,8 +576,10 @@ function formatDecision(host: HookHost, event: HookEvent, decision: HookDecision
       case "context":
         return {
           exitCode: 0,
+          // preToolUse has no context field, so the note rides on agent_message; sessionStart
+          // and postToolUse take `additional_context`.
           stdout: JSON.stringify(
-            event === "pre-tool-use" ? { permission: "allow", agent_message: message } : { agent_message: message },
+            event === "pre-tool-use" ? { permission: "allow", agent_message: message } : { additional_context: message },
           ),
         };
       case "deny":
@@ -437,14 +589,15 @@ function formatDecision(host: HookHost, event: HookEvent, decision: HookDecision
     }
   }
 
-  // Claude Code
+  // Claude Code and Codex share this contract.
+  const hookEventName = { "session-start": "SessionStart", "user-prompt-submit": "UserPromptSubmit", "pre-tool-use": "PreToolUse", "post-tool-use": "PostToolUse", stop: "Stop" }[event];
   switch (decision.kind) {
     case "context":
       return {
         exitCode: 0,
         stdout: JSON.stringify({
           hookSpecificOutput: {
-            hookEventName: event === "session-start" ? "SessionStart" : event === "user-prompt-submit" ? "UserPromptSubmit" : "PreToolUse",
+            hookEventName,
             additionalContext: message,
           },
         }),
@@ -497,21 +650,28 @@ async function onSessionStart(root: string, input: HookInput, config: HookConfig
 }
 
 async function onPreToolUse(root: string, input: HookInput, config: HookConfig, host: HookHost): Promise<HookDecision> {
-  if (config.requireTaskReadiness && existsSync(path.join(root, '.graphward/install-manifest.json')) && !isDiscoveryTool(input)) {
-    const toolCwd = input.tool_input?.Cwd ?? input.tool_input?.cwd;
-    if (input.cwd && toCanonicalPath(input.cwd) !== toCanonicalPath(root) || typeof toolCwd === "string" && toCanonicalPath(toolCwd) !== toCanonicalPath(root)) return deny("Hook payload belongs to another project; reconnect with the intended project root.");
-    const allPaths = editPaths(input);
-    // GraphWard governs this project only. File edits that target nothing inside the
-    // project root (agent memory, scratch files, other repos) are left to the host's
-    // own permission system instead of being denied as "outside confirmed scope".
+  const effect = toolEffect(input);
+  if (effect.kind === "none") return ALLOW;
+  if (effect.kind === "shell" && effect.command !== undefined && isReadOnlyShellCommand(effect.command)) return ALLOW;
+
+  if (config.requireTaskReadiness && existsSync(path.join(root, '.graphward/install-manifest.json'))) {
+    // GraphWard governs this project only. A session or command working directory outside
+    // it (another workspace root, another repo) is left to the host's own permissions; one
+    // inside it (Antigravity run_command with Cwd=backend/) is this project.
+    const toolCwd = input.tool_input?.Cwd ?? input.tool_input?.cwd ?? input.tool_input?.workdir;
+    if (input.cwd && !isInsideProject(root, input.cwd) || typeof toolCwd === "string" && !isInsideProject(root, toolCwd)) return ALLOW;
+    const allPaths = effect.kind === "edit" ? effect.paths : [];
+    // File edits that target nothing inside the project root (agent memory, scratch files,
+    // other repos) are left to the host instead of being denied as "outside confirmed scope".
     const paths = allPaths.filter(file => isInsideProject(root, file));
     if (allPaths.length > 0 && paths.length === 0) return context(`GraphWard: ${allPaths.join(", ")} is outside this project; not governed by the task gate.`);
     const readiness = await checkTaskReadiness(root, { host, sessionId: input.session_id, files: paths });
     if (!readiness.ready) return deny(`GraphWard task readiness blocked this mutation: ${readiness.blockers.join(' ')}. Discover → clarify → confirm scope → prepare_task_context → implement → validate.`);
-    if (!paths.length && !input.tool_input?.command && !input.tool_name?.startsWith('mcp__')) return deny('Mutation payload does not expose a supported target.');
+    if (effect.kind === "edit" && !paths.length) return deny('Mutation payload does not expose a supported target.');
   }
 
-  const targetPath = input.tool_input?.file_path;
+  if (effect.kind !== "edit") return ALLOW;
+  const targetPath = input.tool_input?.file_path ?? effect.paths[0];
   if (!targetPath || !isInsideProject(root, targetPath)) return ALLOW;
   const rel = path.relative(root, path.resolve(root, targetPath)).replace(/\\/g, "/");
   if (!isSourceFile(rel)) return ALLOW; // editing docs/config/intelligence is always fine
