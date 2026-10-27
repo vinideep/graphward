@@ -160,7 +160,14 @@ async function scoreDocument(docPath: string, root: string, content: string, con
     }
     // Content first: a source whose bytes match what was recorded when this document
     // was last verified has not drifted, whatever its commit dates say.
-    if (recorded[evPath] && recorded[evPath] === await currentHash(evPath)) continue;
+    if (recorded[evPath]) {
+      if (recorded[evPath] === await currentHash(evPath)) continue;
+      // A content mismatch is direct drift evidence even before a commit and
+      // regardless of a document's timestamp. Timestamps are fallback only.
+      score = Math.min(score, 49);
+      staleSources.push({ file: evPath, modifiedAt: now.toISOString(), daysAfterDoc: 0 });
+      continue;
+    }
     const fileModified = gitLastModified(evPath, root, context.gitDates);
     if (fileModified && docLastUpdated && fileModified > docLastUpdated) {
       const days = daysBetween(docLastUpdated, fileModified);

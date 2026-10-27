@@ -63,3 +63,23 @@ Root completed sequential A–F product changes after the installed orchestrator
 ### Final local verification and native review
 
 Final source-stable byte-bound verification passes 488/488. Actual pinned Graphify ancestor ignore pruning and default `.` context scope rejection were repaired and regressed. Both providers refreshed locally. Exact candidate Claude native canary passes all three scenarios with accepted provider contribution and denied unapproved Write. Following explicit user authorization, native Codex hooks/list confirms all five checkout hooks trusted and enabled; no trust or permission bypass used. Qualification explicitly fails on unavailable current-candidate Codex/Antigravity and held-out measurements. No publication, push, global settings or external-project edits.
+
+## 2026-10-18 — measurement foundation approval
+
+The user approved Phase 0/1 and sent the exact revision-2 challenge; native readiness reports host-observed confirmation. Context preparation c3beec56-375a-4ea1-8ffa-dcf848daaa55 made both providers current with no fallback decision. Excluded stale prose and contested graph relationships remain explicit limits. IMP-016 preceded product edits. Starting 17 paths (12 product source/tests) were copied with manifest SHA256 4b3381b76ad67660fa23ee0439b00720d0cc636cd1d63e0f3fa6e47ee474a057. Pre-edit verify passed npm test in 169436 ms. FEAT-006 is approved; later phases, paid experiments, release changes and external updates are not. No commit, stash, reset or trust bypass.
+
+## 2026-10-18 — IMP-016 local validation
+
+Phase 0/1 implemented. Integrated focused 44/44 and full real verify 578/578 pass, no failures/skips; 24 changed paths covered. Independent review findings fixed and regression-tested. Original 12 product source/test bytes, index and HEAD preserve against anchored baseline. Existing release scripts unchanged. Providers/index/graph/claims synchronized; 556/556 claims verify and new measurement knowledge verifies. Global validation remains needs-attention because 9 pre-existing documents are unverified (46 stale/unrecorded references, 5 relocated). FEAT-006 stays in-review; tickets 11–13 done. No efficacy, native-host, CI or release qualification is inferred.
+
+## 2026-10-19 — IMP-017 / FEAT-007 local completion
+
+Native revision2 confirmation and current provider context preceded source edits. Source-verified old knowledge drift was repaired, baseline578 passed, archive was pinned, and named graphward plus a disjoint renderer owner implemented the bounded unit. Independent review findings were corrected; integrated focused120, full594 and final independent11 checks passed. Combined validation/construction gate passed, citations472 and claims560 current, freshness Proceed38.301outside-scope paths and6foundation hashes preserved. No source drift during checks, no commit/push/deploy/global update or real experiment. CHG-008 and the Phase2 implementation report retain namespace, receipt/budget and qualification limits.
+
+AI-DLC: Construction -> Validated -> Complete (Phase2 local unit).
+
+## AUDIT-REPAIR-20261026 — local completion, 2026-10-27
+
+All45audited corrections applied as81owned product paths after frozen candidate validation. Candidate and original-root full suites658/658; integration16/16; replay36/36; deterministic validation and Construction exit pass.37affected canonical artifacts synchronized,152citations and603claims verified, freshness Proceed. Exact evidence/limits: `.graphward/reports/repairs-2026-10-26/DELIVERY.md`. Existing installedmanifest1.3.1/1.3.3drift and desktop MCP reconnect remain activation work; no native/remote/outcome claim.
+
+AI-DLC: Construction -> Local repairs verified and synchronized -> Complete locally

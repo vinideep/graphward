@@ -120,6 +120,10 @@ export function hasOurEntries(existingSource: string | undefined, oursSource: st
  * caller can delete the file instead of leaving an empty husk.
  */
 export function removeOurEntries(existingSource: string | undefined): string | null {
+  if (existingSource !== undefined) {
+    const parsed = JSON.parse(existingSource);
+    if (!isObject(parsed)) throw new Error("Existing shared hook configuration must be an object; preserved.");
+  }
   const prune = (value: unknown, parentKey?: string, key?: string): unknown => {
     // enabledMcpjsonServers: remove only our server name, keep the rest.
     if (key === ENABLED_MCP_JSON_KEY && Array.isArray(value)) {

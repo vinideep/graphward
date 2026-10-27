@@ -1,7 +1,10 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile, realpath } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import type { GateOptions, GateResult } from "./index.js";
+import { createReviewBinding, validateReviewBinding, type ReviewBinding } from "./review-evidence.js";
+import { createHash } from "node:crypto";
+import { containedManagedTarget } from "../manifest/paths.js";
 
 export interface ApiSnapshotExchange {
   request: { method: string; path: string; headers?: Record<string, string>; body?: unknown };
@@ -9,21 +12,26 @@ export interface ApiSnapshotExchange {
 }
 
 export interface ApiSnapshotManifest {
-  schemaVersion: 1;
+  schemaVersion: 2;
   unit: string;
   capturedAt: string;
   volatilePaths: string[];
   sensitivePaths: string[];
   sourceFiles: string[];
   exchange: ApiSnapshotExchange;
+  binding: ReviewBinding;
 }
 
 export interface ApiSnapshotReplayReport {
-  schemaVersion: 1;
+  schemaVersion: 2;
   unit: string;
   replayedAt: string;
   status: "pass" | "fail";
   differences: string[];
+  binding: ReviewBinding;
+  manifestHash: string;
+  requestHash: string;
+  responseEvidence: "supplied";
 }
 
 const SECRET_HEADER = /^(authorization|cookie|set-cookie|proxy-authorization|x-api-key)$/i;
@@ -71,9 +79,10 @@ export function normalizeApiExchange(
   return copy;
 }
 
-function snapshotDir(root: string, unit: string): string {
+async function snapshotDir(root: string, unit: string): Promise<string> {
   const safe = unit.replace(/[^a-zA-Z0-9._-]+/g, "-");
-  return path.join(root, ".graphward", "snapshots", safe);
+  if (!safe || safe === "." || safe === "..") throw new Error("Invalid API snapshot unit path.");
+  return path.dirname(await containedManagedTarget(root, `.graphward/snapshots/${safe}/manifest.json`));
 }
 
 export async function captureApiSnapshot(
@@ -83,20 +92,21 @@ export async function captureApiSnapshot(
   options: { volatilePaths?: string[]; sensitivePaths?: string[]; sourceFiles?: string[] } = {},
 ): Promise<{ path: string; manifest: ApiSnapshotManifest }> {
   if (!options.sourceFiles?.length) throw new Error("API snapshot capture requires at least one response-producing source file for gate coverage.");
-  const dir = snapshotDir(root, unit);
+  const dir = await snapshotDir(root, unit);
   await mkdir(dir, { recursive: true });
   const manifest: ApiSnapshotManifest = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     unit,
     capturedAt: new Date().toISOString(),
     volatilePaths: options.volatilePaths ?? [],
     sensitivePaths: options.sensitivePaths ?? [],
     sourceFiles: [...new Set(options.sourceFiles ?? [])].sort(),
     exchange: normalizeApiExchange(exchange, options),
+    binding: await createReviewBinding(root, options.sourceFiles),
   };
   const target = path.join(dir, "manifest.json");
   await writeFile(target, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
-  return { path: path.relative(root, target).replace(/\\/g, "/"), manifest };
+  return { path: path.relative(await realpath(root), target).replace(/\\/g, "/"), manifest };
 }
 
 function diffValues(expected: unknown, actual: unknown, at = "$", out: string[] = []): string[] {
@@ -116,11 +126,13 @@ function diffValues(expected: unknown, actual: unknown, at = "$", out: string[] 
 }
 
 export async function replayApiSnapshot(root: string, unit: string, actual: ApiSnapshotExchange): Promise<ApiSnapshotReplayReport> {
-  const dir = snapshotDir(root, unit);
+  const dir = await snapshotDir(root, unit);
+  await containedManagedTarget(root, `.graphward/snapshots/${path.basename(dir)}/replay-report.json`);
   const manifest = JSON.parse(await readFile(path.join(dir, "manifest.json"), "utf8")) as ApiSnapshotManifest;
+  if (manifest.schemaVersion !== 2 || !Array.isArray(manifest.sourceFiles) || !manifest.sourceFiles.length || !manifest.exchange?.request || !manifest.exchange?.response) throw new Error("Snapshot baseline is invalid or legacy; capture a bound baseline again.");
   const normalized = normalizeApiExchange(actual, { volatilePaths: manifest.volatilePaths, sensitivePaths: manifest.sensitivePaths });
   const differences = diffValues(manifest.exchange, normalized);
-  const report: ApiSnapshotReplayReport = { schemaVersion: 1, unit, replayedAt: new Date().toISOString(), status: differences.length ? "fail" : "pass", differences };
+  const report: ApiSnapshotReplayReport = { schemaVersion: 2, unit, replayedAt: new Date().toISOString(), status: differences.length ? "fail" : "pass", differences, binding: await createReviewBinding(root, manifest.sourceFiles), manifestHash: createHash("sha256").update(JSON.stringify(manifest)).digest("hex"), requestHash: createHash("sha256").update(JSON.stringify(normalized.request)).digest("hex"), responseEvidence: "supplied" };
   await writeFile(path.join(dir, "replay-report.json"), `${JSON.stringify(report, null, 2)}\n`, "utf8");
   return report;
 }
@@ -138,20 +150,26 @@ export async function apiSnapshotGate(root: string, options: GateOptions = {}): 
   if (!affected.length) return { gate: "api-snapshot", status: "skipped", summary: "No response-producing surface changed.", findings: [], applicable: false, required: false, reason: "no API response surface in changed files" };
   const snapshots = path.join(root, ".graphward", "snapshots");
   if (!existsSync(snapshots)) return { gate: "api-snapshot", status: "unavailable", summary: "API response changed but no snapshot baseline exists.", findings: [{ severity: "error", message: `Capture and replay snapshots for: ${affected.join(", ")}` }], applicable: true, required: true };
+  try { await containedManagedTarget(root,".graphward/snapshots/.scope-check"); }
+  catch { return {gate:"api-snapshot",status:"unavailable",summary:"Snapshot evidence directory is outside the project scope.",findings:[{severity:"error",message:"Use a contained snapshot directory."}],applicable:true,required:true}; }
   const { readdir } = await import("node:fs/promises");
   const units = await readdir(snapshots, { withFileTypes: true });
   const reports: Array<{ report: ApiSnapshotReplayReport; manifest: ApiSnapshotManifest }> = [];
   for (const unit of units.filter((entry) => entry.isDirectory())) {
-    const reportPath = path.join(snapshots, unit.name, "replay-report.json");
-    const manifestPath = path.join(snapshots, unit.name, "manifest.json");
-    if (existsSync(reportPath) && existsSync(manifestPath)) reports.push({
-      report: JSON.parse(await readFile(reportPath, "utf8")) as ApiSnapshotReplayReport,
-      manifest: JSON.parse(await readFile(manifestPath, "utf8")) as ApiSnapshotManifest,
-    });
+    const reportPath = await containedManagedTarget(root, `.graphward/snapshots/${unit.name}/replay-report.json`);
+    const manifestPath = await containedManagedTarget(root, `.graphward/snapshots/${unit.name}/manifest.json`);
+    if (existsSync(reportPath) && existsSync(manifestPath)) {
+      try {
+        const report = JSON.parse(await readFile(reportPath, "utf8")) as ApiSnapshotReplayReport;
+        const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as ApiSnapshotManifest;
+        if (manifest.schemaVersion !== 2 || report.schemaVersion !== 2 || manifest.unit !== report.unit || !Array.isArray(manifest.sourceFiles) || !manifest.sourceFiles.length || !["pass", "fail"].includes(report.status) || !Array.isArray(report.differences) || !report.differences.every(item => typeof item === "string") || report.status === "pass" && report.differences.length || !Number.isFinite(Date.parse(manifest.capturedAt)) || !Number.isFinite(Date.parse(report.replayedAt)) || Date.parse(report.replayedAt) < Date.parse(manifest.capturedAt) || Date.parse(report.replayedAt) > Date.now() + 60_000 || !manifest.exchange?.request || !manifest.exchange?.response || report.responseEvidence !== "supplied" || report.manifestHash !== createHash("sha256").update(JSON.stringify(manifest)).digest("hex") || report.requestHash !== createHash("sha256").update(JSON.stringify(manifest.exchange.request)).digest("hex") || await validateReviewBinding(root, report.binding, manifest.sourceFiles)) continue;
+        reports.push({report, manifest});
+      } catch { /* Malformed/unbound evidence cannot supply coverage. */ }
+    }
   }
   if (!reports.length) return { gate: "api-snapshot", status: "unavailable", summary: "API snapshot replay evidence is missing.", findings: [{ severity: "error", message: "Run `gw snapshot replay` after integration tests." }], applicable: true, required: true };
   const uncovered = affected.filter((file) => !reports.some(({ manifest }) => manifest.sourceFiles?.includes(file)));
   if (uncovered.length) return { gate: "api-snapshot", status: "unavailable", summary: "API replay evidence does not cover every changed response surface.", findings: uncovered.map((file) => ({ severity: "error" as const, file, message: "No passing snapshot unit declares this changed file in sourceFiles." })), applicable: true, required: true, artifact: ".graphward/snapshots/*/manifest.json" };
   const failed = reports.filter(({ report, manifest }) => report.status === "fail" && manifest.sourceFiles.some((file) => affected.includes(file)));
-  return { gate: "api-snapshot", status: failed.length ? "fail" : "pass", summary: failed.length ? `${failed.length} covered API snapshot replay(s) differ.` : `${affected.length} changed API surface(s) have passing replay evidence.`, findings: failed.flatMap(({ report }) => report.differences.map((message) => ({ severity: "error" as const, message: `${report.unit}: ${message}` }))), applicable: true, required: true, artifact: ".graphward/snapshots/*/replay-report.json" };
+  return { gate: "api-snapshot", status: failed.length ? "fail" : "pass", summary: failed.length ? `${failed.length} covered API snapshot replay(s) differ.` : `${affected.length} changed API surface(s) have candidate-bound supplied-response replay evidence; endpoint execution is not established.`, findings: failed.flatMap(({ report }) => report.differences.map((message) => ({ severity: "error" as const, message: `${report.unit}: ${message}` }))), applicable: true, required: true, artifact: ".graphward/snapshots/*/replay-report.json" };
 }

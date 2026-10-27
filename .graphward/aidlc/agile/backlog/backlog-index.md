@@ -1,9 +1,9 @@
 # Backlog Index
 
 ## Counters
-- next-epic: 2
-- next-feature: 6
-- next-ticket: 11
+- next-epic: 3
+- next-feature: 8
+- next-ticket: 17
 
 ## Status Rollup
 | ID | Type | Title | Parent | Status | Approval | Priority |
@@ -24,3 +24,12 @@
 | TKT-008 | ticket | Build ContextPackV2 and MCP tools | FEAT-004 | todo | — | P0 |
 | TKT-009 | ticket | Repair doctor, versions, and configuration | FEAT-005 | todo | — | P1 |
 | TKT-010 | ticket | Refresh skills, tests, benchmark, and docs | FEAT-005 | todo | — | P1 |
+| EPIC-002 | epic | Measured quality and efficiency | — | in-progress | — | P0 |
+| FEAT-006 | feature | Baseline and trustworthy efficiency measurement | EPIC-002 | done | approved | P0 |
+| TKT-011 | ticket | Immutable dirty-state baseline | FEAT-006 | done | — | P0 |
+| TKT-012 | ticket | Complete and idempotent token accounting | FEAT-006 | done | — | P0 |
+| TKT-013 | ticket | Separate three-arm efficiency comparison | FEAT-006 | done | — | P0 |
+| FEAT-007 | feature | Opt-in concise workflow and safe request routing | EPIC-002 | done | approved | P0 |
+| TKT-014 | ticket | Concise mode, intent and rendering | FEAT-007 | done | — | P0 |
+| TKT-015 | ticket | Authority boundaries and session hooks | FEAT-007 | done | — | P0 |
+| TKT-016 | ticket | Integrated validation and scoped sync | FEAT-007 | done | — | P0 |

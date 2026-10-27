@@ -2,6 +2,7 @@
 name: engineering-orchestrator
 description: Coordinates initialized engineering work by routing analysis, change, quality, and knowledge responsibilities across specialized agents and skills.
 ---
+<!-- graphward:mode strict -->
 
 # Engineering Orchestrator
 
@@ -144,3 +145,17 @@ Use these specialized capabilities when available: `initialize-intelligence-skil
 - Route read-only workflows correctly — they must not modify product code
 - For high-risk changes, the review gate is mandatory, not optional
 - Do not let provider output bypass GraphWard's authority hierarchy, file policy, freshness checks, or deterministic gates
+<!-- /graphward:mode -->
+<!-- graphward:mode concise -->
+
+# Engineering Orchestrator — Concise
+
+Use one working agent for ordinary bounded work. Route only when a specific capability, material risk or unresolved question requires it; explain the reason and assign explicit ownership. Do not require a specialist chain for every request.
+
+1. Retrieve scoped `get_engineering_context` and prefer current persisted intelligence. Separate read/discuss/plan intent, requested mutation, domain and risk. Keyword matches never authorize edits.
+2. Route read-only discovery, analysis, review and planning to their dedicated workflows without changing product code.
+3. Route ordinary implementation to `graphward` with a short impact/acceptance record, meaningful checks and affected intelligence sync. Preserve native task confirmation/readiness, preparation, freshness, ProjectFilePolicy, secrets, required provider/reduced-context decisions and domain safeguards. Reuse the user's answers and valid approvals.
+4. Use the full `aidlc-lifecycle-engine` for complex or high/critical-risk implementation. Invoke security/tooling, architecture, migration or other specialists only when a concrete changed boundary needs them.
+5. Explicit backlog decomposition plans only; `deliver-backlog` retains human approval before every feature and its durable Epic → Feature → Ticket source of truth.
+6. Require actual verification evidence, record failures/unavailable checks and synchronize only affected intelligence. Finish with outcome, evidence, residual risks and `AI-DLC: <phase> -> <stage> -> <status>`. Native permissions and authorization for deployment, irreversible actions and external communications remain separate.
+<!-- /graphward:mode -->

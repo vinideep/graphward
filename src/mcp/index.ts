@@ -10,7 +10,7 @@ import { generateBrief, readBrief } from "../brief/index.js";
 import { shape, terseNode, terseEdge, packRows } from "./shaper.js";
 import { loadGwConfig } from "../config/index.js";
 import { packageVersion } from "../version.js";
-import { resolveRuntimeInvocation } from "../runtime/invocation.js";
+import { resolveRuntimeInvocation, runtimeIdentityStatus } from "../runtime/invocation.js";
 import { MCP_API_VERSION } from "../graph/schema.js";
 import { createConsolidatedRegistry } from "./consolidated.js";
 import type { ApiSnapshotExchange } from "../gates/api-snapshot.js";
@@ -265,7 +265,7 @@ const TOOLS = [
   {
     name: "evaluate_counterfactual",
     description:
-      "Stage 2 Post-Patch Counterfactual Graph Branch: Evaluates tentative in-memory patch overlays before committing, detecting newly introduced dependency cycles and broken call contracts with 100% precision.",
+      "Evaluates tentative patch overlays for dependency cycles and missing graph endpoints; signature and behavioral compatibility require separate tests.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -363,7 +363,7 @@ export async function startMcpServer(projectRoot: string): Promise<void> {
   const consolidated = await createConsolidatedRegistry(projectRoot);
   const server = new Server(
     { name: "graphward", version: await packageVersion() },
-    { capabilities: { tools: {}, experimental: { graphward: { apiVersion: MCP_API_VERSION } } } },
+    { capabilities: { tools: {}, experimental: { graphward: { apiVersion: MCP_API_VERSION, runtime: runtimeIdentityStatus() } } } },
   );
 
   // Advertise only the cohesive GraphWard control-plane surface. The legacy tools
@@ -377,6 +377,10 @@ export async function startMcpServer(projectRoot: string): Promise<void> {
     const text = (t: string, isError = false) => ({ content: [{ type: "text", text: t }], ...(isError ? { isError: true } : {}) });
 
     try {
+      if (name !== "provider_status") {
+        const runtime = runtimeIdentityStatus();
+        if (!runtime.current) throw new Error(`GraphWard runtime generation changed after this MCP process loaded. Restart this connection before using current evidence. Loaded: ${runtime.loadedGeneration ?? "unavailable"}; disk: ${"diskGeneration" in runtime ? runtime.diskGeneration : "invalid"}.`);
+      }
       const root = toCanonicalPath(typeof args.root === "string" ? args.root : projectRoot);
       if (root !== toCanonicalPath(projectRoot)) throw new Error("MCP connection is bound to another project; reconnect with the intended project root.");
       const cfg = await loadBudgetConfig(root);
@@ -393,7 +397,7 @@ export async function startMcpServer(projectRoot: string): Promise<void> {
             { budget: budgetOf(args, cfg, "who_calls", 1500), hints: { callers: { hint: "who_calls <caller> transitive=true (packed: {cols,rows})", mustKeep: true }, matched: { hint: "find_symbol <name>", mustKeep: true } } },
           ));
         }
-        return text(JSON.stringify(await consolidated.execute(name, { ...args, root }, { signal: extra.signal }), null, 2));
+        return text(JSON.stringify(await consolidated.execute(name, { ...args, root }, { signal: extra.signal })));
       }
       if (name === "get_brief") {
         await ensureFreshGraph(root);

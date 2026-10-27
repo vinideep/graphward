@@ -6,6 +6,7 @@ import path from "node:path";
 import test from "node:test";
 
 import { parseCceSearchOutput, runCceIndex, searchCodeContext } from "../dist/providers/cce.js";
+import { computeProviderSourceSnapshot } from "../dist/providers/workspace.js";
 
 const digest = (value) => createHash("sha256").update(value).digest("hex");
 
@@ -29,13 +30,14 @@ async function indexedFixture() {
   await mkdir(path.join(provider, "cce", "project", "storage"), { recursive: true });
   await writeFile(path.join(root, "src", "auth.ts"), content);
   await writeFile(path.join(provider, "cce", "project", "workspace", "src", "auth.ts"), content);
+  const sourceSnapshot = await computeProviderSourceSnapshot(root);
   await writeFile(path.join(provider, "cce", "run.json"), JSON.stringify({
     schemaVersion: 1,
     projectRoot: await import("../dist/providers/workspace.js").then(m=>m.toCanonicalPath(root)),
     provider: "cce",
     providerVersion: "0.4.25",
     generatedAt: new Date().toISOString(),
-    workspaceHash: digest(`src/auth.ts:${digest(content)}`),
+    workspaceHash: sourceSnapshot.workspaceHash,
     sourceHashes: { "src/auth.ts": digest(content) },
     indexedPath: path.join(provider, "cce", "project", "workspace"),
     storagePath: path.join(provider, "cce", "project", "storage"),

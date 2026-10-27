@@ -6,8 +6,10 @@ import { latestOpenFlight } from "../flight/index.js";
 import { loadOpenQuestions } from "./state.js";
 import { validateAllBacklogTickets } from "./backlog-graph.js";
 import type { Phase, GateCheckResult } from "./types.js";
-import { checkTaskReadiness, loadTask } from "./task-contract.js";
-import { changedFiles } from "../verify/index.js";
+import { checkTaskReadiness, loadTask, scopeMatches } from "./task-contract.js";
+import { changedFiles, coverageFor, readRecords, checkSpecificationHash, RECEIPT_SCHEMA_VERSION, isGitWorkTree, nonGitProjectFiles } from "../verify/index.js";
+import { realpath } from "node:fs/promises";
+import { runProcess } from "../process/index.js";
 
 function aidlcDir(root: string): string {
   return path.join(root, ".graphward", "aidlc");
@@ -100,6 +102,10 @@ export async function checkInceptionExit(root: string, taskId?: string): Promise
 export async function checkConstructionExit(root: string, taskId?: string): Promise<GateCheckResult> {
   const missing: string[] = [];
   const recs: string[] = [];
+  const readiness = await checkTaskReadiness(root, {taskId});
+  if (!readiness.ready) missing.push(...readiness.blockers);
+  const task = taskId ? await loadTask(root, taskId) : undefined;
+  if (!task || task.contract.acceptanceCriteria.some(criterion => !task.changeMapping?.some(entry => entry.criterion === criterion && entry.files.length > 0 && entry.tests.length > 0 && entry.rationale?.trim()))) missing.push("Acceptance criteria require a complete change/test evidence mapping.");
 
   // 1. Check active open flights. A flight opened before the task was confirmed belongs to
   // earlier work: it still deserves closing, but it does not describe this task's changes.
@@ -114,10 +120,19 @@ export async function checkConstructionExit(root: string, taskId?: string): Prom
 
   // 2. Check the same deterministic registry used by validate_change, scoped to the
   // working-tree changes, so pre-existing findings elsewhere do not block this exit.
-  const changed = await changedFiles(root);
+  const changed = await isGitWorkTree(root) ? await changedFiles(root) : await nonGitProjectFiles(root);
+  const coverage = await coverageFor(root, changed);
+  const records = await readRecords(root);
+  const specification = await checkSpecificationHash(root);
+  const currentRoot = await realpath(root);
+  const headResult = await runProcess({command:"git",args:["rev-parse","HEAD"],cwd:root});
+  const currentHead = headResult.exitCode === 0 ? headResult.stdout.trim() : null;
+  const executed = (coverage.record ? [coverage.record] : records).some(record => record.schemaVersion === RECEIPT_SCHEMA_VERSION && record.verdict === "pass" && record.requiredChecksSatisfied === true && record.projectRoot === currentRoot && record.head === currentHead && record.checkSpecificationHash === specification && record.mode === "baseline" && !record.skippedCommands?.length && record.commands.length > 0 && (!task?.confirmation || Date.parse(record.createdAt) >= Date.parse(task.confirmation.confirmedAt)));
+  if (!coverage.covered || !executed) missing.push("Current candidate requires a complete executed baseline verification receipt after task confirmation.");
+  const gateChanged = task ? changed.filter(file => task.contract.scope.some(scope => scopeMatches(scope,file))) : changed;
   for (const gate of GATE_NAMES) {
     try {
-      const res = await runGate(gate, root, { risk: "medium", changedFiles: changed });
+      const res = await runGate(gate, root, { risk: "medium", changedFiles: gateChanged });
       if (res.status === "fail" || (res.status === "unavailable" && res.required)) {
         missing.push(`Safety gate failed: ${gate} (${res.summary})`);
         recs.push(`Fix ${gate} findings before exiting construction`);
@@ -128,13 +143,14 @@ export async function checkConstructionExit(root: string, taskId?: string): Prom
     }
   }
 
-  const passed = missing.length === 0;
+  const blocking = await getBlockingOpenQuestions(root);
+  const passed = missing.length === 0 && blocking.length === 0;
   return {
     phase: "construction",
     status: passed ? "pass" : "blocked",
     score: passed ? 100 : Math.max(0, 100 - missing.length * 30),
     missingPrerequisites: missing,
-    blockingQuestions: [],
+    blockingQuestions: blocking,
     recommendations: recs,
   };
 }

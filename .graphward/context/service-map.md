@@ -1,5 +1,5 @@
 # Service Map
-<!-- freshness: last_checked=2026-10-13 -->
+<!-- freshness: last_checked=2026-10-27 -->
 
 GraphWard is a local package, not a network service topology.
 

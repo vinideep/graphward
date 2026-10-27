@@ -164,7 +164,7 @@ export class ExecutionFlowTracker {
         route: options.route,
         testSuite: options.testSuite,
         environment: options.environment ?? "dev",
-        count: edge.invocationCount,
+        count: 1, // store accepts deltas, while the tracker holds the absolute count
         lastObserved: now,
       });
     }

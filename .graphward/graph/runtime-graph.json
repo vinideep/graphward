@@ -1,332 +1,415 @@
 {
   "schemaVersion": 1,
   "graphType": "runtime",
-  "generatedAt": "2026-07-13T00:00:00.000Z",
+  "generatedAt": "2026-10-27T03:35:25.549835Z",
+  "updatedAt": "2026-10-27T03:35:25.549835Z",
   "scope": "graphward-OS",
   "nodes": [
     {
       "id": "entrypoint:cli-main",
       "kind": "entrypoint",
-      "label": "cli/index.ts main()",
+      "label": "CLI main(), argument parsing and command dispatch",
       "path": "src/cli/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/cli/index.ts:273-276"
+        "src/cli/index.ts"
       ]
     },
     {
       "id": "entrypoint:mcp-cli",
       "kind": "entrypoint",
-      "label": "mcp/cli.ts",
+      "label": "MCP stdio launcher for one bound project",
       "path": "src/mcp/cli.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/mcp/cli.ts:1-10"
-      ]
-    },
-    {
-      "id": "middleware:parse-args",
-      "kind": "middleware",
-      "label": "parseArgs()",
-      "path": "src/cli/index.ts",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/cli/index.ts:81-232"
-      ]
-    },
-    {
-      "id": "handler:hook-command",
-      "kind": "handler",
-      "label": "hook command branch (fast-path)",
-      "path": "src/cli/index.ts",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/cli/index.ts:276-292"
-      ]
-    },
-    {
-      "id": "handler:install-command",
-      "kind": "handler",
-      "label": "install/create/update/uninstall branches",
-      "path": "src/cli/index.ts",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/cli/index.ts:496-537"
-      ]
-    },
-    {
-      "id": "handler:map-command",
-      "kind": "handler",
-      "label": "map command branch",
-      "path": "src/cli/index.ts",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/cli/index.ts:450-461"
+        "src/mcp/cli.ts"
       ]
     },
     {
       "id": "handler:mcp-tool-dispatch",
       "kind": "handler",
-      "label": "CallToolRequestSchema handler",
+      "label": "MCP tool dispatch rejects loaded/disk generation drift except provider_status",
       "path": "src/mcp/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/mcp/index.ts:123-246"
+        "src/mcp/index.ts"
+      ]
+    },
+    {
+      "id": "service-layer:consolidated-registry",
+      "kind": "service-layer",
+      "label": "Consolidated GraphWard tool schemas, handlers and read-only context formats",
+      "path": "src/mcp/consolidated.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/mcp/consolidated.ts"
+      ]
+    },
+    {
+      "id": "service-layer:runtime-identity",
+      "kind": "service-layer",
+      "label": "Finalized module/bin generation and loaded/disk process identity",
+      "path": "src/runtime/invocation.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/runtime/invocation.ts"
       ]
     },
     {
       "id": "service-layer:hooks-engine",
       "kind": "service-layer",
-      "label": "runHook() dispatch",
+      "label": "Effect-aware readiness/freshness and receipt-based Stop dispatch",
       "path": "src/hooks/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/hooks/index.ts:696-711"
-      ],
-      "hotness": "high"
-    },
-    {
-      "id": "service-layer:graph-builder",
-      "kind": "service-layer",
-      "label": "buildDependencyGraph()",
-      "path": "src/graph/builders/dependency.ts",
-      "confidence": "verified",
-      "metadata": {
-        "hotness": "high"
-      },
-      "evidence": [
-        "src/graph/builders/dependency.ts:77-133"
+        "src/hooks/index.ts"
       ]
     },
     {
-      "id": "service-layer:impact-analysis",
+      "id": "service-layer:task-contract",
       "kind": "service-layer",
-      "label": "analyzeImpact()",
-      "path": "src/graph/index.ts",
+      "label": "Native confirmation, canonical task scope and prepared-context readiness",
+      "path": "src/aidlc/task-contract.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/graph/index.ts:287-345"
+        "src/aidlc/task-contract.ts"
+      ]
+    },
+    {
+      "id": "service-layer:context-preparation",
+      "kind": "service-layer",
+      "label": "Explicit bounded local provider/graph context refresh",
+      "path": "src/context/preparation.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/context/preparation.ts"
       ]
     },
     {
       "id": "service-layer:context-assembly",
       "kind": "service-layer",
-      "label": "getContext()",
-      "path": "src/context/index.ts",
+      "label": "Knowledge-first getEngineeringContext() with complete estimated payload accounting",
+      "path": "src/context/orchestrator.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/context/index.ts:58-171"
+        "src/context/orchestrator.ts"
       ]
     },
     {
-      "id": "service-layer:claims-verify",
+      "id": "service-layer:verification",
       "kind": "service-layer",
-      "label": "verifyClaims()",
-      "path": "src/claims/index.ts",
+      "label": "Version3 required-check receipts bound to source, execution spec and runtime",
+      "path": "src/verify/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/claims/index.ts:215-241"
+        "src/verify/index.ts"
       ]
     },
     {
       "id": "service-layer:gate-dispatch",
       "kind": "service-layer",
-      "label": "runGate()",
+      "label": "Typed gates preserve fail, skipped and unavailable evidence states",
       "path": "src/gates/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/gates/index.ts:142-150"
+        "src/gates/index.ts"
       ]
     },
     {
       "id": "service-layer:freshness-scoring",
       "kind": "service-layer",
-      "label": "computeFreshness()",
+      "label": "Recorded-source hash drift and citation freshness scoring",
       "path": "src/freshness/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/freshness/index.ts:300-322"
-      ]
-    },
-    {
-      "id": "service-layer:installer",
-      "kind": "service-layer",
-      "label": "install()/applyRendered()",
-      "path": "src/installer/index.ts",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/installer/index.ts:156-213"
-      ]
-    },
-    {
-      "id": "function:extract-imports",
-      "kind": "function",
-      "label": "extractImports() per-language dispatch",
-      "path": "src/graph/parsers/imports.ts",
-      "confidence": "verified",
-      "metadata": {
-        "hotness": "high — invoked once per source file, batched 50 at a time"
-      },
-      "evidence": [
-        "src/graph/parsers/imports.ts:509-530"
-      ]
-    },
-    {
-      "id": "function:validate-graph",
-      "kind": "function",
-      "label": "validateGraph()",
-      "path": "src/graph/schema.ts",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/graph/schema.ts:463-485"
+        "src/freshness/index.ts"
       ]
     },
     {
       "id": "background:telemetry-record",
       "kind": "background",
-      "label": "recordFromTranscript() (best-effort, fire-and-forget on Stop hook)",
+      "label": "Stop awaits best-effort supplied-parent telemetry; missing child scope stays incomplete",
       "path": "src/telemetry/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/telemetry/index.ts:69-78",
-        "src/hooks/index.ts:574-581"
+        "src/telemetry/index.ts"
+      ]
+    },
+    {
+      "id": "service-layer:initialization",
+      "kind": "service-layer",
+      "label": "Adapter/config/provider preparation then canonical graph, claims and bootstrap knowledge",
+      "path": "src/orchestrators/initialize.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/initialize.ts"
+      ]
+    },
+    {
+      "id": "service-layer:setup",
+      "kind": "service-layer",
+      "label": "Reconcile explicitly selected adapters on new and existing installations",
+      "path": "src/orchestrators/setup.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/setup.ts"
+      ]
+    },
+    {
+      "id": "service-layer:configuration",
+      "kind": "service-layer",
+      "label": "Schema2 normalization; invalid/unreadable JSON throws with original bytes preserved",
+      "path": "src/config/index.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/config/index.ts"
+      ]
+    },
+    {
+      "id": "service-layer:installer",
+      "kind": "service-layer",
+      "label": "Contained managed writes, ignore-rule merge and malformed-setting conflict preservation",
+      "path": "src/installer/index.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/installer/index.ts"
+      ]
+    },
+    {
+      "id": "service-layer:managed-paths",
+      "kind": "service-layer",
+      "label": "Manifest/managed lexical and realpath containment checks",
+      "path": "src/manifest/paths.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/manifest/paths.ts"
+      ]
+    },
+    {
+      "id": "service-layer:provider-manager",
+      "kind": "service-layer",
+      "label": "Pinned immutable releases, exact selected-release activation probe and rollback",
+      "path": "src/providers/manager.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/providers/manager.ts"
+      ]
+    },
+    {
+      "id": "service-layer:graphify",
+      "kind": "service-layer",
+      "label": "Structural extraction in a policy-approved disposable mirror",
+      "path": "src/providers/graphify.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/providers/graphify.ts"
+      ]
+    },
+    {
+      "id": "service-layer:cce",
+      "kind": "service-layer",
+      "label": "Policy-scoped local index/current-span retrieval with explicit fallback",
+      "path": "src/providers/cce.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/providers/cce.ts"
+      ]
+    },
+    {
+      "id": "service-layer:process-runner",
+      "kind": "service-layer",
+      "label": "Asynchronous process-group termination and bounded stream teardown",
+      "path": "src/process/index.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/process/index.ts"
+      ]
+    },
+    {
+      "id": "service-layer:graph-facade",
+      "kind": "service-layer",
+      "label": "Native graph refresh/reconciliation and trusted factual queries",
+      "path": "src/graph/index.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/graph/index.ts"
+      ]
+    },
+    {
+      "id": "service-layer:graph-builder",
+      "kind": "service-layer",
+      "label": "Native dependency/call graph extraction from approved source",
+      "path": "src/graph/builders/dependency.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/graph/builders/dependency.ts"
+      ]
+    },
+    {
+      "id": "service-layer:impact-analysis",
+      "kind": "service-layer",
+      "label": "Trusted-edge direct/indirect impact traversal",
+      "path": "src/graph/index.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/graph/index.ts"
+      ]
+    },
+    {
+      "id": "service-layer:claims-verify",
+      "kind": "service-layer",
+      "label": "Re-derive source facts and verify claim evidence status",
+      "path": "src/claims/index.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/claims/index.ts"
+      ]
+    },
+    {
+      "id": "function:extract-imports",
+      "kind": "function",
+      "label": "Compiler-backed TS/JS and language-specific import extraction",
+      "path": "src/graph/parsers/imports.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/graph/parsers/imports.ts"
+      ]
+    },
+    {
+      "id": "function:validate-graph",
+      "kind": "function",
+      "label": "Validate graph shape, duplicate identities and edge endpoints",
+      "path": "src/graph/schema.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/graph/schema.ts"
+      ]
+    },
+    {
+      "id": "optional:sqlite-store",
+      "kind": "service-layer",
+      "label": "Explicit-call SQLite/memory storage with capability and synchronous-transaction status",
+      "path": "src/storage/sqlite-store.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/storage/sqlite-store.ts"
+      ]
+    },
+    {
+      "id": "optional:execution-flow",
+      "kind": "service-layer",
+      "label": "Explicit-call runtime observations; persists count deltas only when a store is supplied",
+      "path": "src/runtime/execution-flow.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/runtime/execution-flow.ts"
+      ]
+    },
+    {
+      "id": "optional:resource-governor",
+      "kind": "service-layer",
+      "label": "Current-process metrics and exported local budget policies; no provider-wide enforcement claim",
+      "path": "src/governor/resource-governor.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/governor/resource-governor.ts"
       ]
     }
   ],
   "edges": [
     {
       "from": "entrypoint:cli-main",
-      "to": "middleware:parse-args",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/cli/index.ts:274"
-      ]
-    },
-    {
-      "from": "entrypoint:cli-main",
-      "to": "handler:hook-command",
-      "relation": "delegates",
-      "confidence": "verified",
-      "metadata": {
-        "note": "fast-path, before version/readline setup"
-      },
-      "evidence": [
-        "src/cli/index.ts:276-292"
-      ]
-    },
-    {
-      "from": "handler:hook-command",
       "to": "service-layer:hooks-engine",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/cli/index.ts:277,288"
-      ]
-    },
-    {
-      "from": "service-layer:hooks-engine",
-      "to": "service-layer:freshness-scoring",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/hooks/index.ts:20,342,371"
-      ]
-    },
-    {
-      "from": "service-layer:hooks-engine",
-      "to": "background:telemetry-record",
       "relation": "delegates",
       "confidence": "verified",
       "metadata": {
-        "note": "dynamic import, best-effort"
+        "condition": "hook command fast path"
       },
       "evidence": [
-        "src/hooks/index.ts:427"
+        "src/cli/index.ts",
+        "src/hooks/index.ts"
       ]
     },
     {
       "from": "entrypoint:cli-main",
-      "to": "handler:install-command",
+      "to": "service-layer:initialization",
       "relation": "delegates",
       "confidence": "verified",
-      "metadata": {},
+      "metadata": {
+        "condition": "initialize command"
+      },
       "evidence": [
-        "src/cli/index.ts:496-537"
+        "src/cli/index.ts",
+        "src/orchestrators/initialize.ts"
       ]
     },
     {
-      "from": "handler:install-command",
+      "from": "entrypoint:cli-main",
       "to": "service-layer:installer",
-      "relation": "calls",
+      "relation": "delegates",
       "confidence": "verified",
-      "metadata": {},
+      "metadata": {
+        "condition": "install/create/update/uninstall"
+      },
       "evidence": [
-        "src/cli/index.ts:497,504,513,527"
+        "src/cli/index.ts",
+        "src/installer/index.ts"
       ]
     },
     {
       "from": "entrypoint:cli-main",
-      "to": "handler:map-command",
+      "to": "service-layer:graph-facade",
       "relation": "delegates",
       "confidence": "verified",
-      "metadata": {},
+      "metadata": {
+        "condition": "map and graph query commands"
+      },
       "evidence": [
-        "src/cli/index.ts:450-461"
+        "src/cli/index.ts",
+        "src/graph/index.ts"
       ]
     },
     {
-      "from": "handler:map-command",
-      "to": "service-layer:graph-builder",
-      "relation": "calls",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/cli/index.ts:451-455",
-        "src/graph/index.ts:23-59"
-      ]
-    },
-    {
-      "from": "service-layer:graph-builder",
-      "to": "function:extract-imports",
+      "from": "entrypoint:cli-main",
+      "to": "optional:resource-governor",
       "relation": "calls",
       "confidence": "verified",
       "metadata": {
-        "hotness": "high"
+        "condition": "resources creates a new local governor; does not observe another process"
       },
       "evidence": [
-        "src/graph/builders/dependency.ts:93"
-      ]
-    },
-    {
-      "from": "service-layer:graph-builder",
-      "to": "function:validate-graph",
-      "relation": "returns",
-      "confidence": "verified",
-      "metadata": {
-        "note": "validation happens after build, before write"
-      },
-      "evidence": [
-        "src/graph/index.ts:45"
+        "src/cli/index.ts"
       ]
     },
     {
@@ -336,68 +419,311 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/mcp/cli.ts:6",
-        "src/mcp/index.ts:123"
+        "src/mcp/cli.ts",
+        "src/mcp/index.ts"
       ]
     },
     {
       "from": "handler:mcp-tool-dispatch",
-      "to": "service-layer:graph-builder",
+      "to": "service-layer:runtime-identity",
       "relation": "calls",
       "confidence": "verified",
-      "metadata": {
-        "tool": "map_dependencies"
-      },
+      "metadata": {},
       "evidence": [
-        "src/mcp/index.ts:131"
+        "src/mcp/index.ts",
+        "src/runtime/invocation.ts"
       ]
     },
     {
       "from": "handler:mcp-tool-dispatch",
-      "to": "service-layer:impact-analysis",
+      "to": "service-layer:consolidated-registry",
       "relation": "calls",
       "confidence": "verified",
-      "metadata": {
-        "tool": "analyze_impact"
-      },
+      "metadata": {},
       "evidence": [
-        "src/mcp/index.ts:175"
+        "src/mcp/index.ts",
+        "src/mcp/consolidated.ts"
       ]
     },
     {
-      "from": "handler:mcp-tool-dispatch",
+      "from": "service-layer:consolidated-registry",
       "to": "service-layer:context-assembly",
       "relation": "calls",
       "confidence": "verified",
-      "metadata": {
-        "tool": "get_context"
-      },
+      "metadata": {},
       "evidence": [
-        "src/mcp/index.ts:201"
+        "src/mcp/consolidated.ts",
+        "src/context/orchestrator.ts"
       ]
     },
     {
-      "from": "handler:mcp-tool-dispatch",
-      "to": "service-layer:claims-verify",
+      "from": "service-layer:consolidated-registry",
+      "to": "service-layer:context-preparation",
       "relation": "calls",
       "confidence": "verified",
-      "metadata": {
-        "tool": "verify_claims"
-      },
+      "metadata": {},
       "evidence": [
-        "src/mcp/index.ts:207"
+        "src/mcp/consolidated.ts",
+        "src/context/preparation.ts"
       ]
     },
     {
-      "from": "handler:mcp-tool-dispatch",
+      "from": "service-layer:consolidated-registry",
+      "to": "service-layer:impact-analysis",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/mcp/consolidated.ts",
+        "src/graph/index.ts"
+      ]
+    },
+    {
+      "from": "service-layer:consolidated-registry",
       "to": "service-layer:gate-dispatch",
       "relation": "calls",
       "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/mcp/consolidated.ts",
+        "src/gates/index.ts"
+      ]
+    },
+    {
+      "from": "service-layer:consolidated-registry",
+      "to": "service-layer:task-contract",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/mcp/consolidated.ts",
+        "src/aidlc/task-contract.ts"
+      ]
+    },
+    {
+      "from": "service-layer:hooks-engine",
+      "to": "service-layer:task-contract",
+      "relation": "calls",
+      "confidence": "verified",
       "metadata": {
-        "tool": "run_gate"
+        "condition": "product implementation readiness or requirements-stage confirmed report/handoff writes"
       },
       "evidence": [
-        "src/mcp/index.ts:189"
+        "src/hooks/index.ts",
+        "src/aidlc/task-contract.ts"
+      ]
+    },
+    {
+      "from": "service-layer:hooks-engine",
+      "to": "service-layer:verification",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {
+        "condition": "Stop required coverage; concise unchanged-state exemption and explicit unavailable policy are distinct non-pass branches"
+      },
+      "evidence": [
+        "src/hooks/index.ts",
+        "src/verify/index.ts"
+      ]
+    },
+    {
+      "from": "service-layer:hooks-engine",
+      "to": "service-layer:freshness-scoring",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/hooks/index.ts",
+        "src/freshness/index.ts"
+      ]
+    },
+    {
+      "from": "service-layer:hooks-engine",
+      "to": "background:telemetry-record",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {
+        "condition": "supplied transcript on Stop; awaited best-effort; no complete child scope is implied"
+      },
+      "evidence": [
+        "src/hooks/index.ts",
+        "src/telemetry/index.ts"
+      ]
+    },
+    {
+      "from": "service-layer:initialization",
+      "to": "service-layer:setup",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/initialize.ts",
+        "src/orchestrators/setup.ts"
+      ]
+    },
+    {
+      "from": "service-layer:initialization",
+      "to": "service-layer:configuration",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/initialize.ts",
+        "src/config/index.ts"
+      ]
+    },
+    {
+      "from": "service-layer:initialization",
+      "to": "service-layer:provider-manager",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/initialize.ts",
+        "src/providers/manager.ts"
+      ]
+    },
+    {
+      "from": "service-layer:initialization",
+      "to": "service-layer:graphify",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/initialize.ts",
+        "src/providers/graphify.ts"
+      ]
+    },
+    {
+      "from": "service-layer:initialization",
+      "to": "service-layer:cce",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/initialize.ts",
+        "src/providers/cce.ts"
+      ]
+    },
+    {
+      "from": "service-layer:initialization",
+      "to": "service-layer:graph-facade",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/initialize.ts",
+        "src/graph/index.ts"
+      ]
+    },
+    {
+      "from": "service-layer:setup",
+      "to": "service-layer:installer",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/orchestrators/setup.ts",
+        "src/installer/index.ts"
+      ]
+    },
+    {
+      "from": "service-layer:installer",
+      "to": "service-layer:managed-paths",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/installer/index.ts",
+        "src/manifest/paths.ts"
+      ]
+    },
+    {
+      "from": "service-layer:provider-manager",
+      "to": "service-layer:process-runner",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/providers/manager.ts",
+        "src/process/index.ts"
+      ]
+    },
+    {
+      "from": "service-layer:graphify",
+      "to": "service-layer:process-runner",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/providers/graphify.ts",
+        "src/process/index.ts"
+      ]
+    },
+    {
+      "from": "service-layer:cce",
+      "to": "service-layer:process-runner",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/providers/cce.ts",
+        "src/process/index.ts"
+      ]
+    },
+    {
+      "from": "service-layer:verification",
+      "to": "service-layer:process-runner",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/verify/index.ts",
+        "src/process/index.ts"
+      ]
+    },
+    {
+      "from": "service-layer:graph-facade",
+      "to": "service-layer:graph-builder",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/graph/index.ts",
+        "src/graph/builders/dependency.ts"
+      ]
+    },
+    {
+      "from": "service-layer:graph-facade",
+      "to": "function:validate-graph",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/graph/index.ts",
+        "src/graph/schema.ts"
+      ]
+    },
+    {
+      "from": "service-layer:graph-builder",
+      "to": "function:extract-imports",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/graph/builders/dependency.ts",
+        "src/graph/parsers/imports.ts"
+      ]
+    },
+    {
+      "from": "service-layer:context-assembly",
+      "to": "service-layer:claims-verify",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/context/orchestrator.ts",
+        "src/claims/index.ts"
       ]
     },
     {
@@ -407,22 +733,40 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/context/index.ts:68"
+        "src/context/orchestrator.ts",
+        "src/graph/index.ts"
       ]
     },
     {
       "from": "service-layer:context-assembly",
-      "to": "service-layer:claims-verify",
+      "to": "service-layer:cce",
       "relation": "calls",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/context/index.ts:80"
+        "src/context/orchestrator.ts",
+        "src/providers/cce.ts"
+      ]
+    },
+    {
+      "from": "optional:execution-flow",
+      "to": "optional:sqlite-store",
+      "relation": "calls",
+      "confidence": "verified",
+      "metadata": {
+        "condition": "a caller explicitly supplies a store; records count deltas, not cumulative totals"
+      },
+      "evidence": [
+        "src/runtime/execution-flow.ts",
+        "src/storage/sqlite-store.ts"
       ]
     }
   ],
   "unknowns": [
-    "No function-level call graph exists below the module-boundary level shown here (e.g. individual helper calls within gates/*.ts) — this graph stops at the service-layer/function granularity that was directly traced from source reads this session."
-  ],
-  "updatedAt": "2026-10-14T00:00:00.000Z"
+    "This is a scoped source-reviewed control-flow map, not an observed production/native-host trace or exhaustive function call graph.",
+    "Optional runtime ingestion, SQLite and resource helpers are not shown as default context/MCP dependencies; callers must integrate them explicitly.",
+    "POSIX group termination and Windows taskkill attempts bound the asynchronous runner response; foreign-platform child cleanup and escaped-process behavior need separate qualification.",
+    "A running pre-upgrade MCP process cannot retroactively acquire the loaded/disk generation guard; reconnect/rebuild and exact implementation identity remain separate.",
+    "Host hook delivery, permission/trust configuration, bypass paths, real transcript accounting and coding efficacy need candidate-bound external evidence."
+  ]
 }

@@ -13,14 +13,19 @@
  * managed mutation errors deny the operation. Host-specific coverage limits remain explicit.
  */
 
-import { mkdir, readFile, writeFile, appendFile, rename, stat } from "node:fs/promises";
+import { mkdir, readFile, writeFile, appendFile, rename, stat, lstat, rm } from "node:fs/promises";
 import path from "node:path";
-import { existsSync } from "node:fs";
-import { resolveRuntimeInvocation } from "../runtime/invocation.js";
+import { existsSync, lstatSync, readlinkSync, realpathSync } from "node:fs";
+import { createHash, randomUUID } from "node:crypto";
+import { resolveRuntimeInvocation, quoteShellArgument } from "../runtime/invocation.js";
 import { checkTaskReadiness, observeUserPrompt, observeNativeQuestionResponse } from "../aidlc/task-contract.js";
 import { computeFreshness } from "../freshness/index.js";
 import { defaultGwConfig, loadGwConfig } from "../config/index.js";
 import { toCanonicalPath } from "../providers/workspace.js";
+import { execFile } from "node:child_process";
+import { withLock } from "../manifest/lock.js";
+import type ts from "typescript";
+import { createRequire } from "node:module";
 
 export type HookEvent = "session-start" | "user-prompt-submit" | "pre-tool-use" | "post-tool-use" | "stop";
 
@@ -84,6 +89,9 @@ export interface HookConfig {
   requireValidationOnStop: boolean;
   /** Explicit verification commands; empty means auto-detect from the project. */
   verifyCommands: string[];
+  /** Per-command timeout for `verify`, in ms; unset uses the built-in 15 minutes. */
+  verifyTimeoutMs?: number;
+  unavailableValidationPolicy?: "block" | "allow-explicit";
 }
 
 export const DEFAULT_HOOK_CONFIG: HookConfig = {
@@ -92,6 +100,7 @@ export const DEFAULT_HOOK_CONFIG: HookConfig = {
   blockStaleEdits: false,
   requireValidationOnStop: true,
   verifyCommands: [],
+  unavailableValidationPolicy: "block",
 };
 
 const CONFIG_PATH = ".graphward/gw.config.json";
@@ -107,8 +116,7 @@ export async function loadHookConfig(root: string): Promise<HookConfig> {
 
 function runtimeCommand(): string {
   const invocation = resolveRuntimeInvocation();
-  const quote = (value: string) => process.platform === 'win32' ? `"${value.replaceAll('"', '\\"')}"` : `'${value.replaceAll("'", "'\"'\"'")}'`;
-  return [invocation.command, ...invocation.args].map(quote).join(' ');
+  return [invocation.command, ...invocation.args].map(value => quoteShellArgument(value)).join(' ');
 }
 /** Invoke the identified installed runtime without package-name resolution. */
 export function hookCommand(event: HookEvent, host: HookHost = "claude-code"): string { return runtimeCommand() + ` hook ${event} --host ${host}`; }
@@ -128,10 +136,10 @@ export function claudeCodeHookSettings(): string {
         SessionStart: [{ hooks: [{ type: "command", command: hookCommand("session-start") }] }],
         PreToolUse: [
           // Anchored: an unanchored regex matcher also fires on TodoWrite, BashOutput, etc.
-          { matcher: "^(Edit|Write|NotebookEdit|MultiEdit|Bash|PowerShell|mcp__.*)$", hooks: [{ type: "command", command: hookCommand("pre-tool-use"), onFailure: "block" }] },
+          { matcher: "^(Edit|Write|NotebookEdit|MultiEdit|Bash|PowerShell|Task|Agent|mcp__.*)$", hooks: [{ type: "command", command: hookCommand("pre-tool-use"), onFailure: "block" }] },
         ],
         PostToolUse: [
-          { matcher: "Edit|Write|NotebookEdit|MultiEdit|Bash|PowerShell|AskUserQuestion|ExitPlanMode", hooks: [{ type: "command", command: hookCommand("post-tool-use") }] },
+          { matcher: "^(Edit|Write|NotebookEdit|MultiEdit|Bash|PowerShell|Task|Agent|AskUserQuestion|ExitPlanMode|mcp__.*)$", hooks: [{ type: "command", command: hookCommand("post-tool-use") }] },
         ],
         Stop: [{ hooks: [{ type: "command", command: hookCommand("stop") }] }],
       },
@@ -187,21 +195,26 @@ function editPaths(input: HookInput): string[] {
 }
 /** Resolve symlinks through the nearest existing ancestor, so a new file written via an
  *  aliased path (e.g. macOS /var -> /private/var) cannot look like it is outside the project. */
-function canonicalTarget(file: string): string {
+function canonicalTarget(file: string, depth = 0): string {
+  if (depth > 40) throw new Error("Symlink resolution exceeded its safe limit.");
   let current = path.resolve(file);
   const missing: string[] = [];
-  while (!existsSync(current)) {
-    const parent = path.dirname(current);
-    if (parent === current) break;
-    missing.unshift(path.basename(current));
-    current = parent;
+  for (;;) {
+    try {
+      if (lstatSync(current).isSymbolicLink()) return canonicalTarget(path.join(path.resolve(path.dirname(current), readlinkSync(current)), ...missing), depth + 1);
+      return path.join(realpathSync(current), ...missing);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+      const parent = path.dirname(current);
+      if (parent === current) throw error;
+      missing.unshift(path.basename(current)); current = parent;
+    }
   }
-  return path.join(toCanonicalPath(current), ...missing);
 }
 
 function isInsideProject(root: string, file: string): boolean {
   const relative = path.relative(toCanonicalPath(root), canonicalTarget(path.resolve(root, file)));
-  return relative === "" || !relative.startsWith("..") && !path.isAbsolute(relative);
+  return relative === "" || relative !== ".." && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative);
 }
 
 /**
@@ -258,7 +271,6 @@ const GRAPHWARD_CODE_TOOLS = new Set(["evaluate_experiment_step"]);
 const MUTATING_VERB = /(^|[_-])(write|edit|create|delete|remove|rm|move|rename|copy|patch|apply|replace|insert|update|append|save|mkdir|upload|put|modify|overwrite|truncate)(?=[_-]|$)/i;
 const EXECUTOR_NAME = /(^|[_-])(exec|execute|run|shell|terminal|bash|command|cmd|process|eval|repl|python|js|javascript|script)(?=[_-]|$)/i;
 /** Browser automation runs JavaScript in a page, not on the project. */
-const BROWSER_SERVER = /chrome|browser|playwright|puppeteer|devtools|selenium/i;
 const PATH_KEY = /^(path|paths|file|files|file_?path|filepath|target_?file|targetfile|source|destination|dest|directory|dir|absolute_?path|relative_?path|uri)$/i;
 
 function mcpTool(name: string): { server?: string; tool: string } | undefined {
@@ -301,8 +313,18 @@ function toolEffect(input: HookInput): ToolEffect {
   if (FILE_EDIT_TOOLS.test(tool)) return { kind: "edit", paths: editPaths(input) };
   if (SHELL_TOOLS.test(tool)) return { kind: "shell", command };
   const mcp = mcpTool(raw);
-  if (mcp && GRAPHWARD_TOOLS.has(mcp.tool)) return GRAPHWARD_CODE_TOOLS.has(mcp.tool) ? { kind: "execute" } : { kind: "none" };
-  if (mcp?.server && BROWSER_SERVER.test(mcp.server)) return { kind: "none" };
+  // These page tools expose explicit *output* paths. A screenshot without one is
+  // remote observation; a supplied local destination is a filesystem effect.
+  if (mcp && /^(?:take_screenshot|take_snapshot|evaluate_script|performance_start_trace|performance_stop_trace|take_heapsnapshot|get_network_request)$/.test(mcp.tool)) {
+    const outputs = [args.filePath, args.requestFilePath, args.responseFilePath].filter((value): value is string => typeof value === "string" && value.length > 0);
+    if (outputs.length) return { kind: "edit", paths: outputs };
+  }
+  // Namespaces are provenance, not effects. A browser-like name or a copied GraphWard
+  // tool name cannot exempt filesystem writes or arbitrary local code payloads.
+  if (command !== undefined) return { kind: "shell", command };
+  if (["code", "script"].some(key => typeof args[key] === "string")) return { kind: "execute" };
+  if (mcp?.server === "graphward" && GRAPHWARD_TOOLS.has(mcp.tool)) return GRAPHWARD_CODE_TOOLS.has(mcp.tool) ? { kind: "execute" } : { kind: "none" };
+  if (mcp && GRAPHWARD_TOOLS.has(mcp.tool)) return { kind: "execute" };
   // Any other tool — third-party MCP or a host tool this version has never seen — is gated
   // only when it demonstrably runs local commands/code or writes a path.
   const name = mcp?.tool ?? tool;
@@ -336,14 +358,14 @@ function splitShellSegments(command: string): string[][] | null {
     if (quote === "'") { if (char === "'") quote = null; else word += char; continue; }
     if (quote === '"') {
       if (char === '"') { quote = null; continue; }
-      if (char === "`" || char === "$" && /[({]/.test(next)) return null;
+      if (char === "`" || char === "$") return null;
       if (char === "\\" && next) { word += next; index++; continue; }
       word += char; continue;
     }
     if (char === "'" || char === '"') { quote = char; hasWord = true; continue; }
     if (char === "\\") { if (!next || next === "\n") return null; word += next; hasWord = true; index++; continue; }
     if (char === "\n" || char === "\r" || char === "`" || char === "(" || char === ")") return null;
-    if (char === "$" && /[({]/.test(next)) return null;
+    if (char === "$") return null;
     if (char === " " || char === "\t") { pushWord(); continue; }
     if (char === "<") return null;
     if (char === ">") {
@@ -368,10 +390,10 @@ function splitShellSegments(command: string): string[][] | null {
 
 const READ_ONLY_COMMANDS = new Set([
   "pwd", "ls", "cat", "head", "tail", "wc", "stat", "file", "du", "tree", "basename", "dirname", "realpath", "which", "echo", "printf", "true", "cut", "tr", "nl", "column", "grep", "egrep", "fgrep", "jq", "diff", "cd",
-  "date", "whoami", "id", "uname", "hostname", "uptime", "df", "free", "ps", "pgrep", "lsof", "printenv", "less", "more", "sleep", "seq",
+  "whoami", "id", "uname", "uptime", "df", "free", "ps", "pgrep", "lsof", "printenv", "sleep", "seq",
   "sha256sum", "sha1sum", "shasum", "md5", "md5sum", "cksum", "hexdump", "od", "strings",
 ]);
-const READ_ONLY_GIT = new Set(["status", "diff", "log", "show", "ls-files", "rev-parse", "blame", "grep", "cat-file", "ls-tree", "shortlog", "describe", "merge-base", "rev-list", "for-each-ref", "name-rev", "count-objects", "fetch"]);
+const READ_ONLY_GIT = new Set(["status", "diff", "log", "show", "ls-files", "rev-parse", "blame", "grep", "cat-file", "ls-tree", "shortlog", "describe", "merge-base", "rev-list", "for-each-ref", "name-rev", "count-objects"]);
 /** Environment prefixes that only change formatting; anything else (PAGER, GIT_EXTERNAL_DIFF,
  *  LD_PRELOAD, BASH_ENV...) can make a "read" command execute arbitrary code. */
 const SAFE_ENV = /^(TZ|LANG|LANGUAGE|LC_[A-Z]+|NO_COLOR|FORCE_COLOR|TERM|COLUMNS|LINES|CLICOLOR)=/;
@@ -395,6 +417,38 @@ function readOnlyGitSubcommand(sub: string, args: string[]): boolean {
 }
 const FIND_WRITES = new Set(["-exec", "-execdir", "-ok", "-okdir", "-delete", "-fprint", "-fprint0", "-fprintf", "-fls"]);
 
+// Deliberately small expression language. Node evaluation is not generally a read:
+// ambient globals, constructors, computed properties and user callbacks execute code.
+function isPureJavaScript(source: string): boolean {
+  if (source.length > 16_384) return false;
+  let ts: typeof import("typescript");
+  try { ts = createRequire(import.meta.url)("typescript"); } catch { return false; }
+  const file = ts.createSourceFile("inspection.js", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.JS);
+  const calls = new Set(["console.log", "console.info", "console.dir", "JSON.stringify", "JSON.parse", "Number", "String", "Boolean", "Math.abs", "Math.floor", "Math.ceil", "Math.round", "Math.min", "Math.max"]);
+  const expression = (node: ts.Node): boolean => {
+    if (ts.isNumericLiteral(node) || ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node) || [ts.SyntaxKind.TrueKeyword, ts.SyntaxKind.FalseKeyword, ts.SyntaxKind.NullKeyword].includes(node.kind)) return true;
+    if (ts.isParenthesizedExpression(node)) return expression(node.expression);
+    if (ts.isArrayLiteralExpression(node)) return node.elements.every(expression);
+    if (ts.isObjectLiteralExpression(node)) return node.properties.every(item => ts.isPropertyAssignment(item) && (ts.isIdentifier(item.name) || ts.isStringLiteral(item.name) || ts.isNumericLiteral(item.name)) && expression(item.initializer));
+    if (ts.isPrefixUnaryExpression(node)) return [ts.SyntaxKind.PlusToken, ts.SyntaxKind.MinusToken, ts.SyntaxKind.ExclamationToken, ts.SyntaxKind.TildeToken].includes(node.operator) && expression(node.operand);
+    if (ts.isBinaryExpression(node)) return node.operatorToken.kind >= ts.SyntaxKind.FirstBinaryOperator && node.operatorToken.kind <= ts.SyntaxKind.LastBinaryOperator && !(node.operatorToken.kind >= ts.SyntaxKind.FirstAssignment && node.operatorToken.kind <= ts.SyntaxKind.LastAssignment) && expression(node.left) && expression(node.right);
+    if (ts.isConditionalExpression(node)) return expression(node.condition) && expression(node.whenTrue) && expression(node.whenFalse);
+    return ts.isCallExpression(node) && calls.has(node.expression.getText(file)) && node.arguments.every(expression);
+  };
+  return !(file as ts.SourceFile & {parseDiagnostics?: unknown[]}).parseDiagnostics?.length && file.statements.length > 0 && file.statements.every(statement => ts.isExpressionStatement(statement) && expression(statement.expression));
+}
+
+function graphwardArgs(words: string[]): string[] | undefined {
+  let start = 0;
+  while (SAFE_ENV.test(words[start] ?? "")) start++;
+  words = words.slice(start);
+  if (words[0] === "gw" || words[0] === "graphward") return words.slice(1);
+  if (words[0] !== process.execPath && words[0] !== realpathSync(process.execPath)) return undefined;
+  const invocation = resolveRuntimeInvocation();
+  const runtime = [invocation.command, ...invocation.args];
+  return runtime.every((part, index) => words[index] === part) ? words.slice(runtime.length) : undefined;
+}
+
 function isReadOnlySegment(words: string[]): boolean {
   let index = 0;
   while (index < words.length && /^[A-Za-z_][A-Za-z0-9_]*=/.test(words[index])) {
@@ -403,15 +457,19 @@ function isReadOnlySegment(words: string[]): boolean {
   }
   if (index === words.length) return true; // a formatting variable assignment alone
   words = words.slice(index);
-  const invocation = resolveRuntimeInvocation();
-  const runtime = [invocation.command, ...invocation.args];
-  const cliArgs = runtime.every((part, index) => words[index] === part) ? words.slice(runtime.length)
-    : words[0] === "gw" || words[0] === "graphward" ? words.slice(1) : undefined;
-  if (cliArgs) return /^(?:verify|context|providers status|aidlc (?:prepare-task|assess|gate))(?:\s|$)/.test(cliArgs.join(" "));
+  const cliArgs = graphwardArgs(words);
+  if (cliArgs) return /^(?:verify|context|providers status|aidlc (?:prepare-task|assess|gate|confirm-task|accept-reduced-context))(?:\s|$)/.test(cliArgs.join(" "));
   const [name, ...args] = words;
-  if (READ_ONLY_COMMANDS.has(name)) return !args.some(arg => arg === "--output" || /^--output=/.test(arg));
+  if (READ_ONLY_COMMANDS.has(name)) return !args.some(arg => arg === "--output" || /^--output=/.test(arg) || name === "file" && (/^--compile(?:=|$)/.test(arg) || /^-[^-]*C/.test(arg)));
   if (VERSION_PROBES.has(name) && args.length === 1 && VERSION_FLAGS.has(args[0])) return true;
   switch (name) {
+    case "command": return args.length === 2 && (args[0] === "-v" || args[0] === "-V") && /^[\w.-]+$/.test(args[1]);
+    case "node": {
+      const rest = args[0] === "--input-type=module" ? args.slice(1) : args;
+      return rest.length === 2 && ["-e", "--eval", "-p", "--print"].includes(rest[0]) && isPureJavaScript(rest[1]);
+    }
+    case "date": return args.every(arg => arg.startsWith("+") || /^(?:-u|-R|--utc|--universal|--iso-8601(?:=\w+)?|--rfc-3339=\w+)$/.test(arg));
+    case "hostname": return args.every(arg => /^(?:-s|-f|-i|-I|--short|--fqdn|--ip-address|--all-ip-addresses)$/.test(arg));
     case "sort": return !args.some(arg => arg === "-o" || /^--output/.test(arg) || /^-[A-Za-z]*o/.test(arg));
     case "uniq": return args.filter(arg => !arg.startsWith("-")).length <= 1; // a second operand is an output file
     case "find": return !args.some(arg => FIND_WRITES.has(arg));
@@ -419,12 +477,12 @@ function isReadOnlySegment(words: string[]): boolean {
     case "sed": {
       // Only `sed -n '<line-range>p' [files]`; the first operand is the script and must be a pure print.
       const operands = args.filter(arg => arg !== "-n");
-      return args.includes("-n") && operands.every(arg => !arg.startsWith("-")) && /^(?:\d+|\$)(?:,(?:\d+|\$))?p$/.test(operands[0] ?? "");
+      return args.includes("-n") && operands.every(arg => !arg.startsWith("-")) && /^(?:\s*(?:\d+|\$)(?:,(?:\d+|\$))?p\s*;?)+$/.test(operands[0] ?? "");
     }
     case "git": {
       let rest = args;
       while (rest[0] === "-C" || rest[0] === "--no-pager") rest = rest[0] === "-C" ? rest.slice(2) : rest.slice(1);
-      return readOnlyGitSubcommand(rest[0] ?? "", rest.slice(1)) && !rest.some(arg => arg === "-c" || /^--(?:output|ext-diff|textconv|exec|upload-pack)/.test(arg));
+      return readOnlyGitSubcommand(rest[0] ?? "", rest.slice(1)) && !rest.some(arg => arg === "-c" || /^-o/.test(arg) || /^--(?:output|ext-diff|textconv|exec|upload-pack|open-files-in-pager|edit|unset|add|replace-all|delete|move|copy|create-reflog|force|prune|expire)/.test(arg) || /^-[^-]*[edmMCDf]/.test(arg) && ["config", "branch", "tag"].includes(rest[0]));
     }
     case "env": return args.length === 0 || args.every(arg => arg === "-0" || arg === "--null");
     case "npm": case "pnpm": case "yarn": return ["ls", "list", "view", "info", "outdated", "why", "explain"].includes(args[0] ?? "") && !args.includes("--fix");
@@ -432,7 +490,7 @@ function isReadOnlySegment(words: string[]): boolean {
     case "kubectl": return ["get", "describe", "logs", "version", "top", "explain"].includes(args[0] ?? "") || args[0] === "config" && args[1] === "view";
     case "curl":
       // Network reads print to stdout; anything that writes or uploads a local file is gated.
-      return !args.some(arg => CURL_WRITES.test(arg) || /^-[A-Za-z]*[oODcTKF]/.test(arg) && !arg.startsWith("--") || arg.startsWith("@") || /=@/.test(arg));
+      return !args.some(arg => CURL_WRITES.test(arg) || /^--(?:request|data(?:-[a-z]+)?|json|next|url-query|quote|prequote|postquote|mail-from|mail-rcpt)(?:=|$)/.test(arg) || /^-[A-Za-z]*[oODcTKFXdGQ]/.test(arg) && !arg.startsWith("--") || arg.startsWith("@") || /=@/.test(arg));
     default: return false;
   }
 }
@@ -503,10 +561,126 @@ export function looksLikeValidationCommand(command: string): boolean {
 interface SessionState {
   changedFiles: string[];
   validationCommands: string[];
+  unavailableValidation?: { identity: string; quote: string; host: HookHost; recordedAt: string };
 }
 
 const STATE_DIR = ".graphward/.hooks-state";
 const EVENT_LOG_MAX_BYTES = 1024 * 1024;
+const digest = (value: string | Buffer) => createHash("sha256").update(value).digest("hex");
+
+interface ReadOnlySession {
+  schemaVersion: 1;
+  root: string;
+  host: HookHost;
+  session: string;
+  fingerprint: string;
+  eligible: boolean;
+}
+
+function readOnlyIdentity(input: HookInput, host: HookHost): string | undefined {
+  return typeof input.session_id === "string" && input.session_id.trim() && input.session_id.length <= 4096
+    ? digest(JSON.stringify([host, input.session_id])) : undefined;
+}
+
+function readOnlyPath(root: string, identity: string): string {
+  return path.join(root, STATE_DIR, `readonly-${identity}.json`);
+}
+
+async function readOnlyState(root: string, input: HookInput, host: HookHost): Promise<ReadOnlySession | undefined> {
+  const identity = readOnlyIdentity(input, host); if (!identity) return undefined;
+  try {
+    const { checksum, ...state } = JSON.parse(await readFile(readOnlyPath(root, identity), "utf8"));
+    if (checksum !== digest(JSON.stringify(state)) || state.schemaVersion !== 1 || state.root !== toCanonicalPath(root) || state.host !== host || state.session !== input.session_id || typeof state.eligible !== "boolean" || !/^[a-f0-9]{64}$/.test(state.fingerprint)) return undefined;
+    return state;
+  } catch { return undefined; }
+}
+
+async function saveReadOnlyState(root: string, identity: string, state: ReadOnlySession): Promise<void> {
+  await mkdir(path.join(root, STATE_DIR), { recursive: true });
+  await ensureStateGitignored(root);
+  const location = readOnlyPath(root, identity); const temporary = `${location}.${randomUUID()}.tmp`;
+  try { await writeFile(temporary, JSON.stringify({ ...state, checksum: digest(JSON.stringify(state)) })); await rename(temporary, location); }
+  finally { await rm(temporary, { force: true }); }
+}
+
+/** Unlike provider indexes, this uses Git's full Stop candidate universe. Errors,
+ * unsupported entries, excessive data or races mean no exemption. Local checksums
+ * detect corruption; they are not tamper-proof native-host attestations. */
+async function stopFingerprint(root: string): Promise<string | undefined> {
+  const git = (args: string[]) => new Promise<string>((resolve, reject) => {
+    execFile("git", args, { cwd: root, encoding: "utf8", timeout: 10_000, maxBuffer: 16 * 1024 * 1024 }, (error, stdout) => error ? reject(error) : resolve(stdout));
+  });
+  try {
+    const canonicalRoot = toCanonicalPath(root);
+    if (toCanonicalPath((await git(["rev-parse", "--show-toplevel"])).trim()) !== canonicalRoot) return undefined;
+    const head = (await git(["rev-parse", "HEAD"])).trim();
+    const gitDir = canonicalTarget(path.resolve(root, (await git(["rev-parse", "--git-dir"])).trim()));
+    const inventory = async () => {
+      const files = [...new Set((await git(["ls-files", "-z", "--cached", "--others", "--exclude-standard"])).split("\0").filter(file => file && !file.startsWith(".graphward/")))].sort();
+      const index = (await git(["ls-files", "--stage", "-z"])).split("\0").filter(record => record && !record.split("\t").slice(1).join("\t").startsWith(".graphward/"));
+      if (index.some(record => record.startsWith("160000 "))) throw new Error("Nested repository source coverage is unknown.");
+      return { files, index };
+    };
+    const before = await inventory();
+    if (before.files.length > 20_000) return undefined;
+    const configFile = (file: string) => /(?:^|\/)(?:package(?:-lock)?\.json|(?:tsconfig|jsconfig)[^/]*\.json|\.gitignore|\.gwignore|\.eiignore|\.gitmodules|[^/]*lock[^/]*|[^/]*\.config\.[cm]?[jt]s)$/.test(file);
+    const files = [...new Set([...before.files, ".graphward/gw.config.json", ".graphward/config.json"])].sort();
+    let totalBytes = 0;
+    const hashes: Array<Array<string | number>> = [];
+    for (const file of files) {
+      const absolute = path.resolve(root, file);
+      const relative = path.relative(canonicalRoot, canonicalTarget(absolute));
+      if (relative === ".." || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) return undefined;
+      try {
+        const first = await lstat(absolute);
+        if (!first.isFile()) return undefined;
+        // Bind other configuration formats and inventory changes by metadata without
+        // reading arbitrary private config/assets. Source and known gate config bind bytes.
+        if (!isSourceFile(file) && !configFile(file) && !file.startsWith(".graphward/")) {
+          hashes.push([file, "metadata", first.mode, first.mtimeMs, first.ctimeMs, first.size, first.ino, first.dev]);
+          continue;
+        }
+        if (first.size > 4 * 1024 * 1024) return undefined;
+        totalBytes += first.size; if (totalBytes > 64 * 1024 * 1024) return undefined;
+        const bytes = await readFile(absolute); const last = await lstat(absolute);
+        if (first.ino !== last.ino || first.dev !== last.dev || first.size !== last.size || first.mtimeMs !== last.mtimeMs || first.ctimeMs !== last.ctimeMs || first.mode !== last.mode || bytes.length !== last.size) return undefined;
+        hashes.push([file, digest(bytes), last.mode, last.mtimeMs, last.ctimeMs]);
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== "ENOENT") return undefined;
+        hashes.push([file, "missing", 0, 0, 0]);
+      }
+    }
+    if (JSON.stringify(before) !== JSON.stringify(await inventory()) || head !== (await git(["rev-parse", "HEAD"])).trim()) return undefined;
+    return digest(JSON.stringify({ root: canonicalRoot, gitDir, head, index: before.index, hashes }));
+  } catch { return undefined; }
+}
+
+async function startReadOnlySession(root: string, input: HookInput, host: HookHost): Promise<void> {
+  if ((await loadGwConfig(root)).workflow.mode !== "concise") return;
+  const identity = readOnlyIdentity(input, host); if (!identity) return;
+  await withLock(root, async () => {
+    let exists = false;
+    try { await lstat(readOnlyPath(root, identity)); exists = true; } catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; }
+    // Repeated SessionStart is a resume/collision, never a new baseline.
+    const fingerprint = !exists ? await stopFingerprint(root) : undefined;
+    await saveReadOnlyState(root, identity, { schemaVersion: 1, root: toCanonicalPath(root), host, session: input.session_id!, fingerprint: fingerprint ?? "0".repeat(64), eligible: !exists && !!fingerprint });
+  }, { name: `.readonly-${identity}.lock` });
+}
+
+async function notePotentialMutation(root: string, input: HookInput, host: HookHost, effect: ToolEffect): Promise<void> {
+  const tool = baseToolName(input.tool_name ?? "");
+  const delegated = /(?:spawn_agent|followup_task|send_message|send_input|create_thread|fork_thread|handoff_thread)/.test(tool) || /^(?:Task|Agent|delegate_to_agent)$/i.test(tool);
+  const mcp = mcpTool(input.tool_name ?? "");
+  const runsChecks = mcp?.server === "graphward" && ["run_gate", "validate_change", "replay_api_snapshot", "capture_api_snapshot", "evaluate_experiment_step"].includes(mcp.tool)
+    || effect.kind === "shell" && splitShellSegments(effect.command ?? "")?.some(segment => ["verify", "gate"].includes(graphwardArgs(segment)?.[0] ?? ""));
+  const read = effect.kind === "none" || effect.kind === "shell" && effect.command !== undefined && isReadOnlyShellCommand(effect.command);
+  if (read && !delegated && !runsChecks) return;
+  const identity = readOnlyIdentity(input, host); if (!identity) return;
+  await withLock(root, async () => {
+    const state = await readOnlyState(root, input, host);
+    if (state?.eligible) await saveReadOnlyState(root, identity, { ...state, eligible: false });
+  }, { name: `.readonly-${identity}.lock` });
+}
 
 function sessionId(input: HookInput): string {
   const raw = input.session_id ?? "default";
@@ -524,6 +698,7 @@ async function readState(root: string, input: HookInput): Promise<SessionState> 
     return {
       changedFiles: Array.isArray(parsed.changedFiles) ? parsed.changedFiles : [],
       validationCommands: Array.isArray(parsed.validationCommands) ? parsed.validationCommands : [],
+      unavailableValidation: parsed.unavailableValidation,
     };
   } catch {
     return { changedFiles: [], validationCommands: [] };
@@ -535,6 +710,15 @@ async function writeState(root: string, input: HookInput, state: SessionState): 
   await mkdir(dir, { recursive: true });
   await ensureStateGitignored(root);
   await writeFile(statePath(root, input), JSON.stringify(state), "utf8");
+}
+
+async function unavailableIdentity(root: string, input: HookInput, config: HookConfig, host: HookHost): Promise<string | undefined> {
+  if (config.unavailableValidationPolicy !== "allow-explicit" || !input.session_id || config.verifyCommands.length) return undefined;
+  const verification = await import("../verify/index.js");
+  if ((await verification.detectCheckCommands(root)).length) return undefined;
+  const state = await readState(root, input);
+  const files = (await verification.isGitWorkTree(root) ? await verification.changedFiles(root) : await verification.withinNonGitScope(root, state.changedFiles)).filter(isSourceFile);
+  return digest(JSON.stringify([host, input.session_id, await verification.verificationScopeIdentity(root, files)]));
 }
 
 /** Keep ephemeral session state out of version control in the target repo. */
@@ -619,7 +803,8 @@ function formatDecision(host: HookHost, event: HookEvent, decision: HookDecision
 // Event handlers
 // ---------------------------------------------------------------------------
 
-async function onSessionStart(root: string, input: HookInput, config: HookConfig): Promise<HookDecision> {
+async function onSessionStart(root: string, input: HookInput, config: HookConfig, host: HookHost): Promise<HookDecision> {
+  await startReadOnlySession(root, input, host).catch(() => {});
   // Fresh session: clear any stale evidence from a previous session id collision.
   await writeState(root, input, { changedFiles: [], validationCommands: [] }).catch(() => {});
 
@@ -651,6 +836,9 @@ async function onSessionStart(root: string, input: HookInput, config: HookConfig
 
 async function onPreToolUse(root: string, input: HookInput, config: HookConfig, host: HookHost): Promise<HookDecision> {
   const effect = toolEffect(input);
+  // Persist before any allow/deny/foreign-workspace branch: a failed or restored edit
+  // still makes session provenance uncertain. The host remains the permission owner.
+  await notePotentialMutation(root, input, host, effect);
   if (effect.kind === "none") return ALLOW;
   if (effect.kind === "shell" && effect.command !== undefined && isReadOnlyShellCommand(effect.command)) return ALLOW;
 
@@ -658,14 +846,23 @@ async function onPreToolUse(root: string, input: HookInput, config: HookConfig, 
     // GraphWard governs this project only. A session or command working directory outside
     // it (another workspace root, another repo) is left to the host's own permissions; one
     // inside it (Antigravity run_command with Cwd=backend/) is this project.
-    const toolCwd = input.tool_input?.Cwd ?? input.tool_input?.cwd ?? input.tool_input?.workdir;
-    if (input.cwd && !isInsideProject(root, input.cwd) || typeof toolCwd === "string" && !isInsideProject(root, toolCwd)) return ALLOW;
     const allPaths = effect.kind === "edit" ? effect.paths : [];
+    for (const file of allPaths) {
+      const lexical = path.relative(path.resolve(root), path.resolve(root, file));
+      if (lexical !== ".." && !lexical.startsWith(`..${path.sep}`) && !path.isAbsolute(lexical) && !isInsideProject(root, file)) return deny(`Mutation target resolves outside this project through a symlink: ${file}`);
+    }
+    const toolCwd = input.tool_input?.Cwd ?? input.tool_input?.cwd ?? input.tool_input?.workdir;
+    const hasProjectTarget = allPaths.some(file => isInsideProject(root, file));
+    if (!hasProjectTarget && (input.cwd && !isInsideProject(root, input.cwd) || typeof toolCwd === "string" && !isInsideProject(root, toolCwd))) return ALLOW;
     // File edits that target nothing inside the project root (agent memory, scratch files,
     // other repos) are left to the host instead of being denied as "outside confirmed scope".
     const paths = allPaths.filter(file => isInsideProject(root, file));
     if (allPaths.length > 0 && paths.length === 0) return context(`GraphWard: ${allPaths.join(", ")} is outside this project; not governed by the task gate.`);
-    const readiness = await checkTaskReadiness(root, { host, sessionId: input.session_id, files: paths });
+    const reportingOnly = effect.kind === "edit" && paths.length > 0 && paths.every(file => {
+      const isReport = (relative: string) => /^\.graphward\/(?:reports|handoffs)\//.test(relative.replace(/\\/g, "/"));
+      return isReport(path.relative(path.resolve(root),path.resolve(root,file))) && isReport(path.relative(toCanonicalPath(root),canonicalTarget(path.resolve(root,file))));
+    });
+    const readiness = await checkTaskReadiness(root, { host, sessionId: input.session_id, files: paths, ...(reportingOnly ? { stage: "requirements" as const } : {}) });
     if (!readiness.ready) return deny(`GraphWard task readiness blocked this mutation: ${readiness.blockers.join(' ')}. Discover → clarify → confirm scope → prepare_task_context → implement → validate.`);
     if (effect.kind === "edit" && !paths.length) return deny('Mutation payload does not expose a supported target.');
   }
@@ -673,7 +870,7 @@ async function onPreToolUse(root: string, input: HookInput, config: HookConfig, 
   if (effect.kind !== "edit") return ALLOW;
   const targetPath = input.tool_input?.file_path ?? effect.paths[0];
   if (!targetPath || !isInsideProject(root, targetPath)) return ALLOW;
-  const rel = path.relative(root, path.resolve(root, targetPath)).replace(/\\/g, "/");
+  const rel = path.relative(toCanonicalPath(root), canonicalTarget(path.resolve(root, targetPath))).replace(/\\/g, "/");
   if (!isSourceFile(rel)) return ALLOW; // editing docs/config/intelligence is always fine
 
   // Non-strict mode only reports documents describing this file, so only score those;
@@ -699,7 +896,8 @@ async function onPreToolUse(root: string, input: HookInput, config: HookConfig, 
   return context(detail);
 }
 
-async function onPostToolUse(root: string, input: HookInput): Promise<HookDecision> {
+async function onPostToolUse(root: string, input: HookInput, host: HookHost): Promise<HookDecision> {
+  await notePotentialMutation(root, input, host, toolEffect(input));
   const tool = input.tool_name ?? "";
   const state = await readState(root, input);
   let dirty = false;
@@ -710,7 +908,7 @@ async function onPostToolUse(root: string, input: HookInput): Promise<HookDecisi
   if (/^(Edit|Write|NotebookEdit|MultiEdit)$/.test(tool)) {
     const targetPath = input.tool_input?.file_path;
     if (targetPath) {
-      const rel = path.relative(root, path.resolve(root, targetPath)).replace(/\\/g, "/");
+      const rel = path.relative(toCanonicalPath(root), canonicalTarget(path.resolve(root, targetPath))).replace(/\\/g, "/");
       if (isSourceFile(rel) && !state.changedFiles.includes(rel)) {
         state.changedFiles.push(rel);
         dirty = true;
@@ -731,7 +929,7 @@ async function onPostToolUse(root: string, input: HookInput): Promise<HookDecisi
   return ALLOW; // tracking is invisible
 }
 
-async function onStop(root: string, input: HookInput, config: HookConfig): Promise<HookDecision> {
+async function onStop(root: string, input: HookInput, config: HookConfig, host: HookHost): Promise<HookDecision> {
   // Always record real token telemetry at session end (best-effort, never blocks).
   if (typeof input.transcript_path === "string" && input.transcript_path) {
     try {
@@ -744,14 +942,23 @@ async function onStop(root: string, input: HookInput, config: HookConfig): Promi
   // A repeated Stop attempt is not validation evidence. The host may set
   // stop_hook_active after a block; keep evaluating the deterministic record.
 
-  const { changedFiles, coverageFor, detectCheckCommands, isGitWorkTree } = await import("../verify/index.js");
+  const { changedFiles, coverageFor, detectCheckCommands, isGitWorkTree, withinNonGitScope } = await import("../verify/index.js");
 
   // Derive the change set from git, not from what the tool matcher happened to see.
   // Fall back to hook-tracked edits only when git is unavailable (e.g. no repo); a clean
   // Git tree means everything was committed, not that the change set is unknown.
+  // Outside Git, only files a receipt can bind count (nested repos' .gitignore applies).
   const state = await readState(root, input);
-  const candidates = (await isGitWorkTree(root) ? await changedFiles(root) : state.changedFiles).filter(isSourceFile);
+  const candidates = (await isGitWorkTree(root) ? await changedFiles(root) : await withinNonGitScope(root, state.changedFiles)).filter(isSourceFile);
   if (candidates.length === 0) return ALLOW; // no source changed
+
+  if ((await loadGwConfig(root)).workflow.mode === "concise") {
+    const baseline = await readOnlyState(root, input, host);
+    if (baseline?.eligible) {
+      const fingerprint = await stopFingerprint(root);
+      if (fingerprint && fingerprint === baseline.fingerprint) return ALLOW;
+    }
+  }
 
   const coverage = await coverageFor(root, candidates);
   if (coverage.covered) {
@@ -762,6 +969,7 @@ async function onStop(root: string, input: HookInput, config: HookConfig): Promi
   const checks = config.verifyCommands.length > 0
     ? config.verifyCommands
     : await detectCheckCommands(root);
+  if (!checks.length && state.unavailableValidation?.host === host && state.unavailableValidation.identity === await unavailableIdentity(root, input, config, host)) return ALLOW;
 
   const reason: string[] = [
     "GraphWard: these source changes have no passing verification record.",
@@ -782,7 +990,7 @@ async function onStop(root: string, input: HookInput, config: HookConfig): Promi
   reason.push(
     checks.length > 0
       ? `Run \`${runtimeCommand()} verify .\` (will run: ${checks.join(", ")}).`
-      : "No check command could be detected. Configure `verify.commands` in .graphward/gw.config.json, or state explicitly that validation is unavailable and stop again.",
+      : `No check command could be detected. Configure \`hooks.verifyCommands\` in .graphward/gw.config.json.${config.unavailableValidationPolicy === "allow-explicit" ? " If checks are genuinely unavailable, state 'Validation is unavailable; no check commands are configured.' This records an unavailable outcome for this session and exact source; it never establishes a pass." : " Validation remains unavailable under the current blocking policy; an explicit hooks.unavailableValidationPolicy=allow-explicit policy permits a scoped honest unavailable outcome."}`,
   );
   return block(reason.join("\n"));
 }
@@ -859,17 +1067,21 @@ export async function runHook(event: HookEvent, root: string, input: HookInput, 
     const config = await loadHookConfig(root);
     let decision: HookDecision;
     switch (event) {
-      case "session-start": decision = await onSessionStart(root, input, config); break;
+      case "session-start": decision = await onSessionStart(root, input, config, host); break;
       case "user-prompt-submit": {
         const observed = await observeUserPrompt(root, host, input.session_id ?? '', typeof input.prompt === 'string' ? input.prompt : '');
+        if (typeof input.prompt === "string" && /^Validation is unavailable; no check commands are configured\.?$/i.test(input.prompt.trim())) {
+          const identity = await unavailableIdentity(root, input, config, host);
+          if (identity) { const state = await readState(root, input); state.unavailableValidation = {identity, quote:input.prompt,host,recordedAt:new Date().toISOString()}; await writeState(root, input, state); }
+        }
         decision = observed.confirmed ? context(`GraphWard scope confirmed for task ${"taskId" in observed ? observed.taskId : ""}. Prepare current context before implementation.`) : ALLOW; break;
       }
       case "pre-tool-use":  decision = await onPreToolUse(root, input, config, host); break;
       case "post-tool-use": {
         const confirmation = input.tool_name === 'AskUserQuestion' ? await observeNativeQuestionResponse(root, host, input.session_id ?? '', input.tool_input?.questions, input.tool_response) : { confirmed: false };
-        decision = confirmation.confirmed ? context('GraphWard requirements confirmed by native user response. Prepare current implementation context.') : await onPostToolUse(root, input); break;
+        decision = confirmation.confirmed ? context('GraphWard requirements confirmed by native user response. Prepare current implementation context.') : await onPostToolUse(root, input, host); break;
       }
-      case "stop":          decision = await onStop(root, input, config); break;
+      case "stop":          decision = await onStop(root, input, config, host); break;
       default:              decision = ALLOW;
     }
     if (event === 'session-start' && decision.kind === 'context') decision.message += `\nGraphWard native host: ${host}; parent session ID: ${input.session_id ?? 'unavailable'}. Bind propose_task_contract to this host/session. Task APIs are documented in .graphward/providers/tool-contracts.json.`;
@@ -883,6 +1095,7 @@ export async function runHook(event: HookEvent, root: string, input: HookInput, 
     return formatDecision(host, event, decision);
   } catch (error) {
     if (event === 'pre-tool-use' && existsSync(path.join(root, '.graphward/install-manifest.json'))) return formatDecision(host, event, deny(`GraphWard readiness failed: ${String(error)}`));
+    if (event === "stop" && (await loadHookConfig(root)).requireValidationOnStop) return formatDecision(host, event, block(`GraphWard verification is unavailable: ${String(error)}. Resolve the unsupported source target or verification error, then run \`${runtimeCommand()} verify .\`.`));
     return { exitCode: 0 };
   }
 }

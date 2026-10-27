@@ -1,5 +1,5 @@
 # Technology Decisions
-<!-- freshness: last_checked=2026-10-13 -->
+<!-- freshness: last_checked=2026-10-27 -->
 
 | Concern | Choice |
 |---|---|
@@ -15,6 +15,6 @@
 | Host enforcement | native lifecycle hooks calling `gw hook <event>` |
 | CI | GitHub Actions OS/architecture matrix |
 
-(evidence: package.json, tsconfig.json, scripts/build.mjs, src/providers/compatibility.ts, src/providers/manager.ts, src/hooks/index.ts, .github/workflows/ci.yml)
+(evidence: package.json, tsconfig.json, test/launcher-reliability.test.mjs, src/providers/compatibility.ts, src/providers/manager.ts, src/hooks/index.ts, .github/workflows/ci.yml)
 
 Provider packages are deliberately outside the Node dependency graph so missing or incompatible Python tooling can degrade cleanly to native GraphWard behavior. (evidence: src/providers/manager.ts)

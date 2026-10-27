@@ -1,10 +1,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { loadGwConfig } from "../config/index.js";
-import { getEngineeringContext } from "../context/orchestrator.js";
+import { getEngineeringContext, formatEngineeringContext } from "../context/orchestrator.js";
 import { analyzeImpact, ensureFreshGraph, findSymbol, whoCalls, loadExistingGraph } from "../graph/index.js";
 import type { DependencyGraph, Snapshot } from "../graph/schema.js";
-import { ChangeSimulator, type ChangeIntent, type GraphLike } from "../simulation/change-simulator.js";
+import { ChangeSimulator, repositorySimulationGraph, type ChangeIntent, type GraphLike } from "../simulation/change-simulator.js";
 import { CounterfactualGraphBranch, type PatchDelta } from "../simulation/counterfactual-graph.js";
 import { RiskEngine } from "../risk/risk-engine.js";
 import { HierarchicalPartitioner } from "../graph/partitioning.js";
@@ -27,6 +27,7 @@ import { proposeTask, checkTaskReadiness, bindTaskContext, recordTaskChangeMappi
 import { hostSupportStatus } from "../adapters/qualification.js";
 import { IDE_IDS, type IdeId } from "../types.js";
 import type { PropertySchema } from "./registry.js";
+import { runtimeIdentityStatus } from "../runtime/invocation.js";
 
 const rootProperty = { type: "string" as const };
 const filesProperty = { type: "array" as const, items: { type: "string" as const } };
@@ -77,10 +78,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
     inputSchema: { type: "object", required: ["task"], additionalProperties: false, properties: { root: rootProperty, task: { type: "string" }, files: filesProperty, budget: { type: "number", minimum: 1 }, format: { type: "string", enum: ["json", "markdown", "full"] } } },
     handler: async (args) => {
       const pack = await getEngineeringContext(rootOf(args, projectRoot), { task: args.task as string, files: args.files as string[] | undefined, budget: args.budget as number | undefined });
-      if (args.format === "full") return pack;
-      if (args.format === "markdown") return { markdown: pack.markdown, risk: pack.risk, unknowns: pack.unknowns, conflicts: pack.conflicts, requiresDecision: pack.requiresDecision === true, stopReason: pack.stopReason, tokenAllocation: pack.tokenAllocation };
-      const { markdown: _rendered, ...structured } = pack;
-      return structured;
+      return formatEngineeringContext(pack, args.format === "full" || args.format === "markdown" ? args.format : "json");
     },
   });
   registry.register({
@@ -123,7 +121,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
         Promise.all(PROVIDER_NAMES.map((name) => providerStatus(name, { disabled }))),
         inspectProjectProviderRuns(root, { disabled }),
       ]);
-      return { policy: providerConfig.providers.policy, requireProviders: providerConfig.providers.requireProviders, binaries, projectRuns };
+      return { policy: providerConfig.providers.policy, requireProviders: providerConfig.providers.requireProviders, binaries, projectRuns, runtime: runtimeIdentityStatus() };
     },
   });
 
@@ -324,6 +322,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
     handler: async (args) => {
       const root = rootOf(args, projectRoot);
       const state = await loadAidlcState(root);
+      const startingWork = (typeof args.phase === "string" && args.phase !== state.position.phase) || (typeof args.stage === "string" && args.stage !== state.position.stage) || (typeof args.activeUnit === "string" && args.activeUnit !== state.position.activeUnit);
       if (typeof args.phase === "string" && args.phase !== state.position.phase) {
         const phase = state.position.phase as Phase;
         if (["discovery", "inception", "construction", "operations"].includes(phase)) {
@@ -340,6 +339,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
       if (typeof args.activeWorkflow === "string") state.position.activeWorkflow = args.activeWorkflow;
       if (typeof args.activeHat === "string") state.position.activeHat = args.activeHat;
       if (typeof args.activeUnit === "string") state.position.activeUnit = args.activeUnit;
+      if (startingWork) state.position.completionStatus = "in-progress";
       if (typeof args.breadcrumb === "string") state.breadcrumb = args.breadcrumb;
       else if (args.phase || args.stage) {
         state.breadcrumb = `AI-DLC: ${state.position.phase} -> ${state.position.stage} -> in-progress`;
@@ -587,12 +587,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
       if (!graph) {
         await ensureFreshGraph(root);
         const depGraph = await loadExistingGraph(path.join(root, ".graphward", "graph", "dependency-graph.json"));
-        graph = depGraph
-          ? {
-              nodes: depGraph.nodes.map((n) => ({ id: n.id, path: n.path ?? "", kind: n.kind, label: n.label })),
-              edges: depGraph.edges.map((e) => ({ from: e.from, to: e.to, relation: e.relation })),
-            }
-          : { nodes: [], edges: [] };
+        graph = depGraph ? await repositorySimulationGraph(root, depGraph) : {nodes:[],edges:[],coverage:{symbols:"unavailable",routes:"unavailable",tests:"validated-paths",limitations:["No canonical dependency graph is available."]}};
       }
 
       const maxDepth = typeof args.maxDepth === "number" ? args.maxDepth : 5;
@@ -602,7 +597,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
 
   registry.register({
     name: "evaluate_counterfactual",
-    description: "Stage 2 Post-Patch Counterfactual Graph Branch: Evaluates tentative in-memory patch overlays before committing, detecting newly introduced dependency cycles and broken call contracts with 100% precision.",
+    description: "Evaluates tentative in-memory patch overlays for dependency cycles and missing graph endpoints; signature and behavioral compatibility require separate tests.",
     inputSchema: {
       type: "object",
       additionalProperties: false,

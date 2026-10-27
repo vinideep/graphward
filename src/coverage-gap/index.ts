@@ -1,5 +1,6 @@
 import type { DependencyGraph } from "../graph/schema.js";
 import path from "node:path";
+import { factualEdge } from "../graph/trust.js";
 
 export interface CoverageGap {
   file: string;
@@ -21,11 +22,12 @@ export function detectCoverageGaps(
   const gaps: CoverageGap[] = [];
   
   for (const file of changedFiles) {
-    const symbols = graph.nodes.filter(n => n.path === file && n.kind === 'export');
+    const key = file.replace(/\.[^.\/]+$/, "");
+    const symbols = graph.nodes.filter(n => (n.path === file || n.path === key || n.metadata.sourcePath === file) && (n.kind === 'export' || n.kind === 'symbol' && n.metadata.exported === true));
     
     for (const symbol of symbols) {
       let hasTest = false;
-      const incomingEdges = graph.edges.filter(e => e.to === symbol.id);
+      const incomingEdges = graph.edges.filter(e => e.to === symbol.id && factualEdge(e));
       
       for (const edge of incomingEdges) {
         const fromNode = graph.nodes.find(n => n.id === edge.from);
@@ -71,7 +73,7 @@ export function generateCharacterizationTests(
     // For ES modules, import .js instead of .ts
     const importPath = relPath.replace(/\.(ts|tsx)$/, '.js');
     
-    let content = `import { describe, it } from 'node:test';\nimport assert from 'node:assert/strict';\n`;
+    let content = `// Optional characterization scaffold. Supply and review a behavioral oracle.\nimport { describe, it } from 'node:test';\nimport assert from 'node:assert/strict';\n`;
     
     const symbols = fileGaps.map(g => g.symbol);
     if (symbols.length > 0) {
@@ -82,24 +84,9 @@ export function generateCharacterizationTests(
       content += `describe('characterization: ${gap.symbol}', () => {\n`;
       content += `  it('captures behavior for ${gap.symbol}', async (t) => {\n`;
       content += `    assert.ok(typeof ${gap.symbol} !== 'undefined');\n`;
-      content += `    if (typeof ${gap.symbol} === 'function') {\n`;
-      content += `      try {\n`;
-      content += `        const result = await ${gap.symbol}();\n`;
-      content += `        if (t?.assert?.snapshot) {\n`;
-      content += `          t.assert.snapshot(result);\n`;
-      content += `        } else {\n`;
-      content += `          assert.ok(result !== undefined || result === undefined);\n`;
-      content += `        }\n`;
-      content += `      } catch (e) {\n`;
-      content += `        assert.ok(e);\n`;
-      content += `      }\n`;
-      content += `    } else {\n`;
-      content += `      if (t?.assert?.snapshot) {\n`;
-      content += `        t.assert.snapshot(${gap.symbol});\n`;
-      content += `      } else {\n`;
-      content += `        assert.ok(${gap.symbol} !== undefined || ${gap.symbol} === undefined);\n`;
-      content += `      }\n`;
-      content += `    }\n`;
+      content += `    assert.equal(typeof t?.assert?.snapshot, 'function', 'Characterization unavailable: configure snapshot support and review the captured oracle before use');\n`;
+      content += `    const result = typeof ${gap.symbol} === 'function' ? await ${gap.symbol}() : ${gap.symbol};\n`;
+      content += `    t.assert.snapshot(result);\n`;
       content += `  });\n`;
       content += `});\n\n`;
     }

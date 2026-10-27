@@ -1,5 +1,6 @@
 import type { SymbolId } from "./symbol-identity.js";
 import type { DependencyGraph, GraphNode, GraphEdge } from "./schema.js";
+import { factualEdge } from "./trust.js";
 
 export type PartitionLevel = "GLOBAL" | "PACKAGE" | "COMMUNITY" | "TASK";
 
@@ -34,6 +35,9 @@ export interface TaskGraphSlice {
   edges: GraphEdge[];
   hopRadius: number;
   estimatedTokens: number;
+  tokenBudget?: number;
+  budgetOverflow?: boolean;
+  omittedNodes?: number;
 }
 
 /**
@@ -50,6 +54,7 @@ export class HierarchicalGraphPartitioner {
     if (!adj) {
       adj = new Map<string, string[]>();
       for (const edge of graph.edges) {
+        if (!factualEdge(edge)) continue;
         const list = adj.get(edge.from) ?? [];
         list.push(edge.to);
         adj.set(edge.from, list);
@@ -97,6 +102,7 @@ export class HierarchicalGraphPartitioner {
     }
 
     for (const edge of graph.edges) {
+      if (!factualEdge(edge)) continue;
       const fromPkg = nodeToPkg.get(edge.from);
       const toPkg = nodeToPkg.get(edge.to);
       if (fromPkg && toPkg && fromPkg !== toPkg) {
@@ -132,7 +138,7 @@ export class HierarchicalGraphPartitioner {
 
     const edges: GraphEdge[] = [];
     for (const edge of graph.edges) {
-      if (packageNodeIds.has(edge.from) && packageNodeIds.has(edge.to)) {
+      if (factualEdge(edge) && packageNodeIds.has(edge.from) && packageNodeIds.has(edge.to)) {
         edges.push(edge);
       }
     }
@@ -161,6 +167,7 @@ export class HierarchicalGraphPartitioner {
 
     const neighbors = new Map<string, string[]>();
     for (const edge of graph.edges) {
+      if (!factualEdge(edge)) continue;
       const fList = neighbors.get(edge.from) ?? [];
       fList.push(edge.to);
       neighbors.set(edge.from, fList);
@@ -207,7 +214,7 @@ export class HierarchicalGraphPartitioner {
     let cId = 1;
     for (const [, cNodes] of communities) {
       const cNodeIds = new Set(cNodes.map((n) => n.id));
-      const cEdges = graph.edges.filter((e) => cNodeIds.has(e.from) && cNodeIds.has(e.to));
+      const cEdges = graph.edges.filter((e) => factualEdge(e) && cNodeIds.has(e.from) && cNodeIds.has(e.to));
 
       slices.push({
         level: "COMMUNITY",
@@ -264,10 +271,21 @@ export class HierarchicalGraphPartitioner {
       hop: 0,
     }));
 
-    let estimatedTokens = selectedNodes.size * 35;
+    const resultFor = (selected: Map<string, GraphNode>): TaskGraphSlice => {
+      const ids = new Set(selected.keys());
+      const result: TaskGraphSlice = { level: "TASK", seeds, nodes: [...selected.values()], edges: graph.edges.filter(edge => factualEdge(edge) && ids.has(edge.from) && ids.has(edge.to)), hopRadius: resolvedHops, estimatedTokens: 0, tokenBudget: resolvedBudget, budgetOverflow: false, omittedNodes: graph.nodes.length - selected.size };
+      // Account for the complete serialized result, including this receipt.
+      for (let pass = 0; pass < 5; pass++) {
+        const estimate = Math.ceil(JSON.stringify(result).length / 4);
+        const overflow = estimate > resolvedBudget;
+        if (estimate === result.estimatedTokens && overflow === result.budgetOverflow) break;
+        result.estimatedTokens = estimate; result.budgetOverflow = overflow;
+      }
+      return result;
+    };
 
     while (queue.length > 0) {
-      if (estimatedTokens >= resolvedBudget) break;
+      if (resultFor(selectedNodes).estimatedTokens >= resolvedBudget) break;
       const current = queue.shift()!;
       if (current.hop >= resolvedHops) continue;
 
@@ -277,32 +295,16 @@ export class HierarchicalGraphPartitioner {
           visited.add(nb);
           const node = nodeMap.get(nb);
           if (node) {
-            const addedTokens = 35;
-            if (estimatedTokens + addedTokens > resolvedBudget) {
-              break; // Token budget ceiling hit
-            }
+            const candidate = new Map(selectedNodes); candidate.set(node.id, node);
+            if (resultFor(candidate).estimatedTokens > resolvedBudget) continue;
             selectedNodes.set(node.id, node);
-            estimatedTokens += addedTokens;
             queue.push({ id: nb, hop: current.hop + 1 });
           }
         }
       }
     }
 
-    const selectedIds = new Set(selectedNodes.keys());
-    const safeEdges = Array.isArray(graph?.edges) ? graph.edges : [];
-    const selectedEdges = safeEdges.filter(
-      (e) => selectedIds.has(e.from) && selectedIds.has(e.to)
-    );
-
-    return {
-      level: "TASK",
-      seeds,
-      nodes: Array.from(selectedNodes.values()),
-      edges: selectedEdges,
-      hopRadius: resolvedHops,
-      estimatedTokens,
-    };
+    return resultFor(selectedNodes);
   }
 
   private extractPackage(node: GraphNode): string {

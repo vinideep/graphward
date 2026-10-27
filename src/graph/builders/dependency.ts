@@ -6,6 +6,7 @@ import { parseManifests } from "../parsers/manifest.js";
 import { extractImports } from "../parsers/imports.js";
 import { extractSymbols, resolvePendingCalls, buildGlobalSymbolTable, type PendingCall } from "../parsers/symbols.js";
 import { collectProjectFiles, ProjectFilePolicy } from "../../project-files/index.js";
+import { factualEdge } from "../trust.js";
 
 const SOURCE_EXTS = new Set([".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs", ".py", ".go", ".rs", ".rb", ".java", ".kt"]);
 
@@ -121,14 +122,14 @@ export async function buildDependencyGraph(root: string, options: BuildOptions =
   for (let i = 0; i < sourceFiles.length; i += BATCH) {
     const batch = sourceFiles.slice(i, i + BATCH);
     const [importResults, symbolResults] = await Promise.all([
-      Promise.all(batch.map((f) => extractImports(f, root))),
-      Promise.all(batch.map((f) => extractSymbols(f, root))),
+      Promise.all(batch.map((f) => extractImports(f, root, policy))),
+      Promise.all(batch.map((f) => extractSymbols(f, root, policy))),
     ]);
     for (const { nodes, edges, unknowns } of importResults) {
       const replacements = new Map<string, string>();
-      const normalizedNodes = nodes.map((node) => {
+      const normalizedNodes = await Promise.all(nodes.map(async (node) => {
         if (node.kind !== "module" || !node.path) return node;
-        const decision = policy.explain(node.path);
+        const decision = await policy.explainExisting(node.path);
         if (decision.included) return node;
         const id = `external:${node.path}`;
         replacements.set(node.id, id);
@@ -147,7 +148,7 @@ export async function buildDependencyGraph(root: string, options: BuildOptions =
             policyReason: decision.reason,
           },
         } satisfies GraphNode;
-      });
+      }));
       const normalizedEdges = edges.map((edge) => ({
         ...edge,
         from: replacements.get(edge.from) ?? edge.from,
@@ -172,7 +173,7 @@ export async function buildDependencyGraph(root: string, options: BuildOptions =
   // modules' import lists with the freshly parsed edges.
   const importsByModule = new Map<string, Set<string>>();
   for (const edge of options.baseGraph?.edges ?? []) {
-    if (edge.relation !== "imports" || changedModuleIds.has(edge.from)) continue;
+    if (edge.relation !== "imports" || changedModuleIds.has(edge.from) || !factualEdge(edge)) continue;
     if (!importsByModule.has(edge.from)) importsByModule.set(edge.from, new Set());
     importsByModule.get(edge.from)!.add(edge.to);
   }
@@ -184,7 +185,7 @@ export async function buildDependencyGraph(root: string, options: BuildOptions =
   }
 
   const unchangedSymbols = (options.baseGraph?.nodes ?? []).filter((node) => {
-    if (node.kind !== "symbol") return false;
+    if (node.kind !== "symbol" || isGraphifyOnlyNode(node) || node.metadata.trustState && node.metadata.trustState !== "fresh") return false;
     const moduleId = node.id.startsWith("symbol:")
       ? `module:${node.id.slice("symbol:".length).split("#")[0]}`
       : node.id;
@@ -336,7 +337,11 @@ export async function mergeIncrementalUpdate(existing: DependencyGraph, updated:
     generatedAt: new Date().toISOString(),
     nodes: [...keptNodes, ...updated.nodes],
     edges: [...keptEdges, ...updated.edges],
-    unknowns: [...new Set([...existing.unknowns, ...updated.unknowns])],
+    unknowns: [...new Set([...existing.unknowns.filter((unknown) => {
+      // Parser diagnostics belong to the source named after `at`/`for`, or
+      // the referencing endpoint. Replace that owner's diagnostics on refresh.
+      return !changedFiles.some((file) => unknown.includes(`${file}:`) || unknown.includes(`for ${file}`) || unknown.includes(`\"module:${sourceKey(file)}\"`) || unknown.includes(`\"symbol:${sourceKey(file)}#`));
+    }), ...updated.unknowns])],
   };
 
   // Re-deduplicate

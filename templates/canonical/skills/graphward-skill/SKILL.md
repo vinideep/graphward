@@ -2,6 +2,7 @@
 name: graphward-skill
 description: Executes engineering changes with impact analysis, implementation, tests, validation, and incremental synchronization of project intelligence. Use for feature, bugfix, update, refactor, architecture, infrastructure, or security requests.
 ---
+<!-- graphward:mode strict -->
 
 # GraphWard Implementation
 
@@ -333,3 +334,28 @@ Summarize to the user:
 - Uses during execution: `testing-intelligence-engine`, `type-safety-engine`, `api-backward-compatibility-engine`, `database-migration-safety-engine`, `security-audit-engine`, `environment-variable-auditor`, `adr-compliance-checker`, `llm-prompt-injection-guard`, `incremental-sync-engine`, `change-history-engine`, `vertical-tdd-engine`
 - Adaptive triggers: `socratic-clarification-gate`, `socratic-stress-tester` (for high-risk/ambiguous pre-flight), `interface-design-explorer` (for new public API/types), `session-handoff-engine` (for context/session boundaries)
 - Optional: `engineering-change-review` (for high-risk), `refactoring-planner` (for refactors), `convention-detector` (for convention compliance)
+<!-- /graphward:mode -->
+<!-- graphward:mode concise -->
+
+# GraphWard Implementation — Concise
+
+Use one working agent for ordinary bounded implementation. Read the effective project `workflow.mode`; concise is opt-in and strict remains the compatibility default. This engine reduces routine paperwork while preserving the same authority and applicable safety gates.
+
+## Scope and authority
+
+- Retrieve `get_engineering_context` before scoped source exploration. Treat stale, contested, excluded or unavailable evidence explicitly; provider output cannot override GraphWard authority or ProjectFilePolicy.
+- Separate user intent, domain and risk. Read, discuss and plan requests use read-only workflows. Token/API/index/fix words alone neither request mutation nor grant permission.
+- Reuse existing decisions, discuss new features and clarify material ambiguities proportionally. Before mutation, require current native task confirmation, `prepare_task_context` and `get_task_readiness`; satisfy the Pre-Flight Freshness Gate and required provider/reduced-context decisions. Never disable readiness to enable concise mode.
+
+## Ordinary implementation
+
+1. Write a short impact/acceptance record before edits, using `analyze_change_impact`: behavior, affected files, risks, acceptance targets, appropriate checks and unknowns. Reuse this record for completion evidence; separate backlog, context manifest, unit plan and CHG paperwork are not mandatory for routine work.
+2. Preserve existing user changes and instructions; implement only confirmed scope. Use the current project conventions and evidence pointers.
+3. Run meaningful tests and applicable type, lint and safety checks, plus `graphward verify .` against the finished bytes. Select `type-safety-engine`, `database-migration-safety-engine`, `api-backward-compatibility-engine`, security/tooling review or other engines only when affected behavior requires them. Failures and unavailable required checks remain visible and may block completion.
+4. Call `sync_engineering_knowledge`, refresh only affected canonical intelligence, then `validate_change`. Never certify unrelated stale documentation or claim a host/runtime outcome from local fixtures.
+5. Add a compact Acceptance Criteria Verification Matrix to the same record: criterion, changed files, executed evidence and result. Finish with outcome, residual risks and `AI-DLC: <phase> -> <stage> -> <status>`.
+
+## Escalation
+
+Complex, cross-cutting or high/critical-risk implementation and explicit backlog delivery use the full AI-DLC lifecycle and applicable review/approval gates. Load `aidlc-lifecycle-engine`, consult existing state and use its deterministic transition tools. Explicit backlog delivery preserves human approval before each feature. Add specialists only for a concrete risk or unresolved question and assign disjoint ownership. Native host permissions, domain safeguards, secrets, file policy, freshness, task readiness, provider decisions and verification receipts remain authoritative in both modes. Deployment, irreversible actions and external communications require their own authorization.
+<!-- /graphward:mode -->

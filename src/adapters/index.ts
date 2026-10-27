@@ -6,15 +6,30 @@ import {
   generateSkillsIndex,
   generateWorkflowRouting,
   prepareRendered,
+  selectWorkflowMode,
 } from "../token-optimizer.js";
 import { claudeCodeHookSettings, cursorHookSettings, codexHookSettings, antigravityHookSettings, defaultConfigFile } from "../hooks/index.js";
 import { MCP_TOOL_SUMMARY, mcpServerRegistration } from "../mcp/index.js";
 import { IDE_IDS, type IdeId, type RenderedFile } from "../types.js";
 import { HOST_PROFILES } from "./capabilities.js";
-import { resolveRuntimeInvocation } from "../runtime/invocation.js";
+import { resolveRuntimeInvocation, quoteShellArgument } from "../runtime/invocation.js";
 import { invocationPolicyDescription, invocationPolicyMarkdown, type SkillName } from "../routing/catalog.js";
+import { loadGwConfig, type WorkflowMode } from "../config/index.js";
 
 const BLOCK_ID = "graphward";
+
+async function readModeTemplate(category: Parameters<typeof readTemplate>[0], name: string, workflowMode: WorkflowMode): Promise<string> {
+  return selectWorkflowMode(await readTemplate(category, name), workflowMode);
+}
+
+function modeInstructions(workflowMode: WorkflowMode = "strict"): string {
+  if (workflowMode === "strict") return sharedInstructions;
+  return sharedInstructions
+    .replace(/- When a provider-installed custom-agent directory[^\n]+/, "- Use one working agent for ordinary bounded concise work. Invoke engineering-orchestrator from the installed manifest for routing, complexity or uncertainty; add specialists only for a concrete risk with explicit ownership.")
+    .replace(/- Before non-trivial edits[^\n]+/, "- Before edits, write a short impact/acceptance record with behavior, scope, risks, checks and unknowns; call analyze_change_impact. Validate actual results and synchronize affected intelligence.")
+    .replace(/- AI-DLC work must preserve[^\n]+/, "- Ordinary concise work reuses one short record; separate backlog, context manifest, unit plan and CHG paperwork are optional. Complex/high-risk work and explicit backlog delivery retain full AI-DLC, applicable gates and per-feature approval. End with an AI-DLC breadcrumb.")
+    + "\n- Concise mode preserves native permissions, task confirmation/readiness, prepared context, freshness, ProjectFilePolicy, secrets, required provider/reduced-context decisions, verification receipts and project/domain safeguards.\n";
+}
 
 // Workflows that act on a user-supplied request and therefore receive the
 // host's argument placeholder when rendered as a native slash command.
@@ -81,16 +96,19 @@ function providerInstructions(options: {
   routingPath: string;
   indexPath: string;
   nativeHooks: boolean;
+  workflowMode?: WorkflowMode;
 }): string {
   const agentLine = options.agentsPath
     ? `- When the ${options.agentsPath} directory is available, start non-trivial work with the engineering-orchestrator custom agent. It routes the request to the right specialist and keeps the workflow evidence-based.`
     : "- This provider has no installed custom-agent surface; route non-trivial work through a GraphWard entry workflow.";
   const routingLine = `- **Route before loading skills.** Consult \`${options.routingPath}\` and \`${options.indexPath}\` before opening an internal \`SKILL.md\`. Entry workflows are model-invocable; internal engines are loaded only through the selected route.`;
-  return sharedInstructions
+  return modeInstructions(options.workflowMode)
     .replace(/- When a provider-installed custom-agent directory[^\n]+/, agentLine)
     .replace(/- \*\*Route before loading skills\.\*\*[^\n]+/, routingLine)
     + `\n- ${options.nativeHooks ? "Native hook integration is generated. Discovery, connection and enforcement require separate host qualification; hooks are guardrails with documented bypasses." : "This provider has no GraphWard runtime hooks; run `gw verify` and applicable `gw gate` commands in CI before completion."}\n`
-    + (options.nativeHooks ? "- **Task gate.** Until a task is confirmed, hooks gate only what can change this project's files: file edits inside the project, shell commands that are not read-only, and MCP tools that write project paths or run local code. Everything else passes: reads, search, browser, agents, task lists, every GraphWard MCP tool (except `evaluate_experiment_step`), and read-only shell (`ls`, `cat`, `rg`, `grep`, `find`, `git log/diff/show/status/fetch`, `sed -n 'N,Mp'`, `curl` to stdout, `--version` probes, pipelines of these). To edit: `propose_task_contract` (pass host and sessionId; scope accepts prefixes or globs) → follow its `howToConfirm` (Claude Code: `AskUserQuestion` containing the exact challenge with an `Approve scope` option) → `prepare_task_context` with taskId → `get_task_readiness`. Edits inside the confirmed scope keep context valid; file edits outside this project are not gated; finish with `gw verify .`.\n" : "");
+    + (options.nativeHooks ? options.workflowMode === "concise"
+      ? "- **Task gate.** Hooks retain mutation readiness and conservative tool-effect checks; names and read-only request intent never grant authority. To edit: `propose_task_contract` with the native host/session → obtain the user's current confirmation through `howToConfirm` → `prepare_task_context` with taskId → `get_task_readiness`. Respect actual target scope, project/domain safeguards and native permissions. Finish changed source with `gw verify .`; unchanged read-only sessions may exempt pre-existing dirt only when complete bound provenance proves it.\n"
+      : "- **Task gate.** Until a task is confirmed, hooks gate file edits inside the project, write-capable shell commands, and MCP filesystem/local execution effects. Read-only search and safe source pipelines remain available; tool names alone grant no exemption. Browser operations with local output paths are edits. Trusted GraphWard recovery tools remain reachable; running checks is not read-only provenance. To edit: `propose_task_contract` (pass host and sessionId; scope accepts prefixes or globs) → follow its `howToConfirm` (Claude Code: `AskUserQuestion` containing the exact challenge with an `Approve scope` option) → `prepare_task_context` with taskId → `get_task_readiness`. Edits inside the confirmed scope keep context valid; external file edits remain governed by native permissions; finish with `gw verify .`.\n" : "");
 }
 
 /**
@@ -151,11 +169,12 @@ async function skillsAt(
   directory: string,
   owner: IdeId,
   names: readonly SkillName[] = SKILL_NAMES,
+  workflowMode: WorkflowMode = "strict",
 ): Promise<RenderedFile[]> {
   return Promise.all(
     names.map(async (skillName) => {
       const name = skillName;
-      const raw = `${await readTemplate("skills", name)}\n\n${invocationPolicyMarkdown(skillName)}\n`
+      const raw = `${await readModeTemplate("skills", name, workflowMode)}\n\n${invocationPolicyMarkdown(skillName)}\n`
         .replace(/^description:\s*.+$/m, `description: ${JSON.stringify(invocationPolicyDescription(skillName))}`);
       return file(
         `${owner === "claude-code" ? directory : ".graphward/engines"}/${name}/SKILL.md`,
@@ -166,22 +185,22 @@ async function skillsAt(
   );
 }
 
-async function workflowsAt(directory: string, owner: IdeId): Promise<RenderedFile[]> {
+async function workflowsAt(directory: string, owner: IdeId, workflowMode: WorkflowMode = "strict"): Promise<RenderedFile[]> {
   return Promise.all(
     WORKFLOW_NAMES.map(async (name) =>
       file(
         `${directory}/${name}.md`,
-        prepareRendered(await readTemplate("workflows", name)),
+        prepareRendered(await readModeTemplate("workflows", name, workflowMode)),
         owner,
       ),
     ),
   );
 }
 
-async function agentsAt(directory: string, owner: IdeId): Promise<RenderedFile[]> {
+async function agentsAt(directory: string, owner: IdeId, workflowMode: WorkflowMode = "strict"): Promise<RenderedFile[]> {
   return Promise.all(
     AGENT_NAMES.map(async (name) =>
-      file(`${directory}/${name}.md`, await readTemplate("agents", name), owner),
+      file(`${directory}/${name}.md`, await readModeTemplate("agents", name, workflowMode), owner),
     ),
   );
 }
@@ -202,10 +221,10 @@ function withArgumentHint(content: string, hint: string): string {
 // passed through (e.g. `/graphward Add rate limiting`).
 // `withArgumentHint` splices into the frontmatter, so content must be prepared
 // (and therefore still start with `---`) before the hint is inserted.
-async function claudeCommandsAt(directory: string, owner: IdeId): Promise<RenderedFile[]> {
+async function claudeCommandsAt(directory: string, owner: IdeId, workflowMode: WorkflowMode = "strict"): Promise<RenderedFile[]> {
   return Promise.all(
     WORKFLOW_NAMES.map(async (name) => {
-      const workflow = prepareRendered(await readTemplate("workflows", name));
+      const workflow = prepareRendered(await readModeTemplate("workflows", name, workflowMode));
       if (!INPUT_WORKFLOWS.has(name)) {
         return file(`${directory}/${name}.md`, workflow, owner);
       }
@@ -222,8 +241,8 @@ async function claudeCommandsAt(directory: string, owner: IdeId): Promise<Render
 // Render SKILL-BRIEF.md (tier-2 CCR) for each skill. Briefs are ~150t each vs
 // ~1,200t for full skills; AI loads briefs first to confirm relevance, then
 // loads SKILL.md at execution time.
-async function skillBriefsAt(directory: string, owner: IdeId): Promise<RenderedFile[]> {
-  const briefs = await generateAllSkillBriefs(SKILL_NAMES);
+async function skillBriefsAt(directory: string, owner: IdeId, workflowMode: WorkflowMode = "strict"): Promise<RenderedFile[]> {
+  const briefs = await generateAllSkillBriefs(SKILL_NAMES, workflowMode);
   return SKILL_NAMES.map((name) =>
     file(`${directory}/${name}/SKILL-BRIEF.md`, briefs.get(name) ?? "", owner),
   );
@@ -235,10 +254,12 @@ interface SkillBundleProfile {
   routingPath: string;
   emitBriefs: boolean;
   skillNames?: readonly SkillName[];
+  workflowMode?: WorkflowMode;
 }
 
 async function skillBundle(owner: IdeId, p: SkillBundleProfile): Promise<RenderedFile[]> {
   const skillNames = p.skillNames ?? SKILL_NAMES;
+  const workflowMode = p.workflowMode ?? "strict";
   const resourceDirectory = owner === "claude-code" ? p.skillsDir : ".graphward/engines";
   const [index, skills, briefs] = await Promise.all([
     // Shared `.agents` indexes must remain byte-identical when Codex is
@@ -246,11 +267,11 @@ async function skillBundle(owner: IdeId, p: SkillBundleProfile): Promise<Rendere
     // canonical engine inventory; `skillNames` only controls provider-visible
     // files, allowing Codex to replace one engine with its launcher.
     generateSkillsIndex(SKILL_NAMES, resourceDirectory, undefined, p.emitBriefs),
-    skillsAt(p.skillsDir, owner, skillNames),
-    p.emitBriefs ? generateAllSkillBriefs(skillNames).then((generated) =>
+    skillsAt(p.skillsDir, owner, skillNames, workflowMode),
+    p.emitBriefs ? generateAllSkillBriefs(skillNames, workflowMode).then((generated) =>
       skillNames.map((name) => file(`${resourceDirectory}/${name}/SKILL-BRIEF.md`, generated.get(name) ?? "", owner))) : Promise.resolve([]),
   ]);
-  const routing = generateWorkflowRouting(resourceDirectory, p.emitBriefs);
+  const routing = generateWorkflowRouting(resourceDirectory, p.emitBriefs, workflowMode);
   return [
     file(p.indexPath, index, owner),
     file(p.routingPath, routing, owner),
@@ -365,10 +386,10 @@ function quoteYaml(value: string): string {
  * and delegation metadata remain visible in the prompt body so no routing
  * information is lost during the format migration.
  */
-async function agentsAsMarkdownAt(directory: string, owner: IdeId): Promise<RenderedFile[]> {
+async function agentsAsMarkdownAt(directory: string, owner: IdeId, workflowMode: WorkflowMode = "strict"): Promise<RenderedFile[]> {
   const results: RenderedFile[] = [];
   for (const name of AGENT_NAMES) {
-    const raw = await readTemplate("agents", name);
+    const raw = await readModeTemplate("agents", name, workflowMode);
     const { meta, body } = parseFrontmatter(raw);
     const agentName = meta["name"] ?? name;
     const description = meta["description"] ?? "";
@@ -392,13 +413,13 @@ async function agentsAsMarkdownAt(directory: string, owner: IdeId): Promise<Rend
       ...(extra.agents?.length
         ? [
             "",
-            `Delegate to these specialist agents when the request matches their responsibility: ${extra.agents.map((agent) => "`" + agent + "`").join(", ")}.`,
+            `${workflowMode === "concise" ? "Specialists are available only for a concrete risk or unresolved question" : "Delegate to these specialist agents when the request matches their responsibility"}: ${extra.agents.map((agent) => "`" + agent + "`").join(", ")}.`,
           ]
         : []),
       ...(extra.autoRoute !== undefined
         ? [
             "",
-            `Routing policy: auto-route is ${extra.autoRoute ? "enabled" : "disabled"}; parallel delegation is ${extra.parallel ? "enabled" : "disabled"}.`,
+            workflowMode === "concise" ? "Routing policy: use one working agent for ordinary bounded work; justify specialist escalation with a concrete risk or uncertainty and explicit ownership." : `Routing policy: auto-route is ${extra.autoRoute ? "enabled" : "disabled"}; parallel delegation is ${extra.parallel ? "enabled" : "disabled"}.`,
           ]
         : []),
     ].join("\n");
@@ -423,7 +444,7 @@ async function agentsAsMarkdownAt(directory: string, owner: IdeId): Promise<Rend
  * The route-only implementation engine is embedded in the agent and omitted
  * from Codex's visible skill inventory.
  */
-async function codexAgentsAt(directory: string, owner: IdeId): Promise<RenderedFile[]> {
+async function codexAgentsAt(directory: string, owner: IdeId, workflowMode: WorkflowMode = "strict"): Promise<RenderedFile[]> {
   const results: RenderedFile[] = [];
   const tomlLiteral = (value: string): string => {
     if (value.includes("'''")) {
@@ -443,9 +464,9 @@ async function codexAgentsAt(directory: string, owner: IdeId): Promise<RenderedF
       owner,
     );
 
-  const graphward = await readTemplate("workflows", "graphward");
+  const graphward = await readModeTemplate("workflows", "graphward", workflowMode);
   const graphwardParts = parseFrontmatter(graphward);
-  const implementation = parseFrontmatter(await readTemplate("skills", "graphward-skill"));
+  const implementation = parseFrontmatter(await readModeTemplate("skills", "graphward-skill", workflowMode));
   results.push(
     renderAgent(
       "graphward",
@@ -461,7 +482,7 @@ async function codexAgentsAt(directory: string, owner: IdeId): Promise<RenderedF
   );
 
   for (const name of AGENT_NAMES) {
-    const raw = await readTemplate("agents", name);
+    const raw = await readModeTemplate("agents", name, workflowMode);
     const { meta, body } = parseFrontmatter(raw);
     const extra = AGENT_METADATA[name];
     const runtimeContext = [
@@ -473,13 +494,13 @@ async function codexAgentsAt(directory: string, owner: IdeId): Promise<RenderedF
       ...(extra.agents?.length
         ? [
             "",
-            `Delegate to these specialist agents when the request matches their responsibility: ${extra.agents.map((agent) => `\`${agent}\``).join(", ")}.`,
+            `${workflowMode === "concise" ? "Specialists are available only for a concrete risk or unresolved question" : "Delegate to these specialist agents when the request matches their responsibility"}: ${extra.agents.map((agent) => `\`${agent}\``).join(", ")}.`,
           ]
         : []),
       ...(extra.autoRoute !== undefined
         ? [
             "",
-            `Routing policy: auto-route is ${extra.autoRoute ? "enabled" : "disabled"}; parallel delegation is ${extra.parallel ? "enabled" : "disabled"}.`,
+            workflowMode === "concise" ? "Routing policy: use one working agent for ordinary bounded work; justify specialist escalation with a concrete risk or uncertainty and explicit ownership." : `Routing policy: auto-route is ${extra.autoRoute ? "enabled" : "disabled"}; parallel delegation is ${extra.parallel ? "enabled" : "disabled"}.`,
           ]
         : []),
     ].join("\n");
@@ -524,12 +545,13 @@ implementation request:
   );
 }
 
-async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedFile[]> {
+async function renderAdapter(ide: IdeId, projectRoot: string, workflowMode: WorkflowMode): Promise<RenderedFile[]> {
   switch (ide) {
     case "antigravity": {
-      const ruleContent = prepareRendered(await readTemplate("rules", "graphward"));
+      const ruleContent = prepareRendered(await readModeTemplate("rules", "graphward", workflowMode));
       const [bundle, agents, workflows] = await Promise.all([
         skillBundle(ide, {
+          workflowMode,
           skillsDir: ".agents/skills",
           indexPath: `.agents/skills/${SKILLS_INDEX_FILENAME}`,
           routingPath: `.agents/${WORKFLOW_ROUTING_FILENAME}`,
@@ -538,8 +560,8 @@ async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedF
         // Antigravity's current workspace layout is plural `.agents/*`.
         // The installer migrates older `.agent/*` files when they are still
         // managed and untouched, while preserving local edits as conflicts.
-        agentsAsMarkdownAt(".agents/agents", ide),
-        workflowsAt(".agents/workflows", ide),
+        agentsAsMarkdownAt(".agents/agents", ide, workflowMode),
+        workflowsAt(".agents/workflows", ide, workflowMode),
       ]);
       return [
         ...bundle,
@@ -551,34 +573,36 @@ async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedF
     case "antigravity-cli": {
       const [bundle, agents, workflows] = await Promise.all([
         skillBundle(ide, {
+          workflowMode,
           skillsDir: ".agents/skills",
           indexPath: `.agents/skills/${SKILLS_INDEX_FILENAME}`,
           routingPath: `.agents/${WORKFLOW_ROUTING_FILENAME}`,
           emitBriefs: false,
         }),
-        agentsAsMarkdownAt(".agents/agents", ide),
-        workflowsAt(".agents/workflows", ide),
+        agentsAsMarkdownAt(".agents/agents", ide, workflowMode),
+        workflowsAt(".agents/workflows", ide, workflowMode),
       ]);
       return [
         ...bundle,
         ...agents,
         ...workflows,
-        block("AGENTS.md", sharedInstructions, ide),
+        block("AGENTS.md", modeInstructions(workflowMode), ide),
       ];
     }
     case "codex": {
       const codexSkillNames = SKILL_NAMES;
       const [bundle, agents, workflows, codexAgents] = await Promise.all([
         skillBundle(ide, {
+          workflowMode,
           skillsDir: ".agents/skills",
           indexPath: `.agents/skills/${SKILLS_INDEX_FILENAME}`,
           routingPath: `.agents/${WORKFLOW_ROUTING_FILENAME}`,
           emitBriefs: false,
           skillNames: codexSkillNames,
         }),
-        agentsAsMarkdownAt(".agents/agents", ide),
-        workflowsAt(".agents/workflows", ide),
-        codexAgentsAt(".codex/agents", ide),
+        agentsAsMarkdownAt(".agents/agents", ide, workflowMode),
+        workflowsAt(".agents/workflows", ide, workflowMode),
+        codexAgentsAt(".codex/agents", ide, workflowMode),
       ]);
       return [
         ...bundle,
@@ -586,31 +610,33 @@ async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedF
         ...workflows,
         ...codexAgents,
 
-        block("AGENTS.md", sharedInstructions, ide),
+        block("AGENTS.md", modeInstructions(workflowMode), ide),
       ];
     }
     case "generic": {
       const [bundle, workflows] = await Promise.all([
         skillBundle(ide, {
+          workflowMode,
           skillsDir: ".agents/skills",
           indexPath: `.agents/skills/${SKILLS_INDEX_FILENAME}`,
           routingPath: `.agents/${WORKFLOW_ROUTING_FILENAME}`,
           emitBriefs: false,
         }),
-        workflowsAt(".agents/workflows", ide),
+        workflowsAt(".agents/workflows", ide, workflowMode),
       ]);
-      return [...bundle, ...workflows, block("AGENTS.md", sharedInstructions, ide)];
+      return [...bundle, ...workflows, block("AGENTS.md", modeInstructions(workflowMode), ide)];
     }
     case "claude-code": {
       const [bundle, agents, commands] = await Promise.all([
         skillBundle(ide, {
+          workflowMode,
           skillsDir: ".claude/skills",
           indexPath: `.claude/skills/${SKILLS_INDEX_FILENAME}`,
           routingPath: `.claude/${WORKFLOW_ROUTING_FILENAME}`,
           emitBriefs: true,
         }),
-        agentsAt(".claude/agents", ide),
-        claudeCommandsAt(".claude/commands", ide),
+        agentsAt(".claude/agents", ide, workflowMode),
+        claudeCommandsAt(".claude/commands", ide, workflowMode),
       ]);
       return [
         ...bundle,
@@ -619,20 +645,23 @@ async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedF
         jsonMerge(".claude/settings.json", claudeCodeHookSettings(), ide),
         jsonMerge(".mcp.json", mcpServerRegistration(projectRoot), ide),
         seed(".graphward/gw.config.json", defaultConfigFile(), ide),
-        block("CLAUDE.md", providerInstructions({ agentsPath: ".claude/agents/", routingPath: ".claude/WORKFLOW-ROUTING.md", indexPath: ".claude/skills/SKILLS-INDEX.md", nativeHooks: true }) + claudeCodeInstructions, ide),
+        block("CLAUDE.md", providerInstructions({ agentsPath: ".claude/agents/", routingPath: ".claude/WORKFLOW-ROUTING.md", indexPath: ".claude/skills/SKILLS-INDEX.md", nativeHooks: true, workflowMode }) + (workflowMode === "concise" ? claudeCodeInstructions
+          .replace("a validation command actually ran", "a passing verification receipt covers changed source")
+          .replace("Hooks are fail-safe: with no intelligence installed they do nothing.", "Managed mutation-readiness errors remain fail-closed; discovery and native permissions retain their own boundaries.") : claudeCodeInstructions), ide),
       ];
     }
     case "cursor": {
-      const ruleContent = prepareRendered(await readTemplate("rules", "graphward"));
+      const ruleContent = prepareRendered(await readModeTemplate("rules", "graphward", workflowMode));
       const rule = `---\ndescription: GraphWard orchestration and synchronization rules\nalwaysApply: true\n---\n\n${ruleContent}\n\n${routingInstructions(".cursor/WORKFLOW-ROUTING.md", ".cursor/skills/SKILLS-INDEX.md")}`;
       const [bundle, commands] = await Promise.all([
         skillBundle(ide, {
+          workflowMode,
           skillsDir: ".cursor/skills",
           indexPath: `.cursor/skills/${SKILLS_INDEX_FILENAME}`,
           routingPath: `.cursor/${WORKFLOW_ROUTING_FILENAME}`,
           emitBriefs: false,
         }),
-        workflowsAt(".cursor/commands", ide),
+        workflowsAt(".cursor/commands", ide, workflowMode),
       ]);
       return [
         ...bundle,
@@ -646,17 +675,18 @@ async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedF
     case "github-copilot": {
       const [bundle, agentFiles, promptFiles] = await Promise.all([
         skillBundle(ide, {
+          workflowMode,
           skillsDir: ".github/skills",
           indexPath: `.github/skills/${SKILLS_INDEX_FILENAME}`,
           routingPath: `.github/${WORKFLOW_ROUTING_FILENAME}`,
           emitBriefs: false,
         }),
-        agentsAt(".github/agents", ide),
+        agentsAt(".github/agents", ide, workflowMode),
         Promise.all(
           WORKFLOW_NAMES.map(async (name) =>
             file(
               `.github/prompts/${name}.prompt.md`,
-              prepareRendered(await readTemplate("workflows", name)),
+              prepareRendered(await readModeTemplate("workflows", name, workflowMode)),
               ide,
             ),
           ),
@@ -666,7 +696,7 @@ async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedF
         ...bundle,
         ...agentFiles,
         ...promptFiles,
-        block(".github/copilot-instructions.md", providerInstructions({ agentsPath: ".github/agents/", routingPath: ".github/WORKFLOW-ROUTING.md", indexPath: ".github/skills/SKILLS-INDEX.md", nativeHooks: false }), ide),
+        block(".github/copilot-instructions.md", providerInstructions({ agentsPath: ".github/agents/", routingPath: ".github/WORKFLOW-ROUTING.md", indexPath: ".github/skills/SKILLS-INDEX.md", nativeHooks: false, workflowMode }), ide),
       ];
     }
     case "gemini-cli": {
@@ -689,6 +719,7 @@ async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedF
       };
       const [bundle, commands] = await Promise.all([
         skillBundle(ide, {
+          workflowMode,
           skillsDir: ".agents/skills",
           indexPath: `.agents/skills/${SKILLS_INDEX_FILENAME}`,
           routingPath: `.agents/${WORKFLOW_ROUTING_FILENAME}`,
@@ -696,7 +727,7 @@ async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedF
         }),
         Promise.all(
           WORKFLOW_NAMES.map(async (name) => {
-            const workflow = prepareRendered(await readTemplate("workflows", name));
+            const workflow = prepareRendered(await readModeTemplate("workflows", name, workflowMode));
             const prompt = INPUT_WORKFLOWS.has(name)
               ? `${workflow}\n\nUser supplied scope or request: {{args}}`
               : workflow;
@@ -707,12 +738,13 @@ async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedF
       return [
         ...bundle,
         ...commands,
-        block("GEMINI.md", providerInstructions({ routingPath: ".agents/WORKFLOW-ROUTING.md", indexPath: ".agents/skills/SKILLS-INDEX.md", nativeHooks: false }), ide),
+        block("GEMINI.md", providerInstructions({ routingPath: ".agents/WORKFLOW-ROUTING.md", indexPath: ".agents/skills/SKILLS-INDEX.md", nativeHooks: false, workflowMode }), ide),
       ];
     }
     case "commandcode": {
       const [bundle, commands] = await Promise.all([
         skillBundle(ide, {
+          workflowMode,
           skillsDir: ".commandcode/skills",
           indexPath: `.commandcode/skills/${SKILLS_INDEX_FILENAME}`,
           routingPath: `.commandcode/${WORKFLOW_ROUTING_FILENAME}`,
@@ -720,7 +752,7 @@ async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedF
         }),
         Promise.all(
           WORKFLOW_NAMES.map(async (name) => {
-            const workflow = prepareRendered(await readTemplate("workflows", name));
+            const workflow = prepareRendered(await readModeTemplate("workflows", name, workflowMode));
             const prompt = INPUT_WORKFLOWS.has(name)
               ? `${workflow}\n\nUser supplied scope or request: $ARGUMENTS`
               : workflow;
@@ -731,15 +763,16 @@ async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedF
       return [
         ...bundle,
         ...commands,
-        block("AGENTS.md", sharedInstructions, ide),
+        block("AGENTS.md", modeInstructions(workflowMode), ide),
       ];
     }
     case "roo-code": {
-      const ruleContent = prepareRendered(await readTemplate("rules", "graphward"));
+      const ruleContent = prepareRendered(await readModeTemplate("rules", "graphward", workflowMode));
       const routing = routingInstructions(".roo/WORKFLOW-ROUTING.md", ".roo/skills/SKILLS-INDEX.md");
       const finalRule = `${ruleContent}\n\n${routing}`;
       const [bundle] = await Promise.all([
         skillBundle(ide, {
+          workflowMode,
           skillsDir: ".roo/skills",
           indexPath: `.roo/skills/${SKILLS_INDEX_FILENAME}`,
           routingPath: `.roo/${WORKFLOW_ROUTING_FILENAME}`,
@@ -753,11 +786,12 @@ async function renderAdapter(ide: IdeId, projectRoot: string): Promise<RenderedF
       ];
     }
     case "cline": {
-      const ruleContent = prepareRendered(await readTemplate("rules", "graphward"));
+      const ruleContent = prepareRendered(await readModeTemplate("rules", "graphward", workflowMode));
       const routing = routingInstructions(".cline/WORKFLOW-ROUTING.md", ".cline/skills/SKILLS-INDEX.md");
       const finalRule = `${ruleContent}\n\n${routing}`;
       const [bundle] = await Promise.all([
         skillBundle(ide, {
+          workflowMode,
           skillsDir: ".cline/skills",
           indexPath: `.cline/skills/${SKILLS_INDEX_FILENAME}`,
           routingPath: `.cline/${WORKFLOW_ROUTING_FILENAME}`,
@@ -777,12 +811,12 @@ function toGeminiCommand(description: string, prompt: string): string {
   return `description = ${JSON.stringify(description)}\nprompt = """\n${escaped}\n"""\n`;
 }
 
-async function hostIntegration(ide: IdeId, projectRoot: string): Promise<RenderedFile[]> {
+async function hostIntegration(ide: IdeId, projectRoot: string, workflowMode: WorkflowMode): Promise<RenderedFile[]> {
   const profile = HOST_PROFILES[ide];
   const outputs: RenderedFile[] = [file(`.graphward/providers/hosts/${ide}.json`, JSON.stringify(profile, null, 2) + "\n", ide)];
   const directory = ide === "claude-code" ? ".claude/skills" : ide === "cursor" ? ".cursor/skills" : ide === "cline" ? ".cline/skills" : ide === "roo-code" ? ".roo/skills" : ide === "github-copilot" ? ".github/skills" : ide === "commandcode" ? ".commandcode/skills" : ".agents/skills";
   for (const name of WORKFLOW_NAMES) {
-    const workflow = await readTemplate("workflows", name);
+    const workflow = await readModeTemplate("workflows", name, workflowMode);
     outputs.push(file(`${directory}/${name}/SKILL.md`, prepareRendered(workflow) + `\n\nRead the active host capability profile under .graphward/providers/hosts/. Use its native question tool, or ask in the parent conversation. Subagents return unresolved questions to the parent. For every feature, discover repository facts, discuss requirements, confirm scope, prepare implementation context, then implement and validate. Prompt scores never authorize edits. Internal engines live in ${ide === "claude-code" ? ".claude/skills" : ".graphward/engines"}. Preserve configured model and reasoning settings.\n`, ide));
   }
   if (ide === "codex") {
@@ -797,7 +831,7 @@ async function hostIntegration(ide: IdeId, projectRoot: string): Promise<Rendere
     outputs.push(jsonMerge(".agents/hooks.json", antigravityHookSettings(ide), ide));
     outputs.push(seed(".graphward/gw.config.json", defaultConfigFile(), ide));
   }
-  if (ide === "cursor") outputs.push(...await agentsAt(".cursor/agents", ide));
+  if (ide === "cursor") outputs.push(...await agentsAt(".cursor/agents", ide, workflowMode));
   return outputs;
 }
 
@@ -839,12 +873,12 @@ export function isIdeId(input: string): input is IdeId {
 
 export async function renderAdapters(ides: IdeId[], projectRoot = process.cwd()): Promise<RenderedFile[]> {
   const unique = [...new Set(ides)];
+  const workflowMode = (await loadGwConfig(projectRoot)).workflow.mode;
   const { createConsolidatedRegistry } = await import("../mcp/consolidated.js");
   const toolContracts = (await createConsolidatedRegistry(projectRoot)).list();
-  const outputs = await Promise.all(unique.map(async ide => [...await renderAdapter(ide, projectRoot), ...await hostIntegration(ide, projectRoot)]));
+  const outputs = await Promise.all(unique.map(async ide => [...await renderAdapter(ide, projectRoot, workflowMode), ...await hostIntegration(ide, projectRoot, workflowMode)]));
   const invocation = resolveRuntimeInvocation();
-  const quote = (value: string) => `"${value.replaceAll('"', '\\"')}"`;
-  const command = [invocation.command, ...invocation.args].map(quote).join(' ');
+  const command = [invocation.command, ...invocation.args].map(value => quoteShellArgument(value)).join(' ');
   const files = mergeRenderedFiles([...outputs.flat(), { path: ".graphward/providers/tool-contracts.json", content: JSON.stringify({ schemaVersion: 1, tools: toolContracts }, null, 2) + "\n", kind: "file", owners: unique }]);
   return files.map(item => ({ ...item, content: item.content.replace(/npx gw\b/g, command).replace(/npx graphward\b/g, command).replace(/(?<![\w/])graphward (?=verify|aidlc|providers|map|health|context|gate)/g, command + " ") }));
 }

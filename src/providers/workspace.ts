@@ -82,7 +82,7 @@ export async function computeProviderSourceSnapshot(root: string): Promise<Provi
   return {
     files,
     sourceHashes: Object.fromEntries(files.map((file) => [file.path, file.hash])),
-    workspaceHash: hash(files.map((file) => `${file.path}:${file.hash}`).join("\n")),
+    workspaceHash: hash(`${policy.generationKey()}\n${files.map((file) => `${file.path}:${file.hash}`).join("\n")}`),
     skippedLarge,
   };
 }

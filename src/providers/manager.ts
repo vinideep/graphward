@@ -254,8 +254,10 @@ export async function installProvider(name: ProviderName, options: InstallProvid
       await rm(staging.versionRoot, { recursive: true, force: true });
       return { name, displayName: provider.displayName, purpose: provider.purpose, health: "error", requiredVersion: provider.version, message: `Provider activation failed; the previous version remains active: ${error instanceof Error ? error.message : String(error)}`, checkedAt: new Date().toISOString() };
     }
-    const status = await providerStatus(name, { providerHome, runner });
-    if (status?.health !== "healthy") {
+    // Activation must qualify this exact release. General discovery may select a
+    // healthy legacy fallback and cannot establish whether activation succeeded.
+    const status = await probeExecutable(name, staging.executable, "managed", runner);
+    if (status?.health !== "healthy" || !status.fingerprint || status.fingerprint !== stagedStatus.fingerprint || status.executable !== staging.executable) {
       if (previousCurrent !== undefined) {
         const restore = `${currentPath}.tmp-${randomUUID()}`;
         await writeFile(restore, previousCurrent, "utf8");
@@ -264,7 +266,7 @@ export async function installProvider(name: ProviderName, options: InstallProvid
         await unlink(currentPath).catch(() => undefined);
       }
       await rm(staging.versionRoot, { recursive: true, force: true });
-      return status ?? { name, displayName: provider.displayName, purpose: provider.purpose, health: "error", requiredVersion: provider.version, message: "Activated provider failed its health check; the previous version was restored.", checkedAt: new Date().toISOString() };
+      return { ...status, name, displayName: provider.displayName, purpose: provider.purpose, health: "error", requiredVersion: provider.version, message: "Activated provider failed its exact executable/version/fingerprint check; the previous version was restored.", checkedAt: new Date().toISOString() };
     }
     options.onProgress?.(`${provider.displayName} is installed and healthy.`);
     return status;

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "graphType": "service",
-  "generatedAt": "2026-07-13T00:00:00.000Z",
+  "generatedAt": "2026-10-27T03:31:34.651765+00:00",
   "scope": "graphward-OS",
   "nodes": [
     {
@@ -14,22 +14,23 @@
         "processModel": "one-shot, exits after each command"
       },
       "evidence": [
-        "src/cli/index.ts:1-15",
-        "package.json:13"
+        "src/cli/index.ts",
+        "package.json"
       ]
     },
     {
       "id": "service:mcp-server",
       "kind": "service",
-      "label": "ei-mcp (MCP tool server)",
+      "label": "GraphWard MCP server",
       "path": "src/mcp/index.ts",
       "confidence": "verified",
       "metadata": {
-        "processModel": "long-lived, stdio transport, no network listener"
+        "processModel": "long-lived, local stdio transport, project-root bound; loaded generation remains distinct from disk build"
       },
       "evidence": [
-        "src/mcp/index.ts:115-250",
-        "package.json:14"
+        "src/mcp/index.ts",
+        "src/mcp/cli.ts",
+        "package.json"
       ]
     },
     {
@@ -39,7 +40,7 @@
       "path": ".graphward/",
       "confidence": "inferred",
       "metadata": {
-        "note": "Not a real database — flat JSON/JSONL/Markdown files on the local filesystem, modeled here as the shared data store both processes read/write.",
+        "note": "Not a real database \u2014 flat JSON/JSONL/Markdown files on the local filesystem, modeled here as the shared data store both processes read/write.",
         "stores": [
           "install-manifest.json",
           "graph/*.json",
@@ -50,10 +51,10 @@
         ]
       },
       "evidence": [
-        "src/manifest/index.ts:6",
-        "src/graph/index.ts:24-25",
-        "src/claims/index.ts:40",
-        "src/hooks/index.ts:237"
+        "src/manifest/index.ts",
+        "src/graph/index.ts",
+        "src/claims/index.ts",
+        "src/hooks/index.ts"
       ]
     },
     {
@@ -65,10 +66,8 @@
         "transport": "child_process (execSync / execFile)"
       },
       "evidence": [
-        "src/freshness/index.ts:40-51",
-        "src/gates/index.ts:18-23,109-140",
-        "src/git-analysis/index.ts:52-63",
-        "src/user-profile/index.ts:52-63"
+        "src/verify/index.ts",
+        "src/git-analysis/index.ts"
       ]
     },
     {
@@ -80,22 +79,48 @@
         "transport": "stdio JSON-RPC"
       },
       "evidence": [
-        "src/mcp/index.ts:248-249"
+        "src/mcp/index.ts",
+        "src/mcp/cli.ts"
       ]
     },
     {
       "id": "external-api:host-lifecycle-hooks",
       "kind": "external-api",
-      "label": "Host lifecycle hook system (Claude Code settings.json / Cursor hooks.json)",
+      "label": "Native AI IDE lifecycle hooks",
       "confidence": "verified",
       "metadata": {
-        "hosts": [
-          "claude-code",
-          "cursor"
-        ]
+        "note": "Generated support and explicit native qualification limits are defined per host profile; enablement is separate proof."
       },
       "evidence": [
-        "src/hooks/index.ts:100-154"
+        "src/hooks/index.ts",
+        "src/adapters/index.ts",
+        "src/adapters/capabilities.ts"
+      ]
+    },
+    {
+      "id": "external-api:graphify",
+      "kind": "external-api",
+      "label": "Optional local graphify process",
+      "confidence": "verified",
+      "metadata": {
+        "transport": "local child process; configured policy and health dependent"
+      },
+      "evidence": [
+        "src/providers/graphify.ts",
+        "src/providers/manager.ts"
+      ]
+    },
+    {
+      "id": "external-api:cce",
+      "kind": "external-api",
+      "label": "Optional local cce process",
+      "confidence": "verified",
+      "metadata": {
+        "transport": "local child process; configured policy and health dependent"
+      },
+      "evidence": [
+        "src/providers/cce.ts",
+        "src/providers/manager.ts"
       ]
     }
   ],
@@ -107,8 +132,12 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/manifest/index.ts:26-28",
-        "src/installer/index.ts:208-211"
+        "src/cli/index.ts",
+        "package.json",
+        "src/manifest/index.ts",
+        "src/graph/index.ts",
+        "src/claims/index.ts",
+        "src/hooks/index.ts"
       ]
     },
     {
@@ -118,7 +147,12 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/manifest/index.ts:13-24"
+        "src/cli/index.ts",
+        "package.json",
+        "src/manifest/index.ts",
+        "src/graph/index.ts",
+        "src/claims/index.ts",
+        "src/hooks/index.ts"
       ]
     },
     {
@@ -128,8 +162,9 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/mcp/index.ts:154-165",
-        "src/mcp/index.ts:211-233"
+        "src/mcp/consolidated.ts",
+        "src/context/orchestrator.ts",
+        "src/orchestrators/change.ts"
       ]
     },
     {
@@ -137,51 +172,118 @@
       "to": "database:ei-filesystem-store",
       "relation": "writes",
       "confidence": "verified",
-      "metadata": {},
+      "metadata": {
+        "note": "Explicit mutating tools, including preparation and sync; retrieval leaves project artifacts unchanged."
+      },
       "evidence": [
-        "src/mcp/index.ts:128-152 (map_dependencies writes dependency-graph.json)"
+        "src/mcp/consolidated.ts",
+        "src/context/orchestrator.ts",
+        "src/orchestrators/change.ts"
       ]
     },
     {
       "from": "service:cli",
       "to": "external-api:git",
-      "relation": "http",
-      "confidence": "inferred",
+      "relation": "executes",
+      "confidence": "verified",
       "metadata": {
-        "note": "not HTTP — local subprocess call; relation reused for 'external process communication' per schema's closest fit"
+        "transport": "local child process"
       },
       "evidence": [
-        "src/freshness/index.ts:40-51"
+        "src/cli/index.ts",
+        "package.json",
+        "src/verify/index.ts",
+        "src/git-analysis/index.ts"
       ]
     },
     {
       "from": "external-api:mcp-client-host",
       "to": "service:mcp-server",
-      "relation": "grpc",
-      "confidence": "inferred",
+      "relation": "rpc",
+      "confidence": "verified",
       "metadata": {
-        "note": "not gRPC — stdio JSON-RPC (MCP protocol); relation reused as closest schema fit for a client-initiated RPC-style call"
+        "transport": "stdio JSON-RPC"
       },
       "evidence": [
-        "src/mcp/index.ts:248-249"
+        "src/mcp/index.ts",
+        "src/mcp/cli.ts",
+        "package.json"
       ]
     },
     {
       "from": "external-api:host-lifecycle-hooks",
       "to": "service:cli",
-      "relation": "http",
+      "relation": "executes",
       "confidence": "verified",
       "metadata": {
-        "note": "host invokes `npx gw hook <event>` as a subprocess per lifecycle event"
+        "transport": "local child process"
       },
       "evidence": [
-        "src/hooks/index.ts:100-105",
-        "src/cli/index.ts:276-292"
+        "src/hooks/index.ts",
+        "src/adapters/index.ts",
+        "src/adapters/capabilities.ts",
+        "src/cli/index.ts",
+        "package.json"
+      ]
+    },
+    {
+      "from": "service:cli",
+      "to": "external-api:graphify",
+      "relation": "executes",
+      "confidence": "verified",
+      "metadata": {
+        "transport": "local child process; policy/health dependent"
+      },
+      "evidence": [
+        "src/providers/graphify.ts",
+        "src/orchestrators/initialize.ts"
+      ]
+    },
+    {
+      "from": "service:mcp-server",
+      "to": "external-api:graphify",
+      "relation": "executes",
+      "confidence": "verified",
+      "metadata": {
+        "transport": "local child process; policy/health dependent"
+      },
+      "evidence": [
+        "src/providers/graphify.ts",
+        "src/context/preparation.ts"
+      ]
+    },
+    {
+      "from": "service:cli",
+      "to": "external-api:cce",
+      "relation": "executes",
+      "confidence": "verified",
+      "metadata": {
+        "transport": "local child process; policy/health dependent"
+      },
+      "evidence": [
+        "src/providers/cce.ts",
+        "src/orchestrators/initialize.ts"
+      ]
+    },
+    {
+      "from": "service:mcp-server",
+      "to": "external-api:cce",
+      "relation": "executes",
+      "confidence": "verified",
+      "metadata": {
+        "transport": "local child process; policy/health dependent"
+      },
+      "evidence": [
+        "src/providers/cce.ts",
+        "src/context/preparation.ts"
       ]
     }
   ],
   "unknowns": [
-    "No formal service mesh exists; 'service' nodes here represent two local process types, not deployed services. Edge relations 'http'/'grpc' are reused loosely as the closest schema-defined relation for subprocess/stdio-RPC communication — see each edge's metadata.note for the actual transport."
+    "This graph represents local processes, not deployed services. Descriptive executes/rpc relations use the generic graph schema; no HTTP/gRPC transport is implied.",
+    "Generated host integrations do not establish native discovery, trust, enablement or enforcement on every IDE.",
+    "Optional SQLite/storage helpers are not established as the default canonical store or default-context runtime ingestion.",
+    "This source review establishes no remote CI, new provider installation, foreign-platform or arbitrary-project outcome qualification."
   ],
-  "updatedAt": "2026-10-14T00:00:00.000Z"
+  "updatedAt": "2026-10-27T03:31:34.651765+00:00"
 }

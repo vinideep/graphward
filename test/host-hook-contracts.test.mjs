@@ -45,10 +45,10 @@ test("Claude Code: built-in, agent, browser, search and GraphWard tools pass wit
     ["AskUserQuestion", { questions: [] }], ["EnterWorktree", { path: "wt" }], ["Artifact", { file_path: path.join(root, "page.html") }],
     ["mcp__context-engine__context_search", { query: "x", top_k: 12 }], ["mcp__context-engine__session_recall", { topic: "x" }],
     ["mcp__claude-in-chrome__javascript_tool", { action: "javascript_exec", text: "fetch('/x')" }], ["mcp__Claude_Browser__navigate", { url: "https://x" }],
-    ["mcp__ccd_session__spawn_task", { title: "x" }], ["mcp__engineering-intelligence__get_engineering_context", { task: "x" }],
+    ["mcp__ccd_session__spawn_task", { title: "x" }], ["mcp__graphward__get_engineering_context", { task: "x" }],
     ["mcp__graphward__validate_change", { files: ["src/index.ts"] }], ["mcp__graphward__sync_engineering_knowledge", {}],
-    ["mcp__graphward__update_aidlc_state", { phase: "construction" }], ["mcp__plugin_tools_gw__propose_task_contract", {}],
-    ["Bash", { command: "TZ=Asia/Kolkata date '+%H:%M'; git -C backend fetch -q origin && git status -sb | head -1" }],
+    ["mcp__graphward__update_aidlc_state", { phase: "construction" }], ["mcp__graphward__propose_task_contract", {}],
+    ["Bash", { command: "git -C backend status -sb | head -1" }],
     ["Bash", { command: "curl -s -m 10 https://api.example.com/version" }], ["Bash", { command: "node --version && npm ls" }],
     ["PowerShell", { command: "git branch --show-current" }],
   ];
@@ -57,6 +57,8 @@ test("Claude Code: built-in, agent, browser, search and GraphWard tools pass wit
     ["Edit", { file_path: path.join(root, "src/index.ts"), old_string: "1", new_string: "2" }], ["Write", { file_path: path.join(root, "src/new.ts"), content: "" }],
     ["Bash", { command: "touch src/index.ts" }], ["Bash", { command: "GIT_PAGER='sh -c id' git log" }], ["Bash", { command: "curl -so out.json https://x" }],
     ["mcp__graphward__evaluate_experiment_step", {}], ["mcp__filesystem__write_file", { path: "src/index.ts", content: "" }],
+    ["mcp__engineering-intelligence__get_engineering_context", { task: "x" }], ["mcp__plugin_tools_gw__propose_task_contract", {}],
+    ["Bash", { command: "git fetch -q origin" }],
   ];
   for (const [tool, input] of denied) assert.equal(await sharedDecision(root, "claude-code", tool, input), "deny", tool);
 });
@@ -64,7 +66,7 @@ test("Claude Code: built-in, agent, browser, search and GraphWard tools pass wit
 test("Claude Code: the PreToolUse matcher is anchored so TodoWrite/BashOutput never reach the gate", () => {
   const settings = JSON.parse(claudeCodeHookSettings());
   const matcher = new RegExp(settings.hooks.PreToolUse[0].matcher);
-  for (const tool of ["Edit", "Write", "NotebookEdit", "Bash", "PowerShell", "mcp__graphward__validate_change"]) assert.ok(matcher.test(tool), tool);
+  for (const tool of ["Edit", "Write", "NotebookEdit", "Bash", "PowerShell", "Task", "Agent", "mcp__graphward__validate_change"]) assert.ok(matcher.test(tool), tool);
   for (const tool of ["TodoWrite", "BashOutput", "Read", "TaskCreate"]) assert.ok(!matcher.test(tool), tool);
 });
 
@@ -87,11 +89,11 @@ test("Cursor: Shell/Read/Grep/Task and MCP:<tool> follow Cursor's names; GraphWa
     const input = normalizeInput("cursor", JSON.stringify({ conversation_id: "c", hook_event_name: "preToolUse", workspace_roots: [root], tool_name, tool_input }));
     return JSON.parse((await runHook("pre-tool-use", root, input, "cursor")).stdout).permission;
   };
-  for (const [tool, input] of [["MCP:propose_task_contract", {}], ["MCP:get_task_readiness", {}], ["Read", { file_path: "src/index.ts" }], ["Grep", { pattern: "a" }],
+  for (const [tool, input] of [["mcp__graphward__propose_task_contract", {}], ["mcp__graphward__get_task_readiness", {}], ["Read", { file_path: "src/index.ts" }], ["Grep", { pattern: "a" }],
     ["Task", { description: "x" }], ["Shell", { command: "git status" }], ["MCP:search_docs", { query: "x" }]]) {
     assert.equal(await decide(tool, input), "allow", tool);
   }
-  for (const [tool, input] of [["Write", { file_path: path.join(root, "src/index.ts") }], ["Delete", { path: "src/index.ts" }], ["Shell", { command: "rm -rf src" }]]) {
+  for (const [tool, input] of [["Write", { file_path: path.join(root, "src/index.ts") }], ["Delete", { path: "src/index.ts" }], ["Shell", { command: "rm -rf src" }], ["MCP:propose_task_contract", {}], ["MCP:get_task_readiness", {}]]) {
     assert.equal(await decide(tool, input), "deny", tool);
   }
 });

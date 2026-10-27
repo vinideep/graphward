@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graphward.dev/schemas/api-snapshot-replay.schema.json",
+  "title": "GraphWard supplied API replay report",
+  "description": "Comparison of supplied response data, not an executed endpoint attestation.",
+  "type": "object",
+  "$defs": {
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "projectRoot",
+        "runtimeGeneration",
+        "files"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "projectRoot": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runtimeGeneration": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "files": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1
+          },
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^(?:[a-f0-9]{64}|missing)$"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "unit",
+    "replayedAt",
+    "status",
+    "differences",
+    "binding",
+    "manifestHash",
+    "requestHash",
+    "responseEvidence"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 2
+    },
+    "unit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "replayedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "pass",
+        "fail"
+      ]
+    },
+    "differences": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "binding": {
+      "$ref": "#/$defs/binding"
+    },
+    "manifestHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "requestHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "responseEvidence": {
+      "const": "supplied"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "pass"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "differences": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ]
+}

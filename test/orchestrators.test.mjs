@@ -139,3 +139,39 @@ test("runHealth reports graph stats and an overall verdict", async () => {
     rmSync(dir, { recursive: true, force: true });
   }
 });
+
+
+test('health rejects duplicate node IDs and canonical missing endpoints', async()=>{
+ const dir=initRepo();
+ try {
+  await buildGraph(dir);
+  const {readFileSync}=await import('node:fs');
+  const graphPath=path.join(dir,'.graphward/graph/dependency-graph.json');
+  const graph=JSON.parse(readFileSync(graphPath,'utf8'));
+  graph.nodes.push({...graph.nodes[0]});
+  graph.edges.push({from:graph.nodes[0].id,to:'absent-target',relation:'calls',confidence:'unknown',evidence:[],metadata:{}});
+  writeFileSync(graphPath,JSON.stringify(graph));
+  const result=await runHealth(dir);
+  assert.equal(result.ok,false);
+  assert.equal(result.json.graph.duplicateNodeIds.length,1);
+  assert.equal(result.json.graph.missingEndpoints.length,1);
+ } finally {rmSync(dir,{recursive:true,force:true});}
+});
+
+test('health fails unverified material documents and reports explicit navigation-only guides',async()=>{
+ const dir=initRepo();
+ try {
+  await buildGraph(dir);
+  mkdirSync(path.join(dir,'.graphward/knowledge-base'),{recursive:true});
+  writeFileSync(path.join(dir,'.graphward/knowledge-base/valid.md'),'Alpha returns one. (evidence: src/a.js:1)\n');
+  writeFileSync(path.join(dir,'.graphward/knowledge-base/uncited.md'),'# Material behavior\nThe backend always authenticates requests.\n');
+  writeFileSync(path.join(dir,'.graphward/knowledge-base/navigation.md'),'<!-- graphward: navigation-only -->\n# Navigation\n- `src/`\n');
+  const {recordEvidenceHashes}=await import('../dist/evidence/index.js');
+  await recordEvidenceHashes(dir);
+  const result=await runHealth(dir);
+  assert.equal(result.ok,false);
+  assert.equal(result.json.evidence.unverifiedDocuments.length,1);
+  assert.match(result.json.evidence.unverifiedDocuments[0].path,/uncited/);
+  assert.equal(result.json.evidence.navigationOnlyDocuments,1);
+ } finally {rmSync(dir,{recursive:true,force:true});}
+});

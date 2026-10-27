@@ -1,8 +1,76 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createHash } from "node:crypto";
+import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import { renderAdapters } from "../dist/adapters/index.js";
 import { validateRender } from "../dist/validation/index.js";
-import { AGENT_NAMES, SKILL_NAMES } from "../dist/templates.js";
+import { AGENT_NAMES, SKILL_NAMES, readTemplate } from "../dist/templates.js";
+import { selectWorkflowMode } from "../dist/token-optimizer.js";
+
+test("canonical mode selection preserves original strict bytes and handles CRLF before projection", async () => {
+  const originalHashes = [
+    ["workflows", "graphward", "507cd7fecbb1f0e4d6f976fe1cfc7057c5fbef6bbaad560e6bb756d7addcd2a0"],
+    ["skills", "graphward-skill", "7ff893ad3d8c9c6c27949619d7049c59cb82f4c8e3b00d4d7cf4f223ba9f619d"],
+    ["skills", "aidlc-lifecycle-engine", "6a2a8df3fec54ad1bb58bc99387f22be69b7cd9bb741d229b9b077252e24eb1f"],
+    ["skills", "context-budget-optimizer", "282725b55c87ab6b102bc2307e64bec9c07fb31840db2cc78edb6f703c78a2c3"],
+    ["agents", "engineering-orchestrator", "45ca6ff53057ec2b8654ad7afde3c1feff0d6b55d4dd1565ff1ee871cd07eeb1"],
+    // Intentional repair guidance update; strict projection must preserve these exact bytes.
+    ["rules", "graphward", "8f29d8a4265c055050c91e060cbff1d1bebda12afd44fcea7298f6fd027d3527"],
+  ];
+  for (const [category, name, expected] of originalHashes) {
+    const canonical = await readTemplate(category, name);
+    const strict = selectWorkflowMode(canonical);
+    assert.equal(createHash("sha256").update(strict).digest("hex"), expected, `${category}/${name}`);
+    assert.equal(selectWorkflowMode(canonical, "invalid"), strict, "invalid direct-JS input retains strict");
+    for (const mode of ["strict", "concise"]) {
+      const selected = selectWorkflowMode(canonical, mode);
+      assert.equal(selectWorkflowMode(canonical.replace(/\n/g, "\r\n"), mode).replace(/\r\n/g, "\n"), selected);
+      assert.doesNotMatch(selected, /graphward:mode/);
+    }
+  }
+  assert.throws(() => selectWorkflowMode("<!-- graphward:mode concise -->\nunterminated"), /Malformed/);
+});
+
+test("all providers select concise instructions consistently without changing absent or invalid mode", async t => {
+  const root = await mkdtemp(path.join(tmpdir(), "gw-render-mode-"));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await mkdir(path.join(root, ".graphward"));
+  const configPath = path.join(root, ".graphward/gw.config.json");
+  const ides = ["antigravity", "antigravity-cli", "codex", "claude-code", "cursor", "github-copilot", "gemini-cli", "commandcode", "generic", "roo-code", "cline"];
+  const absent = await renderAdapters(ides, root);
+  await writeFile(configPath, JSON.stringify({ workflow: { mode: "invalid" } }));
+  assert.deepEqual(await renderAdapters(ides, root), absent);
+  await writeFile(configPath, JSON.stringify({ workflow: { mode: "strict" } }));
+  assert.deepEqual(await renderAdapters(ides, root), absent);
+  await writeFile(configPath, JSON.stringify({ workflow: { mode: "concise" } }));
+  const concise = await renderAdapters(ides, root);
+  const get = name => concise.find(item => item.path === name)?.content ?? "";
+  for (const name of [".agents/workflows/graphward.md", ".claude/commands/graphward.md", ".cursor/commands/graphward.md", ".github/prompts/graphward.prompt.md", ".gemini/commands/graphward.toml", ".commandcode/commands/graphward.md", ".agents/skills/graphward/SKILL.md", ".github/skills/graphward/SKILL.md"]) {
+    assert.match(get(name), /one working agent/, name);
+    assert.match(get(name), /get_task_readiness/, name);
+    assert.match(get(name), /high\/critical-risk/, name);
+    assert.doesNotMatch(get(name), /15\. \*\*Review Gate|7\. \*\*Plan Agile/, name);
+  }
+  for (const name of [".graphward/engines/graphward-skill/SKILL.md", ".claude/skills/graphward-skill/SKILL.md", ".codex/agents/graphward.toml"]) {
+    assert.match(get(name), /one working agent/, name);
+    assert.match(get(name), /ProjectFilePolicy/, name);
+    assert.match(get(name), /full AI-DLC lifecycle/, name);
+    assert.doesNotMatch(get(name), /- Update Agile artifacts when product behavior is in scope:/, name);
+  }
+  for (const name of ["AGENTS.md", "CLAUDE.md", "GEMINI.md", ".github/copilot-instructions.md", ".agents/rules/graphward.md", ".cursor/rules/graphward.mdc", ".roo/rules/graphward.md", ".clinerules/graphward.md", ".codex/agents/engineering-orchestrator.toml", ".agents/agents/engineering-orchestrator/agent.md"]) {
+    assert.match(get(name), /one working agent/, name);
+    assert.doesNotMatch(get(name), /start non-trivial work with the engineering-orchestrator|auto-route is enabled|maintain Agile artifacts/, name);
+  }
+  const row = get(".agents/WORKFLOW-ROUTING.md").split("\n").find(line => line.startsWith("| `graphward` |"));
+  assert.match(row, /^\| `graphward` \| yes \| `graphward-skill` \|/);
+  assert.match(row, /aidlc-lifecycle-engine/);
+  assert.match(get(".claude/skills/graphward-skill/SKILL-BRIEF.md"), /Concise/);
+  assert.match(get("CLAUDE.md"), /passing verification receipt covers changed source/);
+  assert.doesNotMatch(get("CLAUDE.md"), /Everything else passes|with no intelligence installed they do nothing/);
+  assert.match(get("AGENTS.md"), /Concise mode preserves native permissions, task confirmation\/readiness/);
+});
 
 test("all V2 IDE adapters render internally valid native destinations and workflows", async () => {
   const ides = ["antigravity", "antigravity-cli", "codex", "claude-code", "cursor", "github-copilot", "gemini-cli", "commandcode", "generic", "roo-code", "cline"];

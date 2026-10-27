@@ -4,7 +4,7 @@
 
 GraphWard helps coding agents understand existing behavior, clarify a request, identify affected callers and tests, and record what was validated. It combines project-owned knowledge, dependency graphs and current source evidence. It does not replace your assistant or guarantee correct code or complete dependency coverage.
 
-> **Current checkout — October 12, 2026:** reliability repairs are implemented locally but unpublished; package version remains `1.2.8`. Other copies with that version can contain older code. The guided CLI is planned, not implemented. Existing-project migration has two open preservation defects described below.
+> **Current source candidate — October 26, 2026:** this checkout declares package version `1.3.3`. This identifies local source, not a published release or a running IDE process. Use `gw --version` for the invoked version and MCP `provider_status.runtime` for the loaded process/build generation. Native host, remote platform and measured outcome qualification remain separate from local tests.
 
 ## Start here
 
@@ -171,6 +171,22 @@ Ordinary edits within approved intent refresh context without repeatedly revokin
 
 Track **requirement → changed files → validation**. Review missing consumers/failure cases and unnecessary additions, not just compilation. Whether ordinary host requests follow this contract depends on discovered integration, permissions and verified hook coverage.
 
+### Opt-in concise workflow
+
+Strict is the default for existing and new configurations. To try the shorter workflow, merge this setting into `.graphward/gw.config.json`, keeping your other settings:
+
+```json
+{
+  "workflow": { "mode": "concise" }
+}
+```
+
+Preview `graphward update . --dry-run`, then update the project to refresh its managed agent instructions. Ordinary concise work uses one working agent, scoped context, a short impact/acceptance record, applicable verification and affected intelligence sync. Complex or high-risk work and explicit backlog delivery retain their required lifecycle and specialist checks. Missing or invalid mode values resolve to strict.
+
+Read, discussion and planning requests do not authorize edits. Both modes retain native permissions, task readiness, freshness, project scope and real verification. In concise mode, Stop can disregard pre-existing dirty source only when complete session tracking shows that the session stayed read-only and the source/Git/configuration state is unchanged. Missing or uncertain tracking keeps the verification requirement.
+
+Concise mode is experimental. Local regression tests establish behavior; token savings and coding accuracy still require the separate measured experiments.
+
 ## CCE, Graphify and source inspection
 
 - **CCE:** current source spans inside approved file scope.
@@ -251,7 +267,11 @@ Configure real checks in `.graphward/gw.config.json`:
 
 Use commands that exist in your project. Supported package scripts can also be detected. **Zero executed checks cannot establish a pass.** Baseline/preflight do not generate product code/tests to manufacture success.
 
-Verification preserves original exit status, reports failures/timeouts and binds evidence to checked bytes. Later edits invalidate it. Run meaningful application checks, not just intelligence checks.
+Verification preserves original exit status and reports failures/timeouts. Version 3 receipts bind canonical project/HEAD, checked bytes, required commands, configuration inputs, actual command/timeout/mode selection, and the finalized implementation generation. Source, check, configuration or runtime changes invalidate reuse. Legacy receipts remain history; re-run checks to obtain current evidence. Explicit custom checks report their own results and cannot substitute for omitted required baseline checks.
+
+When no checks exist, the default Stop policy remains blocking. Projects may explicitly configure `hooks.unavailableValidationPolicy: "allow-explicit"`; a native user message `Validation is unavailable; no check commands are configured.` then records an unavailable outcome for that session and exact source/check state. This permits an honest final report and never establishes a validation pass or waives configured failures.
+
+Security and convention artifacts require completed, dated, attributed reviews with current source/scope/runtime bindings; see [the review schema](schemas/review-evidence.schema.json) and `createReviewBinding` in `dist/gates/review-evidence.js`. Empty, pending, unrelated or stale evidence stays unavailable. API snapshot v2 capture/replay binds source, request baseline and runtime generation; replay checks supplied response data and does not itself prove that an endpoint executed.
 
 Failed validation does not guarantee automatic rollback. Repair or report the failure while preserving unrelated local edits. File restoration cannot undo external effects of scripts, tests or agent tools. Local checks, native canaries, measured accuracy and release qualification are distinct evidence.
 
@@ -266,6 +286,8 @@ Failed validation does not guarantee automatic rollback. Repair or report the fa
 | Data | Core artifacts stay local; model-provider disclosure follows the coding host's configuration/permissions. |
 
 Local tooling does not guarantee no data leaves the machine. Checks are not container-isolated. Not every artifact writer scans for secrets.
+
+Dashboard export uses an explicit contained artifact inventory and excludes private profiles, task answers, caches and runtime state. Repository Markdown renders with raw HTML and external resource loading disabled, and diagrams use strict rendering. Experiment rollback requires a captured pre-edit baseline, preserves index state, and refuses to overwrite later candidate drift. Isolated measurement identifies the copied candidate and keeps skipped or unavailable verification visible. Metric `KEEP` alone cannot establish a verified result.
 
 Default `.graphward/.gitignore` excludes several content-derived areas, including knowledge, graphs, claims, context, reports, provider caches and user memory. It does not make all lifecycle/change records private. Inspect actual Git ignore/tracking state before sharing. Current `--share` is not wired through CLI paths as a validated redacted export; do not rely on it for safe publication.
 
@@ -298,6 +320,8 @@ Dynamic calls/imports, unsupported languages, incomplete configuration and unres
 | MCP points at another project | Inspect canonical project root/runtime registration. Another project's indexes are invalid task evidence. |
 | Update conflicts | Preserve custom content, review diffs and account for preservation blockers; avoid routine force overwrite. |
 | No verification commands | Configure meaningful `hooks.verifyCommands`; do not generate tests merely to pass baseline. |
+| Codex approval is visible but readiness remains unconfirmed | Send the displayed approval challenge as a plain chat message. The app's wrapped question replies are not currently ingested by the Codex confirmation hook; do not fabricate a receipt. |
+| A host exposes only a bare MCP tool name | Recovery names require the exact GraphWard server namespace. A bare name such as `MCP:propose_task_contract` cannot establish that identity and remains gated. Qualified tools are required to propose tasks; there is currently no CLI proposal command. Existing tasks support CLI preparation and interactive operator confirmation. |
 | Setup exits but integration is incomplete | Inspect providers and six native support stages; best-effort completion is not readiness proof. |
 
 ## Planned CLI upgrade
@@ -345,6 +369,16 @@ npm run test:benchmark -- --dry-run
 node scripts/evaluate-agent-runs.mjs --results measured-runs.json
 ```
 
-Evaluation separates missed required changes, unnecessary additions, clarification errors, context gaps, regressions, cost and latency. Missing evidence blocks qualification; simulations are not measured successes.
+Evaluation accepts a version 2 envelope with a preregistered held-out task/check protocol, its hash, paired records and contained hash-verified executed-check artifacts. It requires the complete frozen sample, at least 20 pairs across 3 repositories, and identical task/oracle/check identities between arms. Those floors are release policy, not a statistical power claim. Legacy arrays are nonqualifying. Valid supplied evidence establishes record consistency; provenance and genuine accuracy/performance improvement still require independent measurement. Missing evidence blocks qualification; simulations are not measured successes.
+
+Context JSON, Markdown and full payloads account for complete serialized output and expose omitted counts or irreducible budget overflow. Estimates use the documented character heuristic; MCP transport/model usage are separate. Resource, coverage, storage and runtime helpers expose their local or degraded capabilities; they do not establish active provider throttling, measured coverage or durable storage when those facilities are unavailable.
+
+The separate efficiency evaluator is maintainer-checkout tooling; it is not included in the installed package. It describes matched `baseline`, `current`, and `simplified` arms and includes failed attempts, retries, and maintenance in processed tokens per accepted task, with cost and latency reported separately. Every result has `releaseQualification: false`; pilot and development observations cannot qualify a release. See the [efficiency experiment protocol](benchmark/efficiency/PROTOCOL.md) before collecting runs.
+
+```bash
+node scripts/evaluate-efficiency-runs.mjs --spec frozen-efficiency-spec.json --results measured-efficiency-runs.json
+```
+
+`graphward telemetry` reports observational cohorts. Missing token categories, unsupported host formats, and unknown child transcript accounting remain incomplete. Explicit authorized child manifests and complete category accounting are required by `usageFromTelemetry` before a sample can enter a complete efficiency comparison; no raw prompt content is stored in the telemetry log.
 
 Schemas: [schemas/](schemas/). Further background: [WORKFLOW_GUIDE.md](WORKFLOW_GUIDE.md), [graphward-blueprint.md](graphward-blueprint.md). Use this README's current-candidate status/contracts when assessing behavior and qualification.

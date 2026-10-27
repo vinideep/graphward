@@ -6,6 +6,7 @@ export const LEGACY_CONFIG_PATH = ".graphward/config.json";
 export const GW_CONFIG_SCHEMA_VERSION = 2;
 
 export type ProviderPolicy = "auto" | "full" | "native";
+export type WorkflowMode = "strict" | "concise";
 
 export interface ProjectFilesConfig {
   roots?: string[];
@@ -22,6 +23,7 @@ export interface ProvidersConfig {
 
 export interface GwConfig {
   schemaVersion: number;
+  workflow: { mode: WorkflowMode; [key: string]: unknown };
   hooks?: Record<string, unknown>;
   tokenBudgets: Record<string, number>;
   projectFiles: ProjectFilesConfig;
@@ -35,6 +37,7 @@ export type EiConfig = GwConfig;
 
 const DEFAULT_CONFIG: GwConfig = {
   schemaVersion: GW_CONFIG_SCHEMA_VERSION,
+  workflow: { mode: "strict" },
   hooks: {},
   tokenBudgets: {},
   projectFiles: {},
@@ -49,11 +52,11 @@ const DEFAULT_CONFIG: GwConfig = {
 async function readJson(location: string): Promise<Record<string, unknown> | undefined> {
   try {
     const parsed = JSON.parse(await readFile(location, "utf8")) as unknown;
-    return parsed && typeof parsed === "object" && !Array.isArray(parsed)
-      ? parsed as Record<string, unknown>
-      : undefined;
-  } catch {
-    return undefined;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("Expected a JSON object.");
+    return parsed as Record<string, unknown>;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined;
+    throw new Error(`Invalid or unreadable GraphWard configuration at ${location}; original bytes preserved. ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 
@@ -72,6 +75,8 @@ function strings(value: unknown): string[] | undefined {
 }
 
 function normalizeConfig(raw: Record<string, unknown>, legacy: Record<string, unknown> = {}): EiConfig {
+  const workflow = raw.workflow && typeof raw.workflow === "object" && !Array.isArray(raw.workflow)
+    ? raw.workflow as Record<string, unknown> : {};
   const projectFiles = raw.projectFiles && typeof raw.projectFiles === "object" && !Array.isArray(raw.projectFiles)
     ? raw.projectFiles as Record<string, unknown>
     : {};
@@ -87,9 +92,11 @@ function normalizeConfig(raw: Record<string, unknown>, legacy: Record<string, un
   return {
     ...raw,
     schemaVersion: GW_CONFIG_SCHEMA_VERSION,
-    hooks: raw.hooks && typeof raw.hooks === "object" && !Array.isArray(raw.hooks)
-      ? raw.hooks as Record<string, unknown>
-      : {},
+    workflow: { ...workflow, mode: workflow.mode === "concise" ? "concise" : "strict" },
+    hooks: {
+      ...(raw.hooks && typeof raw.hooks === "object" && !Array.isArray(raw.hooks) ? raw.hooks as Record<string, unknown> : {}),
+      unavailableValidationPolicy: (raw.hooks as Record<string, unknown> | undefined)?.unavailableValidationPolicy === "allow-explicit" ? "allow-explicit" : "block",
+    },
     tokenBudgets: {
       ...numbers(legacy.tokenBudgets),
       ...numbers(raw.tokenBudgets),

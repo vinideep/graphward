@@ -26,3 +26,7 @@ Trigger: a CLI subcommand's flags/behavior change, or an MCP tool's `inputSchema
 ## Unknowns
 
 - N/A — this event guidance is derived directly from the CLI/MCP surface documented in `04-api-documentation.md`.
+
+## Local audit repair migration — 2026-10-27
+
+Completed security/convention review bindings, API capture/replay schema2 and required-baseline verification schema3 are current contracts; legacy evidence remains advisory/unavailable. Supplied-response replay is not endpoint execution. See repairs-2026-10-26/API-MIGRATION.md and public schema tests.

@@ -2,6 +2,7 @@ import { mkdir, readFile, appendFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { createHash } from "node:crypto";
+import { readApprovedSource } from "../project-files/index.js";
 
 export interface LearnedPatternInput {
   type: "convention" | "regression" | "constraint";
@@ -18,6 +19,8 @@ export interface LearnedPatternProposal extends LearnedPatternInput {
   deduplicationHash: string;
   proposedAt: string;
   status: "proposed" | "promoted" | "rejected";
+  sourceEvidence?: Record<string, string>;
+  evidenceAssurance?: "current-contained-source";
 }
 
 export interface UncertaintyEventInput {
@@ -33,6 +36,7 @@ export interface MemoryQueryResult {
   constraints: string[];
   conventions: string[];
   regressions: string[];
+  quarantinedGuidance?: Array<{id:string;reason:string}>;
 }
 
 function memoryDir(root: string): string {
@@ -62,6 +66,15 @@ function safeInline(value: string): string {
   return value.replace(/[\r\n\t]+/g, " ").replace(/\s{2,}/g, " ").trim();
 }
 
+async function patternEvidence(root: string, files: string[]): Promise<Record<string,string>> {
+  const evidence: Record<string,string> = {};
+  for (const file of files) {
+    const source = await readApprovedSource(root, file);
+    evidence[source.path] = createHash("sha256").update(source.content).digest("hex");
+  }
+  return evidence;
+}
+
 export async function proposeLearnedPattern(root: string, pattern: LearnedPatternInput): Promise<LearnedPatternProposal & { path: string }> {
   const validTypes = ["convention", "regression", "constraint"] as const;
   if (!pattern || !validTypes.includes(pattern.type as any)) throw new Error(`Invalid pattern type "${pattern?.type}". Allowed types: ${validTypes.join(", ")}.`);
@@ -76,6 +89,7 @@ export async function proposeLearnedPattern(root: string, pattern: LearnedPatter
     proposedAt: new Date().toISOString(),
     status: "proposed",
   };
+  try { proposal.sourceEvidence = await patternEvidence(root, pattern.targetFiles); } catch { /* An unbacked proposal is never authority. Promotion validates it. */ }
   const dir = proposalDir(root);
   await mkdir(dir, { recursive: true });
   const target = path.join(dir, `${proposal.id}.json`);
@@ -89,12 +103,18 @@ export async function promoteLearnedPattern(
   decision: { reviewer: string; rationale: string; promote: boolean },
 ): Promise<{ saved: boolean; path: string; id: string; status: "promoted" | "rejected" | "duplicate" }> {
   if (!decision.reviewer.trim() || !decision.rationale.trim()) throw new Error("Promotion requires reviewer and rationale.");
+  if (!/^pat-[a-f0-9]{16}$/.test(id)) throw new Error("Invalid learned-pattern proposal ID.");
   const proposalPath = path.join(proposalDir(root), `${id}.json`);
   const proposal = JSON.parse(await readFile(proposalPath, "utf8")) as LearnedPatternProposal;
   if (!decision.promote) {
     await writeFile(proposalPath, `${JSON.stringify({ ...proposal, status: "rejected", decision }, null, 2)}\n`, "utf8");
     return { saved: false, path: path.relative(root, proposalPath).replace(/\\/g, "/"), id, status: "rejected" };
   }
+  if (proposal.schemaVersion !== 1 || proposal.id !== id || !proposal.targetFiles?.length || proposal.deduplicationHash !== patternHash(proposal)) throw new Error("Learned-pattern proposal identity/evidence is invalid.");
+  let evidence: Record<string,string>;
+  try { evidence = await patternEvidence(root, proposal.targetFiles); }
+  catch (error) { throw new Error(`Learning source evidence is unavailable: ${error instanceof Error ? error.message : String(error)}`); }
+  if (proposal.sourceEvidence && Object.entries(evidence).some(([file,hash]) => proposal.sourceEvidence![file] !== hash)) throw new Error("Learning source evidence changed after proposal; re-propose and review the current source.");
 
   const fileNameMap: Record<LearnedPatternInput["type"], { file: string; heading: string }> = {
     convention: { file: "coding-patterns.md", heading: "# Coding Patterns" },
@@ -110,7 +130,7 @@ export async function promoteLearnedPattern(
   const entry = `- **${safeInline(proposal.title)}:** ${safeInline(proposal.rule)} (${safeInline(proposal.description)}) (evidence: ${proposal.targetFiles!.map(safeInline).join(", ")}) [provenance: ${proposal.provenance ?? "unknown"}] [pattern-id:${proposal.id}] [reviewer:${safeInline(decision.reviewer)}]\n`;
   const { writeProtectedFile } = await import("../manifest/lock.js");
   await writeProtectedFile(root, filePath, existing + entry);
-  await writeFile(proposalPath, `${JSON.stringify({ ...proposal, status: "promoted", decision }, null, 2)}\n`, "utf8");
+  await writeFile(proposalPath, `${JSON.stringify({ ...proposal, status: "promoted", sourceEvidence:evidence, evidenceAssurance:"current-contained-source", decision }, null, 2)}\n`, "utf8");
   return { saved: true, path: path.relative(root, filePath).replace(/\\/g, "/"), id, status: "promoted" };
 }
 
@@ -203,6 +223,7 @@ export async function queryProjectMemory(
 ): Promise<MemoryQueryResult> {
   const dir = memoryDir(root);
   const queryWords: string[] = [];
+  const quarantinedGuidance: Array<{id:string;reason:string}> = [];
   if (query.file) {
     queryWords.push(...query.file.toLowerCase().split(/[\\/._-]+/).filter((w) => w.length > 2));
   }
@@ -215,7 +236,19 @@ export async function queryProjectMemory(
     try {
       if (!existsSync(full)) return [];
       const text = await readFile(full, "utf8");
-      const bullets = parseBullets(text);
+      const bullets: string[] = [];
+      for (const bullet of parseBullets(text)) {
+        const id = /\[pattern-id:(pat-[a-f0-9]{16})\]/.exec(bullet)?.[1];
+        if (id) {
+          try {
+            const proposal = JSON.parse(await readFile(path.join(proposalDir(root), `${id}.json`), "utf8")) as LearnedPatternProposal;
+            if (proposal.status !== "promoted" || proposal.evidenceAssurance !== "current-contained-source" || !proposal.sourceEvidence || !proposal.targetFiles?.length) throw new Error("Legacy or unbound learned guidance requires review.");
+            const current = await patternEvidence(root, proposal.targetFiles);
+            if (Object.entries(current).some(([file,hash]) => proposal.sourceEvidence![file] !== hash)) throw new Error("Source backing changed after promotion.");
+          } catch (error) { quarantinedGuidance.push({id,reason:error instanceof Error ? error.message : String(error)}); continue; }
+        }
+        bullets.push(bullet);
+      }
       if (queryWords.length === 0) return bullets;
       const matched = bullets.filter((b) => matchesQuery(b, queryWords));
       return matched;
@@ -234,5 +267,6 @@ export async function queryProjectMemory(
     constraints,
     conventions,
     regressions,
+    ...(quarantinedGuidance.length ? {quarantinedGuidance} : {}),
   };
 }

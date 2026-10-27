@@ -1,5 +1,5 @@
 # Runtime Map
-<!-- freshness: last_checked=2026-10-13 -->
+<!-- freshness: last_checked=2026-10-27 -->
 
 ## Initialization
 
@@ -24,7 +24,7 @@ discovery (always allowed: reads, get_engineering_context, read-only shell)
  -> prepare_task_context(taskId)     -> preparation receipt + bound context + baseline
  -> get_task_readiness
  -> edits inside confirmed scope     (context stays valid)
- -> gw verify .                      (Stop hook requires a passing record)
+ -> gw verify .                      (current required baseline receipt; explicit unavailable policy stays non-pass)
 ```
 
 ## Context
@@ -35,7 +35,7 @@ get_engineering_context
  -> trusted GraphWard graph neighborhood
  -> scoped CCE/native spans (+ budgeted skeleton outlines)
  -> conflicts + unknowns + risk/gates/tests
- -> ContextPackV2 (format json | markdown | full)
+ -> ContextPackV2 (format json | markdown | full; entire payload estimated, omissions/overflow explicit)
 ```
 
 ## Change

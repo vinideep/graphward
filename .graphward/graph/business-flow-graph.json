@@ -1,210 +1,283 @@
 {
   "schemaVersion": 1,
   "graphType": "business-flow",
-  "generatedAt": "2026-07-13T00:00:00.000Z",
+  "generatedAt": "2026-10-27T03:35:25.549835Z",
+  "updatedAt": "2026-10-27T03:35:25.549835Z",
   "scope": "graphward-OS",
   "nodes": [
     {
       "id": "action:developer-runs-install",
       "kind": "user-action",
-      "label": "Developer runs `npx gw install`",
+      "label": "Developer requests install/update/setup/initialize for selected adapters",
+      "path": "src/cli/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "README.md:66-71"
+        "src/cli/index.ts"
       ]
     },
     {
       "id": "step:select-ides",
       "kind": "system-step",
-      "label": "Resolve requested IDE adapters (flag or interactive prompt)",
+      "label": "Resolve adapters; setup unions/reconciles explicit additions with existing managed inventory",
+      "path": "src/orchestrators/setup.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/cli/index.ts:234-251"
+        "src/orchestrators/setup.ts"
       ]
     },
     {
-      "id": "step:validate-templates",
+      "id": "step:validate-config",
       "kind": "system-step",
-      "label": "validateRender() — rendered adapter contract checks before writing",
+      "label": "Read/migrate valid configuration; malformed or unreadable bytes cause a preservation error",
+      "path": "src/config/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/installer/index.ts:219"
+        "src/config/index.ts"
       ]
     },
     {
       "id": "decision:templates-valid",
       "kind": "decision",
-      "label": "Templates pass validation?",
+      "label": "Canonical adapter templates pass render checks?",
+      "path": "src/validation/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/installer/index.ts:163-170"
+        "src/validation/index.ts"
       ]
     },
     {
       "id": "step:render-adapters",
       "kind": "system-step",
-      "label": "renderAdapters() — produce RenderedFile[] per IDE",
+      "label": "Render requested host instructions, hooks and exact runtime registration",
+      "path": "src/adapters/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:840-844"
+        "src/adapters/index.ts"
+      ]
+    },
+    {
+      "id": "decision:target-safe",
+      "kind": "decision",
+      "label": "Stored and rendered managed targets remain contained after canonical resolution?",
+      "path": "src/manifest/paths.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/manifest/paths.ts"
       ]
     },
     {
       "id": "decision:file-conflict",
       "kind": "decision",
-      "label": "Does target file/block match desired or prior-manifest hash?",
+      "label": "User-owned seed/shared JSON or modified file/block can be preserved/reconciled safely?",
+      "path": "src/installer/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/installer/index.ts:66-73,96-101"
+        "src/installer/index.ts"
       ]
     },
     {
       "id": "step:write-files",
       "kind": "system-step",
-      "label": "Write file/block to disk",
+      "label": "Write safe managed content and merge default ignore rules while retaining user lines",
+      "path": "src/installer/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/installer/index.ts:76-77,105"
+        "src/installer/index.ts"
       ]
     },
     {
       "id": "outcome:conflict-reported",
       "kind": "outcome",
-      "label": "Conflict reported; file preserved untouched",
+      "label": "Report error/conflict and preserve unsafe, locally edited or malformed shared content",
+      "path": "src/installer/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/installer/index.ts:81-84,109-112"
+        "src/installer/index.ts"
       ]
     },
     {
       "id": "step:write-manifest",
       "kind": "system-step",
-      "label": "writeManifest() — persist install-manifest.json",
+      "label": "Persist managed installation inventory and report operation actions",
+      "path": "src/manifest/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/manifest/index.ts:26-30",
-        "src/installer/index.ts:289"
+        "src/manifest/index.ts"
       ]
     },
     {
       "id": "outcome:install-complete",
       "kind": "outcome",
-      "label": "Adapter files installed; developer opens IDE and runs a workflow",
+      "label": "Managed adapter generation completes; native discovery/enablement remains separate",
+      "path": "src/adapters/qualification.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/cli/index.ts:520-521,533-535"
+        "src/adapters/qualification.ts"
       ]
     },
     {
       "id": "action:developer-runs-initialize",
       "kind": "user-action",
-      "label": "Developer runs `/initialize-graphward` inside the IDE",
+      "label": "Developer requests CLI initialization or the installed initialization entry workflow",
+      "path": "src/cli/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "README.md:74-78"
+        "src/cli/index.ts"
       ]
     },
     {
-      "id": "step:agent-reads-skill",
+      "id": "step:initialize",
       "kind": "system-step",
-      "label": "Host IDE's AI agent loads initialize-intelligence-skill and executes its procedure",
-      "confidence": "inferred",
-      "metadata": {
-        "note": "execution happens inside the host IDE's model, not this package's process"
-      },
-      "evidence": [
-        ".claude/skills/initialize-intelligence-skill/SKILL.md:91-133"
-      ]
-    },
-    {
-      "id": "step:intelligence-artifacts-written",
-      "kind": "system-step",
-      "label": "Knowledge base, memory, context, events, graphs, AI-DLC state written to .graphward/",
+      "label": "Prepare optional providers, native graph, scoped CCE index, claims and deterministic knowledge baseline",
+      "path": "src/orchestrators/initialize.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        ".claude/skills/initialize-intelligence-skill/SKILL.md:19-90"
+        "src/orchestrators/initialize.ts"
       ]
     },
     {
       "id": "outcome:baseline-established",
       "kind": "outcome",
-      "label": "Project intelligence baseline exists; future sessions reuse it instead of re-exploring",
+      "label": "Baseline artifacts exist with current trust/unknowns; further model synthesis is optional workflow work",
+      "path": "src/orchestrators/initialize.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/adapters/index.ts:53-77"
+        "src/orchestrators/initialize.ts"
       ]
     },
     {
-      "id": "action:developer-edits-source",
+      "id": "action:developer-requests-edit",
       "kind": "user-action",
-      "label": "Developer/agent edits a source file mid-session",
+      "label": "Developer/agent requests a product edit or report/handoff write on supported hook paths",
+      "path": "src/hooks/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/hooks/index.ts:365-390"
+        "src/hooks/index.ts"
+      ]
+    },
+    {
+      "id": "step:confirm-task",
+      "kind": "system-step",
+      "label": "Record task revision and bind actual native user confirmation to host/session",
+      "path": "src/aidlc/task-contract.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/aidlc/task-contract.ts"
+      ]
+    },
+    {
+      "id": "decision:report-only",
+      "kind": "decision",
+      "label": "All requested targets are canonically contained report/handoff artifacts?",
+      "path": "src/hooks/index.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/hooks/index.ts"
+      ]
+    },
+    {
+      "id": "step:prepare-context",
+      "kind": "system-step",
+      "label": "Prepare/bind current implementation context for product mutations",
+      "path": "src/context/preparation.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/context/preparation.ts"
       ]
     },
     {
       "id": "step:pre-tool-use-check",
       "kind": "system-step",
-      "label": "PreToolUse hook: task readiness gate, then computeFreshness() scoped to the edited file",
+      "label": "Check appropriate task-readiness stage and source freshness before supported write",
+      "path": "src/hooks/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/hooks/index.ts:499-545"
+        "src/hooks/index.ts"
       ]
     },
     {
       "id": "step:post-tool-use-record",
       "kind": "system-step",
-      "label": "PostToolUse hook: record changed file / validation command in session state",
+      "label": "Track supported actual changes/check attempts without treating command shape as passing evidence",
+      "path": "src/hooks/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/hooks/index.ts:392-421"
+        "src/hooks/index.ts"
       ]
     },
     {
-      "id": "decision:validation-ran",
+      "id": "decision:verification-covered",
       "kind": "decision",
-      "label": "Did a validation command run this session?",
+      "label": "Current required version3 receipt covers source/root/HEAD, required checks/config and runtime?",
+      "path": "src/verify/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/hooks/index.ts:436-438"
+        "src/verify/index.ts"
+      ]
+    },
+    {
+      "id": "decision:unchanged-concise",
+      "kind": "decision",
+      "label": "Opt-in concise mode proves unchanged pre-existing dirt with complete session/source/config provenance?",
+      "path": "src/hooks/index.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/hooks/index.ts"
+      ]
+    },
+    {
+      "id": "decision:unavailable-accepted",
+      "kind": "decision",
+      "label": "No checks exist and explicit allow-explicit policy plus bound user unavailable outcome apply?",
+      "path": "src/hooks/index.ts",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/hooks/index.ts"
       ]
     },
     {
       "id": "outcome:stop-blocked",
       "kind": "outcome",
-      "label": "Stop hook blocks completion, asks for validation",
+      "label": "Supported Stop blocks completion and reports missing/failed/unavailable checks",
+      "path": "src/hooks/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/hooks/index.ts:445-454"
+        "src/hooks/index.ts"
       ]
     },
     {
       "id": "outcome:session-ends",
       "kind": "outcome",
-      "label": "Session ends; telemetry recorded",
+      "label": "Supported Stop allows completion; available parent transcript telemetry is attempted best-effort",
+      "path": "src/hooks/index.ts",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/hooks/index.ts:424-431"
+        "src/hooks/index.ts"
       ]
     }
   ],
@@ -216,27 +289,44 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/cli/index.ts:510"
+        "src/cli/index.ts",
+        "src/orchestrators/setup.ts"
       ]
     },
     {
       "from": "step:select-ides",
-      "to": "step:validate-templates",
+      "to": "step:validate-config",
       "relation": "triggers",
       "confidence": "verified",
-      "metadata": {},
+      "metadata": {
+        "condition": "setup/initialize/update migration paths; direct install may only seed config"
+      },
       "evidence": [
-        "src/installer/index.ts:163"
+        "src/orchestrators/setup.ts",
+        "src/config/index.ts"
       ]
     },
     {
-      "from": "step:validate-templates",
+      "from": "step:select-ides",
       "to": "decision:templates-valid",
       "relation": "triggers",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/installer/index.ts:163-170"
+        "src/installer/index.ts",
+        "src/validation/index.ts"
+      ]
+    },
+    {
+      "from": "step:validate-config",
+      "to": "outcome:conflict-reported",
+      "relation": "on-failure",
+      "confidence": "verified",
+      "metadata": {
+        "note": "configuration errors throw before migration can replace bytes"
+      },
+      "evidence": [
+        "src/config/index.ts"
       ]
     },
     {
@@ -246,7 +336,8 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/installer/index.ts:171"
+        "src/installer/index.ts",
+        "src/adapters/index.ts"
       ]
     },
     {
@@ -254,21 +345,41 @@
       "to": "outcome:conflict-reported",
       "relation": "on-failure",
       "confidence": "verified",
-      "metadata": {
-        "note": "returns error actions immediately, does not proceed to render"
-      },
+      "metadata": {},
       "evidence": [
-        "src/installer/index.ts:164-170"
+        "src/installer/index.ts"
       ]
     },
     {
       "from": "step:render-adapters",
-      "to": "decision:file-conflict",
+      "to": "decision:target-safe",
       "relation": "triggers",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/installer/index.ts:175-176"
+        "src/installer/index.ts",
+        "src/manifest/paths.ts"
+      ]
+    },
+    {
+      "from": "decision:target-safe",
+      "to": "decision:file-conflict",
+      "relation": "on-success",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/installer/index.ts"
+      ]
+    },
+    {
+      "from": "decision:target-safe",
+      "to": "outcome:conflict-reported",
+      "relation": "on-failure",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/installer/index.ts",
+        "src/manifest/paths.ts"
       ]
     },
     {
@@ -278,7 +389,7 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/installer/index.ts:76-77,105"
+        "src/installer/index.ts"
       ]
     },
     {
@@ -288,7 +399,8 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/installer/index.ts:81-84,109-112"
+        "src/installer/index.ts",
+        "src/installer/json-merge.ts"
       ]
     },
     {
@@ -298,7 +410,8 @@
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/installer/index.ts:198-211"
+        "src/installer/index.ts",
+        "src/manifest/index.ts"
       ]
     },
     {
@@ -306,119 +419,194 @@
       "to": "outcome:install-complete",
       "relation": "triggers",
       "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/cli/index.ts:527-535"
-      ]
-    },
-    {
-      "from": "outcome:install-complete",
-      "to": "action:developer-runs-initialize",
-      "relation": "requires",
-      "confidence": "verified",
       "metadata": {
-        "note": "documented recommended next step"
+        "note": "generation alone does not establish native activation"
       },
       "evidence": [
-        "README.md:74-78"
+        "src/installer/index.ts",
+        "src/adapters/qualification.ts"
       ]
     },
     {
       "from": "action:developer-runs-initialize",
-      "to": "step:agent-reads-skill",
+      "to": "step:initialize",
       "relation": "triggers",
-      "confidence": "inferred",
-      "metadata": {},
+      "confidence": "verified",
+      "metadata": {
+        "note": "direct CLI path is verified; host-model workflow adherence remains externally qualified"
+      },
       "evidence": [
-        ".claude/commands/initialize-graphward.md"
+        "src/cli/index.ts",
+        "src/orchestrators/initialize.ts"
       ]
     },
     {
-      "from": "step:agent-reads-skill",
-      "to": "step:intelligence-artifacts-written",
-      "relation": "triggers",
-      "confidence": "inferred",
-      "metadata": {},
-      "evidence": [
-        ".claude/skills/initialize-intelligence-skill/SKILL.md:91-133"
-      ]
-    },
-    {
-      "from": "step:intelligence-artifacts-written",
+      "from": "step:initialize",
       "to": "outcome:baseline-established",
       "relation": "triggers",
       "confidence": "verified",
       "metadata": {},
-      "evidence": []
+      "evidence": [
+        "src/orchestrators/initialize.ts"
+      ]
     },
     {
-      "from": "outcome:baseline-established",
-      "to": "action:developer-edits-source",
+      "from": "action:developer-requests-edit",
+      "to": "step:confirm-task",
       "relation": "requires",
-      "confidence": "inferred",
-      "metadata": {
-        "note": "typical subsequent session"
-      },
-      "evidence": []
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/hooks/index.ts",
+        "src/aidlc/task-contract.ts"
+      ]
     },
     {
-      "from": "action:developer-edits-source",
-      "to": "step:pre-tool-use-check",
+      "from": "step:confirm-task",
+      "to": "decision:report-only",
       "relation": "triggers",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/hooks/index.ts:365-372"
+        "src/hooks/index.ts"
+      ]
+    },
+    {
+      "from": "decision:report-only",
+      "to": "step:pre-tool-use-check",
+      "relation": "on-success",
+      "confidence": "verified",
+      "metadata": {
+        "readinessStage": "requirements",
+        "note": "no unrelated provider/context preparation required"
+      },
+      "evidence": [
+        "src/hooks/index.ts",
+        "src/aidlc/task-contract.ts"
+      ]
+    },
+    {
+      "from": "decision:report-only",
+      "to": "step:prepare-context",
+      "relation": "on-failure",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/hooks/index.ts",
+        "src/aidlc/task-contract.ts"
+      ]
+    },
+    {
+      "from": "step:prepare-context",
+      "to": "step:pre-tool-use-check",
+      "relation": "triggers",
+      "confidence": "verified",
+      "metadata": {
+        "readinessStage": "implementation"
+      },
+      "evidence": [
+        "src/context/preparation.ts",
+        "src/aidlc/task-contract.ts"
       ]
     },
     {
       "from": "step:pre-tool-use-check",
       "to": "step:post-tool-use-record",
-      "relation": "triggers",
+      "relation": "on-success",
       "confidence": "verified",
       "metadata": {
-        "note": "sequential hook events per tool invocation"
+        "condition": "host delivers supported post-tool event after actual tool execution"
       },
       "evidence": [
-        "src/hooks/index.ts:392-421"
+        "src/hooks/index.ts"
       ]
     },
     {
       "from": "step:post-tool-use-record",
-      "to": "decision:validation-ran",
+      "to": "decision:unchanged-concise",
       "relation": "requires",
       "confidence": "verified",
       "metadata": {
-        "note": "evaluated later, at Stop"
+        "condition": "Stop requires validation and source changed; clean source allows completion separately"
       },
       "evidence": [
-        "src/hooks/index.ts:436-438"
+        "src/hooks/index.ts",
+        "src/verify/index.ts"
       ]
     },
     {
-      "from": "decision:validation-ran",
-      "to": "outcome:stop-blocked",
-      "relation": "on-failure",
-      "confidence": "verified",
-      "metadata": {},
-      "evidence": [
-        "src/hooks/index.ts:445-454"
-      ]
-    },
-    {
-      "from": "decision:validation-ran",
+      "from": "decision:verification-covered",
       "to": "outcome:session-ends",
       "relation": "on-success",
       "confidence": "verified",
       "metadata": {},
       "evidence": [
-        "src/hooks/index.ts:432-437"
+        "src/hooks/index.ts",
+        "src/verify/index.ts"
+      ]
+    },
+    {
+      "from": "decision:verification-covered",
+      "to": "decision:unavailable-accepted",
+      "relation": "on-failure",
+      "confidence": "verified",
+      "metadata": {
+        "note": "only genuinely absent checks can use the explicit unavailable branch; configured failures remain blocking"
+      },
+      "evidence": [
+        "src/hooks/index.ts"
+      ]
+    },
+    {
+      "from": "decision:unchanged-concise",
+      "to": "outcome:session-ends",
+      "relation": "on-success",
+      "confidence": "verified",
+      "metadata": {
+        "note": "unchanged-session exemption is not a new passing verification result"
+      },
+      "evidence": [
+        "src/hooks/index.ts"
+      ]
+    },
+    {
+      "from": "decision:unchanged-concise",
+      "to": "decision:verification-covered",
+      "relation": "on-failure",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/hooks/index.ts"
+      ]
+    },
+    {
+      "from": "decision:unavailable-accepted",
+      "to": "outcome:session-ends",
+      "relation": "on-success",
+      "confidence": "verified",
+      "metadata": {
+        "note": "bound explicit unavailable outcome stays non-pass; configured failed checks cannot use this branch"
+      },
+      "evidence": [
+        "src/hooks/index.ts"
+      ]
+    },
+    {
+      "from": "decision:unavailable-accepted",
+      "to": "outcome:stop-blocked",
+      "relation": "on-failure",
+      "confidence": "verified",
+      "metadata": {},
+      "evidence": [
+        "src/hooks/index.ts"
       ]
     }
   ],
   "unknowns": [
-    "The 'developer edits source → agent reads skill' business flows depend on the host IDE's AI agent actually following the installed skill instructions — this package cannot verify or enforce that the model complies; only the deterministic gate/hook/claim mechanisms are independently verifiable.",
-    "Exact behavior of the interactive IDE-selection prompt (readline Q&A) when no --ide flag and no --yes flag is given was traced from source but not exercised live in this session."
-  ],
-  "updatedAt": "2026-10-14T00:00:00.000Z"
+    "This source-reviewed business/control map is conditional on actual host integration, tool events, native permissions and hook trust; generated files do not prove discovery/enablement/enforcement.",
+    "Installation can update independent safe files while reporting other conflicts; this graph does not claim an all-files transactional installation.",
+    "Host-agent workflow compliance and optional knowledge synthesis are external model behavior; direct CLI bootstrap source is traced without claiming all native IDE flows ran.",
+    "Stop has separate clean-source, matching-required-receipt, unchanged-concise and explicitly unavailable branches. Only a passing required-check receipt establishes verification success.",
+    "Best-effort telemetry is awaited on supplied transcript paths and may return no sample; complete child/session accounting and efficiency/accuracy benefits are not implied."
+  ]
 }

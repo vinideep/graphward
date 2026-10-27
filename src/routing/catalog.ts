@@ -98,15 +98,38 @@ const ROUTE_PATTERNS: Array<[WorkflowName, RegExp]> = [
   ["design-an-interface", /\b(design|compare|explore)\b.*\b(interface|api signature|contract|type definition)/i],
 ];
 
+export type RequestIntent = "read" | "discuss" | "plan" | "mutate" | "ambiguous";
+
+/** Advisory routing only. Tool effects and native task authorization remain authoritative. */
+export function requestIntent(prompt: string): RequestIntent {
+  const text = prompt.trim().replace(/^(?:please\s+|(?:can|could|would) you\s+|help me\s+|i (?:want|need) (?:you )?to\s+|we need to\s+|let'?s\s+)+/i, "");
+  const mutation = /^(?:implement|fix|add|build|create|change|modify|edit|update|upgrade|refactor|remove|delete|rename|rotate|migrate|patch|replace|deploy|deliver|scaffold)\b/i;
+  const coordinatedMutation = /(?:\band\b|\bthen\b|\balso\b|[;.!?])\s*(?:please\s+)?(?:implement|fix|add|build|create|change|modify|edit|update|refactor|remove|delete|rotate|migrate|patch|deploy)\b/i.test(text);
+  const forbidsEdits = /\b(do not (?:edit|modify|change) (?:anything|any files|files)|no changes(?!\s+(?:to|outside|in|within|beyond)\b)|analysis only|review only)\b/i.test(text);
+  // In an explicit implementation request, "read-only" can describe the product
+  // (a read-only API/connection). A separate no-edit instruction is a conflict.
+  if (mutation.test(text)) return forbidsEdits ? "ambiguous" : "mutate";
+  if (forbidsEdits || /\bread[- ]only\b/i.test(text)) return coordinatedMutation ? "ambiguous" : "read";
+  if (coordinatedMutation) return "mutate";
+  if (/^(?:plan|design|propose|scope|clarify|compare|grill|stress[- ]test|give (?:me )?(?:a |the )?plan)\b/i.test(text)) return "plan";
+  if (/^(?:explain|discuss|describe|what|why|how|is|are|does|do we|tell me)\b/i.test(text)) return "discuss";
+  if (/^(?:review|audit|inspect|read|locate|find|search|show|list|analy[sz]e|assess|discover|understand|explore|map)\b/i.test(text)) return "read";
+  return "ambiguous";
+}
+
 export function routeRequest(prompt: string): WorkflowName {
-  const readOnly = /\b(read[- ]only|do not (?:edit|modify|change)|no changes|analysis only|review only)\b/i.test(prompt);
+  const intent = requestIntent(prompt);
+  const readOnly = intent !== "mutate";
+  // An explicit second action must not disappear behind a preceding review/design route.
+  if (intent === "mutate" && /^(?:review|audit|explain|plan|design|inspect)\b/i.test(prompt.trim())) return "graphward";
   for (const [name, pattern] of ROUTE_PATTERNS) {
     if (!pattern.test(prompt)) continue;
-    if (readOnly && WORKFLOW_CATALOG[name].mutatesProduct) {
+    if (intent === "mutate" && !WORKFLOW_CATALOG[name].mutatesProduct) return "graphward";
+    if ((readOnly || intent !== "mutate") && WORKFLOW_CATALOG[name].mutatesProduct) {
       if (/\bimpact\b/i.test(prompt)) return "analyze-impact";
       return "review-engineering-change";
     }
     return name;
   }
-  return readOnly ? "review-engineering-change" : "graphward";
+  return intent === "plan" ? "scope-requirement" : intent === "mutate" ? "graphward" : "review-engineering-change";
 }

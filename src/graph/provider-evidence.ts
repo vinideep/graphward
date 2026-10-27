@@ -47,6 +47,21 @@ export interface GraphifyReconciliationResult {
   staleEvidence: number;
   rejectedEvidence: number;
   available: boolean;
+  /** Excluded raw relationships retained for audit; never canonical graph facts. */
+  quarantinedEvidence?: Array<{
+    reason: string;
+    rawEdge: Record<string, unknown>;
+    rawSource?: Record<string, unknown>;
+    rawTarget?: Record<string, unknown>;
+    normalizedSource?: string;
+    normalizedTarget?: string;
+    sourceTrust?: TrustState;
+    targetTrust?: TrustState;
+    sourceHash?: string;
+    targetHash?: string;
+  }>;
+  graphHash?: string;
+  provenance?: Pick<GraphifyRunManifest, "providerVersion" | "generatedAt" | "sourceCommit" | "workspaceHash" | "sourceHashes">;
 }
 
 function stringValue(value: unknown): string | undefined {
@@ -235,21 +250,34 @@ export async function reconcileGraphifyEvidence(root: string, nativeGraph: Depen
     acceptedNodes += 1;
   }
 
+  const quarantinedEvidence: NonNullable<GraphifyReconciliationResult["quarantinedEvidence"]> = [];
+  const rawNodeById = new Map(rawNodes.map(node => [stringValue(node.id), node]));
   for (const rawEdge of rawEdges) {
     const source = nodeMap.get(stringValue(rawEdge.source) ?? stringValue(rawEdge.from) ?? "");
     const target = nodeMap.get(stringValue(rawEdge.target) ?? stringValue(rawEdge.to) ?? "");
-    if (!source || !target) { rejectedEvidence += 1; continue; }
-    if (source.trustState !== "fresh" || target.trustState === "stale") { staleEvidence += 1; continue; }
+    const quarantine = (reason: string) => quarantinedEvidence.push({
+      reason, rawEdge: { ...rawEdge },
+      rawSource: rawNodeById.get(stringValue(rawEdge.source) ?? stringValue(rawEdge.from)),
+      rawTarget: rawNodeById.get(stringValue(rawEdge.target) ?? stringValue(rawEdge.to)),
+      normalizedSource: source?.id, normalizedTarget: target?.id,
+      sourceTrust: source?.trustState, targetTrust: target?.trustState,
+      sourceHash: source?.sourceHash, targetHash: target?.sourceHash,
+    });
+    if (!source || !target) { quarantine("Provider endpoint missing, malformed or outside approved scope."); rejectedEvidence += 1; continue; }
+    if (!nodeIds.has(source.id) || !nodeIds.has(target.id)) { quarantine("Normalized endpoint is absent from the canonical graph."); rejectedEvidence += 1; continue; }
+    if (source.trustState !== "fresh" || target.trustState === "stale") { quarantine("Provider endpoint evidence is stale or unverifiable."); staleEvidence += 1; continue; }
     const relation = normalizeRelation(rawEdge.relation ?? rawEdge.type);
     const key = `${source.id}\u0000${target.id}\u0000${relation}`;
-    const sourceFile = await normalizeSourcePath(root, providerWorkspace, rawEdge.source_file) ?? source.sourceFile;
+    const edgeSourceFile = await normalizeSourcePath(root, providerWorkspace, rawEdge.source_file);
+    if (stringValue(rawEdge.source_file) && !edgeSourceFile) { quarantine("Relationship evidence path is outside approved scope."); rejectedEvidence += 1; continue; }
+    const sourceFile = edgeSourceFile ?? source.sourceFile;
     if (sourceFile) {
       const decision = await policy.explainExisting(sourceFile);
-      if (!decision.included) { rejectedEvidence += 1; continue; }
+      if (!decision.included) { quarantine("Relationship evidence is outside approved scope."); rejectedEvidence += 1; continue; }
     }
     const currentHash = sourceFile ? await currentFileHash(root, sourceFile) : source.sourceHash;
     const expectedHash = sourceFile ? manifest.sourceHashes[sourceFile] : undefined;
-    if (sourceFile && (!currentHash || !expectedHash || currentHash !== expectedHash)) { staleEvidence += 1; continue; }
+    if (sourceFile && (!currentHash || !expectedHash || currentHash !== expectedHash)) { quarantine("Relationship source hash is stale or missing."); staleEvidence += 1; continue; }
     const evidence = evidenceFor(sourceFile, stringValue(rawEdge.source_location));
     const metadata = providerMetadata(manifest, "fresh", rawEdge, currentHash);
     const existing = edgeByKey.get(key);
@@ -287,6 +315,7 @@ export async function reconcileGraphifyEvidence(root: string, nativeGraph: Depen
   if (staleEvidence > 0) notes.push(`Graphify evidence excluded as stale: ${staleEvidence} item(s).`);
   if (rejectedEvidence > 0) notes.push(`Graphify evidence rejected as malformed or out of scope: ${rejectedEvidence} item(s).`);
   if (contestedEdges > 0) notes.push(`Graphify evidence marked contested: ${contestedEdges} relationship(s); these cannot support claims.`);
+  if (quarantinedEvidence.length > 0) notes.push(`Graphify relationships quarantined: ${quarantinedEvidence.length}; audit: .graphward/reports/provider-evidence-quarantine.json.`);
   const graph: DependencyGraph = { ...nativeGraph, nodes, edges, unknowns: unique([...nativeGraph.unknowns, ...notes]) };
-  return { graph, acceptedNodes, acceptedEdges, corroboratedEdges, contestedEdges, staleEvidence, rejectedEvidence, available: true };
+  return { graph, acceptedNodes, acceptedEdges, corroboratedEdges, contestedEdges, staleEvidence, rejectedEvidence, available: true, quarantinedEvidence, graphHash: manifest.graphHash, provenance: { providerVersion: manifest.providerVersion, generatedAt: manifest.generatedAt, sourceCommit: manifest.sourceCommit, workspaceHash: manifest.workspaceHash, sourceHashes: manifest.sourceHashes } };
 }

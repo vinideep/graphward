@@ -127,7 +127,10 @@ export async function runSetup(root: string, options: SetupOptions): Promise<Set
     if (migration.changed) log(`Migrated configuration to schema ${migration.config.schemaVersion}.`);
   }
   if (alreadyInstalled) {
-    installOp = await update(root, { dryRun: options.dryRun, force: options.force, packageVersion: options.packageVersion, promptOverwrite: options.promptOverwrite });
+    const { readManifest } = await import("../manifest/index.js");
+    const existing = await readManifest(root);
+    ides = [...new Set([...(existing?.adapters ?? []), ...ides])];
+    installOp = await install(root, ides, { dryRun: options.dryRun, force: options.force, packageVersion: options.packageVersion, promptOverwrite: options.promptOverwrite });
     wasUpdate = true;
     log(`Updated adapters: ${installOp.changed} changed, ${installOp.conflicts} conflict(s).`);
   } else {

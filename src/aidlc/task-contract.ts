@@ -1,6 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { lstatSync, readlinkSync, realpathSync } from "node:fs";
 import { toCanonicalPath, computeProviderSourceSnapshot, type ProviderSourceSnapshot } from "../providers/workspace.js";
 import { withLock } from "../manifest/lock.js";
 import { getEngineeringContext } from "../context/orchestrator.js";
@@ -57,6 +58,25 @@ export function scopeMatches(scope: string, relative: string): boolean {
   return relative === base || relative.startsWith(`${base}/`);
 }
 const inScope = (task: TaskDecisionReceipt, relative: string) => task.contract.scope.some(scope => scopeMatches(scope, relative));
+
+/** Resolve new targets through existing ancestors, including dangling symlinks. */
+function canonicalTarget(file: string, depth = 0): string {
+  if (depth > 40) throw new Error("Symlink resolution exceeded its safe limit.");
+  let current = path.resolve(file);
+  const suffix: string[] = [];
+  for (;;) {
+    try {
+      const info = lstatSync(current);
+      if (info.isSymbolicLink()) return canonicalTarget(path.join(path.resolve(path.dirname(current), readlinkSync(current)), ...suffix), depth + 1);
+      return path.join(realpathSync(current), ...suffix);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+      const parent = path.dirname(current);
+      if (parent === current) throw error;
+      suffix.unshift(path.basename(current)); current = parent;
+    }
+  }
+}
 
 /** Option labels accepted as approval when the question text carries the exact challenge. */
 const APPROVAL_LABELS = new Set(["approve scope", "confirm scope", "approve", "confirm"]);
@@ -138,12 +158,26 @@ export async function resolveSessionTask(root: string, host: string, sessionId: 
 const reducedContextChallenge = (task: TaskDecisionReceipt, generation: string | undefined) => `Accept reduced context for GraphWard task ${task.taskId} ${task.revisionHash} generation ${generation}`;
 /** Provider-excluded (oversized) files the task is authorized to touch; only these reduce its coverage. */
 const excludedInScope = (task: TaskDecisionReceipt, preparation: { excludedFiles?: string[] } | undefined) => (preparation?.excludedFiles ?? []).filter(file => inScope(task, file));
+function isNativeApproval(prompt: string, host: string, challenge: string): boolean {
+  if (prompt.trim() === challenge) return true;
+  if (host !== "codex") return false;
+  const wrapped = /^<send_user_message_question_reply>\s*([\s\S]*)\s*<\/send_user_message_question_reply>$/.exec(prompt.trim());
+  if (!wrapped) return false;
+  try {
+    const replies: unknown = JSON.parse(wrapped[1]);
+    return Array.isArray(replies) && replies.some(reply => {
+      if (!reply || typeof reply.questionItemId !== "string" || typeof reply.question !== "string" || reply.answer !== challenge || !reply.question.includes(challenge)) return false;
+      const identity = JSON.parse(reply.questionItemId);
+      return Array.isArray(identity) && ["request_user_input_async", "request_user_input"].includes(identity[0]) && typeof identity[1] === "string" && identity[1].length > 0 && Number.isInteger(identity[2]);
+    });
+  } catch { return false; }
+}
 /** Only native hook adapters call this; it is deliberately absent from MCP tools. */
 export async function observeUserPrompt(root: string, host: string, sessionId: string, prompt: string) {
   if (!host || !sessionId || !prompt) return { confirmed: false };
   return withLock(root, async () => {
     const task = await resolveSessionTask(root, host, sessionId); if (!task) return { confirmed: false };
-    if (prompt.trim() === confirmationChallenge(task)) {
+    if (isNativeApproval(prompt, host, confirmationChallenge(task))) {
       if (task.contract.questions.some(q => !q.answer)) return { confirmed: false, reason: "Unanswered requirements questions remain." };
       task.confirmation = { source: "host-user-prompt", assurance: "host-observed", host, sessionId, eventHash: digest(prompt), quote: prompt, confirmedAt: new Date().toISOString(), revisionHash: task.revisionHash };
       await atomic(taskPath(root, task.taskId), task); return { confirmed: true, taskId: task.taskId };
@@ -190,15 +224,21 @@ export async function checkTaskReadiness(root: string, options: { taskId?: strin
   const blockers: string[] = [];
   const task = options.taskId ? await loadTask(root, options.taskId) : options.host && options.sessionId ? await resolveSessionTask(root, options.host, options.sessionId) : undefined;
   if (!task) return { ready: false, blockers: ["No task contract is bound to this task/session. Call propose_task_contract (with host and sessionId) and follow its howToConfirm steps."], confirmationAssurance: "unavailable" };
+  if (options.host !== undefined || options.sessionId !== undefined) {
+    const bound = options.host && options.sessionId ? await resolveSessionTask(root, options.host, options.sessionId) : undefined;
+    if (!bound || bound.taskId !== task.taskId || task.confirmation?.host !== options.host || task.confirmation?.sessionId !== options.sessionId) blockers.push("Current task confirmation is not bound to this native host/session.");
+  }
   if (!task.confirmation || task.confirmation.revisionHash !== task.revisionHash || !task.confirmation.quote || task.confirmation.eventHash !== digest(task.confirmation.quote) || !["host-user-prompt", "host-question-response", "operator-conversation"].includes(task.confirmation.source) ||
-      task.confirmation.source === "host-user-prompt" && (task.confirmation.assurance !== "host-observed" || task.confirmation.quote.trim() !== confirmationChallenge(task)) ||
+      task.confirmation.source === "host-user-prompt" && (task.confirmation.assurance !== "host-observed" || !isNativeApproval(task.confirmation.quote, task.confirmation.host, confirmationChallenge(task))) ||
       task.confirmation.source === "host-question-response" && (task.confirmation.assurance !== "host-observed" || task.confirmation.host !== "claude-code" || !task.confirmation.quote.includes(confirmationChallenge(task))) ||
       task.confirmation.source === "operator-conversation" && task.confirmation.assurance !== "conversational") blockers.push(`Current scope requires a recorded user confirmation; assistant assertions do not authorize work. ${confirmationInstructions(confirmationChallenge(task))[1]}`);
   if (task.contract.questions.some(question => !question.answer)) blockers.push("Requirements questions remain unanswered.");
   if (task.contract.kind === "feature" && !task.contract.questions.length) blockers.push("Every new feature requires a requirements discussion, including confirmation of a fully specified scope.");
   for (const file of options.files ?? []) {
-    const relative = path.relative(toCanonicalPath(root), path.resolve(root, file)).replace(/\\/g, "/");
-    if (relative.startsWith("../") || path.isAbsolute(relative) || !inScope(task, relative)) blockers.push(`File is outside confirmed authorization scope: ${file} (scope: ${task.contract.scope.join(", ")})`);
+    try {
+      const relative = path.relative(toCanonicalPath(root), canonicalTarget(path.resolve(root, file))).replace(/\\/g, "/");
+      if (relative === ".." || relative.startsWith("../") || path.isAbsolute(relative) || !inScope(task, relative)) blockers.push(`File is outside confirmed authorization scope: ${file} (scope: ${task.contract.scope.join(", ")})`);
+    } catch { blockers.push(`Cannot establish canonical authorization scope for: ${file}`); }
   }
   if (options.stage !== "requirements") {
     const preparation = await readContextPreparation(root); const snapshot = await computeProviderSourceSnapshot(root); const generation = snapshot.workspaceHash;

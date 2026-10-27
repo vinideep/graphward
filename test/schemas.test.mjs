@@ -16,6 +16,8 @@ test("schemas", async (t) => {
     const content = await readFile(join(schemasDir, "verification-record.schema.json"), "utf8");
     const parsed = JSON.parse(content);
     assert.strictEqual(parsed.title, "GraphWard Verification Record");
+    assert.strictEqual(parsed.properties.schemaVersion.const, 3);
+    for (const field of ["runtimeGeneration", "executionSpecification", "requiredChecksSatisfied"]) assert.ok(parsed.required.includes(field));
   });
 
   await t.test("config.schema.json is valid JSON", async () => {

@@ -1,23 +1,22 @@
 # Context Manifest
-<!-- freshness: last_checked=2026-10-14 -->
+<!-- freshness: last_checked=2026-10-27 -->
 
-## Scope
-- Request: remove agent-workflow blockers (task gate, context budgets, freshness, gates, CLI safety) and re-verify GraphWard intelligence (IMP-015).
-- Candidate modules: `src/aidlc/task-contract.ts`, `src/hooks/index.ts`, `src/context/orchestrator.ts`, `src/mcp/consolidated.ts`, `src/freshness/index.ts`, `src/evidence/index.ts`, `src/gates/dead-exports.ts`, `src/gates/env-vars.ts`, `src/cli/index.ts`.
-- Risk: high; the task gate runs on every agent tool call in installed repositories.
+## Current scope
 
-## Ranked Context
-| Rank | Artifact | Sections / Keys | Reason | Estimated Tokens | Load Mode |
-|---:|---|---|---|---:|---|
-| 1 | `.graphward/knowledge-base/02-architecture.md` | Task gate | Lifecycle and discovery rules | 400 | section |
-| 2 | `.graphward/context/dangerous-areas.md` | classifier, confirmation, outside-project exemption | Security boundaries of the gate | 250 | section |
-| 3 | `.graphward/knowledge-base/11-complex-areas.md` | Task gate and hook enforcement | Required test coverage | 200 | section |
-| 4 | `src/aidlc/task-contract.ts` | readiness, scope, baseline | Direct implementation scope | 900 | source slice |
-| 5 | `src/hooks/index.ts` | discovery classifier, onPreToolUse | Direct implementation scope | 700 | source slice |
-| 6 | `test/task-contract-reliability.test.mjs`, `test/hooks.test.mjs` | allowed and rejected paths | Regression coverage | 600 | test slice |
+Approved task e5ad3bc6-7e7f-4a7e-96ff-3ba5d95ddb2b revision2 repairs F01–F45 from the AI IDE audit. The product objective is accurate, useful context and proportional workflows without approval bypass. The reviewed patch owns81paths; preserved pre-existing changes remain separately attributable. Native/remote/platform and actual agent outcome qualification stay explicit.
 
-## Trust and Freshness
-- Freshness decision: Proceed after re-verification; scored sources use recorded content hashes before commit dates.
-- Provider output is not used as canonical authority.
+## Ranked context
 
-(evidence: src/aidlc/task-contract.ts, src/hooks/index.ts, src/context/orchestrator.ts, src/freshness/index.ts, src/evidence/index.ts)
+| Priority | Entry | Purpose |
+|---|---|---|
+| 1 | `.graphward/reports/repairs-2026-10-26/finding-ledger.json` | All45repair IDs, evidence ledgers and qualification limits |
+| 2 | `.graphward/knowledge-base/16-reliability-contracts.md` | Current authorization, proof and preservation contracts |
+| 3 | `.graphward/context/module-map.md` | Targeted source navigation |
+| 4 | `.graphward/reports/repairs-2026-10-26/API-MIGRATION.md` | Receipt/review/schema/runtime/storage migration |
+| 5 | `.graphward/reports/repairs-2026-10-26/original-verification.json` | Current original-root required baseline receipt |
+
+## Trust
+
+Current source/tests/manifests outrank documentation. Provider evidence stays scoped and labelled; source hashes and source-reviewed prose underpin freshness. Scripts remain outside current provider indexing and have direct review/test evidence. A checksum is not semantic/native-host attestation.
+
+(evidence: src/aidlc/task-contract.ts, src/hooks/index.ts, src/verify/index.ts, src/context/orchestrator.ts, src/graph/trust.ts, src/freshness/index.ts, src/evidence/index.ts, src/gates/review-evidence.ts)

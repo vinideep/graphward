@@ -15,6 +15,7 @@ export async function rollbackReadinessGate(root: string, options: GateOptions =
   let artifact: Record<string, unknown>;
   try { artifact = JSON.parse(await readFile(target, "utf8")) as Record<string, unknown>; }
   catch { return { gate: "rollback-readiness", status: "unavailable", summary: "Rollback artifact is invalid JSON.", findings: [{ severity: "error", message: `Invalid ${rel}` }], applicable: true, required: true, artifact: rel }; }
+  if (!artifact || typeof artifact !== "object" || Array.isArray(artifact) || artifact.schemaVersion !== 1) return {gate:"rollback-readiness",status:"unavailable",summary:"Rollback plan schema is invalid.",findings:[{severity:"error",message:`Invalid ${rel} schemaVersion/object`}],applicable:true,required:true,artifact:rel};
   const missing = REQUIRED.filter((field) => typeof artifact[field] !== "string" || !(artifact[field] as string).trim());
-  return { gate: "rollback-readiness", status: missing.length ? "fail" : "pass", summary: missing.length ? `Rollback artifact is missing ${missing.length} required field(s).` : "Rollback readiness evidence is complete.", findings: missing.map((field) => ({ severity: "error", message: `Rollback field '${field}' is required.` })), applicable: true, required: true, artifact: rel };
+  return { gate: "rollback-readiness", status: missing.length ? "fail" : "pass", summary: missing.length ? `Rollback artifact is missing ${missing.length} required field(s).` : "Declared rollback plan fields are complete; rollback execution has not been established.", findings: missing.map((field) => ({ severity: "error", message: `Rollback field '${field}' is required.` })), applicable: true, required: true, artifact: rel };
 }

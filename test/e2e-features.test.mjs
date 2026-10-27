@@ -771,12 +771,13 @@ test("T1.26: recordLearnedPattern records convention pattern to coding-patterns.
 
   const repo = await createIsolatedRepo();
   try {
+    await repo.write("src/index.ts", "export const sourceEvidence = true;\n");
     const result = await mod.recordLearnedPattern(repo.dir, {
       type: "convention",
       title: "Use ESM Import Extensions",
       description: "Always append .js extension to relative imports in TypeScript files.",
       rule: "Imports of local modules must end with .js",
-      targetFiles: ["src/**/*.ts"],
+      targetFiles: ["src/index.ts"],
     });
 
     assert.equal(result.status, "proposed");
@@ -795,6 +796,7 @@ test("T1.27: recordLearnedPattern records regression pattern to regression-patte
 
   const repo = await createIsolatedRepo();
   try {
+    await repo.write("src/index.ts", "export function charge(amount) { if (amount <= 0) throw new Error('positive amount required'); return amount; }\n");
     const result = await mod.recordLearnedPattern(repo.dir, {
       type: "regression",
       title: "Negative Amount in Payment Charge",
@@ -818,6 +820,7 @@ test("T1.28: recordLearnedPattern records constraint to project-constraints.md",
 
   const repo = await createIsolatedRepo();
   try {
+    await repo.write("src/index.ts", "export const persistence = { kind: 'repository abstraction' };\n");
     const result = await mod.recordLearnedPattern(repo.dir, {
       type: "constraint",
       title: "No Direct DB Access in Adapters",
@@ -1355,6 +1358,7 @@ test("T2.26: recordLearnedPattern avoids unbounded duplicate identical patterns"
 
   const repo = await createIsolatedRepo();
   try {
+    await repo.write("src/index.ts", "export const sourceEvidence = true;\n");
     const pat = {
       type: "convention",
       title: "Idempotent Title",
@@ -1399,6 +1403,7 @@ test("T2.28: learned-pattern promotion auto-creates memory directory if missing"
 
   const repo = await createIsolatedRepo();
   try {
+    await repo.write("src/index.ts", "export const value = null;\n");
     const result = await mod.recordLearnedPattern(repo.dir, {
       type: "constraint",
       title: "Auto Init Test",
@@ -1420,6 +1425,7 @@ test("T2.29: recordLearnedPattern escapes markdown special characters and code b
 
   const repo = await createIsolatedRepo();
   try {
+    await repo.write("src/index.ts", "export const pattern = /[a-z]+/i;\n");
     const result = await mod.recordLearnedPattern(repo.dir, {
       type: "convention",
       title: "Avoid `eval()` & RegExp `.*`",

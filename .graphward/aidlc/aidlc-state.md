@@ -1,35 +1,38 @@
 # AI-DLC State
-<!-- freshness: last_checked=2026-10-14 -->
+<!-- freshness: last_checked=2026-10-27 -->
 
 ## Current Position
 
 | Field | Value |
 |---|---|
 | Phase | construction |
-| Stage | IMP-015 follow-up: remaining audit items fixed and validated |
+| Stage | Local audit repairs verified and synchronized |
 | Active workflow | `graphward` |
-| Active hat | change-agent |
-| Active unit | IMP-015 |
-| Completion status | in-progress |
+| Active hat | graphward |
+| Active unit | AUDIT-REPAIR-20261026 |
+| Completion status | complete |
 
 ## Progress Breadcrumb
 
 ```
-AI-DLC: construction -> validation -> complete (committed on branch, not pushed)
+AI-DLC: Construction -> Local audit repairs verified and synchronized -> Complete locally
 ```
 
 ## Active Delivery
 
-User-approved comprehensive reliability plan; sequential units A–F. Existing changes preserved under approved-repair-2026-10-11.
+AUDIT-REPAIR-20261026 local source/runtime/intelligence unit complete: all45 audited finding corrections or tested capability boundaries,81owned product paths,658/658full tests in candidate and original root,16/16integration,36/36audit replay groups, current-generation independent IR retest, validation/Construction pass. See reports/repairs-2026-10-26/DELIVERY.md for exact evidence and open activation/qualification boundaries.
 
 ## Unknowns
 
-- Remote CI was not observed (gh CLI unavailable in the working session); OS matrix results are unverified.
-- Native host loading/enforcement qualified only for Claude Code on macOS; Codex, Antigravity, Cursor and Windows/Linux remain unqualified (PLAN-011 A9, A11).
-- PLAN-011 A4 (doctor non-mutation proof) and A5 (hook-failure visibility) still lack evidence.
-- Other projects using GraphWard keep their previously installed adapters until gw update is run there; provider indexes there were not refreshed.
-- A long-running MCP server keeps the dist it loaded; restart host MCP connections after rebuilding.
+- Overall install health still flags the pre-existing installed manifest1.3.1 versus canonical package1.3.3. Read-only supported update preview proposes39managed changes/0conflicts; protected installed adapter updates remain unapplied.
+- Existing pre-repair desktop MCP connection requires supported reconnect. Fresh owned SDK MCP already initialized/listed31tools and reported current loaded/disk4773generation; that does not reload the existing connection.
+- Remote CI, native host/platform matrix, Windows descendant cleanup and actual browser execution remain unrun; no universal enforcement claim.
+- No held-out real model experiment or live host usage reconciliation establishes coding accuracy or token savings. Synthetic consistency and character estimates remain qualified.
+- Other projects and global settings retain their existing installations; no publishing/deployment/commits/pushes/provider downloads occurred.
+- Scripts and benchmark fixtures remain outside canonical provider indexing by existing .gwignore; direct source/test review evidence is retained separately.
+- 64dead-export candidates remain advisory; no deletion without consumer/dynamic registration evidence.
+- Historical pending guided-onboarding requirements and earlier programme decisions remain separately dated; this repair does not silently approve or deliver them.
 
 ## Current Validation Unit
 
-IMP-015 (2026-10-14): build passes; full suite green; gw health --strict healthy; gw verify PASS. Verified now: SDK Client initialize/list/call works (31 tools, server 1.3.1); unknown verbs and non-install flag-only invocations fail with no writes; doctor reports 284 checks with no errors; launcher bins are 0755; global gw/graphward/gw-mcp link to this checkout (1.3.1); npm audit reports 0 vulnerabilities after MCP SDK 1.32.1.
+Current runtime4773a20152bd268f2634abf09477de4ae2f8cb37f983b2c7c608c4f45c45b76f; original-root required baseline105dirty paths covered without source drift.152current citations,603verified claims, freshness Proceed38artifacts. HEAD/index and unrelated source preserved.

@@ -18,6 +18,8 @@ import { evaluateEvidencePolicy, type EvidencePolicyDecision } from "./evidence-
 import { readRuntimeObservations } from "../storage/sqlite-store.js";
 import { loadGwConfig } from "../config/index.js";
 import { computeProviderSourceSnapshot, toCanonicalPath } from "../providers/workspace.js";
+import { requestIntent, type RequestIntent } from "../routing/catalog.js";
+import { factualEdge, nodeSourcePath } from "../graph/trust.js";
 
 export interface NegativeConstraint {
   experimentId: string;
@@ -40,6 +42,8 @@ export interface ContextPackV2Request {
 }
 
 export interface TaskClassification {
+  intent: RequestIntent;
+  uncertainties: string[];
   kind: TaskKind;
   risk: RiskLevel;
   domains: string[];
@@ -104,6 +108,8 @@ export interface ContextPackV2 {
   conflicts: string[];
   negativeConstraints?: NegativeConstraint[];
   unknowns: string[];
+  unknownSummary?: { total: number; returned: number; omitted: number };
+  budgetAccounting?: { estimator: "characters/4"; format: "json" | "markdown" | "full"; estimatedTokens: number; overflow: boolean; omitted: Record<string, number>; reason?: string };
   risk: { level: RiskLevel; requiredGates: string[]; testsToRun: string[] };
   tokenAllocation: { budget: number; knowledge: number; architecture: number; code: number; reserve: number; used: number };
   overallConfidence: number;
@@ -128,23 +134,25 @@ function words(value: string): string[] {
 
 function classify(task: string, files: string[]): TaskClassification {
   const text = `${task} ${files.join(" ")}`.toLowerCase();
-  const security = /auth|security|credential|secret|token|encrypt|permission|rate.?limit|vulnerab/.test(text);
-  const database = /database|migration|schema|sql|table|column|index/.test(text);
+  const intent = requestIntent(task);
+  const mutation = intent === "mutate" || intent === "ambiguous";
+  const security = /\b(?:auth(?:entication|orization)?|security|credentials?|secrets?|encrypt\w*|permissions?|vulnerab\w*|jwt)\b|rate.?limit|(?:access|refresh|auth|bearer) token/.test(text);
+  const database = /\b(?:database|migration|migrate|schema|sql|tables?|columns?)\b|(?:database|sql|table) index|(?:^|\/)migrations?\//.test(text);
   const api = /\bapi\b|endpoint|route|controller|contract|graphql|openapi/.test(text);
   const architecture = /architecture|cross.?service|new service|replatform|redesign|monorepo/.test(text);
   const bug = /\bbug\b|\bfix\b|broken|failure|incorrect|regression|exception/.test(text);
   const simple = /typo|spelling|comment|rename label/.test(text) && files.length <= 1;
-  const kind: TaskKind = security ? "security-change" : database ? "database-change" : api ? "api-change" : architecture ? "architecture-change" : simple ? "simple" : bug ? "bug" : "feature";
-  const risk: RiskLevel = security ? "critical" : database || api || architecture ? "high" : simple ? "low" : "medium";
+  const kind: TaskKind = !mutation ? "simple" : security ? "security-change" : database ? "database-change" : api ? "api-change" : architecture ? "architecture-change" : simple ? "simple" : bug ? "bug" : "feature";
+  const risk: RiskLevel = !mutation ? "low" : security ? "critical" : database || api || architecture ? "high" : simple ? "low" : "medium";
   const domains = [security && "security", database && "database", api && "api", architecture && "architecture"].filter((value): value is string => Boolean(value));
   if (domains.length === 0) domains.push("application");
-  const modes = ["standard", security && "adversarial", architecture && "design-first"].filter((value): value is string => Boolean(value));
+  const modes = [mutation ? "standard" : intent, mutation && security && "adversarial", mutation && architecture && "design-first"].filter((value): value is string => Boolean(value));
   const route: TaskClassification["route"] = ["graphward-knowledge", "graphward-graph", "cce", "native-retrieval"];
-  if (security) route.push("security-gates");
-  if (api) route.push("api-gates");
-  if (database) route.push("migration-gates");
-  if (architecture) route.push("design-first");
-  return { kind, risk, domains, modes, route };
+  if (mutation && security) route.push("security-gates");
+  if (mutation && api) route.push("api-gates");
+  if (mutation && database) route.push("migration-gates");
+  if (mutation && architecture) route.push("design-first");
+  return { intent, uncertainties: intent === "ambiguous" ? ["Request intent is uncertain; classification does not authorize mutation."] : [], kind, risk, domains, modes, route };
 }
 
 function dynamicBudget(classification: TaskClassification): number {
@@ -245,8 +253,7 @@ function safeTrust(metadata: Record<string, unknown>): string {
 }
 
 function usableEdge(edge: GraphEdge): boolean {
-  const trust = safeTrust(edge.metadata);
-  return trust === "fresh";
+  return factualEdge(edge);
 }
 
 function selectSeeds(graph: DependencyGraph | null, root: string, task: string, requestedFiles: string[]): string[] {
@@ -383,7 +390,7 @@ function renderMarkdown(pack: Omit<ContextPackV2, "markdown">): string {
   }
   if (pack.architecture.nodes.length > 0) {
     lines.push("## Architecture neighborhood");
-    for (const node of pack.architecture.nodes.slice(0, 30)) lines.push(`- ${node.id}${node.path ? ` (${node.path})` : ""} [${node.trustState}]`);
+    for (const node of pack.architecture.nodes) lines.push(`- ${node.id}${node.path ? ` (${node.path})` : ""} [${node.trustState}]`);
     lines.push("");
   }
   if (pack.architecture.callChains && pack.architecture.callChains.length > 0) {
@@ -409,7 +416,7 @@ function renderMarkdown(pack: Omit<ContextPackV2, "markdown">): string {
   }
   if (pack.claims.length > 0) {
     lines.push("## Verified claims");
-    for (const claim of pack.claims.slice(0, 30)) lines.push(`- ${claim.id}: ${claim.statement}`);
+    for (const claim of pack.claims) lines.push(`- ${claim.id}: ${claim.statement}`);
     lines.push("");
   }
   if (pack.conflicts.length > 0) lines.push("## Conflicts", ...pack.conflicts.map((item) => `- ${item}`), "");
@@ -420,9 +427,79 @@ function renderMarkdown(pack: Omit<ContextPackV2, "markdown">): string {
     }
     lines.push("");
   }
-  if (pack.unknowns.length > 0) lines.push("## Unknowns", ...pack.unknowns.map((item) => `- ${item}`), "");
+  if (pack.unknowns.length > 0 || pack.unknownSummary?.omitted) lines.push("## Unknowns", ...pack.unknowns.map((item) => `- ${item}`), ...(pack.unknownSummary?.omitted ? [`- ${pack.unknownSummary.omitted} additional unknown(s) omitted; narrow the request or raise the budget.`] : []), "");
   lines.push("## Required validation", `- Gates: ${pack.risk.requiredGates.join(", ") || "project defaults"}`, `- Tests: ${pack.risk.testsToRun.join(", ") || "targeted tests must be identified"}`, "", `Stop: ${pack.stopReason}`);
   return lines.join("\n");
+}
+
+/** One accounting boundary for every public response format. These are
+ * character-based estimates, not actual model tokenizer or host usage.
+ */
+export function formatEngineeringContext(pack: ContextPackV2, format: "json" | "markdown" | "full" = "json"): Record<string, unknown> {
+  const copy = structuredClone(pack);
+  const result: Record<string, unknown> = format === "markdown"
+    ? { markdown: copy.markdown, risk: copy.risk, unknowns: copy.unknowns, unknownSummary: copy.unknownSummary, conflicts: copy.conflicts, requiresDecision: copy.requiresDecision === true, stopReason: copy.stopReason, tokenAllocation: copy.tokenAllocation, budgetAccounting: copy.budgetAccounting }
+    : copy as unknown as Record<string, unknown>;
+  if (format === "json") delete result.markdown;
+  const allocation = copy.tokenAllocation;
+  const accounting = { estimator: "characters/4" as const, format, estimatedTokens: 0, overflow: false, omitted: copy.budgetAccounting?.omitted ?? {} } as NonNullable<ContextPackV2["budgetAccounting"]>;
+  result.budgetAccounting = accounting;
+  for (let pass = 0; pass < 8; pass++) {
+    const measured = estimateTokens(JSON.stringify(result));
+    const overflow = measured > allocation.budget;
+    const reason = overflow ? "Required response identity/status exceeds this budget; raise the budget or narrow the request." : undefined;
+    if (allocation.used === measured && accounting.estimatedTokens === measured && accounting.overflow === overflow && accounting.reason === reason) break;
+    allocation.used = measured; allocation.reserve = Math.max(0, allocation.budget - measured);
+    accounting.estimatedTokens = measured; accounting.overflow = overflow; accounting.reason = reason;
+  }
+  return result;
+}
+
+function budgetCompletePack(base: Omit<ContextPackV2, "markdown">): ContextPackV2 {
+  const pack: ContextPackV2 = { ...base, markdown: "" };
+  const omitted: Record<string, number> = {};
+  const totalUnknowns = pack.unknowns.length;
+  pack.unknownSummary = { total: totalUnknowns, returned: totalUnknowns, omitted: 0 };
+  pack.budgetAccounting = { estimator: "characters/4", format: "full", estimatedTokens: 0, overflow: false, omitted };
+  const synchronize = () => {
+    pack.unknownSummary = { total: totalUnknowns, returned: pack.unknowns.length, omitted: totalUnknowns - pack.unknowns.length };
+    const chunks = [...pack.code.primary, ...pack.code.secondary, ...pack.code.tests];
+    const keys = new Set(chunks.map(chunk => `${chunk.path}:${chunk.startLine}-${chunk.endLine}`));
+    pack.evidence = pack.evidence.filter(item => keys.has(`${item.path}:${item.lines[0]}-${item.lines[1]}`));
+    pack.provenanceBadges = pack.provenanceBadges?.filter(item => keys.has(item.entityId));
+    if (totalUnknowns || Object.keys(omitted).length) {
+      pack.overallConfidence = Math.min(pack.overallConfidence, 0.65);
+      pack.stopReason = `Stopped with ${totalUnknowns} unknown(s), ${totalUnknowns - pack.unknowns.length} omitted, and explicit response coverage limits; resolve relevant gaps before implementation.`;
+    }
+    pack.markdown = renderMarkdown(pack);
+    return formatEngineeringContext(pack, "full") as unknown as ContextPackV2;
+  };
+  const drop = (items: unknown[] | undefined, category: string, minimum = 0) => {
+    if (!items || items.length <= minimum) return false;
+    items.pop(); omitted[category] = (omitted[category] ?? 0) + 1; return true;
+  };
+  let response = synchronize();
+  // Remove optional repetitions first. Keep canonical identity, trust/status,
+  // required gates and unknown counts even when a tiny budget must expand.
+  while (response.tokenAllocation.used > pack.tokenAllocation.budget) {
+    let changed = drop(pack.code.secondary, "code") || drop(pack.code.skeletons, "skeletons") || drop(pack.claims, "claims", 1) || drop(pack.architecture.callChains, "callChains") || drop(pack.negativeConstraints, "negativeConstraints");
+    if (!changed && pack.providerContribution?.invocations?.length) { pack.providerContribution.invocations = []; omitted.providerInvocations = 1; changed = true; }
+    if (!changed && pack.providerContribution?.invocation) { delete pack.providerContribution.invocation; omitted.providerInvocation = 1; changed = true; }
+    if (!changed) changed = drop(pack.knowledge.decisions, "knowledge") || drop(pack.knowledge.documents, "knowledge", 1) || drop(pack.architecture.edges, "edges");
+    if (!changed && pack.architecture.nodes.length > 1) {
+      const seedSet = new Set(pack.architecture.seeds);
+      let index = -1;
+      for (let candidate = pack.architecture.nodes.length - 1; candidate >= 0; candidate--) if (!seedSet.has(pack.architecture.nodes[candidate].id)) { index = candidate; break; }
+      const [removed] = pack.architecture.nodes.splice(index >= 0 ? index : pack.architecture.nodes.length - 1, 1);
+      pack.architecture.edges = pack.architecture.edges.filter(edge => edge.from !== removed.id && edge.to !== removed.id);
+      pack.architecture.seeds = pack.architecture.seeds.filter(id => id !== removed.id);
+      omitted.nodes = (omitted.nodes ?? 0) + 1; changed = true;
+    }
+    if (!changed) changed = drop(pack.unknowns, "unknowns", 1) || drop(pack.code.primary, "code", 1) || drop(pack.code.tests, "code", 1) || drop(pack.claims, "claims") || drop(pack.knowledge.documents, "knowledge");
+    if (!changed) break;
+    response = synchronize();
+  }
+  return response;
 }
 
 export async function getEngineeringContext(
@@ -546,7 +623,7 @@ export async function getEngineeringContext(
   const unknowns = [
     ...(knowledge.trust === "degraded" ? [`GraphWard knowledge has ${knowledge.citationDrift} missing reference(s), ${knowledge.staleEvidence} stale citation(s) and ${knowledge.documentDrift ?? 0} document(s) whose cited source changed; affected prose was not loaded. Re-verify and run \`gw evidence-record .\`.`] : []),
     ...(knowledge.trust === "unverifiable" ? ["GraphWard knowledge has no recorded citation snapshot; prose was not promoted as verified context."] : []),
-    ...graphUnknowns.slice(0, 20),
+    ...[...graphUnknowns].sort((a, b) => Number(approvedScope.some(file => b.includes(file))) - Number(approvedScope.some(file => a.includes(file))) || relevance(b, words(request.task)) - relevance(a, words(request.task))),
     ...(!graphCurrent ? ["Canonical graph freshness is unverified or stale; call prepare_task_context before implementation."] : []),
     ...(retrieval.fallbackUsed ? [retrieval.message] : []),
     ...providerRuns.filter(run => run.fallback).map(run => `${run.name}: ${run.message}`),
@@ -555,11 +632,11 @@ export async function getEngineeringContext(
   ];
   const impact = requestedFiles.length > 0 ? await analyzeImpact(root, requestedFiles) : undefined;
   const requiredGates = [
-    classification.kind === "security-change" && "security review",
-    classification.kind === "api-change" && "api-diff",
-    classification.kind === "database-change" && "migration-lint",
-    "type-check",
-    "targeted tests",
+    classification.route.includes("security-gates") && "security review",
+    classification.route.includes("api-gates") && "api-diff",
+    classification.route.includes("migration-gates") && "migration-lint",
+    ["mutate", "ambiguous"].includes(classification.intent) && "type-check",
+    ["mutate", "ambiguous"].includes(classification.intent) && "targeted tests",
   ].filter((value): value is string => Boolean(value));
   const testsToRun = [...new Set([...(impact?.testsToRun ?? []), ...tests.map((chunk) => chunk.path)])];
   const confidence = Math.min(graphCurrent && !retrieval.fallbackUsed ? 0.9 : 0.65,
@@ -569,7 +646,7 @@ export async function getEngineeringContext(
     (claims.length > 0 ? 0.15 : 0) +
     (knowledge.trust === "healthy" ? 0.15 : knowledge.trust === "empty" ? 0.05 : 0),
   );
-  const stopConditions = [architecture.nodes.length > 0, trimmed.length > 0, testsToRun.length > 0, conflicts.length === 0];
+  const stopConditions = [architecture.nodes.length > 0, trimmed.length > 0, testsToRun.length > 0, conflicts.length === 0, unknowns.length === 0];
   const stopReason = stopConditions.every(Boolean) && confidence >= 0.85
     ? "Required components, current implementation evidence, dependency paths, and tests were resolved above the confidence threshold."
     : `Stopped at the token/scope boundary with confidence ${confidence.toFixed(2)}; unresolved items are explicit and must be checked before implementation.`;
@@ -877,5 +954,5 @@ export async function getEngineeringContext(
       cce: { version: cce?.detectedVersion ?? cce?.requiredVersion, health: retrieval.providerHealth, fallback: retrieval.fallbackUsed },
     },
   };
-  return { ...base, markdown: renderMarkdown(base) };
+  return budgetCompletePack(base);
 }

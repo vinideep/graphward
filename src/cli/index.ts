@@ -760,6 +760,7 @@ async function main(): Promise<void> {
     const cf = await changedFiles(options.root);
     const { record, noCommands } = await runVerification(options.root, {
       commands: config.verifyCommands.length > 0 ? config.verifyCommands : undefined,
+      timeoutMs: typeof config.verifyTimeoutMs === "number" ? config.verifyTimeoutMs : undefined,
       mode: options.impactOnly && !options.full ? "impact" : "baseline",
       changedFiles: cf,
       provenance: options.provenance ?? "unknown",
@@ -773,7 +774,7 @@ async function main(): Promise<void> {
         output.write(`${run.exitCode === 0 ? "PASS" : "FAIL"}  ${run.command}  (${run.durationMs}ms)\n`);
       }
       const covered = Object.keys(record.files).length;
-      output.write(`Verdict: ${record.verdict.toUpperCase()} — record covers ${covered} changed file(s).\n`);
+      output.write(`Verdict: ${record.verdict.toUpperCase()} — ${record.requiredChecksSatisfied ? `required baseline covers ${covered} changed file(s)` : "local check result only; required baseline remains unverified"}.\n`);
       if (record.verdict === "fail") {
         const failing = record.commands.find((r) => r.exitCode !== 0);
         if (failing?.outputTail) output.write(`${failing.outputTail.trimEnd()}\n`);
