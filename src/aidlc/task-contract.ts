@@ -10,7 +10,8 @@ import { loadGwConfig } from "../config/index.js";
 
 export interface TaskQuestion { id: string; question: string; options: string[]; answer?: string }
 export interface TaskContract {
-  kind: "feature" | "fix" | "refactor";
+  /** chore: checks, builds, version bumps and other housekeeping with no behavior change. */
+  kind: "feature" | "fix" | "refactor" | "chore";
   request: string;
   intendedUsers: string[];
   behavior: string[];
@@ -103,7 +104,7 @@ export function validateTaskContract(input: unknown): TaskContract {
   const value = input as Record<string, unknown>;
   const allowed = ["kind", "request", "intendedUsers", "behavior", "nonGoals", "acceptanceCriteria", "scope", "constraints", "questions"];
   for (const key of Object.keys(value)) if (!allowed.includes(key)) throw new Error(`Unknown contract field: ${key}`);
-  if (!["feature", "fix", "refactor"].includes(value.kind as string) || typeof value.request !== "string" || !value.request.trim()) throw new Error("Task kind and request are required.");
+  if (!["feature", "fix", "refactor", "chore"].includes(value.kind as string) || typeof value.request !== "string" || !value.request.trim()) throw new Error("Task kind and request are required.");
   if (!Array.isArray(value.questions)) throw new Error("Complete questions and answers are required.");
   const ids = new Set<string>();
   const questions = value.questions.map((item: unknown) => {

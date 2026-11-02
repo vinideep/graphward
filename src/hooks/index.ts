@@ -381,7 +381,11 @@ function splitShellSegments(command: string): string[][] | null {
       index += redirect[0].length - 1; continue;
     }
     if (char === "|") { if (next === "|") index++; if (!endSegment()) return null; continue; }
-    if (char === ";") { if (!endSegment()) return null; continue; }
+    if (char === ";") {
+      if (!endSegment()) return null;
+      if (!command.slice(index + 1).trim()) return segments; // a trailing terminator is not a command
+      continue;
+    }
     word += char; hasWord = true;
   }
   if (quote || !endSegment()) return null;
@@ -458,7 +462,14 @@ function isReadOnlySegment(words: string[]): boolean {
   if (index === words.length) return true; // a formatting variable assignment alone
   words = words.slice(index);
   const cliArgs = graphwardArgs(words);
-  if (cliArgs) return /^(?:verify|context|providers status|aidlc (?:prepare-task|assess|gate|confirm-task|accept-reduced-context))(?:\s|$)/.test(cliArgs.join(" "));
+  if (cliArgs) {
+    if (cliArgs.length === 1 && VERSION_FLAGS.has(cliArgs[0])) return true;
+    // Pure reads: health writes only with --open; claims add/derive write the claim store.
+    const [sub, ...subArgs] = cliArgs;
+    if ((sub === "health" || sub === "evidence-check") && !subArgs.includes("--open")) return true;
+    if (sub === "claims") return !subArgs.some(arg => /^--(?:statement|evidence|author)(?:=|$)/.test(arg)) && ["verify", "list"].includes(subArgs.find(arg => !arg.startsWith("-")) ?? "verify");
+    return /^(?:verify|context|providers status|aidlc (?:prepare-task|assess|gate|confirm-task|accept-reduced-context))(?:\s|$)/.test(cliArgs.join(" "));
+  }
   const [name, ...args] = words;
   if (READ_ONLY_COMMANDS.has(name)) return !args.some(arg => arg === "--output" || /^--output=/.test(arg) || name === "file" && (/^--compile(?:=|$)/.test(arg) || /^-[^-]*C/.test(arg)));
   if (VERSION_PROBES.has(name) && args.length === 1 && VERSION_FLAGS.has(args[0])) return true;

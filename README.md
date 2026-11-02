@@ -4,7 +4,7 @@
 
 GraphWard helps coding agents understand existing behavior, clarify a request, identify affected callers and tests, and record what was validated. It combines project-owned knowledge, dependency graphs and current source evidence. It does not replace your assistant or guarantee correct code or complete dependency coverage.
 
-> **Current source candidate — October 26, 2026:** this checkout declares package version `1.3.3`. This identifies local source, not a published release or a running IDE process. Use `gw --version` for the invoked version and MCP `provider_status.runtime` for the loaded process/build generation. Native host, remote platform and measured outcome qualification remain separate from local tests.
+> **Current source candidate — October 27, 2026:** this checkout declares package version `1.3.4`. This identifies local source, not a published release or a running IDE process. Use `gw --version` for the invoked version and MCP `provider_status.runtime` for the loaded process/build generation. Native host, remote platform and measured outcome qualification remain separate from local tests.
 
 ## Start here
 

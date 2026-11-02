@@ -259,3 +259,10 @@ test('context packs account for every budgeted section: claims counted, seeds vi
   assert.ok((pack.provenanceBadges??[]).every(badge=>badge.badge==='PROV:CURRENT-SOURCE'));
  }
 });
+test('chore contracts cover checks and housekeeping; unknown kinds are still rejected',async t=>{
+ const root=await fixture(t);
+ const chore={...contract(),kind:'chore',request:'Rebuild and run the suite',intendedUsers:[],questions:[]};
+ const proposal=await proposeTask(root,chore,{taskId:'checks',host:'codex',sessionId:'conversation'});
+ assert.equal(proposal.task.contract.kind,'chore');
+ await assert.rejects(proposeTask(root,{...chore,kind:'audit'},{taskId:'audit',host:'codex',sessionId:'conversation'}),/Task kind and request are required/);
+});

@@ -325,6 +325,37 @@ test("discovery classifier allows read-only pipelines and quoted metacharacters,
   for (const command of rejected) assert.equal(isReadOnlyShellCommand(command), false, command);
 });
 
+test("discovery classifier accepts a trailing terminator and GraphWard's own read-only commands", () => {
+  const allowed = [
+    "ls;",
+    "cat package.json | head -3; ",
+    "git status --short; git log -1;",
+    "gw --version",
+    "graphward -v",
+    "gw health .",
+    "gw health . --json --strict",
+    "gw evidence-check .",
+    "gw claims",
+    "gw claims --json",
+    "gw claims verify .",
+    "gw claims list",
+  ];
+  for (const command of allowed) assert.equal(isReadOnlyShellCommand(command), true, command);
+  const rejected = [
+    "ls;;",
+    "; ls",
+    "ls; rm x;",
+    "gw health . --open",
+    "gw claims add --statement s --evidence src/a.ts:1-2 --author me",
+    "gw claims derive",
+    "gw claims --statement verify add",
+    "gw freshness .",
+    "gw git-analysis .",
+    "gw --version --json",
+  ];
+  for (const command of rejected) assert.equal(isReadOnlyShellCommand(command), false, command);
+});
+
 test("hook event log rotates instead of growing without bound", async () => {
   const root = await mkdtemp(path.join(tmpdir(), "ei-hooks-rotate-"));
   const state = path.join(root, ".graphward", ".hooks-state");
