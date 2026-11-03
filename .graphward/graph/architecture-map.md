@@ -1,5 +1,5 @@
 # Architecture Map
-<!-- freshness: last_checked=2026-10-27 -->
+<!-- freshness: last_checked=2026-11-03 -->
 
 This summary is derived from GraphWard's normalized dependency graph. Provider JSON/report files are evidence inputs and must not be edited into a competing canonical graph. (evidence: src/graph/provider-evidence.ts, src/graph/index.ts)
 
@@ -32,4 +32,4 @@ flowchart TD
 
 Provider health and fallback status are carried into every task context so degraded operation cannot look fully provider-backed. (evidence: src/context/orchestrator.ts, src/providers/manager.ts)
 
-Current reviews/required-baseline receipts bind scope/source/check/runtime identity. Fresh MCP processes expose loaded versus disk generation; pre-upgrade processes require a reconnect. Context response budgets count the complete estimated payload and report omissions/overflow. (evidence: src/gates/review-evidence.ts, src/verify/index.ts, src/runtime/invocation.ts, src/mcp/index.ts, src/context/orchestrator.ts)
+Current reviews/required-baseline receipts bind scope/source/check/runtime identity. Fresh MCP processes expose loaded versus disk generation and delegate calls to a child from a valid newer build (refusing an invalid one); pre-upgrade processes require a reconnect. Context response budgets count the complete estimated payload and report omissions/overflow. (evidence: src/gates/review-evidence.ts, src/verify/index.ts, src/runtime/invocation.ts, src/mcp/index.ts, src/context/orchestrator.ts)

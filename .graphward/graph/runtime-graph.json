@@ -30,7 +30,7 @@
     {
       "id": "handler:mcp-tool-dispatch",
       "kind": "handler",
-      "label": "MCP tool dispatch rejects loaded/disk generation drift except provider_status",
+      "label": "MCP tool dispatch delegates loaded/disk generation drift to a child from the verified current build, refusing an invalid build; provider_status answers locally",
       "path": "src/mcp/index.ts",
       "confidence": "verified",
       "metadata": {},

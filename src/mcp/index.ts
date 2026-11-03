@@ -3,6 +3,8 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { Server } from "@modelcontextprotocol/sdk/server";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { buildGraph, analyzeImpact, loadExistingGraph, ensureFreshGraph, findSymbol, whoCalls } from "../graph/index.js";
 import { preflight, postflight } from "../flight/index.js";
@@ -359,18 +361,57 @@ function safeRegex(pattern: string | undefined): RegExp | undefined {
   }
 }
 
+// After dist/ is rebuilt this process still runs the code it loaded, so it must not
+// answer from it. Rather than refusing every call until a human reconnects, forward to
+// a child started from the current build. resolveRuntimeInvocation verifies every
+// module against the identity manifest and throws for a partial or invalid build.
+function currentGenerationDelegate(projectRoot: string): () => Promise<Client> {
+  let active: { generation: string; client: Promise<Client> } | undefined;
+  let childPid: number | undefined;
+  process.once("exit", () => { try { if (childPid) process.kill(childPid); } catch { /* already gone */ } });
+  return async () => {
+    const invocation = resolveRuntimeInvocation({ kind: "mcp", projectRoot });
+    if (active?.generation === invocation.generation) return active.client;
+    const previous = active;
+    const env = Object.fromEntries(Object.entries(process.env).filter((entry): entry is [string, string] => entry[1] !== undefined));
+    const transport = new StdioClientTransport({ command: invocation.command, args: invocation.args, cwd: projectRoot, env, stderr: "ignore" });
+    const client = new Client({ name: "graphward-generation-delegate", version: invocation.version });
+    const connecting = client.connect(transport).then(() => { childPid = transport.pid ?? undefined; return client; });
+    const current = { generation: invocation.generation, client: connecting };
+    active = current;
+    const forget = () => { if (active === current) active = undefined; };
+    client.onclose = forget;
+    connecting.catch(forget);
+    void previous?.client.then(old => old.close()).catch(() => {});
+    return connecting;
+  };
+}
+
 export async function startMcpServer(projectRoot: string): Promise<void> {
   const consolidated = await createConsolidatedRegistry(projectRoot);
   const server = new Server(
     { name: "graphward", version: await packageVersion() },
-    { capabilities: { tools: {}, experimental: { graphward: { apiVersion: MCP_API_VERSION, runtime: runtimeIdentityStatus() } } } },
+    { capabilities: { tools: { listChanged: true }, experimental: { graphward: { apiVersion: MCP_API_VERSION, runtime: runtimeIdentityStatus() } } } },
   );
+  const delegate = currentGenerationDelegate(projectRoot);
+  let announcedStale = false;
+  // Tell the host once, so it re-lists and picks up the current build's schemas.
+  const announceStale = () => {
+    if (announcedStale) return;
+    announcedStale = true;
+    void server.sendToolListChanged().catch(() => {});
+  };
 
   // Advertise only the cohesive GraphWard control-plane surface. The legacy tools
   // remain callable below as compatibility wrappers for existing clients, but
   // are intentionally absent from discovery so the model does not have to
   // orchestrate GraphWard, Graphify, and CCE primitives itself.
-  server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: consolidated.list() }));
+  server.setRequestHandler(ListToolsRequestSchema, async () => {
+    if (!runtimeIdentityStatus().current) {
+      try { return await (await delegate()).listTools(); } catch { /* invalid build: calls will report it */ }
+    }
+    return { tools: consolidated.list() };
+  });
 
   server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
     const { name, arguments: args = {} } = request.params;
@@ -379,7 +420,18 @@ export async function startMcpServer(projectRoot: string): Promise<void> {
     try {
       if (name !== "provider_status") {
         const runtime = runtimeIdentityStatus();
-        if (!runtime.current) throw new Error(`GraphWard runtime generation changed after this MCP process loaded. Restart this connection before using current evidence. Loaded: ${runtime.loadedGeneration ?? "unavailable"}; disk: ${"diskGeneration" in runtime ? runtime.diskGeneration : "invalid"}.`);
+        if (!runtime.current) {
+          let client: Client;
+          try {
+            client = await delegate();
+          } catch (error) {
+            const reason = error instanceof Error ? error.message : String(error);
+            throw new Error(`GraphWard runtime generation changed after this MCP process loaded and the current build could not be started (${reason}). Restart this connection before using current evidence. Loaded: ${runtime.loadedGeneration ?? "unavailable"}; disk: ${"diskGeneration" in runtime ? runtime.diskGeneration : "invalid"}.`);
+          }
+          announceStale();
+          // Arguments are forwarded unchanged; the current build performs all validation.
+          return await client.callTool({ name, arguments: args }, undefined, { signal: extra.signal }) as any;
+        }
       }
       const root = toCanonicalPath(typeof args.root === "string" ? args.root : projectRoot);
       if (root !== toCanonicalPath(projectRoot)) throw new Error("MCP connection is bound to another project; reconnect with the intended project root.");
