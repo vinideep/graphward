@@ -2,6 +2,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { runProcessSync } from "../process/index.js";
+import { BRIEF_DOCUMENT, readDerivedHashes } from "../brief/index.js";
 import { ANNOTATED_DOC_DIRS, extractAnnotatedPaths, hashSourceFile, listIntelligenceDocuments, readEvidenceSnapshot, type EvidenceSnapshot } from "../evidence/index.js";
 
 // ---------------------------------------------------------------------------
@@ -123,7 +124,12 @@ function actionFromStatus(status: FreshnessStatus): FreshnessAction {
 async function scoreDocument(docPath: string, root: string, content: string, context: ScoringContext): Promise<DocumentScore> {
   const docLastUpdated = extractDocTimestamp(content);
   const evidencePaths = extractEvidencePaths(content);
-  const recorded = { ...context.snapshot?.documents?.find((document) => document.path === docPath)?.sourceHashes, ...context.snapshot?.annotationHashes?.[docPath] };
+  const recorded = {
+    ...context.snapshot?.documents?.find((document) => document.path === docPath)?.sourceHashes,
+    ...context.snapshot?.annotationHashes?.[docPath],
+    // Only the generated brief may vouch for its own derivation; anywhere else it would be self-certification.
+    ...(docPath === BRIEF_DOCUMENT ? readDerivedHashes(content) : {}),
+  };
   const currentHash = (file: string) => {
     let pending = context.sourceHashes.get(file);
     if (!pending) { pending = hashSourceFile(root, file); context.sourceHashes.set(file, pending); }

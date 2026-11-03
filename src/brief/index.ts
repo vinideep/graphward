@@ -1,5 +1,6 @@
 import { mkdir, writeFile, readFile } from "node:fs/promises";
 import path from "node:path";
+import { hashSourceFile } from "../evidence/index.js";
 import type { DependencyGraph } from "../graph/schema.js";
 
 // Load the graph file directly (no import from graph/index.js) to keep this
@@ -29,8 +30,33 @@ const EXT_LANG: Record<string, string> = {
   java: "Java", kt: "Kotlin",
 };
 
+export const BRIEF_DOCUMENT = ".graphward/context/repo-brief.md";
+const BRIEF_SOURCES = [".graphward/graph/dependency-graph.json", "package.json"];
+const DERIVED_FROM = /<!-- graphward:derived-from ((?:\S+=[0-9a-f]{64}\s*)+)-->/;
+
 function briefPath(root: string): string {
-  return path.join(root, ".graphward", "context", "repo-brief.md");
+  return path.join(root, BRIEF_DOCUMENT);
+}
+
+// The brief is rebuilt with every graph build, so it carries the hashes of the
+// sources it was rendered from instead of relying on the last evidence-record.
+// Freshness honours these for BRIEF_DOCUMENT only; the sidecar is never written.
+export function readDerivedHashes(content: string): Record<string, string> {
+  const match = content.match(DERIVED_FROM);
+  if (!match) return {};
+  return Object.fromEntries(match[1].trim().split(/\s+/).map(pair => {
+    const at = pair.lastIndexOf("=");
+    return [pair.slice(0, at), pair.slice(at + 1)];
+  }));
+}
+
+async function derivedHashes(root: string): Promise<Record<string, string>> {
+  const hashes: Record<string, string> = {};
+  for (const source of BRIEF_SOURCES) {
+    const hash = await hashSourceFile(root, source);
+    if (hash) hashes[source] = hash;
+  }
+  return hashes;
 }
 
 function extOf(evidenceFile: string | undefined): string | null {
@@ -57,7 +83,7 @@ export interface BriefResult {
 export async function generateBrief(root: string): Promise<BriefResult> {
   const graph = await loadGraphFile(root);
   const pkg = await readPackageJson(root);
-  const markdown = renderBrief(root, graph, pkg);
+  const markdown = renderBrief(root, graph, pkg, graph ? await derivedHashes(root) : {});
 
   const outPath = briefPath(root);
   await mkdir(path.dirname(outPath), { recursive: true });
@@ -73,7 +99,7 @@ export async function readBrief(root: string): Promise<string | null> {
   }
 }
 
-function renderBrief(root: string, graph: DependencyGraph | null, pkg: Record<string, unknown> | null): string {
+function renderBrief(root: string, graph: DependencyGraph | null, pkg: Record<string, unknown> | null, derived: Record<string, string>): string {
   const scope = graph?.scope ?? path.basename(root);
   if (!graph) {
     return `# Repo Brief — ${scope}\n\n_No dependency graph yet. Run \`graphward setup\` (or \`map\`) to generate one._\n`;
@@ -137,6 +163,8 @@ function renderBrief(root: string, graph: DependencyGraph | null, pkg: Record<st
   lines.push("<!-- Generated deterministically from the dependency graph. ~500-token orientation digest. -->");
   lines.push("<!-- freshness derives from the current graph and package manifest evidence below. -->");
   lines.push("(evidence: .graphward/graph/dependency-graph.json, package.json)");
+  const pairs = Object.entries(derived).map(([source, hash]) => `${source}=${hash}`);
+  if (pairs.length) lines.push(`<!-- graphward:derived-from ${pairs.join(" ")} -->`);
   lines.push("");
   lines.push(`- **Scale**: ${modules.length} source modules, ${symbols.length} symbols, ${packages.length} external packages, ${graph.edges.length} edges.`);
   if (langs.length) lines.push(`- **Languages**: ${langs.join(", ")}.`);
