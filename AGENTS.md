@@ -30,5 +30,5 @@ These run deterministically. Use them instead of inferring the answer from sourc
 - `assess_risk` — compute multi-dimensional risk profile and tiered verification plan
 - `slice_graph` — hierarchically slice monorepo graph at global, package, community, or task level
 
-CLI equivalents: `"/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node" "/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/cli/index.js" map|gate <name>|verify|freshness|context|claims verify|git-analysis .`. `gate` and `verify` exit non-zero on failure, so they work in CI too.
+CLI equivalents: `'/Users/vinithr/.nvm/versions/node/v22.16.0/bin/node' '/Users/vinithr/personal/AI/engineering-intelligence-OS/dist/cli/index.js' map|gate <name>|verify|freshness|context|claims verify|git-analysis .`. `gate` and `verify` exit non-zero on failure, so they work in CI too.
 <!-- graphward:end -->

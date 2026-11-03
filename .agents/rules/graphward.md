@@ -97,6 +97,8 @@ These workflows analyze and report but do **not** modify product code:
 
 The `graphward`, `tdd`, `create-project`, and `deliver-backlog` workflows may modify product code. `create-project` is limited to approved scaffolding; `deliver-backlog` modifies one approved feature at a time. Audit, review, analysis, discovery, mapping, synchronization, and design-only workflows remain read-only unless the user separately authorizes implementation.
 
+Safe inspection does not require an implementation contract. Confirmed report/handoff scope uses requirements readiness and does not grant source-write authority. Verification completion requires current required checks; custom, skipped, unavailable or legacy evidence cannot silently become a baseline pass. Completed security/convention reviews and API replays must carry current candidate bindings. Report exact capability limits and payload budget overflow rather than claiming completeness from missing evidence.
+
 ## Canonical Paths
 
 Use these as the canonical project-intelligence paths — never invent alternatives:

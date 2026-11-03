@@ -2,7 +2,8 @@
   "hooks": {
     "freshnessThreshold": 60,
     "blockStaleEdits": false,
-    "requireValidationOnStop": true
+    "requireValidationOnStop": true,
+    "unavailableValidationPolicy": "block"
   },
   "schemaVersion": 2,
   "tokenBudgets": {},
@@ -12,5 +13,8 @@
     "offline": false,
     "requireProviders": false,
     "exposeRawMcp": false
+  },
+  "workflow": {
+    "mode": "strict"
   }
 }
