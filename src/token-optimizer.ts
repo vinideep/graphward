@@ -14,6 +14,7 @@
  */
 
 import { readTemplate } from "./templates.js";
+import type { WorkflowMode } from "./config/index.js";
 import {
   SKILL_INVOCATION_POLICIES,
   WORKFLOW_CATALOG,
@@ -61,11 +62,23 @@ export function prepareRendered(content: string): string {
 export const SKILLS_INDEX_FILENAME = "SKILLS-INDEX.md";
 export const WORKFLOW_ROUTING_FILENAME = "WORKFLOW-ROUTING.md";
 
-export function generateWorkflowRouting(skillsDir = ".claude/skills", briefsAvailable = true): string {
+/** Select canonical mode branches before frontmatter parsing, escaping or compression. */
+export function selectWorkflowMode(content: string, mode: WorkflowMode = "strict"): string {
+  const selected = mode === "concise" ? "concise" : "strict";
+  const rendered = content.replace(/<!-- graphward:mode (strict|concise) -->\r?\n([\s\S]*?)<!-- \/graphward:mode -->(?:\r?\n)?/g,
+    (_match, branch: string, body: string) => branch === selected ? body : "");
+  if (/<!--\s*\/?graphward:mode\b/.test(rendered)) throw new Error("Malformed workflow mode branches in canonical template.");
+  return rendered;
+}
+
+export function generateWorkflowRouting(skillsDir = ".claude/skills", briefsAvailable = true, mode: WorkflowMode = "strict"): string {
   const rows = (Object.entries(WORKFLOW_SKILL_ROUTING) as [string, { primary: string[]; optional: string[] }][])
     .map(([cmd, r]) => {
-      const primary = r.primary.map((s) => `\`${s}\``).join(", ");
-      const optional = r.optional.length ? r.optional.map((s) => `\`${s}\``).join(", ") : "—";
+      const concise = mode === "concise" && cmd === "graphward";
+      const primarySkills = concise ? ["graphward-skill"] : r.primary;
+      const optionalSkills = concise ? [...new Set([...r.primary.filter(skill => skill !== "graphward-skill"), ...r.optional])] : r.optional;
+      const primary = primarySkills.map((s) => `\`${s}\``).join(", ");
+      const optional = optionalSkills.length ? optionalSkills.map((s) => `\`${s}\``).join(", ") : "—";
       const route = WORKFLOW_CATALOG[cmd as keyof typeof WORKFLOW_CATALOG];
       return `| \`${cmd}\` | ${route.mutatesProduct ? "yes" : "no"} | ${primary} | ${optional} |`;
     });
@@ -185,11 +198,12 @@ export function generateSkillBrief(content: string, name: string): string {
  */
 export async function generateAllSkillBriefs(
   skillNames: ReadonlyArray<string>,
+  mode: WorkflowMode = "strict",
 ): Promise<Map<string, string>> {
   const entries = await Promise.all(
     skillNames.map(async (name) => {
       const full = await readTemplate("skills", name).catch(() => "");
-      return [name, prepareRendered(generateSkillBrief(full, name))] as const;
+      return [name, prepareRendered(generateSkillBrief(selectWorkflowMode(full, mode), name))] as const;
     }),
   );
   return new Map(entries);

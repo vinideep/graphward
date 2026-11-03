@@ -179,6 +179,7 @@ test("T3.3: Continuous Self-Learning + Evidence Citation Healing (F2 + F6)", asy
 
   const repo = await createIsolatedRepo();
   try {
+    await repo.write("src/index.ts", "export const window = BigInt(1000);\n");
     // 1. Record a regression pattern
     const proposed = await learnMod.recordLearnedPattern(repo.dir, {
       type: "regression",

@@ -1,4 +1,5 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { accessSync } from "node:fs";
 import path from "node:path";
 import { runProcessSync } from "../process/index.js";
 
@@ -87,7 +88,7 @@ function detectIdesInUse(root: string): string[] {
   return [...new Set(candidates
     .filter(([, p]) => {
       try {
-        require("node:fs").accessSync(path.join(root, p));
+        accessSync(path.join(root, p));
         return true;
       } catch {
         return false;
@@ -190,22 +191,22 @@ export function seedFromGitHistory(root: string, email: string): GitHistorySigna
 
   // Avg lines changed (numstat — separate call, skip on timeout)
   let avgLinesChanged = 0;
-  const numstat = tryGit(["log", `--author=${email}`, "--numstat", "--format=", "-100"], root);
+  const numstat = tryGit(["log", `--author=${email}`, "--numstat", "--format=COMMIT:%H", "-100"], root);
   if (numstat) {
     let totalLines = 0;
-    let lineCount = 0;
+    let commitCount = 0;
     for (const line of numstat.split("\n")) {
+      if (line.startsWith("COMMIT:")) { commitCount++; continue; }
       const parts = line.trim().split("\t");
       if (parts.length >= 2) {
         const adds = parseInt(parts[0] ?? "0", 10);
         const dels = parseInt(parts[1] ?? "0", 10);
         if (!isNaN(adds) && !isNaN(dels)) {
           totalLines += adds + dels;
-          lineCount++;
         }
       }
     }
-    avgLinesChanged = lineCount > 0 ? Math.round(totalLines / lineCount) : 0;
+    avgLinesChanged = commitCount > 0 ? Math.round(totalLines / commitCount) : 0;
   }
 
   return { totalCommits, testCommitRatio, primaryDirs, primaryLanguage, usesConventionalCommits, avgLinesChanged };

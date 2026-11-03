@@ -1,4 +1,4 @@
-import { chmodSync, lstatSync, readFileSync, writeFileSync } from 'node:fs';
+import { chmodSync, lstatSync, readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
 
@@ -20,5 +20,16 @@ export function finalizeBuild(root, outputRoot = path.join(root, "dist")) {
     chmodSync(target, 0o755);
     bins[name] = { path: relative, sha256: createHash('sha256').update(bytes).digest('hex') };
   }
-  writeFileSync(path.join(outputRoot, 'runtime-identity.json'), JSON.stringify({ schemaVersion: 1, name: pkg.name, version: pkg.version, bins }, null, 2) + '\n');
+  const modules = {};
+  const walk = (directory, prefix = '') => {
+    for (const entry of readdirSync(directory, {withFileTypes:true}).sort((a,b)=>a.name.localeCompare(b.name))) {
+      const relative = prefix + entry.name;
+      if (entry.isDirectory()) walk(path.join(directory, entry.name), relative + '/');
+      else if (entry.isFile() && /\.(?:js|json)$/.test(entry.name) && relative !== 'runtime-identity.json') modules[relative] = createHash('sha256').update(readFileSync(path.join(directory, entry.name))).digest('hex');
+      else if (entry.isSymbolicLink()) throw new Error(`Runtime modules cannot be symlinks: ${relative}`);
+    }
+  };
+  walk(outputRoot);
+  const generation = createHash('sha256').update(JSON.stringify(modules)).digest('hex');
+  writeFileSync(path.join(outputRoot, 'runtime-identity.json'), JSON.stringify({ schemaVersion: 2, name: pkg.name, version: pkg.version, generation, modules, bins }, null, 2) + '\n');
 }

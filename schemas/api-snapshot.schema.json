@@ -3,21 +3,139 @@
   "$id": "https://graphward.dev/schemas/api-snapshot.schema.json",
   "title": "GraphWard API snapshot manifest",
   "type": "object",
-  "required": ["schemaVersion", "unit", "capturedAt", "volatilePaths", "sensitivePaths", "sourceFiles", "exchange"],
+  "required": [
+    "schemaVersion",
+    "unit",
+    "capturedAt",
+    "volatilePaths",
+    "sensitivePaths",
+    "sourceFiles",
+    "exchange",
+    "binding"
+  ],
   "properties": {
-    "schemaVersion": { "const": 1 },
-    "unit": { "type": "string", "minLength": 1 },
-    "capturedAt": { "type": "string", "format": "date-time" },
-    "volatilePaths": { "type": "array", "items": { "type": "string" } },
-    "sensitivePaths": { "type": "array", "items": { "type": "string" } },
-    "sourceFiles": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "schemaVersion": {
+      "const": 2
+    },
+    "unit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capturedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "volatilePaths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sensitivePaths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "sourceFiles": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
     "exchange": {
       "type": "object",
-      "required": ["request", "response"],
+      "required": [
+        "request",
+        "response"
+      ],
       "properties": {
-        "request": { "type": "object", "required": ["method", "path"], "properties": { "method": { "type": "string" }, "path": { "type": "string" }, "headers": { "type": "object", "additionalProperties": { "type": "string" } }, "body": true } },
-        "response": { "type": "object", "required": ["status"], "properties": { "status": { "type": "integer", "minimum": 100, "maximum": 599 }, "headers": { "type": "object", "additionalProperties": { "type": "string" } }, "body": true } }
+        "request": {
+          "type": "object",
+          "required": [
+            "method",
+            "path"
+          ],
+          "properties": {
+            "method": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "headers": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "body": true
+          }
+        },
+        "response": {
+          "type": "object",
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 599
+            },
+            "headers": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "body": true
+          }
+        }
+      }
+    },
+    "binding": {
+      "$ref": "#/$defs/binding"
+    }
+  },
+  "$defs": {
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "projectRoot",
+        "runtimeGeneration",
+        "files"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": 1
+        },
+        "projectRoot": {
+          "type": "string",
+          "minLength": 1
+        },
+        "runtimeGeneration": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "files": {
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "minLength": 1
+          },
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^(?:[a-f0-9]{64}|missing)$"
+          }
+        }
       }
     }
-  }
+  },
+  "description": "Normalized supplied API baseline; source/runtime bound, not evidence of endpoint execution."
 }

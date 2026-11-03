@@ -1,5 +1,37 @@
 # Changelog
 
+## Unreleased - Agent workflow reliability (IMP-015)
+- **Task gate**: proposals return `howToConfirm`; Claude `AskUserQuestion` approval accepts the challenge as the selected label or an `Approve scope (Recommended)` label; scope entries accept globs (`src/**`); in-scope edits keep bound context valid (per-file baseline), out-of-scope drift still blocks; file edits outside the project are not gated.
+- **Discovery**: quote-aware read-only shell classifier allows pipelines/lists of `ls`, `cat`, `rg`, `grep`, `find`, `git log|diff|show`, `sed -n 'N,Mp'`; writing flags and substitution still require a task.
+- **Context budgets**: `prepare_task_context` (MCP and `gw aidlc prepare-task`) returns a compact receipt; `get_engineering_context` gains `format` (`json` default, `markdown`, `full`); skeleton outlines and claims are charged to the token budget; per-node provenance badges removed (data already on nodes).
+- **Freshness**: content-hash first (sources unchanged since `gw evidence-record` are not drift), backtick and JSON `"evidence"` citations checked, machine state excluded, edit hook scores only documents citing the edited file (~2.0s → ~0.3s per edit).
+- **Gates**: dead-exports no longer misses `dir/index.js` namespace/dynamic imports and exempts npm-script entry files; env-vars ignores comments, platform variables and test fixtures and reads mixed-case names.
+- **CLI**: a flag-only invocation implies `install` only for install options; `gw --json` and similar now fail without writing.
+- **Hooks**: event log rotates at 1 MB; Stop no longer blocks on a clean Git tree after committing verified work, and explains HEAD-bound verification records.
+- **Dependencies**: `@modelcontextprotocol/sdk` 1.32.1; `npm audit` clean.
+- **Source hygiene**: removed a literal NUL byte from `src/evidence/index.ts`.
+- **Brownfield / multi-repo adoption**:
+  - Oversized files skipped by provider indexing are recorded as `excludedFiles` instead of unknowns, so they no longer degrade preparation. Readiness asks for a reduced-coverage decision only when one of them is inside the task's scope.
+  - Codex namespaced tools (`collaborationspawn_agent`, `clocksleep`), agent orchestration and MCP resource listing pass the task gate.
+  - `record_task_change_mapping` merges entries by criterion and returns `unmappedCriteria`; completeness is still enforced by `validate_change`.
+  - The construction-exit gate runs safety gates against working-tree changes. An open flight opened before the task was confirmed becomes a recommendation instead of a blocker.
+  - migration-lint honours `changedFiles`. It recognises migrations by directory (`migrations/`, `db/migrate/`, `alembic/versions/`) or file name, no longer by any path containing "migrat", and skips rollback bodies (`downgrade()`, `def down`, `exports.down`) and `#` comments.
+  - dead-exports exempts Next.js convention exports and `*.config.*` files.
+  - `validate_change` treats `.graphward/**` as low risk and leaves it out of impact analysis.
+  - MCP `validate_change` and `sync_engineering_knowledge` default to `detail: "summary"`: all counts, with only non-passing claims, citations and documents listed, and gate findings and impact details capped at 25 (`detail: "full"` restores every row).
+  - Knowledge references also resolve inside top-level child directories (child repos).
+  - Unverified evidence documents state the specific reason.
+- **Host hook contracts** (checked against the Claude Code, Codex, Cursor and Antigravity hook docs):
+  - The PreToolUse gate classifies calls by what they can do instead of denying every tool it does not know. Only in-project file edits, non-read-only shell, `evaluate_experiment_step`, and third-party MCP tools that write project paths or run local code need a confirmed task. Reads, search, browser, agents, task lists and all other GraphWard MCP tools (under any server name, including Cursor `MCP:<tool>` and Antigravity `mcp_<server>_<tool>`) always pass.
+  - Recognised host tool names: Cursor `Shell`/`Write`/`Delete`, Antigravity `write_to_file`/`replace_file_content`/`multi_replace_file_content`/`run_command`, Codex `apply_patch`/`Bash` and namespaced locals.
+  - Read-only shell now also covers formatting env prefixes (`TZ=`, `LANG=`, `LC_*=`), `date`, `ps`, `df`, `--version` probes, `npm ls`, `docker ps/logs/inspect`, `kubectl get/describe/logs`, `git fetch`, list-only `git branch`/`remote`/`tag`/`stash`/`config --get`, and `curl` without output-file or upload flags.
+  - A command `Cwd` inside the project (Antigravity `run_command` in `backend/`) is no longer denied as "another project"; a working directory outside the project is left to the host.
+  - Claude Code's PreToolUse matcher is anchored, so `TodoWrite` and `BashOutput` no longer reach the gate. Context output uses the matching `hookEventName` for PostToolUse and Stop.
+  - Cursor sessionStart/postToolUse context uses `additional_context`.
+  - Antigravity PreToolUse always answers with a `decision`, PostToolUse answers `{}`, and session start is wired to `SessionStart`; `PreInvocation` fired every turn and reset session tracking.
+  - Reinstalling removes GraphWard entries from hook events it no longer installs, keeping user entries.
+- Note: entries for 1.1.0–1.3.1 were never recorded here.
+
 ## 1.0.4 - Hardening & Verification Release
 - **Coverage-gap detector**: Automatically generates preflight characterization tests for un-tested code paths.
 - **Clarification gate**: Deterministic graph-based boundary and consumer checks instead of LLM self-assessment.

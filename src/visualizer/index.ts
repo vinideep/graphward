@@ -1,6 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { readTemplate, SKILL_NAMES, AGENT_NAMES, WORKFLOW_NAMES } from "../templates.js";
+import { containedFilePath } from "../project-files/index.js";
 
 interface SkillInfo {
   name: string;
@@ -249,18 +250,18 @@ async function scanWorkspaceFiles(dir: string, baseDir: string): Promise<Record<
     const entries = await readdir(dir, { withFileTypes: true });
     for (const entry of entries) {
       const fullPath = path.join(dir, entry.name);
-      const relPath = path.relative(baseDir, fullPath);
-      if (entry.name === "node_modules" || entry.name === ".git") {
+      const relPath = path.relative(baseDir, fullPath).replace(/\\/g, "/");
+      if (/(?:^|\/)(?:users|sessions|baselines|experiment-baselines|telemetry|providers|tasks|\.verify|\.hooks-state)(?:\/|$)/.test(relPath) || /(?:secret|credential|private|personal-profile)/i.test(entry.name)) {
         continue;
       }
       if (entry.isDirectory()) {
         const subResults = await scanWorkspaceFiles(fullPath, baseDir);
         Object.assign(results, subResults);
-      } else {
+      } else if (entry.isFile()) {
         const ext = path.extname(entry.name).toLowerCase();
         if ([".md", ".json", ".txt", ".yaml", ".yml"].includes(ext)) {
           try {
-            const content = await readFile(fullPath, "utf8");
+            const content = await readFile(await containedFilePath(baseDir, relPath), "utf8");
             results[relPath] = content;
           } catch {
             // ignore
@@ -276,10 +277,15 @@ async function scanWorkspaceFiles(dir: string, baseDir: string): Promise<Record<
 
 async function readWorkspaceIntelligence(projectRoot: string): Promise<Record<string, string>> {
   const files: Record<string, string> = {};
-  for (const sub of [".graphward"]) {
+  // Export only inspectable canonical artifacts. Runtime receipts, task answers,
+  // personal profiles, caches and arbitrary workspace files are never embedded.
+  for (const sub of [".graphward/knowledge-base", ".graphward/context", ".graphward/graph", ".graphward/changes"]) {
     const dir = path.join(projectRoot, sub);
     const scanned = await scanWorkspaceFiles(dir, projectRoot);
     Object.assign(files, scanned);
+  }
+  for (const file of [".graphward/aidlc/aidlc-state.md", ".graphward/aidlc/execution-plan.md"]) {
+    try { files[file] = await readFile(await containedFilePath(projectRoot, file), "utf8"); } catch { /* absent or excluded */ }
   }
   return files;
 }
@@ -1202,12 +1208,13 @@ body::before {
 </style>
 </head>
 <body>
+<details style="padding:0.6rem 1rem"><summary>Export inventory (${Object.keys(workspaceFiles).length} scoped artifact files)</summary><pre>${Object.keys(workspaceFiles).sort().map(file => file.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")).join("\n")}</pre><p>Personal profiles, task answers, runtime state and arbitrary workspace files are excluded.</p></details>
 
 <div class="topbar">
   <div class="topbar-inner">
     <div class="brand">
       <div class="brand-mark"></div>
-      <div>GraphWard<small>${vaultName}</small></div>
+      <div>GraphWard<small>${vaultName.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</small></div>
     </div>
     <button class="search-trigger" onclick="openPalette()">
       <span>Search skills, workflows, files…</span>
@@ -1397,8 +1404,23 @@ function basename(p) { return p.substring(p.lastIndexOf('/') + 1); }
 function stem(p) { const b = basename(p); const i = b.lastIndexOf('.'); return i > 0 ? b.substring(0, i) : b; }
 
 // ── Markdown / Mermaid setup ─────────────────────────────────────────
-mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'loose' });
+mermaid.initialize({ startOnLoad: false, theme: 'dark', securityLevel: 'strict' });
 const renderer = new marked.Renderer();
+// Repository Markdown is untrusted data. Raw HTML is displayed as text, links
+// use explicit web/fragment protocols, and images cannot fetch remote resources.
+renderer.html = function(htmlOrToken) {
+  return escapeHtml(typeof htmlOrToken === 'object' && htmlOrToken !== null ? htmlOrToken.text : htmlOrToken);
+};
+renderer.link = function(hrefOrToken, title, text) {
+  const token = typeof hrefOrToken === 'object' && hrefOrToken !== null ? hrefOrToken : { href: hrefOrToken, text: text };
+  const href = String(token.href || '').trim();
+  const label = escapeHtml(token.text || href);
+  const protocol = href.toLowerCase();
+  return protocol.startsWith('https://') || protocol.startsWith('http://') || href.startsWith('#') ? '<a href="' + escapeHtml(href) + '" rel="noopener noreferrer" target="_blank">' + label + '</a>' : label;
+};
+renderer.image = function(tokenOrHref, title, text) {
+  return escapeHtml(typeof tokenOrHref === 'object' && tokenOrHref !== null ? tokenOrHref.text : text || '');
+};
 // marked >= 12 passes a token object; older versions pass (code, lang).
 renderer.code = function(codeOrToken, langArg) {
   const isToken = typeof codeOrToken === 'object' && codeOrToken !== null;

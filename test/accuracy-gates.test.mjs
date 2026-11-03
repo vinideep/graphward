@@ -5,6 +5,7 @@ import path from "node:path";
 import test from "node:test";
 import { captureApiSnapshot, replayApiSnapshot, normalizeApiExchange } from "../dist/gates/api-snapshot.js";
 import { runGate } from "../dist/gates/index.js";
+import { createReviewBinding } from "../dist/gates/review-evidence.js";
 
 async function root() { return mkdtemp(path.join(tmpdir(), "gw-accuracy-gates-")); }
 async function write(root, rel, value) { const target = path.join(root, rel); await mkdir(path.dirname(target), { recursive: true }); await writeFile(target, typeof value === "string" ? value : `${JSON.stringify(value, null, 2)}\n`); }
@@ -12,6 +13,7 @@ const exchange = { request: { method: "GET", path: "/users", headers: { Authoriz
 
 test("API snapshots redact secrets, mask explicit volatility, and detect semantic differences", async () => {
   const dir = await root();
+  await write(dir, "src/routes/users.ts", "export const endpoint = 'users';\n");
   const normalized = normalizeApiExchange(exchange, { volatilePaths: ["response.body.id"] });
   assert.equal(normalized.request.headers.authorization, "[REDACTED]");
   assert.equal(normalized.response.body.token, "[REDACTED]");
@@ -38,7 +40,8 @@ test("rollback content and convention thresholds are enforced", async () => {
   const dir = await root();
   await write(dir, ".graphward/aidlc/operations/rollback-readiness.json", { schemaVersion: 1, codeRevert: "revert commit", stateCompensation: "none; read-only state", disablePath: "disable flag", externalEffects: "none", irreversibleSteps: "none", verification: "run tests" });
   assert.equal((await runGate("rollback-readiness", dir, { risk: "medium" })).status, "pass");
-  await write(dir, ".graphward/reports/convention-findings.json", { schemaVersion: 1, findings: [
+  await write(dir, "src/a.ts", "export const a = 1;\n");
+  await write(dir, ".graphward/reports/convention-findings.json", { schemaVersion: 1, status:"complete",reviewer:"fixture convention review",reviewedAt:new Date().toISOString(),binding:await createReviewBinding(dir,["src/a.ts"]), findings: [
     { id: "one", message: "major architecture violation", severity: "major", category: "architecture", confidence: 0.8, adherence: 0.8 },
     { id: "ignored", message: "low confidence", severity: "critical", category: "security", confidence: 0.79, adherence: 1 }
   ] });

@@ -12,7 +12,11 @@ import type { GateRisk } from "../gates/index.js";
 
 const SOURCE_FILE_RE = /\.(ts|tsx|js|jsx|mjs|cjs|py|go|rs|rb|java|kt|sql)$/i;
 
-function inferRisk(files: string[]): GateRisk {
+/** GraphWard's own intelligence artifacts: documentation about the code, never part of it. */
+const isIntelligenceArtifact = (file: string) => file === ".graphward" || file.replace(/\\/g, "/").startsWith(".graphward/");
+
+function inferRisk(changed: string[]): GateRisk {
+  const files = changed.filter((file) => !isIntelligenceArtifact(file));
   if (files.some((file) => /(auth|security|crypto|migration|schema|mcp|permissions?|secrets?)/i.test(file))) return "high";
   if (files.some((file) => SOURCE_FILE_RE.test(file))) return "medium";
   return "low";
@@ -21,7 +25,8 @@ function inferRisk(files: string[]): GateRisk {
 export async function validateChange(root: string, files?: string[], base = "HEAD", options: { taskId?: string } = {}) {
   const changed = files && files.length > 0 ? files : await changedFiles(root);
   const freshness = await ensureFreshGraph(root);
-  const impact = await analyzeImpact(root, changed);
+  // Intelligence artifacts have no graph node; analysing them only yields "unknown module" noise.
+  const impact = await analyzeImpact(root, changed.filter((file) => !isIntelligenceArtifact(file)));
   const risk = inferRisk(changed);
   const readiness = await checkTaskReadiness(root, { taskId: options.taskId, files: changed });
   const task = options.taskId ? await loadTask(root, options.taskId) : undefined;

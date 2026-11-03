@@ -82,3 +82,25 @@ Documentation follow-up IMP-014 (2026-10-12): user requested the full README gui
 The user approved the full reliability/requirements/accuracy plan. Execute sequentially: A runtime and verification → B provider context → C task contracts → D native adapters/hooks → E/F integrated accuracy and release qualification. IMP-012 defines ownership, dependencies and acceptance. Baseline: 437/437. Native host/remote qualification remains separate from local evidence.
 
 Final local verification passed 488/488 with unchanged bytes during checks. Claude native qualification passed against candidate 222cd268ee8202c93c8f272ee6aeb867b018aebfaf7aab00347f294dd51cad87. Codex checkout exact-hook trust is reviewed. Release-qualification.json fails closed on missing current-candidate Codex/Antigravity and held-out measurements.
+
+## IMP-016: approved measurement foundation — 2026-10-18
+
+Task quality-efficiency-foundation-2026-10-18 revision 2 is host-confirmed. FEAT-006/TKT-011–013 are the only new implementation scope. Prerequisites passed: current providers, readiness true, hashed 17-path archive, npm test PASS (169436 ms; 12 pre-existing source/test paths). Baseline tooling, telemetry and separate efficiency evaluation have disjoint ownership. Integrate contracts, preserve original product bytes/release files, run focused checks, sync affected intelligence and perform stable full verification. Later workflow changes and real model experiments remain excluded.
+
+IMP-016 local implementation result: focused 44/44, full 578/578 and original-product preservation pass. Global knowledge gate remains open on 9 pre-existing documents; FEAT-006 in-review. Later units remain pending. Detailed evidence: reports/efficiency-foundation-2026-10-18/IMPLEMENTATION.md.
+
+## IMP-017 / FEAT-007: confirmed Phase 2 — 2026-10-19
+
+Native task quality-efficiency-concise-2026-10-18 revision 2 is host-observed and implementation-ready; both providers are current with no reduced-context decision. TKT-014 (strict-default opt-in mode, intent and rendering), TKT-015 (authority/tool/session boundaries), TKT-016 (preservation, verification, review and intelligence) deliver this feature. Clear the source-verified freshness gate and baseline full verify before product edits, then delegate the bounded source/test/template changes to the named graphward agent. Independent security review focuses on false read-only exemptions, session binding, canonical scope and tool attribution. Whole-response budgeting, receipt identity, cache reuse, downstream migration and real model experiments remain later units.
+
+Local result: FEAT-007/TKT-014–016 done. Build, focused120/120, full594/594, independent final11/11, combined change validation and construction exit gate pass. Citations472/472 and claims560/560 current; freshness Proceed38artifacts.301unrelatedpaths and6foundationhashes preserved. FEAT-006 local knowledge review closed by this integrated proof. Precise limits and unchanged later-unit boundaries are in reports/concise-workflow-2026-10-19/IMPLEMENTATION.md.
+
+## AUDIT-REPAIR-20261026 — 2026-10-26
+
+User approved all45 findings under native task e5ad3bc6-7e7f-4a7e-96ff-3ba5d95ddb2b revision2. Three disjoint implementation owners; lead integrates CLI/MCP/contracts. Dependency order and preservation boundary: reports/IMP-20261026-ai-ide-repairs.md. Status: baseline/preflight; no product fixes yet. No per-feature gate or commits/publishing/global updates.
+
+## AUDIT-REPAIR-20261026 — local completion, 2026-10-27
+
+All45audited corrections applied as81owned product paths after frozen candidate validation. Candidate and original-root full suites658/658; integration16/16; replay36/36; deterministic validation and Construction exit pass.37affected canonical artifacts synchronized,152citations and603claims verified, freshness Proceed. Exact evidence/limits: `.graphward/reports/repairs-2026-10-26/DELIVERY.md`. Existing installedmanifest1.3.1/1.3.3drift and desktop MCP reconnect remain activation work; no native/remote/outcome claim.
+
+AI-DLC: Construction -> Local repairs verified and synchronized -> Complete locally

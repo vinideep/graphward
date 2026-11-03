@@ -15,6 +15,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { deriveFacts, factKey, renderFact, type DerivedFact } from "./derive.js";
+import { ProjectFilePolicy, readApprovedSource } from "../project-files/index.js";
 
 export { deriveFacts, factKey, renderFact, type DerivedFact } from "./derive.js";
 
@@ -87,10 +88,10 @@ function hashText(text: string): string {
 }
 
 /** Hash an evidence span at the current working-tree state, or null if absent. */
-export async function hashSpan(root: string, ev: { path: string; lines?: [number, number] }): Promise<string | null> {
+export async function hashSpan(root: string, ev: { path: string; lines?: [number, number] }, policy?: ProjectFilePolicy): Promise<string | null> {
   let content: string;
   try {
-    content = await readFile(path.resolve(root, ev.path), "utf8");
+    content = (await readApprovedSource(root, ev.path, policy)).content;
   } catch {
     return null;
   }
@@ -214,6 +215,7 @@ export interface VerifyClaimsReport {
 
 export async function verifyClaims(root: string): Promise<VerifyClaimsReport> {
   const store = await loadClaims(root);
+  const policy = await ProjectFilePolicy.load(root);
   const results: ClaimVerification[] = [];
 
   // Re-derive the whole fact set once, only if some claim actually needs it.
@@ -226,7 +228,7 @@ export async function verifyClaims(root: string): Promise<VerifyClaimsReport> {
     const staleEvidence: string[] = [];
     const missingEvidence: string[] = [];
     for (const ev of claim.evidence) {
-      const current = await hashSpan(root, ev);
+      const current = await hashSpan(root, ev, policy);
       if (current === null) missingEvidence.push(evLabel(ev));
       else if (current !== ev.contentHash) staleEvidence.push(evLabel(ev));
     }
@@ -238,7 +240,7 @@ export async function verifyClaims(root: string): Promise<VerifyClaimsReport> {
       // The sentence is regenerated from the descriptor and the descriptor is
       // re-computed from source, so this genuinely checks the claim, not the anchor.
       statement = renderFact(claim.fact!);
-      status = currentFacts.has(factKey(claim.fact!)) ? "verified" : "refuted";
+      status = currentFacts.has(factKey(claim.fact!)) && missingEvidence.length === 0 && staleEvidence.length === 0 ? "verified" : "refuted";
     } else if (missingEvidence.length > 0) {
       status = "missing";
     } else if (staleEvidence.length > 0) {
@@ -275,13 +277,14 @@ export async function deriveClaims(root: string): Promise<{ added: number; remov
   const previousDerived = new Set(store.claims.filter((c) => claimKind(c) === "derived").map((c) => factKey(c.fact!)));
 
   const facts = await deriveFacts(root);
+  const policy = await ProjectFilePolicy.load(root);
   const now = new Date().toISOString();
   const derived: Claim[] = [];
   let counter = 0;
 
   for (const fact of facts) {
     const ev = { path: fact.evidence.split(":")[0] };
-    const contentHash = await hashSpan(root, ev);
+    const contentHash = await hashSpan(root, ev, policy);
     if (contentHash === null) continue; // cannot anchor it, so do not state it
     counter += 1;
     derived.push({
@@ -306,11 +309,12 @@ export async function deriveClaims(root: string): Promise<{ added: number; remov
 /** Re-hash every claim's evidence and update the store so verified claims stay current. */
 export async function refreshClaims(root: string): Promise<number> {
   const store = await loadClaims(root);
+  const policy = await ProjectFilePolicy.load(root);
   let updated = 0;
   for (const claim of store.claims) {
     let changed = false;
     for (const ev of claim.evidence) {
-      const current = await hashSpan(root, ev);
+      const current = await hashSpan(root, ev, policy);
       if (current !== null && current !== ev.contentHash) { ev.contentHash = current; changed = true; }
     }
     if (changed) { claim.lastVerified = new Date().toISOString(); updated++; }

@@ -94,6 +94,7 @@ export class SqlitePartitionedStore {
   private dbPath: string;
   private db: any = null;
   private isNativeSqlite = false;
+  private degradedReason?: string;
 
   // In-memory fallback tables if node:sqlite is not available
   private memoryTables = {
@@ -106,7 +107,7 @@ export class SqlitePartitionedStore {
     embeddings: new Map<string, StoredEmbedding>(),
   };
 
-  constructor(dbPath: string = ":memory:") {
+  constructor(dbPath: string = ":memory:", private options: { allowDegradedMemory?: boolean } = {}) {
     this.dbPath = dbPath;
   }
 
@@ -126,11 +127,18 @@ export class SqlitePartitionedStore {
         this.setupNativeTables();
         return;
       }
-    } catch {
-      // Fallback to transactional memory engine
+    } catch (error) {
+      this.degradedReason = error instanceof Error ? error.message : String(error);
+      try { this.db?.close(); } catch { /* close failed initialization */ }
+      this.db = null;
     }
 
     this.isNativeSqlite = false;
+    if (this.dbPath !== ":memory:" && !this.options.allowDegradedMemory) throw new Error(`Persistent SQLite unavailable for ${this.dbPath}; refusing volatile fallback. ${this.degradedReason ?? "Unsupported SQLite implementation."}`);
+  }
+
+  getCapabilities(): { backend: "sqlite" | "memory"; durable: boolean; transactions: boolean; transactionMode: "synchronous"; degraded: boolean; reason?: string } {
+    return { backend: this.isNativeSqlite ? "sqlite" : "memory", durable: this.isNativeSqlite && this.dbPath !== ":memory:", transactions: true, transactionMode: "synchronous", degraded: !this.isNativeSqlite && this.dbPath !== ":memory:", ...(this.degradedReason ? { reason: this.degradedReason } : {}) };
   }
 
   private setupNativeTables(): void {
@@ -243,11 +251,17 @@ export class SqlitePartitionedStore {
     `);
   }
 
-  transaction<T>(fn: () => T): T {
+  transaction<T>(fn: () => T & (T extends PromiseLike<unknown> ? never : unknown)): T {
+    if (Object.prototype.toString.call(fn) === "[object AsyncFunction]") throw new Error("Transactions require a synchronous callback; async callbacks are unsupported.");
+    const execute = (): T => {
+      const result = fn();
+      if (result !== null && (typeof result === "object" || typeof result === "function") && typeof (result as { then?: unknown }).then === "function") throw new Error("Transactions require a synchronous result; thenables are unsupported.");
+      return result;
+    };
     if (this.isNativeSqlite && this.db) {
       this.db.exec("BEGIN TRANSACTION;");
       try {
-        const result = fn();
+        const result = execute();
         this.db.exec("COMMIT;");
         return result;
       } catch (err) {
@@ -255,8 +269,9 @@ export class SqlitePartitionedStore {
         throw err;
       }
     } else {
-      // In-memory atomic execution
-      return fn();
+      const baseline = structuredClone(this.memoryTables);
+      try { return execute(); }
+      catch (error) { this.memoryTables = baseline; throw error; }
     }
   }
 

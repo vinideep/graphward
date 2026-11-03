@@ -2,6 +2,7 @@
 name: graphward
 description: Implement an engineering request with impact analysis, tests, validation, and intelligence synchronization.
 ---
+<!-- graphward:mode strict -->
 
 # GraphWard
 
@@ -37,3 +38,17 @@ Finish with:
 - Safety gates run (freshness, type, API, snapshots, migration, dependency, env, ADR, LLM, acceptance mapping, rollback)
 - Unresolved risks or follow-ups
 - AI-DLC breadcrumb (`AI-DLC: <phase> -> <stage> -> <status>`)
+<!-- /graphward:mode -->
+<!-- graphward:mode concise -->
+
+# GraphWard — Concise Workflow
+
+Use `graphward-skill` for the user's implementation request. Concise mode is an explicit project opt-in; it changes workflow ceremony, never authority.
+
+1. Retrieve scoped `get_engineering_context`; separate read/discuss/plan intent from requested mutation, domain and risk. Read-only work uses its dedicated route and does not modify product code. Classification never grants permission.
+2. Before edits, retain native permissions, confirmed current task scope, `prepare_task_context`, `get_task_readiness`, freshness, ProjectFilePolicy and any required reduced-context decision. Reuse the user's existing answers and approvals without inventing confirmation.
+3. For ordinary bounded work, use one working agent and a short impact/acceptance record: intended behavior, affected files, risks, required checks and unresolved facts. Call `analyze_change_impact`; a separate backlog, context manifest and change record are not mandatory for this routine path.
+4. Implement within scope, run applicable checks and `graphward verify .`, synchronize affected intelligence with `sync_engineering_knowledge`, then `validate_change`. Record actual results, unavailable checks and residual risks. A test-shaped command is not verification evidence.
+5. Escalate to the full `aidlc-lifecycle-engine` for complex or high/critical-risk changes and explicit backlog delivery; retain per-feature human approval. Add a specialist only for a concrete risk or unresolved question, with explicit ownership. Preserve project/domain safeguards in every route.
+6. Report outcome, evidence, risks and `AI-DLC: <phase> -> <stage> -> <status>`. Keep deployment, irreversible actions and external messages within their separate authorization.
+<!-- /graphward:mode -->

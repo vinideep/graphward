@@ -1,0 +1,166 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "efficiency-report.schema.json",
+  "title": "Descriptive efficiency report; never release qualification",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "status": {
+      "enum": [
+        "complete",
+        "incomplete"
+      ]
+    },
+    "stage": {
+      "enum": [
+        "development",
+        "directional-pilot",
+        "held-out",
+        null
+      ]
+    },
+    "measurementComplete": {
+      "type": "boolean"
+    },
+    "releaseQualification": {
+      "const": false
+    },
+    "improvementClaim": {
+      "const": false
+    },
+    "expectedTaskRunsPerArm": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "pairedTaskRuns": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "arms": {
+      "type": "object",
+      "properties": {
+        "baseline": {
+          "type": "object",
+          "required": [
+            "tasksAttempted",
+            "tasksAccepted",
+            "attempts",
+            "maintenanceItems",
+            "accuracy",
+            "tokens",
+            "cost",
+            "latencyMs"
+          ]
+        },
+        "current": {
+          "type": "object",
+          "required": [
+            "tasksAttempted",
+            "tasksAccepted",
+            "attempts",
+            "maintenanceItems",
+            "accuracy",
+            "tokens",
+            "cost",
+            "latencyMs"
+          ]
+        },
+        "simplified": {
+          "type": "object",
+          "required": [
+            "tasksAttempted",
+            "tasksAccepted",
+            "attempts",
+            "maintenanceItems",
+            "accuracy",
+            "tokens",
+            "cost",
+            "latencyMs"
+          ]
+        }
+      },
+      "required": [
+        "baseline",
+        "current",
+        "simplified"
+      ],
+      "additionalProperties": false
+    },
+    "comparisons": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "properties": {
+          "baseline": {
+            "const": "baseline"
+          },
+          "arm": {
+            "enum": [
+              "current",
+              "simplified"
+            ]
+          },
+          "tokenReductionPct": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "costReductionPct": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "acceptanceRateDeltaPct": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "baseline",
+          "arm",
+          "tokenReductionPct",
+          "costReductionPct",
+          "acceptanceRateDeltaPct"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "status",
+    "stage",
+    "measurementComplete",
+    "releaseQualification",
+    "improvementClaim",
+    "expectedTaskRunsPerArm",
+    "pairedTaskRuns",
+    "arms",
+    "comparisons",
+    "failures",
+    "warnings"
+  ],
+  "additionalProperties": false
+}

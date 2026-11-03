@@ -4,6 +4,10 @@
   "type": "object",
   "properties": {
     "schemaVersion": { "type": "number", "const": 2 },
+    "workflow": {
+      "type": "object",
+      "properties": { "mode": { "type": "string", "enum": ["strict", "concise"], "default": "strict" } }
+    },
     "tokenBudgets": { "type": "object", "additionalProperties": { "type": "number", "minimum": 0 } },
     "projectFiles": {
       "type": "object",
@@ -27,6 +31,7 @@
       "type": "object",
       "properties": {
         "verifyCommands": { "type": "array", "items": { "type": "string" } },
+        "unavailableValidationPolicy": { "type": "string", "enum": ["block", "allow-explicit"], "default": "block", "description": "Explicit policy for honestly ending a session without configured/detected checks; never grants a passing validation or waives configured checks." },
         "freshnessThreshold": { "type": "number", "minimum": 0, "maximum": 100 },
         "blockStaleEdits": { "type": "boolean" },
         "requireValidationOnStop": { "type": "boolean" }

@@ -24,8 +24,10 @@ interface ExportSite {
   line: number;
 }
 
+// Must normalize exactly like resolveModuleId (including the `/index` strip); otherwise a
+// namespace/dynamic import of `./dir/index.js` never matches the exporting file's id.
 function moduleId(root: string, absFile: string): string {
-  const rel = path.relative(root, absFile).replace(/\\/g, "/").replace(/\.(tsx?|jsx?|mjs|cjs)$/, "");
+  const rel = path.relative(root, absFile).replace(/\\/g, "/").replace(/\.(tsx?|jsx?|mjs|cjs)$/, "").replace(/\/index$/, "");
   return `module:${rel}`;
 }
 
@@ -66,6 +68,26 @@ function exportedNames(clause: string): string[] {
     .filter((n) => n && n !== "type" && /^[A-Za-z_$][\w$]*$/.test(n));
 }
 
+// Exports a framework reads by convention rather than by import (Next.js App/Pages Router,
+// middleware/instrumentation). Reporting these as dead is always a false positive.
+const NEXT_APP_FILE = /(^|\/)app\/(.*\/)?(page|layout|template|loading|error|global-error|not-found|default|route|opengraph-image|twitter-image|icon|apple-icon|sitemap|robots|manifest)\.(tsx?|jsx?|mjs)$/;
+const NEXT_PAGES_FILE = /(^|\/)pages\/.+\.(tsx?|jsx?|mjs)$/;
+const NEXT_ROOT_FILE = /(^|\/)(src\/)?(middleware|instrumentation|instrumentation-client)\.(tsx?|jsx?|mjs)$/;
+const CONFIG_FILE = /(^|\/)[\w.-]+\.config\.(tsx?|jsx?|mjs|cjs|mts|cts)$/;
+const NEXT_CONVENTION_EXPORTS = new Set([
+  "GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS",
+  "metadata", "generateMetadata", "viewport", "generateViewport", "generateStaticParams", "generateImageMetadata", "generateSitemaps",
+  "dynamic", "dynamicParams", "revalidate", "fetchCache", "runtime", "preferredRegion", "maxDuration", "experimental_ppr",
+  "alt", "size", "contentType",
+  "getServerSideProps", "getStaticProps", "getStaticPaths", "getInitialProps", "config", "reportWebVitals",
+  "middleware", "register", "onRequestError", "onRouterTransitionStart",
+]);
+
+function isFrameworkConventionExport(file: string, name: string): boolean {
+  if (CONFIG_FILE.test(file)) return true;
+  return (NEXT_APP_FILE.test(file) || NEXT_PAGES_FILE.test(file) || NEXT_ROOT_FILE.test(file)) && NEXT_CONVENTION_EXPORTS.has(name);
+}
+
 export async function deadExportsGate(root: string): Promise<GateResult> {
   const files = await walkFiles(root, (rel) => JS_TS_EXTS.has(path.extname(rel).toLowerCase()));
 
@@ -73,9 +95,13 @@ export async function deadExportsGate(root: string): Promise<GateResult> {
   const entryModules = new Set<string>();
   try {
     const pkg = JSON.parse(await readFile(path.join(root, "package.json"), "utf8")) as {
-      main?: string; bin?: string | Record<string, string>; exports?: unknown;
+      main?: string; bin?: string | Record<string, string>; exports?: unknown; scripts?: Record<string, string>;
     };
     const entryPaths: string[] = [];
+    // Files run directly by npm scripts (`node bench/x.ts`) are entry points too.
+    for (const script of Object.values(pkg.scripts ?? {})) {
+      for (const match of String(script).matchAll(/(?:^|\s)(\.?\/?[\w./-]+\.(?:tsx?|jsx?|mjs|cjs))(?=\s|$)/g)) entryPaths.push(match[1]);
+    }
     if (typeof pkg.main === "string") entryPaths.push(pkg.main);
     if (typeof pkg.bin === "string") entryPaths.push(pkg.bin);
     else if (pkg.bin && typeof pkg.bin === "object") entryPaths.push(...Object.values(pkg.bin));
@@ -94,7 +120,7 @@ export async function deadExportsGate(root: string): Promise<GateResult> {
 
     for (const p of entryPaths) {
       entryModules.add(moduleId(root, path.resolve(root, p.replace(/^\.\//, "").replace(/^dist\//, "src/"))));
-      entryModules.add(`module:${p.replace(/\.(tsx?|jsx?|mjs|cjs)$/, "").replace(/^\.\//, "")}`);
+      entryModules.add(`module:${p.replace(/\.(tsx?|jsx?|mjs|cjs)$/, "").replace(/^\.\//, "").replace(/\/index$/, "")}`);
     }
   } catch { /* no package.json */ }
 
@@ -147,6 +173,7 @@ export async function deadExportsGate(root: string): Promise<GateResult> {
   for (const site of exportSites) {
     if (fullyUsedModules.has(site.moduleId)) continue; // consumed wholesale elsewhere
     if (importedNames.has(site.name)) continue;        // imported by name somewhere
+    if (isFrameworkConventionExport(site.file, site.name)) continue; // consumed by the framework
     const key = `${site.moduleId}#${site.name}`;
     if (seen.has(key)) continue;
     seen.add(key);

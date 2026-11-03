@@ -2,6 +2,7 @@ import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import type { GraphNode, GraphEdge } from "../schema.js";
 import { LITERAL_TOKEN, lineOf, literalAt, maskSource } from "./scan.js";
+import { ProjectFilePolicy, readApprovedSource } from "../../project-files/index.js";
 
 export interface ImportResult {
   nodes: GraphNode[];
@@ -128,7 +129,33 @@ function collectJSMatches(source: ReturnType<typeof maskSource>): RawMatch[] {
   return out;
 }
 
-async function extractJSImports(filePath: string, root: string): Promise<ImportResult> {
+function collectASTMatches(content: string, filePath: string, ts: any): RawMatch[] {
+  const file = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true);
+  const out: RawMatch[] = [];
+  const add = (node: any, literal: any, typeOnly: boolean, kind: RawMatch["kind"]) => {
+    if (!literal || !ts.isStringLiteralLike(literal) || literal.text.startsWith("node:")) return;
+    out.push({ specifier: literal.text, typeOnly, kind, line: file.getLineAndCharacterOfPosition(node.getStart(file)).line + 1 });
+  };
+  const visit = (node: any) => {
+    if (ts.isImportDeclaration(node)) {
+      const clause = node.importClause;
+      const named = clause?.namedBindings;
+      const namedTypeOnly = !clause?.name && named && ts.isNamedImports(named) && named.elements.length > 0 && named.elements.every((item: any) => item.isTypeOnly);
+      add(node, node.moduleSpecifier, clause?.isTypeOnly === true || namedTypeOnly === true, "static");
+    } else if (ts.isExportDeclaration(node)) {
+      const clause = node.exportClause;
+      add(node, node.moduleSpecifier, node.isTypeOnly === true || clause && ts.isNamedExports(clause) && clause.elements.length > 0 && clause.elements.every((item: any) => item.isTypeOnly), "reexport");
+    } else if (ts.isCallExpression(node) && node.arguments.length === 1) {
+      if (node.expression.kind === ts.SyntaxKind.ImportKeyword) add(node, node.arguments[0], false, "dynamic");
+      else if (ts.isIdentifier(node.expression) && node.expression.text === "require") add(node, node.arguments[0], false, "require");
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(file);
+  return out;
+}
+
+async function extractJSImports(filePath: string, root: string, existingPolicy?: ProjectFilePolicy): Promise<ImportResult> {
   let content: string;
   try {
     content = await readFile(filePath, "utf8");
@@ -148,10 +175,12 @@ async function extractJSImports(filePath: string, root: string): Promise<ImportR
   const seen = new Set<string>();
   const { loadTypeScriptCompiler, discoverTsConfigs } = await import("./typescript-compiler.js");
   const compiler = await loadTypeScriptCompiler(root);
+  const policy = existingPolicy ?? await ProjectFilePolicy.load(root);
   const configs = compiler ? [...discoverTsConfigs(root, compiler).values()] : [];
   const applicable = configs.filter(config => config.fileNames.includes(filePath)).sort((a, b) => b.configPath.length - a.configPath.length)[0];
 
-  for (const { specifier, typeOnly, line, kind } of collectJSMatches(source)) {
+  if (!compiler) unknowns.push(`AST import analysis unavailable for ${relFile}; lexical import matches are inferred.`);
+  for (const { specifier, typeOnly, line, kind } of compiler ? collectASTMatches(content, filePath, compiler) : collectJSMatches(source)) {
     {
       const relation = typeOnly ? "imports-type" : "imports";
 
@@ -162,8 +191,14 @@ async function extractJSImports(filePath: string, root: string): Promise<ImportR
       const compilerRelative = compilerResolution ? path.relative(root, compilerResolution).replace(/\\/g, "/") : undefined;
       const localResolution = compilerRelative && !compilerRelative.startsWith("../") && !compilerRelative.includes("node_modules/") ? compilerRelative : undefined;
       if (specifier.startsWith(".") || localResolution) {
-        const resolvedPath = localResolution ?? await resolveRelative(specifier, filePath, root);
-        if (resolvedPath) {
+        const candidate = localResolution ?? await resolveRelative(specifier, filePath, root);
+        const decision = candidate ? await policy.explainExisting(candidate) : undefined;
+        const resolvedPath = candidate && decision?.included ? candidate : undefined;
+        if (candidate && decision && !decision.included) {
+          targetId = `external:${candidate}`;
+          targetNode = { id: targetId, kind: "external", label: path.basename(candidate), confidence: "unknown", metadata: { external: true, excludedPath: candidate, policySource: decision.source, policyReason: decision.reason }, evidence: [`${relFile}:${line}`] };
+          unknowns.push(`Import target excluded by project policy at ${relFile}:${line}: ${candidate} (${decision.reason})`);
+        } else if (resolvedPath) {
           const idPath = resolvedPath.replace(/\.(tsx?|jsx?|mjs|cjs|mts|cts)$/, "");
           targetId = `module:${idPath}`;
           targetNode = {
@@ -216,8 +251,8 @@ async function extractJSImports(filePath: string, root: string): Promise<ImportR
         from: sourceNode.id,
         to: targetId,
         relation,
-        confidence: "verified", // the statement itself is verified; node confidence carries resolution
-        metadata: kind === "dynamic" || kind === "require" ? { [kind]: true } : {},
+        confidence: compiler ? "verified" : "inferred",
+        metadata: { extraction: compiler ? "typescript-ast" : "lexical-fallback", ...(kind === "dynamic" || kind === "require" ? { [kind]: true } : {}) },
         evidence: [`${relFile}:${line}`],
       });
     }
@@ -506,18 +541,18 @@ async function extractJavaImports(filePath: string, root: string): Promise<Impor
 
 import { parseWithTreeSitter } from "./tree-sitter.js";
 
-export async function extractImports(filePath: string, root: string): Promise<ImportResult> {
+export async function extractImports(filePath: string, root: string, policy?: ProjectFilePolicy): Promise<ImportResult> {
   const ext = path.extname(filePath).toLowerCase();
   
   let content: string;
   try {
-    content = await readFile(filePath, "utf8");
+    content = (await readApprovedSource(root, filePath, policy)).content;
   } catch {
     return { nodes: [], edges: [] };
   }
 
   if ([".ts", ".tsx", ".js", ".jsx", ".mts", ".cts", ".mjs", ".cjs"].includes(ext)) {
-    return extractJSImports(filePath, root);
+    return extractJSImports(filePath, root, policy);
   }
   if (ext === ".py") {
     return extractPythonImports(filePath, root);

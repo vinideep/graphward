@@ -15,6 +15,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test, { after } from "node:test";
+import { recordEvidenceHashes } from "../dist/evidence/index.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CLI = path.resolve(__dirname, "../dist/cli/index.js");
@@ -94,6 +95,8 @@ test("Shiplogic-style onboarding and incremental sync work through the real CLI"
   assert.equal(pack.knowledge.trust, "healthy");
   assert.ok(pack.architecture.nodes.some((node) => node.path === "src/routes/route-plan.ts"));
 
+  const snapshotPath = path.join(root, ".graphward", "knowledge-base", ".evidence-hashes.json");
+  const originalSnapshot = await readFile(snapshotPath, "utf8");
   const originalOverview = await readFile(path.join(root, ".graphward", "knowledge-base", "00-project-overview.md"), "utf8");
   await writeFile(path.join(root, "src", "domain", "country.ts"),
     "export function normalizeCountry(country: string) { return country.trim().toUpperCase(); }\n");
@@ -105,8 +108,10 @@ test("Shiplogic-style onboarding and incremental sync work through the real CLI"
     "--files", "src/routes/route-plan.ts,src/domain/country.ts",
     "--json",
   ], root);
-  assert.equal(synced.status, 0, `${synced.stdout}\n${synced.stderr}`);
+  assert.equal(synced.status, 1, "changed cited source must fail until its knowledge is explicitly reviewed");
   const sync = JSON.parse(synced.stdout);
+  assert.equal(await readFile(snapshotPath, "utf8"), originalSnapshot, "deterministic sync must preserve old hashes rather than silently certify edits");
+  assert.ok(sync.evidence.results.some(item => item.citation === "src/routes/route-plan.ts" && item.status === "stale"));
   assert.deepEqual(sync.changedFiles, ["src/routes/route-plan.ts", "src/domain/country.ts"]);
   assert.equal(sync.graph.wasIncremental, true);
   assert.ok(sync.graph.fileCount >= 2);
@@ -118,6 +123,40 @@ test("Shiplogic-style onboarding and incremental sync work through the real CLI"
   const graph = JSON.parse(await readFile(path.join(root, ".graphward", "graph", "dependency-graph.json"), "utf8"));
   assert.ok(graph.nodes.some((node) => node.path === "src/domain/country.ts"));
   assert.equal(await readFile(path.join(root, ".graphward", "knowledge-base", "00-project-overview.md"), "utf8"), originalOverview, "deterministic sync must not rewrite canonical prose");
+
+  const staleHealth = cli(["health", root, "--strict", "--json"], root);
+  assert.equal(staleHealth.status, 1, "stale material documents must fail strict health");
+  const affectedDocuments = sync.evidence.documents.filter(document => !document.verified).map(document => document.path);
+  assert.equal(affectedDocuments.length, 2);
+  // Explicitly inspect the changed public behavior before updating only the
+  // impacted knowledge documents. Recording alone is not semantic review.
+  const routeSource = await readFile(path.join(root, "src/routes/route-plan.ts"), "utf8");
+  const countrySource = await readFile(path.join(root, "src/domain/country.ts"), "utf8");
+  assert.match(routeSource, /carrierCapabilities\(normalizeCountry\(country\)\)/);
+  assert.match(countrySource, /country\.trim\(\)\.toUpperCase\(\)/);
+  for (const document of affectedDocuments) {
+    const content = await readFile(path.join(root, document), "utf8");
+    await writeFile(path.join(root, document), `${content}\nRoute planning now trims and uppercases country before selecting carrier capabilities. (evidence: src/domain/country.ts:1, src/routes/route-plan.ts:1-3)\n`);
+  }
+  await recordEvidenceHashes(root, { documents: affectedDocuments });
+  const reviewedSnapshot = JSON.parse(await readFile(snapshotPath, "utf8"));
+  for (const document of JSON.parse(originalSnapshot).documents.filter(document => !affectedDocuments.includes(document.path))) {
+    assert.deepEqual(reviewedSnapshot.documents.find(candidate => candidate.path === document.path), document, "unaffected document hashes must be preserved");
+  }
+  const reviewedSync = cli(["sync", root, "--files", "src/routes/route-plan.ts,src/domain/country.ts", "--json"], root);
+  assert.equal(reviewedSync.status, 0, `${reviewedSync.stdout}\n${reviewedSync.stderr}`);
+  assert.equal(JSON.parse(reviewedSync.stdout).evidence.stale, 0);
+
+  // The deterministic orientation brief cites the graph itself. The final
+  // sync changed that graph generation; explicitly review that exact view
+  // before updating this one annotation receipt, leaving other context alone.
+  const reviewedGraph = JSON.parse(await readFile(path.join(root, ".graphward/graph/dependency-graph.json"), "utf8"));
+  assert.ok(reviewedGraph.nodes.some(node => node.path === "src/domain/country.ts"));
+  const briefPath = ".graphward/context/repo-brief.md";
+  const reviewedBrief = await readFile(path.join(root, briefPath), "utf8");
+  assert.match(reviewedBrief, /src\/domain\/country/);
+  assert.match(reviewedBrief, /evidence: \.graphward\/graph\/dependency-graph\.json, package\.json/);
+  await recordEvidenceHashes(root, { annotationDocuments: [briefPath] });
 
   const finalClaims = cli(["claims", "verify", root, "--strict", "--json"], root);
   assert.equal(finalClaims.status, 0, finalClaims.stdout);

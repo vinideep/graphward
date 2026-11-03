@@ -1,3 +1,4 @@
+<!-- graphward:mode strict -->
 # GraphWard Rules
 
 ## Agent-First Entry Point
@@ -93,6 +94,8 @@ These workflows analyze and report but do **not** modify product code:
 
 The `graphward`, `tdd`, `create-project`, and `deliver-backlog` workflows may modify product code. `create-project` is limited to approved scaffolding; `deliver-backlog` modifies one approved feature at a time. Audit, review, analysis, discovery, mapping, synchronization, and design-only workflows remain read-only unless the user separately authorizes implementation.
 
+Safe inspection does not require an implementation contract. Confirmed report/handoff scope uses requirements readiness and does not grant source-write authority. Verification completion requires current required checks; custom, skipped, unavailable or legacy evidence cannot silently become a baseline pass. Completed security/convention reviews and API replays must carry current candidate bindings. Report exact capability limits and payload budget overflow rather than claiming completeness from missing evidence.
+
 ## Canonical Paths
 
 Use these as the canonical project-intelligence paths — never invent alternatives:
@@ -126,3 +129,19 @@ Use these as the canonical project-intelligence paths — never invent alternati
 - Map every acceptance criterion to automated test, manual verification, or open item before Definition of Done can pass.
 - Run type safety, API compatibility, and database migration safety gates when applicable.
 - Medium-and-above risk changes require rollback instructions and operations readiness.
+<!-- /graphward:mode -->
+<!-- graphward:mode concise -->
+# GraphWard Rules — Concise
+
+The project explicitly opts into `workflow.mode: concise`; missing or invalid mode retains strict behavior. Use one working agent for ordinary bounded tasks. Call the engineering-orchestrator only when routing, complexity or uncertainty warrants it; add specialists for concrete risks with explicit ownership. Provider-native entry workflows remain available.
+
+Before scoped source exploration call `get_engineering_context`, prefer current persisted intelligence and load only relevant evidence. Separate read/discuss/plan intent from mutation and assess domain/risk independently. Read-only workflows do not modify product code; classification never grants authority.
+
+Before implementation retain native task confirmation, `prepare_task_context`, `get_task_readiness`, freshness, ProjectFilePolicy, secrets, required provider/reduced-context decisions and applicable project/domain safeguards. Reuse prior answers and valid approvals. Never implement concise mode by disabling readiness or overriding user instructions.
+
+For ordinary work write one short impact/acceptance record before edits with behavior, scope, risks, checks and unknowns; call `analyze_change_impact`. A full backlog, separate context manifest, unit plan and CHG record are not mandatory on this routine route. Implement within scope, run meaningful checks and `graphward verify .`, call `sync_engineering_knowledge` for affected intelligence, then `validate_change`; record actual evidence and residual blockers. A test-shaped command does not satisfy receipt enforcement.
+
+Complex or high/critical-risk implementation and explicit backlog delivery retain their full AI-DLC lifecycle and applicable gates. Backlog delivery requires human approval before every feature. Native hooks may exempt unchanged read-only sessions from verifying pre-existing dirt only when bound complete provenance proves it; missing/ambiguous state or mutations retain verification. Never claim tamper-proof host provenance from local hashes.
+
+Finish with outcome, validation, risks and `AI-DLC: <phase> -> <stage> -> <status>`. Deployment, irreversible actions and external messages retain their separate authorization.
+<!-- /graphward:mode -->

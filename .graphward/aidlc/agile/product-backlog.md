@@ -35,3 +35,19 @@ Priority: P1, with U0 preservation fixes required before rollout. Human directio
 ## IMP-012 delivery update — 2026-10-11
 
 A–F runtime, provider freshness/provenance, requirements receipts, host configuration/edit checks, source-aware resolution/evidence/locks and honest evaluation gates are implemented locally. Final byte-bound verification: 488/488 pass. Claude Code exact candidate canary passes questions-before-edits, CCE/Graphify contribution and unapproved mutation denial. Codex checkout exact hooks are trusted and enabled following the approved native review. Current-candidate Codex/Antigravity, IDE, platform and held-out measurements remain open; these entries do not mark release qualification complete. Unit evidence and task trace are in reports/approved-repair-2026-10-11/IMPLEMENTATION-REPORT.md.
+
+## EPIC-002 — 2026-10-18
+
+FEAT-006 (Phase 0/1 baseline and trustworthy measurement) is approved through native task revision 2. TKT-011 through TKT-013 implement the foundation. Later workflow/context/verification/reuse/migration phases remain proposed. No historical approval is reused and no measured efficiency/accuracy gain is claimed.
+
+FEAT-007 (Phase 2 opt-in concise workflow and safe routing/hooks) independently confirmed revision 2 on 2026-10-19. TKT-014–016 are indexed; IMP-017 and the current task receipt define scope and acceptance. Phases 3-5 and real experiments remain proposed.
+
+## AUDIT-REPAIR-20261026 — approved repair programme
+
+All F01-F45 in reports/ai-ide-audit-2026-10-26/findings.json are requested and approved for local repair. Units: authority/proof/integration; preservation/runtime; source/graph/context. Each finding needs changed-file/regression evidence and independent review. Status: in progress. Existing epic/feature history is preserved.
+
+## AUDIT-REPAIR-20261026 — local completion, 2026-10-27
+
+All45audited corrections applied as81owned product paths after frozen candidate validation. Candidate and original-root full suites658/658; integration16/16; replay36/36; deterministic validation and Construction exit pass.37affected canonical artifacts synchronized,152citations and603claims verified, freshness Proceed. Exact evidence/limits: `.graphward/reports/repairs-2026-10-26/DELIVERY.md`. Existing installedmanifest1.3.1/1.3.3drift and desktop MCP reconnect remain activation work; no native/remote/outcome claim.
+
+AI-DLC: Construction -> Local repairs verified and synchronized -> Complete locally

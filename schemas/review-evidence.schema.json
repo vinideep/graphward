@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GraphWard completed review evidence",
+  "description": "Source/scope binding is distinct from semantic review quality or trusted host attestation. Use createReviewBinding after reviewing the current candidate.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "status": { "const": "complete" },
+    "reviewer": { "type": "string", "minLength": 1 },
+    "reviewedAt": { "type": "string", "format": "date-time" },
+    "findings": { "type": "array", "items": { "type": "object" } },
+    "binding": { "type": "object", "properties": { "schemaVersion": { "const": 1 }, "projectRoot": { "type": "string", "minLength": 1 }, "runtimeGeneration": { "type": "string", "pattern": "^[a-f0-9]{64}$" }, "files": { "type": "object", "additionalProperties": { "type": "string", "pattern": "^(?:[a-f0-9]{64}|missing)$" } } }, "required": ["schemaVersion", "projectRoot", "runtimeGeneration", "files"] }
+  },
+  "required": ["schemaVersion", "status", "reviewer", "reviewedAt", "findings", "binding"]
+}

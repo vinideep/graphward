@@ -25,6 +25,11 @@ export interface ContextPreparationReceipt {
   providers: ProjectProviderRunStatus[];
   binaries: Awaited<ReturnType<typeof providerStatus>>[];
   unknowns: string[];
+  /**
+   * Files too large for provider indexing. They are a coverage note, not a degradation:
+   * readiness asks for a decision only when one falls inside a task's confirmed scope.
+   */
+  excludedFiles?: string[];
 }
 export const CONTEXT_PREPARATION_PATH = ".graphward/context/preparation.json";
 export async function readContextPreparation(root: string): Promise<ContextPreparationReceipt | undefined> {
@@ -44,7 +49,9 @@ export async function prepareTaskContext(root: string, options: {
     const before = await computeProviderSourceSnapshot(root);
     const previous = await readContextPreparation(root);
     const initialRuns = await inspectProjectProviderRuns(root, { disabled: native });
-    if (!options.retry && previous?.projectRoot === root && previous.sourceGeneration === before.workspaceHash && previous.policy === (config.providers.policy ?? "auto") && previous.requireProviders === config.providers.requireProviders && JSON.stringify(previous.providers) === JSON.stringify(initialRuns)) return previous;
+    // Receipts written before `excludedFiles` existed counted oversized files as unknowns
+    // (and so as degraded); regenerate them instead of reusing that verdict.
+    if (!options.retry && previous?.excludedFiles && previous.projectRoot === root && previous.sourceGeneration === before.workspaceHash && previous.policy === (config.providers.policy ?? "auto") && previous.requireProviders === config.providers.requireProviders && JSON.stringify(previous.providers) === JSON.stringify(initialRuns)) return previous;
     const deadline = Date.now() + Math.max(100, Math.min(options.timeoutMs ?? 120_000, 900_000));
     const runner: ProcessRunner = async request => {
       if (options.signal?.aborted || Date.now() >= deadline) return { command: request.command, args: request.args ?? [], stdout: "", stderr: "Preparation cancelled or timed out", exitCode: options.signal?.aborted ? 130 : 124, timedOut: !options.signal?.aborted };
@@ -53,7 +60,7 @@ export async function prepareTaskContext(root: string, options: {
     const receipt: ContextPreparationReceipt = {
       schemaVersion: 1, id: randomUUID(), projectRoot: root, sourceGeneration: before.workspaceHash,
       preparedAt: new Date().toISOString(), policy: config.providers.policy ?? "auto", requireProviders: config.providers.requireProviders === true, status: "ready", requiresDecision: false,
-      actions: [], providers: [], binaries: [], unknowns: before.skippedLarge.map(file => `Provider coverage excludes oversized file: ${file}`),
+      actions: [], providers: [], binaries: [], unknowns: [], excludedFiles: [...before.skippedLarge].sort(),
     };
     const progress = (message: string) => { receipt.actions.push(message); options.onProgress?.(message); };
     const runs = initialRuns;

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, rmSync, existsSync } from "node:fs";
+import { mkdtempSync, mkdirSync, rmSync, existsSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -9,6 +9,7 @@ import { createConsolidatedRegistry } from "../dist/mcp/consolidated.js";
 function setupLearningRepo() {
   const dir = mkdtempSync(path.join(os.tmpdir(), "gw-learning-"));
   mkdirSync(path.join(dir, "src"), { recursive: true });
+  writeFileSync(path.join(dir, "src/index.ts"), "export const contract = true;\n");
   return dir;
 }
 

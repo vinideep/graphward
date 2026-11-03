@@ -1,6 +1,9 @@
 import { randomUUID } from "node:crypto";
 import type { SymbolId } from "../graph/symbol-identity.js";
 import type { Change } from "../graph/schema.js";
+import type { DependencyGraph } from "../graph/schema.js";
+import { factualEdge, nodeSourcePath } from "../graph/trust.js";
+import { ProjectFilePolicy } from "../project-files/index.js";
 
 export interface ChangeIntent {
   symbol?: SymbolId;
@@ -15,7 +18,10 @@ export interface PredictedImpact {
   affectedRoutes: string[];
   affectedExecutionPaths: string[];
   suggestedTests: string[];
+  coverage?: SimulationCoverage;
 }
+
+export interface SimulationCoverage { symbols: "available" | "partial" | "unavailable"; routes: "available" | "unavailable"; tests: "validated-paths" | "caller-supplied"; limitations: string[] }
 
 export interface GraphEdgeLike {
   from: string; // symbolKey or path
@@ -37,6 +43,31 @@ export interface GraphNodeLike {
 export interface GraphLike {
   nodes: GraphNodeLike[];
   edges: GraphEdgeLike[];
+  coverage?: SimulationCoverage;
+}
+
+/** Adapt canonical graph metadata once, preserving trust and real file identity.
+ * Missing SymbolId/route extraction is an explicit coverage limit, never proof
+ * that a change affects zero symbols or routes.
+ */
+export async function repositorySimulationGraph(root: string, graph: DependencyGraph): Promise<GraphLike> {
+  const policy = await ProjectFilePolicy.load(root);
+  const nodes: GraphNodeLike[] = [];
+  for (const node of graph.nodes) {
+    const source = await nodeSourcePath(root, node, policy);
+    if (!source) continue;
+    const raw = node.metadata.symbolId;
+    const symbolId = raw && typeof raw === "object" && (raw as Record<string, unknown>).path === source && ["repository", "package", "language", "path", "qualifiedName", "declarationHash", "origin"].every(key => typeof (raw as Record<string, unknown>)[key] === "string") ? raw as SymbolId : undefined;
+    const route = typeof node.metadata.route === "string" ? node.metadata.route : undefined;
+    nodes.push({ id: node.id, path: source, kind: node.kind, qualifiedName: node.label, ...(symbolId ? { symbolId } : {}), ...(route ? { route } : {}) });
+  }
+  const byId = new Map(nodes.map(node => [node.id, node]));
+  const edges = graph.edges.filter(edge => factualEdge(edge) && byId.has(edge.from) && byId.has(edge.to)).map(edge => ({ from: edge.from, to: edge.to, relation: edge.relation, route: typeof edge.metadata.route === "string" ? edge.metadata.route : undefined, isTest: /(?:^|\/)(?:test|tests|__tests__|spec)\/|\.(?:test|spec)\./.test(byId.get(edge.from)?.path ?? "") }));
+  const symbols = nodes.filter(node => node.kind === "symbol");
+  const identified = symbols.filter(node => node.symbolId).length;
+  const routes = nodes.some(node => node.route) || edges.some(edge => edge.route);
+  const symbolCoverage = identified === 0 ? "unavailable" : identified < symbols.length ? "partial" : "available";
+  return { nodes, edges, coverage: { symbols: symbolCoverage, routes: routes ? "available" : "unavailable", tests: "validated-paths", limitations: [...(symbolCoverage !== "available" ? ["Some or all native symbols lack a complete SymbolId; empty affectedSymbols does not establish no symbol impact."] : []), ...(!routes ? ["Route metadata is unavailable in this graph; empty affectedRoutes does not establish no route impact."] : []), "Topology prediction does not establish signature or behavioral compatibility."] } };
 }
 
 export class ChangeSimulator {
@@ -153,7 +184,7 @@ export class ChangeSimulator {
         // Check if node is a test file
         if (
           currentNode.path &&
-          (currentNode.path.includes("test") || currentNode.path.includes("spec"))
+          /(?:^|\/)(?:test|tests|__tests__|spec)\/|\.(?:test|spec)\./.test(currentNode.path)
         ) {
           suggestedTestsSet.add(currentNode.path);
         }
@@ -168,8 +199,9 @@ export class ChangeSimulator {
       const incoming = reverseAdjacency.get(current.id) ?? [];
       for (const edge of incoming) {
         if (edge.route) affectedRoutesSet.add(edge.route);
-        if (edge.isTest || edge.from.includes("test") || edge.from.includes("spec")) {
-          suggestedTestsSet.add(edge.from);
+        if (edge.isTest || /(?:^|\/)(?:test|tests|__tests__|spec)\/|\.(?:test|spec)\./.test(nodeMap.get(edge.from)?.path ?? "")) {
+          const source = nodeMap.get(edge.from)?.path;
+          if (source) suggestedTestsSet.add(source);
         }
 
         if (!visited.has(edge.from)) {
@@ -189,6 +221,7 @@ export class ChangeSimulator {
       affectedRoutes: Array.from(affectedRoutesSet),
       affectedExecutionPaths,
       suggestedTests: Array.from(suggestedTestsSet),
+      coverage: graph?.coverage ?? { symbols: "partial", routes: "unavailable", tests: "caller-supplied", limitations: ["Caller-supplied graph paths and metadata have not been verified against a repository."] },
     };
   }
 }

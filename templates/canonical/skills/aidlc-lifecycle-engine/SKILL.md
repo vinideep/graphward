@@ -2,6 +2,7 @@
 name: aidlc-lifecycle-engine
 description: Runs the adaptive AI-DLC lifecycle with Discovery, Inception, Construction, Operations, durable artifacts, hatted agents, and objective completion gates.
 ---
+<!-- graphward:mode strict -->
 
 # AI-DLC Lifecycle Engine
 
@@ -215,3 +216,23 @@ AI-DLC: <phase> -> <stage> -> <status>
 - Operations: `operations-readiness-engine` (deployment, observability, rollback)
 - Used by: `graphward` (main workflow), `engineering-orchestrator` (routing)
 
+<!-- /graphward:mode -->
+<!-- graphward:mode concise -->
+
+# AI-DLC Lifecycle Engine — Concise Routing
+
+Concise mode uses one working agent and a short impact/acceptance record for ordinary bounded work. Do not generate a complete backlog, reverse-engineering bundle, checkpoint series or separate change record merely to satisfy routine workflow ceremony. Preserve acceptance evidence, applicable verification, affected intelligence synchronization and the `AI-DLC: <phase> -> <stage> -> <status>` breadcrumb.
+
+## Full lifecycle escalation
+
+For complex or high/critical-risk implementation and explicit backlog delivery, retain the full lifecycle:
+
+- **Discovery:** resolve business intent, ownership, environment and material unknowns using existing persisted evidence.
+- **Inception:** confirm requirements and native task scope, analyze impact, select applicable governance, define acceptance criteria and independent construction units. Reuse current reverse-engineering evidence rather than reproducing it.
+- **Construction:** implement each unit, record functional/NFR decisions and executable acceptance evidence, use environmental backpressure and preserve `.graphward/aidlc/construction/cross-unit-discoveries.md` when units interact.
+- **Operations:** produce deployment, rollback, observability and MCP/security evidence only when those surfaces are in scope.
+
+Read `.graphward/aidlc/aidlc-state.md` and use `get_aidlc_state`, `update_aidlc_state` and `check_aidlc_gate` for transitions; JSON and Markdown must stay synchronized. Record decisions, checks and unresolved blockers in the existing unit/impact record. Required blocked/unavailable gates prevent completion; do not relabel them as passed.
+
+Explicit `decompose-backlog` / `deliver-backlog` retains canonical `.graphward/aidlc/agile/backlog/` Epic → Feature → Ticket artifacts and human approval before every feature. Domain/project rules and native permissions override workflow convenience. Concise mode never disables task confirmation/readiness, freshness, ProjectFilePolicy, secrets controls, provider/reduced-context decisions or deterministic verification. Specialists require a concrete risk or uncertainty and explicit ownership.
+<!-- /graphward:mode -->

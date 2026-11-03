@@ -12,6 +12,27 @@ import { createPromptOverwrite } from "../dist/cli/index.js";
 
 const options = { packageVersion: "3.5.0" };
 
+test("opting into concise on update preserves user configuration, instructions and edited managed files", async () => {
+  const root = await project();
+  await writeFile(path.join(root, "AGENTS.md"), "# User project rules\n\nPreserve domain approval and secrets handling.\n");
+  await install(root, ["codex", "claude-code", "gemini-cli"], options);
+  const editedPath = ".agents/workflows/graphward.md";
+  const locallyEdited = (await readable(root, editedPath)) + "\nLocal instruction requiring explicit domain approval.\n";
+  await writeFile(path.join(root, editedPath), locallyEdited);
+  const userConfig = JSON.stringify({ workflow: { mode: "concise", custom: "keep" }, hooks: { requireTaskReadiness: true, blockStaleEdits: true, requireValidationOnStop: false }, userSetting: { preserve: true } }, null, 2) + "\n";
+  await writeFile(path.join(root, ".graphward/gw.config.json"), userConfig);
+  const result = await update(root, options);
+  assert.equal(result.conflicts, 1, "only the edited managed workflow conflicts");
+  assert.equal(await readable(root, editedPath), locallyEdited);
+  assert.equal(await readable(root, ".graphward/gw.config.json"), userConfig, "config seed remains user-owned byte for byte");
+  const instructions = await readable(root, "AGENTS.md");
+  assert.match(instructions, /Preserve domain approval and secrets handling/);
+  assert.match(instructions, /one working agent/);
+  assert.match(await readable(root, ".codex/agents/graphward.toml"), /Implementation — Concise/);
+  assert.match(await readable(root, ".claude/commands/graphward.md"), /one working agent/);
+  assert.match(await readable(root, ".gemini/commands/graphward.toml"), /one working agent/);
+});
+
 async function project() {
   return mkdtemp(path.join(tmpdir(), "graphward-"));
 }

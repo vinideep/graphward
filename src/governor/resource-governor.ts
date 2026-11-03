@@ -321,6 +321,7 @@ export class ResourceGovernor {
     const lines: string[] = [
       "GraphWard Resource Governor",
       "===========================",
+      "Local current-process diagnostic; provider processes are not governed by this instance.",
       `Memory          ${renderBar(metrics.heapPercentage)} ${metrics.heapPercentage}% (${formatBytes(metrics.heapUsedBytes)} / ${formatBytes(metrics.heapLimitBytes)})`,
       `CPU             ${renderBar(cpuPct)} ${cpuPct}%`,
       `Index Queue     ${metrics.indexQueueDepth} / ${metrics.maxIndexQueueDepth}`,
@@ -352,6 +353,13 @@ export class ResourceGovernor {
   }
 
   public checkIopsThrottle(operationCost: number = 1): boolean {
+    // Reset before deciding: an exhausted window cannot reach recordIoOperation.
+    if (Date.now() - this.lastIoResetTime >= 1000) {
+      this.ioOperationsCount = 0;
+      this.ioBytesCount = 0;
+      this.lastIoResetTime = Date.now();
+    }
+    if (!Number.isFinite(operationCost) || operationCost < 0) throw new Error("IOPS cost must be finite and non-negative.");
     const limit = this.limits.iopsBudgetPerSec;
     if (this.ioOperationsCount + operationCost > limit) {
       return true; // throttle

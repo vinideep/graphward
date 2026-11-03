@@ -20,12 +20,13 @@
  */
 
 import { createHash } from "node:crypto";
-import { mkdir, readFile, writeFile, readdir, realpath } from "node:fs/promises";
+import { lstat, mkdir, readFile, writeFile, readdir, realpath, stat } from "node:fs/promises";
 import path from "node:path";
 import { runProcess } from "../process/index.js";
 import { parseGitStatusPaths } from "./git-paths.js";
+import { resolveRuntimeInvocation } from "../runtime/invocation.js";
 
-export const RECEIPT_SCHEMA_VERSION = 2;
+export const RECEIPT_SCHEMA_VERSION = 3;
 const MISSING_FILE_HASH = "missing";
 const RECEIPT_DIR = ".graphward/.verify";
 const RECORD_FILE = "verification-records.json";
@@ -68,6 +69,12 @@ export interface VerificationRecord {
   selectionReason?: string;
   changedDuringChecks?: string[];
   projectRoot?: string;
+  checkSpecificationHash?: string;
+  runtimeGeneration?: string;
+  requiredCommands?: string[];
+  requiredChecksSatisfied?: boolean;
+  executionSpecification?: { plannedCommands: string[]; timeoutMs: number; mode: "baseline" | "impact"; selectedArgs?: string[] };
+  executionSpecificationHash?: string;
 }
 
 /** @deprecated Use VerificationRecord instead */
@@ -117,6 +124,11 @@ async function git(root: string, args: string[]): Promise<string | null> {
  * `src/` entry, so a brand-new source file would never be seen — and the gate
  * would pass a change it never verified.
  */
+/** True when `root` is inside a Git work tree, so an empty change set means "clean", not "unknown". */
+export async function isGitWorkTree(root: string): Promise<boolean> {
+  return (await git(root, ["rev-parse", "--is-inside-work-tree"]))?.trim() === "true";
+}
+
 export async function changedFiles(root: string): Promise<string[]> {
   const porcelain = await git(root, ["status", "--porcelain=v1", "-z", "-uall"]);
   if (porcelain === null) return [];
@@ -158,6 +170,25 @@ export async function detectCheckCommands(root: string): Promise<string[]> {
   return [];
 }
 
+/** Includes every auto-detection input and configured checks, even when commands were explicit. */
+export async function checkSpecificationHash(root: string): Promise<string> {
+  const inputs: Record<string, string> = {};
+  for (const file of ["package.json", "package-lock.json", "npm-shrinkwrap.json", "pnpm-lock.yaml", "yarn.lock", ".graphward/gw.config.json", "pyproject.toml", "setup.cfg", "tox.ini", "Cargo.toml", "Cargo.lock", "go.mod", "go.sum", "Gemfile", "Gemfile.lock"]) inputs[file] = (await hashFile(root, file)) ?? MISSING_FILE_HASH;
+  return hashContent(JSON.stringify({ inputs, detectedCommands: await detectCheckCommands(root), runtimeGeneration: resolveRuntimeInvocation().generation }));
+}
+
+export async function requiredCheckCommands(root: string): Promise<string[]> {
+  const { loadGwConfig } = await import("../config/index.js");
+  const configured = (await loadGwConfig(root)).hooks?.verifyCommands;
+  return Array.isArray(configured) && configured.length && configured.every(command => typeof command === "string") ? configured as string[] : detectCheckCommands(root);
+}
+
+export async function verificationScopeIdentity(root: string, files: string[]): Promise<string> {
+  const hashes: Record<string, string> = {};
+  for (const file of [...new Set(files)].sort()) hashes[file] = (await hashFile(root, file)) ?? MISSING_FILE_HASH;
+  return hashContent(JSON.stringify({projectRoot:await realpath(root),head:(await git(root,["rev-parse","HEAD"]))?.trim() ?? null,files:hashes,checkSpecificationHash:await checkSpecificationHash(root)}));
+}
+
 // ---------------------------------------------------------------------------
 // Receipt storage
 // ---------------------------------------------------------------------------
@@ -173,12 +204,14 @@ function legacyReceiptPath(root: string): string {
 function validRecord(value: unknown): value is VerificationRecord {
   if (!value || typeof value !== "object") return false;
   const record = value as VerificationRecord;
-  if (record.schemaVersion === RECEIPT_SCHEMA_VERSION) {
+  if (record.schemaVersion === 2 || record.schemaVersion === RECEIPT_SCHEMA_VERSION) {
     const { verificationHash, ...payload } = record;
     if (typeof verificationHash !== "string" || verificationHash !== hashContent(JSON.stringify(payload))) return false;
     if (typeof record.projectRoot !== "string") return false;
+    if (record.schemaVersion === RECEIPT_SCHEMA_VERSION && (typeof record.checkSpecificationHash !== "string" || typeof record.runtimeGeneration !== "string")) return false;
+    if (record.schemaVersion === RECEIPT_SCHEMA_VERSION && (!Array.isArray(record.requiredCommands) || typeof record.requiredChecksSatisfied !== "boolean" || !record.executionSpecification || record.executionSpecificationHash !== hashContent(JSON.stringify(record.executionSpecification)))) return false;
   }
-  return (record.schemaVersion === 1 || record.schemaVersion === RECEIPT_SCHEMA_VERSION)
+  return ([1, 2, RECEIPT_SCHEMA_VERSION].includes(record.schemaVersion))
     && (record.verdict === "pass" || record.verdict === "fail")
     && typeof record.createdAt === "string" && Number.isFinite(Date.parse(record.createdAt))
     && record.files !== null && typeof record.files === "object" && !Array.isArray(record.files)
@@ -250,8 +283,12 @@ export async function coverageFor(root: string, files: string[]): Promise<Covera
   const records = await readRecords(root);
   const canonicalRoot = await realpath(root);
   const currentHead = (await git(root, ["rev-parse", "HEAD"]))?.trim() ?? null;
+  const specification = await checkSpecificationHash(root);
+  const runtimeGeneration = resolveRuntimeInvocation().generation;
   const matches = (record: VerificationRecord) => record.verdict === "pass"
-    && (record.schemaVersion !== RECEIPT_SCHEMA_VERSION || (record.projectRoot === canonicalRoot && record.head === currentHead))
+    && record.schemaVersion === RECEIPT_SCHEMA_VERSION && record.projectRoot === canonicalRoot && record.head === currentHead
+    && record.requiredChecksSatisfied === true
+    && record.checkSpecificationHash === specification && record.runtimeGeneration === runtimeGeneration
     && [...current].every(([file, hash]) => {
     const value = record.files[file];
     return (typeof value === "string" ? value : value?.hash) === hash;
@@ -303,24 +340,84 @@ export interface VerifyResult {
   noCommands: boolean;
 }
 
+// Directory names never walked outside Git: dependencies, build output and caches.
+const NON_GIT_IGNORED_DIRS = new Set([".git", ".graphward", "node_modules", "dist", "build", "coverage", ".venv", "__pycache__", ".next"]);
+
+/** True for a directory holding its own Git repository (`.git` dir, or a `.git` file for worktrees/submodules). */
+async function hasOwnGit(dir: string): Promise<boolean> {
+  try { await lstat(path.join(dir, ".git")); return true; } catch { return false; }
+}
+
+/**
+ * Files Git considers part of a nested repository: tracked (including deleted
+ * from the worktree) plus untracked-but-not-ignored, so that repo's own
+ * .gitignore applies. Null when Git cannot enumerate it.
+ */
+async function nestedRepoFiles(root: string, relative: string): Promise<string[] | null> {
+  const result = await runProcess({
+    command: "git", args: ["ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+    cwd: path.join(root, relative), maxBuffer: 64 * 1024 * 1024,
+  });
+  if (result.exitCode !== 0) return null;
+  const out: string[] = [];
+  for (const file of new Set(result.stdout.split("\0").filter(Boolean))) {
+    const rel = `${relative}/${file}`;
+    try {
+      // Regular files only: symlinks may resolve outside the project and gitlinks are directories.
+      if (!(await lstat(path.join(root, rel))).isFile()) continue;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+      // Tracked but deleted: keep it so the deletion is bound as "missing".
+    }
+    out.push(rel);
+  }
+  return out;
+}
+
+async function walkNonGitFiles(root: string, relative: string, out: string[]): Promise<void> {
+  for (const entry of await readdir(path.join(root, relative), { withFileTypes: true })) {
+    const rel = relative ? `${relative}/${entry.name}` : entry.name;
+    // Dirents come from lstat, so symlinks are neither files nor directories here.
+    if (entry.isDirectory() && !NON_GIT_IGNORED_DIRS.has(entry.name)) {
+      const nested = await hasOwnGit(path.join(root, rel)) ? await nestedRepoFiles(root, rel) : null;
+      if (nested) out.push(...nested);
+      else await walkNonGitFiles(root, rel, out);
+    } else if (entry.isFile()) out.push(rel);
+  }
+}
+
+/**
+ * The file universe a receipt binds when `root` is not a Git work tree: every
+ * regular file outside ignored directories, except that each nested Git
+ * repository contributes `git ls-files` output so its .gitignore is honoured
+ * (otherwise build output such as `.next/` rewritten by the checks themselves
+ * would fail every run).
+ */
+export async function nonGitProjectFiles(root: string): Promise<string[]> {
+  const out: string[] = [];
+  await walkNonGitFiles(root, "", out);
+  return out;
+}
+
+/**
+ * Restrict hook-tracked paths to the files a non-Git receipt can bind, so the
+ * Stop gate never demands coverage for a file `runVerification` excludes.
+ */
+export async function withinNonGitScope(root: string, files: string[]): Promise<string[]> {
+  const universe = new Set(await nonGitProjectFiles(root));
+  return files.filter((file) => universe.has(file));
+}
+
 /**
  * Execute the project's checks and write a receipt binding the outcome to the
  * exact bytes verified. Hashes are captured AFTER the commands run, so a receipt
  * always describes the tree the checks actually saw.
  */
-async function nonGitFiles(root: string, relative = ""): Promise<string[]> {
-  const ignored = new Set([".git", ".graphward", "node_modules", "dist", "build", "coverage", ".venv", "__pycache__"]);
-  const out: string[] = [];
-  for (const entry of await readdir(path.join(root, relative), { withFileTypes: true })) {
-    const rel = relative ? `${relative}/${entry.name}` : entry.name;
-    if (entry.isDirectory() && !ignored.has(entry.name)) out.push(...await nonGitFiles(root, rel));
-    else if (entry.isFile()) out.push(rel);
-  }
-  return out;
-}
-
 export async function runVerification(root: string, options: VerifyOptions = {}): Promise<VerifyResult> {
-  const plannedCommands = options.commands ?? await detectCheckCommands(root);
+  const specificationBefore = await checkSpecificationHash(root);
+  const runtimeGeneration = resolveRuntimeInvocation().generation;
+  const requiredCommands = await requiredCheckCommands(root);
+  const plannedCommands = options.commands ?? requiredCommands;
   let commands = [...plannedCommands];
   const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) throw new Error("Verification timeout must be positive and finite.");
@@ -349,7 +446,7 @@ export async function runVerification(root: string, options: VerifyOptions = {})
     }
   }
   const inGitRepo = (await git(root, ["rev-parse", "--is-inside-work-tree"]))?.trim() === "true";
-  const scope = new Set([...(options.changedFiles ?? []), ...(inGitRepo ? await changedFiles(root) : await nonGitFiles(root))]);
+  const scope = new Set([...(options.changedFiles ?? []), ...(inGitRepo ? await changedFiles(root) : await nonGitProjectFiles(root))]);
   const snapshot = async (files: Iterable<string>) => {
     const hashes: Record<string, string> = {};
     for (const file of files) {
@@ -370,16 +467,22 @@ export async function runVerification(root: string, options: VerifyOptions = {})
     runs.push(run);
     if (run.exitCode !== 0 || run.timedOut || run.error) break;
   }
-  const afterScope = inGitRepo ? await changedFiles(root) : await nonGitFiles(root);
+  const afterScope = inGitRepo ? await changedFiles(root) : await nonGitProjectFiles(root);
   const files = await snapshot(new Set([...scope, ...afterScope]));
   const changedDuringChecks = Object.keys(files).filter((file) => before[file] !== files[file]);
   const headAfter = (await git(root, ["rev-parse", "HEAD"]))?.trim() ?? null;
-  const verdict = runs.length > 0 && runs.length === commands.length && runs.every((run) => run.exitCode === 0 && !run.timedOut && !run.error) && changedDuringChecks.length === 0 && headAfter === head ? "pass" : "fail";
+  let runtimeAfter: string | undefined;
+  try { runtimeAfter = resolveRuntimeInvocation().generation; } catch { /* Invalid or replaced runtime cannot validate this execution. */ }
+  const verdict = runs.length > 0 && runs.length === commands.length && runs.every((run) => run.exitCode === 0 && !run.timedOut && !run.error) && changedDuringChecks.length === 0 && headAfter === head && runtimeAfter === runtimeGeneration && specificationBefore === await checkSpecificationHash(root) ? "pass" : "fail";
+  const executionSpecification = {plannedCommands,timeoutMs,mode,...(selectedArgs ? {selectedArgs} : {})};
+  const requiredChecksSatisfied = verdict === "pass" && mode === "baseline" && !selectedArgs && !skippedCommands.length && requiredCommands.length > 0 && requiredCommands.every(command => runs.some(run => run.command === command && run.exitCode === 0 && !run.timedOut && !run.error));
   const record: VerificationRecord = {
     schemaVersion: RECEIPT_SCHEMA_VERSION, createdAt: new Date().toISOString(), head, projectRoot: await realpath(root),
     commands: runs, plannedCommands, skippedCommands, files, gitAvailable: inGitRepo, verdict,
     mode, selectionReason, changedDuringChecks,
     provenance: options.provenance ?? "unknown", provenanceAssurance: "declared",
+    checkSpecificationHash: specificationBefore, runtimeGeneration,
+    requiredCommands, requiredChecksSatisfied, executionSpecification, executionSpecificationHash:hashContent(JSON.stringify(executionSpecification)),
   };
   record.verificationHash = hashContent(JSON.stringify(record));
   await writeRecord(root, record);
@@ -397,6 +500,25 @@ export interface KnowledgeVerificationReport {
   details: Array<{ file: string; reference: string; exists: boolean }>;
 }
 
+/**
+ * Directories a reference may be relative to: the project root, then each top-level child
+ * directory. A parent folder holding several repositories (backend/, frontend/) documents
+ * `app/x.py` relative to the child repo it lives in, not to the parent.
+ */
+async function referenceBases(root: string): Promise<string[]> {
+  const bases = [root];
+  try {
+    for (const entry of await readdir(root, { withFileTypes: true })) {
+      if (entry.isDirectory() && !entry.name.startsWith(".") && entry.name !== "node_modules") bases.push(path.join(root, entry.name));
+    }
+  } catch { /* unreadable root: root itself only */ }
+  return bases;
+}
+
+async function isFile(target: string): Promise<boolean> {
+  try { return (await stat(target)).isFile(); } catch { return false; }
+}
+
 export async function verifyKnowledge(root: string): Promise<KnowledgeVerificationReport> {
   const kb = path.join(root, ".graphward", "knowledge-base");
   let files: string[] = [];
@@ -412,6 +534,7 @@ export async function verifyKnowledge(root: string): Promise<KnowledgeVerificati
   let drift = 0;
   const details: Array<{ file: string; reference: string; exists: boolean }> = [];
   const checkedRefs = new Set<string>();
+  const bases = await referenceBases(root);
 
   for (const f of files) {
     try {
@@ -423,13 +546,9 @@ export async function verifyKnowledge(root: string): Promise<KnowledgeVerificati
         if (checkedRefs.has(refPath)) continue;
         checkedRefs.add(refPath);
         referencesChecked++;
-        const targetPath = path.resolve(root, refPath);
         let exists = false;
-        try {
-          await readFile(targetPath);
-          exists = true;
-        } catch {
-          exists = false;
+        for (const base of bases) {
+          if (await isFile(path.resolve(base, refPath))) { exists = true; break; }
         }
         if (!exists) {
           drift++;

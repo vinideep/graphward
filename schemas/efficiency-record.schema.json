@@ -1,0 +1,557 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "efficiency-record.schema.json",
+  "title": "Measured efficiency task run",
+  "description": "One arm/task/seed/repetition; schema validity cannot authenticate measured provenance. No raw prompts or transcripts.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "evidence": {
+      "const": "measured"
+    },
+    "experimentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "specHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "stage": {
+      "enum": [
+        "development",
+        "directional-pilot",
+        "held-out"
+      ]
+    },
+    "taskId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repository": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sourceRevision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "modelVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requestHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": -9007199254740991,
+      "maximum": 9007199254740991
+    },
+    "arm": {
+      "enum": [
+        "baseline",
+        "current",
+        "simplified"
+      ]
+    },
+    "repetition": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "artifactHash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "conditions": {
+      "$ref": "efficiency-experiment.schema.json#/definitions/conditions"
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "command": {
+            "type": "string",
+            "minLength": 1
+          },
+          "exitCode": {
+            "type": "integer"
+          },
+          "timedOut": {
+            "type": "boolean"
+          },
+          "evidenceHash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "id",
+          "command",
+          "exitCode",
+          "timedOut",
+          "evidenceHash"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "properties": {
+        "accepted": {
+          "type": "boolean"
+        },
+        "regressions": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "requiredChangesMissed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "unnecessaryChanges": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "clarificationErrors": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "relevantContextMissed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "evidenceHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "required": [
+        "accepted",
+        "regressions",
+        "requiredChangesMissed",
+        "unnecessaryChanges",
+        "clarificationErrors",
+        "relevantContextMissed",
+        "evidenceHash"
+      ],
+      "additionalProperties": false
+    },
+    "attemptsAccountingComplete": {
+      "const": true
+    },
+    "attempts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/attempt"
+      }
+    },
+    "maintenance": {
+      "type": "object",
+      "properties": {
+        "accountingComplete": {
+          "const": true
+        },
+        "evidenceHash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/usageItem"
+          }
+        }
+      },
+      "required": [
+        "accountingComplete",
+        "evidenceHash",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "latencyMs": {
+      "$ref": "#/definitions/metric"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "evidence",
+    "experimentId",
+    "specHash",
+    "stage",
+    "taskId",
+    "repository",
+    "sourceRevision",
+    "model",
+    "modelVersion",
+    "requestHash",
+    "seed",
+    "arm",
+    "repetition",
+    "artifactHash",
+    "conditions",
+    "startedAt",
+    "completedAt",
+    "checks",
+    "outcome",
+    "attemptsAccountingComplete",
+    "attempts",
+    "maintenance"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "usage": {
+      "type": "object",
+      "properties": {
+        "accounting": {
+          "const": "disjoint"
+        },
+        "scope": {
+          "enum": [
+            "complete",
+            "partial",
+            "unknown"
+          ]
+        },
+        "categories": {
+          "type": "object",
+          "properties": {
+            "uncachedInput": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "availability": {
+                      "const": "available"
+                    },
+                    "tokens": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "availability",
+                    "tokens"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "availability": {
+                      "const": "unavailable"
+                    },
+                    "tokens": {
+                      "type": "null"
+                    }
+                  },
+                  "required": [
+                    "availability",
+                    "tokens"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "cacheWrite": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "availability": {
+                      "const": "available"
+                    },
+                    "tokens": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "availability",
+                    "tokens"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "availability": {
+                      "const": "unavailable"
+                    },
+                    "tokens": {
+                      "type": "null"
+                    }
+                  },
+                  "required": [
+                    "availability",
+                    "tokens"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "cacheRead": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "availability": {
+                      "const": "available"
+                    },
+                    "tokens": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "availability",
+                    "tokens"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "availability": {
+                      "const": "unavailable"
+                    },
+                    "tokens": {
+                      "type": "null"
+                    }
+                  },
+                  "required": [
+                    "availability",
+                    "tokens"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "output": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "availability": {
+                      "const": "available"
+                    },
+                    "tokens": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "availability",
+                    "tokens"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "availability": {
+                      "const": "unavailable"
+                    },
+                    "tokens": {
+                      "type": "null"
+                    }
+                  },
+                  "required": [
+                    "availability",
+                    "tokens"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "uncachedInput",
+            "cacheWrite",
+            "cacheRead",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "accounting",
+        "scope",
+        "categories"
+      ],
+      "additionalProperties": false
+    },
+    "metric": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "availability": {
+              "const": "available"
+            },
+            "value": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "availability",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "availability": {
+              "const": "unavailable"
+            },
+            "value": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "availability",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "cost": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "availability": {
+              "const": "available"
+            },
+            "value": {
+              "type": "number",
+              "minimum": 0
+            },
+            "currency": {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            }
+          },
+          "required": [
+            "availability",
+            "value",
+            "currency"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "availability": {
+              "const": "unavailable"
+            },
+            "value": {
+              "type": "null"
+            },
+            "currency": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "availability",
+            "value",
+            "currency"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "usageItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "usage": {
+          "$ref": "#/definitions/usage"
+        },
+        "cost": {
+          "$ref": "#/definitions/cost"
+        }
+      },
+      "required": [
+        "id",
+        "usage"
+      ],
+      "additionalProperties": false
+    },
+    "attempt": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "usage": {
+          "$ref": "#/definitions/usage"
+        },
+        "cost": {
+          "$ref": "#/definitions/cost"
+        },
+        "kind": {
+          "enum": [
+            "initial",
+            "retry",
+            "repair"
+          ]
+        },
+        "status": {
+          "enum": [
+            "succeeded",
+            "failed",
+            "cancelled"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "usage",
+        "kind",
+        "status"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -137,12 +137,12 @@ test("project provider run status detects current and stale source snapshots", a
   const provider = path.join(root, ".graphward", "providers");
   const source = "export const ready = true;\n";
   const sourceHash = digest(source);
-  const workspaceHash = digest(`src/main.ts:${sourceHash}`);
   await mkdir(path.join(root, "src"), { recursive: true });
   await mkdir(path.join(provider, "graphify"), { recursive: true });
   await mkdir(path.join(provider, "cce", "project", "workspace"), { recursive: true });
   await mkdir(path.join(provider, "cce", "project", "storage"), { recursive: true });
   await writeFile(path.join(root, "src", "main.ts"), source);
+  const {workspaceHash} = await import("../dist/providers/workspace.js").then(m=>m.computeProviderSourceSnapshot(root));
   await writeFile(path.join(provider, "graphify", "graph.json"), JSON.stringify({ nodes: [], edges: [] }));
   await writeFile(path.join(provider, "graphify", "run.json"), JSON.stringify({
     schemaVersion: 1, projectRoot: await import("../dist/providers/workspace.js").then(m=>m.toCanonicalPath(root)), graphHash: digest(JSON.stringify({ nodes: [], edges: [] })), provider: "graphify", providerVersion: "0.9.29", generatedAt: new Date().toISOString(),

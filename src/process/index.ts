@@ -11,6 +11,7 @@ export interface ProcessRequest {
   windowsVerbatimArguments?: boolean;
   onChunk?: (chunk: string, source: "stdout" | "stderr") => void;
   signal?: AbortSignal;
+  input?: string | Buffer;
 }
 
 export interface ProcessResult {
@@ -45,6 +46,7 @@ export const runProcess: ProcessRunner = (request) => {
         windowsHide: true,
         shell: request.shell,
         windowsVerbatimArguments: request.windowsVerbatimArguments,
+        detached: process.platform !== "win32",
       });
     } catch (error) {
       resolve({
@@ -59,16 +61,35 @@ export const runProcess: ProcessRunner = (request) => {
       return;
     }
 
-    if (request.timeoutMs) {
-      timer = setTimeout(() => {
-        timedOut = true;
-        child.kill("SIGTERM");
-        killTimer = setTimeout(() => {
-          if (!settled) child.kill("SIGKILL");
-        }, 3000);
-      }, request.timeoutMs);
-    }
-    const abort = () => { cancelled = true; child.kill("SIGTERM"); killTimer = setTimeout(() => { if (!settled) child.kill("SIGKILL"); }, 3000); };
+    const finish = (code: number, error?: string) => {
+      if (settled) return;
+      settled = true;
+      request.signal?.removeEventListener("abort", abort);
+      if (timer) clearTimeout(timer);
+      if (killTimer) clearTimeout(killTimer);
+      child.stdout.destroy();
+      child.stderr.destroy();
+      child.unref();
+      resolve({ command: request.command, args, exitCode: cancelled ? 130 : timedOut ? 124 : code, stdout, stderr, timedOut, ...(error ? { error } : {}) });
+    };
+    const signalTree = (signal: "SIGTERM" | "SIGKILL") => {
+      if (process.platform !== "win32" && child.pid) {
+        try { process.kill(-child.pid, signal); } catch { /* group already exited */ }
+      } else if (child.pid) {
+        // Windows has no POSIX process groups. taskkill /T owns descendants;
+        // return remains bounded even if platform cleanup itself is unavailable.
+        const killer = spawn("taskkill", ["/pid", String(child.pid), "/T", ...(signal === "SIGKILL" ? ["/F"] : [])], { stdio: "ignore", windowsHide: true });
+        killer.on("error", () => {});
+        killer.unref();
+      }
+    };
+    const terminate = () => {
+      if (settled || killTimer) return;
+      signalTree("SIGTERM");
+      killTimer = setTimeout(() => { signalTree("SIGKILL"); finish(1); }, 3000);
+    };
+    const abort = () => { cancelled = true; terminate(); };
+    if (request.timeoutMs) timer = setTimeout(() => { timedOut = true; terminate(); }, request.timeoutMs);
     request.signal?.addEventListener("abort", abort, { once: true });
     if (request.signal?.aborted) abort();
 
@@ -87,36 +108,17 @@ export const runProcess: ProcessRunner = (request) => {
       }
       request.onChunk?.(chunk, "stderr");
     });
+    if (request.input !== undefined) child.stdin.end(request.input);
 
     child.on("error", (error) => {
-      settled = true;
-      request.signal?.removeEventListener("abort", abort);
-      if (timer) clearTimeout(timer);
-      if (killTimer) clearTimeout(killTimer);
-      resolve({
-        command: request.command,
-        args,
-        exitCode: 1,
-        stdout,
-        stderr,
-        timedOut,
-        error: error instanceof Error ? error.message : String(error),
-      });
+      finish(1, error instanceof Error ? error.message : String(error));
     });
 
     child.on("close", (code) => {
-      settled = true;
-      request.signal?.removeEventListener("abort", abort);
-      if (timer) clearTimeout(timer);
-      if (killTimer) clearTimeout(killTimer);
-      resolve({
-        command: request.command,
-        args,
-        exitCode: cancelled ? 130 : timedOut ? 124 : (code ?? 1),
-        stdout,
-        stderr,
-        timedOut,
-      });
+      // A timed-out leader can exit before a descendant. Kill the owned group
+      // even when inherited pipes happened to close early.
+      if (timedOut || cancelled) signalTree("SIGKILL");
+      finish(code ?? 1);
     });
   });
 };
@@ -131,6 +133,7 @@ export function runProcessSync(request: ProcessRequest): ProcessResult {
     maxBuffer: request.maxBuffer ?? 10 * 1024 * 1024,
     windowsHide: true,
     encoding: "utf8",
+    input: request.input,
   });
   const timedOut = result.error && (result.error as NodeJS.ErrnoException).code === "ETIMEDOUT";
   return {

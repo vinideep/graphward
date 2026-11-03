@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "packageVersion": "1.2.8",
+  "packageVersion": "1.3.4",
   "templateVersion": "5.0.0",
   "adapters": [
     "antigravity",
@@ -198,7 +198,7 @@
     {
       "path": ".agents/hooks.json",
       "kind": "json-merge",
-      "hash": "13c6a891b5801315b63b328ef4457100d860c281ff6ae31be8d4f2b733b274e0",
+      "hash": "e89a715d6912d90ae40cb959eb9bcd9ad8270f7b82d37e49507070ad9ece9a36",
       "owners": [
         "antigravity",
         "antigravity-cli"
@@ -216,7 +216,7 @@
     {
       "path": ".agents/rules/graphward.md",
       "kind": "file",
-      "hash": "987ddc715011ea0d745199ce25ea32264f8dbab412a9785cafebf48cd9a8253e",
+      "hash": "e914a0fe2f2a3860e88ccfa65446a0e7538289c88bfaf5992728143b661dfe4d",
       "owners": [
         "antigravity"
       ]
@@ -340,7 +340,7 @@
     {
       "path": ".agents/skills/graphward/SKILL.md",
       "kind": "file",
-      "hash": "7bb55091a1f8b46ebe16cbe93b47757dc28adbcbe82e591ad26b3e03d2d8d33b",
+      "hash": "4243598725c5978ec23869bc56cad916916899c0ee3ba0262ae8d03a936f0a04",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -554,7 +554,7 @@
     {
       "path": ".agents/workflows/graphward.md",
       "kind": "file",
-      "hash": "f8b42eae84f55a4d42146026e2c1a6b919ef3d76d9ccdc0ac477b4b9b4ca0718",
+      "hash": "1dd78b517666c9611774e1bad731ed5855b5a86889dc8ed263934909e0989206",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -812,7 +812,7 @@
     {
       "path": ".claude/commands/graphward.md",
       "kind": "file",
-      "hash": "c9aa9d610eea2fa0cdc67cff89a3ab9d3755d67d42fce22644c258f235915904",
+      "hash": "4e5efa8eb7c64a77a138379211cfcf3e7a882414757ed55decf9aedb3c163d6a",
       "owners": [
         "claude-code"
       ]
@@ -884,7 +884,7 @@
     {
       "path": ".claude/settings.json",
       "kind": "json-merge",
-      "hash": "4ad76b7d49d4853077f62ed2a63dec925089101764e1bba2742e70064d41470c",
+      "hash": "45b391fb09722de108cf79dc2b0d70fcfe2f3fc6618b18294bc42c3e4c7a26f5",
       "owners": [
         "claude-code"
       ]
@@ -940,7 +940,7 @@
     {
       "path": ".claude/skills/api-backward-compatibility-engine/SKILL.md",
       "kind": "file",
-      "hash": "4ae7474803c34143fb935dbd73f52c6e4aeeaa1ca798dda46d2031a239b60af2",
+      "hash": "c3c06aa0b12b2a3ef3e10f5ea14cb7937a82159e97f938e171ff69e88b16c0bf",
       "owners": [
         "claude-code"
       ]
@@ -1036,7 +1036,7 @@
     {
       "path": ".claude/skills/context-budget-optimizer/SKILL.md",
       "kind": "file",
-      "hash": "383c1e94e11539eae049da17299cd9b3144f4410bdc8f02fd9e03f038b987bd5",
+      "hash": "ad43ec41e72f4dd3ca7d42f826305f679e9817ad3db8efbb4b0ada9f90162e03",
       "owners": [
         "claude-code"
       ]
@@ -1092,7 +1092,7 @@
     {
       "path": ".claude/skills/database-migration-safety-engine/SKILL.md",
       "kind": "file",
-      "hash": "561baf7784421d8cff7732afb5fd59a39b09d10c6a56b3edacd086e556c9f598",
+      "hash": "5e5baad7b7f7cf0b1e4d8621818e0c40de95c48567b5b509400aca320f069f6b",
       "owners": [
         "claude-code"
       ]
@@ -1108,7 +1108,7 @@
     {
       "path": ".claude/skills/dead-code-detector/SKILL.md",
       "kind": "file",
-      "hash": "d7d3063011326714fea3a631aade42c307c182f1e71c1048a1e8226647509e06",
+      "hash": "a13a221f32affaa25df37f2e661cc4d1dfd9a2237bfc98a492936223ef3c8d3a",
       "owners": [
         "claude-code"
       ]
@@ -1204,7 +1204,7 @@
     {
       "path": ".claude/skills/environment-variable-auditor/SKILL.md",
       "kind": "file",
-      "hash": "6842d5af699a672bafb18a42a24b2e1bf3b7224cf0ee22371e2eb1f1740ee758",
+      "hash": "dc5e3c5b6a3e5134b2d4e759adcf7f65953b228f18eb25bc6e00add778b05a77",
       "owners": [
         "claude-code"
       ]
@@ -1220,7 +1220,7 @@
     {
       "path": ".claude/skills/environmental-backpressure-engine/SKILL.md",
       "kind": "file",
-      "hash": "c37707791b006ba89c2df880e973fe50246083f709fb8fe3786c4e68a74b702c",
+      "hash": "d84698cf0222a3367d01a4c8e85cb06a54340fc0dfc5748cef29ef472e3a4af4",
       "owners": [
         "claude-code"
       ]
@@ -1236,7 +1236,7 @@
     {
       "path": ".claude/skills/git-intelligence-engine/SKILL.md",
       "kind": "file",
-      "hash": "8deb4c974f6d4077c6cc30965a9321ef02f30262b53593b5e396d5a8c39c9cc1",
+      "hash": "73eeaf441c17f574f4f2628198ae32106f6d34f831aa1dddbfeac816465d9d97",
       "owners": [
         "claude-code"
       ]
@@ -1252,7 +1252,7 @@
     {
       "path": ".claude/skills/graph-engine/SKILL.md",
       "kind": "file",
-      "hash": "210fec89afe0c3d78c0c6332a2cdff14b6db53871ab6ecbb3f45a786c21a1c20",
+      "hash": "b5edab0b13fb201a6a64bcf7149e363f12a3c9e4010988e776c4b2f372273f4b",
       "owners": [
         "claude-code"
       ]
@@ -1268,7 +1268,7 @@
     {
       "path": ".claude/skills/graph-guided-autoresearch/SKILL.md",
       "kind": "file",
-      "hash": "d6ba4e6ccbd780cff185718264c41e4fe1b00a5f1b792b50f27d29e9a5e02ac9",
+      "hash": "95aa34090b28a0e4db88656bec3548b7ee775e2781a3b604aadf96d75253f0ec",
       "owners": [
         "claude-code"
       ]
@@ -1292,7 +1292,7 @@
     {
       "path": ".claude/skills/graphward/SKILL.md",
       "kind": "file",
-      "hash": "97d91bd084a661d4b2c1c52640c870390e4b7ae15c1ae853d887a96690869105",
+      "hash": "479de91f4641c2aa281958ec578ed3f8beea05a0a06e098830374a12220023d7",
       "owners": [
         "claude-code"
       ]
@@ -1356,7 +1356,7 @@
     {
       "path": ".claude/skills/incremental-sync-engine/SKILL.md",
       "kind": "file",
-      "hash": "d294dd2e855e4eef461ebbe61d26fab5bbaeb7c12368963a79904a42f6005c9c",
+      "hash": "8e360b012b772bc449e1f0153b5e23aeba1d4a335dfeb5e1714dd92ddef1ccfa",
       "owners": [
         "claude-code"
       ]
@@ -1380,7 +1380,7 @@
     {
       "path": ".claude/skills/initialize-intelligence-skill/SKILL.md",
       "kind": "file",
-      "hash": "24d56aa765371a466958e124ed86135ef1154df46de5d28e807defe3f7335823",
+      "hash": "ea0b403853bb13dec6ef1c2ae0700b4f24598f1d81bd2776f1584e5412ae7f5c",
       "owners": [
         "claude-code"
       ]
@@ -1428,7 +1428,7 @@
     {
       "path": ".claude/skills/knowledge-base-validator/SKILL.md",
       "kind": "file",
-      "hash": "554423956c89cad4d0408a921564f51f96297a199b8a7418fa3b9eb90c234bbd",
+      "hash": "174d885efd429ed0523458a2efce5d5395293d65fc4ad7d23d7f06115a18e894",
       "owners": [
         "claude-code"
       ]
@@ -1660,7 +1660,7 @@
     {
       "path": ".claude/skills/socratic-clarification-gate/SKILL.md",
       "kind": "file",
-      "hash": "8ce7ef5b3a62c2b7db1c9e2089fbc44367da7375304cdbae1468f7b948b594f4",
+      "hash": "f79243c9d08a939f69086af5b176d736574ed34db57f17db6b30c2fc68bb23ad",
       "owners": [
         "claude-code"
       ]
@@ -1692,7 +1692,7 @@
     {
       "path": ".claude/skills/staleness-detector/SKILL.md",
       "kind": "file",
-      "hash": "303d64b84dee76a70c66d6a5ecc514f388b8c9c00747c198a509640a120c4c95",
+      "hash": "12dc4601e5a216cd28b1faafb56ba96695582b7fbe9fd63a0defd8a5149c03cd",
       "owners": [
         "claude-code"
       ]
@@ -1756,7 +1756,7 @@
     {
       "path": ".claude/skills/user-intelligence-engine/SKILL.md",
       "kind": "file",
-      "hash": "9b74ecd37c0bd2b408c7910f725d35e2b8ff04b8ebac50a8321e05f321cadc9e",
+      "hash": "5a1991f7d3a600ccdc7ea72547ada3a09b070d33f53c9394e18fa45a4772292b",
       "owners": [
         "claude-code"
       ]
@@ -1945,7 +1945,7 @@
     {
       "path": ".graphward/engines/api-backward-compatibility-engine/SKILL.md",
       "kind": "file",
-      "hash": "e3d5f6a0943d34b20c000e6379d99b9cee751b643d89b9c51e09b5543b552ff7",
+      "hash": "e324f5dea514a56e3656872a03e0946f13ed1e64fefaf47a951cfef4ee625621",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2005,7 +2005,7 @@
     {
       "path": ".graphward/engines/context-budget-optimizer/SKILL.md",
       "kind": "file",
-      "hash": "316c7359c0cf07f8d4f9186ee8d71fc960e74076e60bbf8f2df6c4c273d52dcd",
+      "hash": "13101fb7dd526666fc88d8ded942e79968853dc887d63364f287afc3f9644654",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2035,7 +2035,7 @@
     {
       "path": ".graphward/engines/database-migration-safety-engine/SKILL.md",
       "kind": "file",
-      "hash": "3e3239af7634f47927d355552a6fcf9e85df81931a44233fd07888ca92474dd8",
+      "hash": "8dff47f1622a58ebf6fee89457f7c7445eb456bc4a611cb0e9d222632f16b67b",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2045,7 +2045,7 @@
     {
       "path": ".graphward/engines/dead-code-detector/SKILL.md",
       "kind": "file",
-      "hash": "f3a1c351d76a1c72fbcf920d4b40e31103b8f3affb9fa73e9c3bb6621539a81b",
+      "hash": "04ac2e0407f926b6b46b87139ee4b7a8416e9b36d88571a71b9b21b26b4f4784",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2085,7 +2085,7 @@
     {
       "path": ".graphward/engines/environment-variable-auditor/SKILL.md",
       "kind": "file",
-      "hash": "fb5f8f55f3e4465340422ca3b6afa14915657775243fa1bd2e0272ea2586030b",
+      "hash": "dfac77e55cf71274ad93f38413591938ac8c1165d462a3d6ce2ff7e4db5286f5",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2095,7 +2095,7 @@
     {
       "path": ".graphward/engines/environmental-backpressure-engine/SKILL.md",
       "kind": "file",
-      "hash": "47ed2d57551504317ea55199975ffce30fe274532f9ca402c08b2f332e028f26",
+      "hash": "6791e5df827c24dd27e3c8dc7ab0258bf560cd78836e3f62ce68e33994e0c716",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2105,7 +2105,7 @@
     {
       "path": ".graphward/engines/git-intelligence-engine/SKILL.md",
       "kind": "file",
-      "hash": "41343b02ee6506a084eb57184d09277dab4d8d62bc09a469135045b16b9f199d",
+      "hash": "cb134977d2570244c04a25f7cf66396c9783c0c90c649e8fa08da79f23c505df",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2115,7 +2115,7 @@
     {
       "path": ".graphward/engines/graph-engine/SKILL.md",
       "kind": "file",
-      "hash": "5bc12ee1df0191448161f1732d1af37051230a458fa42bec54aa165555d59702",
+      "hash": "ed4eb09a487425a15e0cab95a4aca09bc700c0b87da3f1d259a7ed40eddf5538",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2125,7 +2125,7 @@
     {
       "path": ".graphward/engines/graph-guided-autoresearch/SKILL.md",
       "kind": "file",
-      "hash": "13d5e0bbfd33047c0f4ffb696f42dc9a41d91899ac73aa38e8b7646b1d03413d",
+      "hash": "43b4ed431439b5811e4a305a892a1340019b693b5a58b25f1532921a6aa5b713",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2165,7 +2165,7 @@
     {
       "path": ".graphward/engines/incremental-sync-engine/SKILL.md",
       "kind": "file",
-      "hash": "1b62ff2dedaf91633de9fdf6107323953d843d170da5190735d8e28483fbc55b",
+      "hash": "18dd37fff99513a059fba1f576b0152b98b87912bdf897f8a17185b1ba10e80d",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2175,7 +2175,7 @@
     {
       "path": ".graphward/engines/initialize-intelligence-skill/SKILL.md",
       "kind": "file",
-      "hash": "fb981103ec1591b7b999a6acb788938a773e1d1f22fd00f9843e27d4cda3b88e",
+      "hash": "f91e82a0dd57e743c75d13c2cf41dbcfef278152227322d693882715c80fd478",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2205,7 +2205,7 @@
     {
       "path": ".graphward/engines/knowledge-base-validator/SKILL.md",
       "kind": "file",
-      "hash": "36a6783094eccf3ccced96f7d2addb57280d15987076b6487219eb21d80614da",
+      "hash": "5d0ee7f057a013c41c369a69f22abcb8051b91bb0d560c38a7fe13d425cf2032",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2335,7 +2335,7 @@
     {
       "path": ".graphward/engines/socratic-clarification-gate/SKILL.md",
       "kind": "file",
-      "hash": "24bf5a873c6ed4c5cbccf208f6a9d97046fd3a414f289b156056b49355a689c3",
+      "hash": "7178c238e2b0e2de9dc1fd5d578f4b976975357cd34956ecdecc3a677bacdc17",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2355,7 +2355,7 @@
     {
       "path": ".graphward/engines/staleness-detector/SKILL.md",
       "kind": "file",
-      "hash": "fd49ea1c8f14b2b030ab71630d6145f48940e4fe621c99e2082c5733a364e5de",
+      "hash": "bb18b71f801327f03be6016bfc130dc4a7fab9fca99059b64d146854ff8b78a9",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2385,7 +2385,7 @@
     {
       "path": ".graphward/engines/user-intelligence-engine/SKILL.md",
       "kind": "file",
-      "hash": "e82ff449b90ac202c0e38f012e557ad9430a9de62aa4c75c752e91134bd72f85",
+      "hash": "2070ae7dd2bbd8d7972a118251f0ebbc7383491e2ebf90a90892ab912e7746f0",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2405,7 +2405,7 @@
     {
       "path": ".graphward/gw.config.json",
       "kind": "seed",
-      "hash": "e9ff0849fc3779c5467b25637d0aee46322cef03d997fc3cd8ee705c2c1a8501",
+      "hash": "ae777f65fb00b93af8417f9069a12a4a2476faccef4ab3f4c9e3888ef429e249",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2448,7 +2448,7 @@
     {
       "path": ".graphward/providers/tool-contracts.json",
       "kind": "file",
-      "hash": "ba17a8f2b84e692cbf0ccf224f8603ee457b164df673088849b3787e891f1817",
+      "hash": "a7b90d4c331661c514996e056a5f347e7ffb293c8de795902299892741e9d3ca",
       "owners": [
         "antigravity",
         "antigravity-cli",
@@ -2467,7 +2467,7 @@
     {
       "path": "AGENTS.md",
       "kind": "block",
-      "hash": "01a8165cf8c8adb9523f5f8fd4f26788aec8b6ee3335eb291fc419e8aeda5982",
+      "hash": "ec827f0ba8ad6648cc6c9c1a3ce8d968c71d5e290b8c9717b68980cb860e9e23",
       "blockId": "graphward",
       "owners": [
         "antigravity-cli",
@@ -2477,7 +2477,7 @@
     {
       "path": "CLAUDE.md",
       "kind": "block",
-      "hash": "6d38207268a0d6600b02d2b8685fcf4397ae1e8c06837fc74725d9793a7e0c77",
+      "hash": "8c8e7a3d2c8ff98f68918c35367fcb2046853ffa946c0244294d33796a332f2a",
       "blockId": "graphward",
       "owners": [
         "claude-code"
@@ -2485,5 +2485,5 @@
     }
   ],
   "installedAt": "2026-07-13T08:35:35.436Z",
-  "updatedAt": "2026-10-11T01:42:14.821Z"
+  "updatedAt": "2026-11-03T03:11:18.889Z"
 }

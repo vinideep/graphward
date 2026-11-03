@@ -23,6 +23,7 @@ import path from "node:path";
 import { buildDependencyGraph } from "../graph/builders/dependency.js";
 import { extractApiSurface } from "../gates/api-diff.js";
 import { walkFiles } from "../gates/index.js";
+import { factualEdge } from "../graph/trust.js";
 
 export type DerivedFact =
   | { type: "source-file"; path: string; evidence: string }
@@ -81,7 +82,7 @@ export async function deriveFacts(root: string): Promise<DerivedFact[]> {
     for (const edge of graph.edges) {
       // Only runtime module→module coupling. Type-only edges are compile-time and
       // package edges are covered by package-dependency below.
-      if (edge.relation !== "imports") continue;
+      if (edge.relation !== "imports" || edge.confidence !== "verified" || !factualEdge(edge)) continue;
       // Provider-only and contested relationships are useful exploration
       // evidence, but they are not canonical facts. Only native relationships
       // (which have no provider trust marker) or source-corroborated fresh

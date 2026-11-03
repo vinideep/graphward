@@ -33,18 +33,20 @@ export type RevertReason =
   | "test_failed"
   | "metric_regressed"
   | "out_of_bounds"
-  | "command_error";
+  | "command_error"
+  | "candidate_drift";
 
 export interface TierGateResult {
-  status: "pass" | "warn" | "fail";
+  status: "pass" | "warn" | "fail" | "skipped" | "unavailable";
   failedGate?: string;
   summary: string;
+  checks?: Array<{ gate: string; status: string; summary: string }>;
 }
 
 export interface TierTestResult {
-  status: "pass" | "fail";
-  command: string;
-  exitCode: number;
+  status: "pass" | "fail" | "unavailable" | "skipped";
+  command?: string;
+  exitCode?: number;
   outputSummary?: string;
 }
 
@@ -77,6 +79,9 @@ export interface ExperimentRecord {
   createdAt: string;
   closedAt: string;
   gitCommit?: string;
+  candidateHash?: string;
+  candidateScope?: { includedFiles: number; omittedFiles: number; scope: string };
+  qualified?: boolean;
 }
 
 export interface EvaluateStepOptions {
@@ -89,7 +94,7 @@ export interface EvaluateStepOptions {
   metricConfig: MetricConfig;
   testCommand?: string;
   skipGates?: boolean;
-  autoRollback?: boolean; // default true: restores file from git baseline if verdict is REVERT
+  autoRollback?: boolean; // default true: requires an owned captured experiment baseline before restoration
   commitOnKeep?: boolean; // default false: auto-commit if KEEP
   useWorktree?: boolean; // default false: run experiment in an isolated git worktree instead of main workspace
 }

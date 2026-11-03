@@ -3,8 +3,12 @@
  * destructive (data loss), locking (production outage risk), or breaking. This is
  * the deterministic core of the database-migration-safety skill.
  *
- * Scope: when a git base ref is supplied it lints only migrations changed vs that
- * ref (pre-merge mode); otherwise it audits every migration in the tree.
+ * Scope: when the caller supplies the changed files (validate_change, lifecycle gates)
+ * it lints only those; when a git base ref is supplied it lints only migrations changed
+ * vs that ref (pre-merge mode); otherwise it audits every migration in the tree.
+ *
+ * Rollback bodies (Alembic `downgrade()`, Rails `def down`, knex/Sequelize `down`) are
+ * skipped: dropping what `upgrade` created is how a reversible migration is written.
  */
 
 import { readFile } from "node:fs/promises";
@@ -24,7 +28,13 @@ const MIGRATION_EXTS = new Set([".sql", ".rb", ".py", ".js", ".ts"]);
 function isMigrationFile(rel: string): boolean {
   const ext = path.extname(rel).toLowerCase();
   if (ext === ".sql") return true;
-  return /migrat/i.test(rel) && MIGRATION_EXTS.has(ext);
+  if (!MIGRATION_EXTS.has(ext)) return false;
+  // A migrations directory (migrations/, db/migrate/, alembic/versions/) or a file named as one
+  // (`add_users_migration.ts`, `migrate.js`). A bare substring match also caught tooling such
+  // as `migration-lint.ts` or `migration_utils.py`, whose rule text then failed the gate.
+  const dirs = path.posix.dirname(rel);
+  const base = path.posix.basename(rel, path.extname(rel));
+  return /(^|\/)[^/]*migrat[^/]*(\/|$)/i.test(dirs) || /(^|\/)alembic\/versions(\/|$)/.test(dirs) || /(^|[._-])(migration|migrations|migrate)$/i.test(base) || /^(migration|migrate)$/i.test(base);
 }
 
 interface Rule {
@@ -47,16 +57,57 @@ const RULES: Rule[] = [
   { re: /\balter\s+table\b[^;]*\badd\s+(constraint|foreign\s+key)\b/i, severity: "warning", message: "Adding a constraint/foreign key validates existing rows under lock — consider NOT VALID + VALIDATE." },
 ];
 
-function stripLineComment(line: string): string {
-  const idx = line.indexOf("--");
-  return idx >= 0 ? line.slice(0, idx) : line;
+function stripLineComment(line: string, ext: string): string {
+  const markers = ext === ".py" || ext === ".rb" ? ["#"] : ["--"];
+  let cut = line.length;
+  for (const marker of markers) { const idx = line.indexOf(marker); if (idx >= 0 && idx < cut) cut = idx; }
+  return line.slice(0, cut);
+}
+
+const ROLLBACK_START = /^(\s*)(?:(?:async\s+)?def\s+(?:downgrade|down)\b|(?:export\s+)?(?:async\s+)?function\s+down\b|(?:exports|module\.exports)\.down\s*=|(?:export\s+)?const\s+down\s*=|(?:async\s+)?down\s*\(|public\s+(?:async\s+)?down\s*\()/;
+
+/** Line indexes inside rollback bodies, found by indentation (Python/Ruby) or brace depth (JS/TS). */
+function rollbackLines(lines: string[], ext: string): Set<number> {
+  const skipped = new Set<number>();
+  for (let i = 0; i < lines.length; i++) {
+    const start = ROLLBACK_START.exec(lines[i]);
+    if (!start) continue;
+    if (ext === ".py" || ext === ".rb") {
+      const indent = start[1].length;
+      let j = i + 1;
+      for (; j < lines.length; j++) {
+        const line = lines[j];
+        if (!line.trim()) { skipped.add(j); continue; }
+        const lineIndent = line.length - line.trimStart().length;
+        if (lineIndent <= indent && !(ext === ".rb" && /^\s*end\b/.test(line) && lineIndent === indent)) break;
+        skipped.add(j);
+        if (ext === ".rb" && lineIndent === indent) { j++; break; }
+      }
+      i = j - 1;
+    } else if (ext !== ".sql") {
+      skipped.add(i);
+      // A brace-less arrow (`exports.down = knex => knex.schema.dropTable("t");`) is one line.
+      if (!lines[i].includes("{")) continue;
+      let depth = 0; let j = i;
+      for (; j < lines.length; j++) {
+        for (const char of lines[j]) { if (char === "{") depth++; else if (char === "}") depth--; }
+        skipped.add(j);
+        if (depth <= 0) break;
+      }
+      i = j;
+    }
+  }
+  return skipped;
 }
 
 function lintContent(content: string, rel: string): GateFinding[] {
   const findings: GateFinding[] = [];
   const lines = content.split("\n");
+  const ext = path.extname(rel).toLowerCase();
+  const rollback = rollbackLines(lines, ext);
   for (let i = 0; i < lines.length; i++) {
-    const line = stripLineComment(lines[i]);
+    if (rollback.has(i)) continue;
+    const line = stripLineComment(lines[i], ext);
     for (const rule of RULES) {
       rule.re.lastIndex = 0;
       if (rule.re.test(line)) {
@@ -69,7 +120,9 @@ function lintContent(content: string, rel: string): GateFinding[] {
 
 export async function migrationLintGate(root: string, options: GateOptions = {}): Promise<GateResult> {
   let relFiles: string[];
-  if (options.base && (await gitAvailable(root))) {
+  if (options.changedFiles) {
+    relFiles = options.changedFiles.map((file) => file.replace(/\\/g, "/")).filter(isMigrationFile);
+  } else if (options.base && (await gitAvailable(root))) {
     relFiles = (await gitChangedFiles(root, options.base)).filter(isMigrationFile);
   } else {
     const abs = await walkFiles(root, isMigrationFile);

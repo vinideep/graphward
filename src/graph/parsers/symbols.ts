@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { GraphNode, GraphEdge } from "../schema.js";
+import { ProjectFilePolicy, readApprovedSource } from "../../project-files/index.js";
 
 export interface PendingCall {
   from: string; // symbol id of the enclosing definition
@@ -250,7 +251,7 @@ function stripExt(relPath: string): string {
   return relPath.replace(/\.(ts|tsx|js|mjs|cjs|py)$/, "");
 }
 
-export async function extractSymbols(filePath: string, root: string): Promise<SymbolResult> {
+export async function extractSymbols(filePath: string, root: string, policy?: ProjectFilePolicy): Promise<SymbolResult> {
   const ext = path.extname(filePath).toLowerCase();
   const isJs = JS_EXTS.has(ext);
   const isPy = PY_EXTS.has(ext);
@@ -258,7 +259,7 @@ export async function extractSymbols(filePath: string, root: string): Promise<Sy
 
   let content: string;
   try {
-    content = await readFile(filePath, "utf8");
+    content = (await readApprovedSource(root, filePath, policy)).content;
   } catch {
     return { nodes: [], edges: [], pendingCalls: [] };
   }
@@ -288,7 +289,7 @@ export async function extractSymbols(filePath: string, root: string): Promise<Sy
         label: def.name,
         path: rel,
         confidence: "verified",
-        metadata: { symbolKind: def.kind, line: def.line },
+        metadata: { symbolKind: def.kind, line: def.line, sourcePath: relFile, exported: tsResult.exports.some(exp => exp.name === def.name) },
         evidence: [`${relFile}:${def.line}`],
       });
       edges.push({
@@ -312,7 +313,7 @@ export async function extractSymbols(filePath: string, root: string): Promise<Sy
           label: exp.name,
           path: rel,
           confidence: "verified",
-          metadata: { symbolKind: exp.kind, line: exp.line ?? 1 },
+          metadata: { symbolKind: exp.kind, line: exp.line ?? 1, sourcePath: relFile, exported: true },
           evidence: [`${relFile}:${exp.line ?? 1}`],
         });
         edges.push({
@@ -391,7 +392,7 @@ export async function extractSymbols(filePath: string, root: string): Promise<Sy
       label: def.name,
       path: rel,
       confidence: "verified",
-      metadata: { symbolKind: def.kind, line: def.line },
+      metadata: { symbolKind: def.kind, line: def.line, sourcePath: relFile, exported: isPy ? !def.name.startsWith("_") : /^\s*export\b/.test(content.split("\n")[def.line - 1] ?? "") },
       evidence: [`${relFile}:${def.line}`],
     });
     edges.push({

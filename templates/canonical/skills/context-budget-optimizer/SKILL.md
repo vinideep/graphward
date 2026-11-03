@@ -3,6 +3,7 @@ name: context-budget-optimizer
 description: Minimizes AI IDE token usage by ranking, slicing, summarizing, and lazy-loading project intelligence while preserving required gates and output quality.
 version: 2.0.0
 ---
+<!-- graphward:mode strict -->
 
 # Context Budget Optimizer
 
@@ -113,3 +114,20 @@ Format:
 - [ ] Required gates still had enough evidence to run
 - [ ] Pack records provider health/fallback, current hashes, confidence, conflicts, and unknowns
 - [ ] Retrieval stopped once the explicit stop conditions were satisfied
+<!-- /graphward:mode -->
+<!-- graphward:mode concise -->
+
+# Context Budget Optimizer — Concise
+
+Call `get_engineering_context` before broad intelligence reads or direct exploration. Prefer verified GraphWard knowledge and normalized graph scope, then current scoped source. Begin with a few relevant spans and stop when the affected behavior, dependencies, tests and unknowns are resolved.
+
+## Token Budget and Lazy Loading
+
+Aim to keep initial intelligence below 40% of available context; this is a planning heuristic, not measured token savings. Load only the selected route's engines, gate-specific evidence and necessary source sections. Reject stale/out-of-scope CCE spans and retain provider health, conflicts, exclusions and fallback information.
+
+## Context Manifest
+
+For ordinary bounded concise work, put evidence pointers, scope, risks and unresolved facts in the short impact/acceptance record or existing context pack. A separate `.graphward/context/context-manifest.md` is optional. Reuse persisted rankings; do not generate a personal profile or scan unrelated directories as a prerequisite for routine work.
+
+For complex/high-risk or explicit backlog work, follow the selected lifecycle's required context and artifacts. If necessary evidence cannot fit, narrow retrieval or report the specific unresolved question; missing context never grants mutation authority. Preserve native task readiness, freshness, ProjectFilePolicy, secrets, required provider/reduced-context decisions and applicable verification gates. Raw provider tools require explicit expert enablement.
+<!-- /graphward:mode -->

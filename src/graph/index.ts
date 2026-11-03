@@ -6,6 +6,8 @@ import { collectProjectFiles, ProjectFilePolicy } from "../project-files/index.j
 import { validateGraph, type DependencyGraph, type GraphNode, type GraphEdge } from "./schema.js";
 import { buildDependencyGraph, loadExistingGraph, mergeIncrementalUpdate } from "./builders/dependency.js";
 import { reconcileGraphifyEvidence } from "./provider-evidence.js";
+import { factualEdge, nodeSourcePath } from "./trust.js";
+export { factualEdge, nodeSourcePath } from "./trust.js";
 
 export type {
   DependencyGraph,
@@ -59,6 +61,7 @@ export { HierarchicalGraphPartitioner, HierarchicalGraphPartitioner as Hierarchi
 export type { PartitionLevel, GlobalGraphSlice, PackageGraphSlice, CommunityGraphSlice, TaskGraphSlice } from "./partitioning.js";
 
 const SOURCE_EXT_RE = /\.(ts|tsx|js|jsx|mts|cts|mjs|cjs|py|go|rs|rb|java|kt)$/;
+const GRAPH_INPUT_RE = /(?:^|\/)(?:tsconfig(?:\.[^/]+)?\.json|package\.json|requirements\.txt|pyproject\.toml|go\.mod|Cargo\.toml|\.gitignore|\.gwignore|\.eiignore)$/;
 
 export interface BuildGraphOptions {
   update?: boolean;
@@ -83,9 +86,10 @@ function gitHead(root: string): string | undefined {
 
 export async function graphWorkspaceHash(root: string): Promise<string> {
   const policy = await ProjectFilePolicy.load(root);
-  const files = await collectProjectFiles(policy, { accept: (rel) => SOURCE_EXT_RE.test(rel) || /(?:^|\/)tsconfig(?:\.[^/]+)?\.json$|(?:^|\/)package\.json$/.test(rel) });
+  const files = await collectProjectFiles(policy, { accept: (rel) => SOURCE_EXT_RE.test(rel) || GRAPH_INPUT_RE.test(rel) });
   files.sort((a, b) => a.localeCompare(b));
   const hash = createHash("sha256");
+  hash.update(policy.generationKey()).update("\0");
   for (const file of files) {
     const relative = path.relative(root, file).replace(/\\/g, "/");
     hash.update(relative).update("\0");
@@ -104,11 +108,18 @@ export async function buildGraph(root: string, options: BuildGraphOptions = {}):
   if (options.update && options.files && options.files.length > 0) {
     // Incremental: build only for changed files, then merge into existing graph
     const existing = await loadExistingGraph(graphPath);
+    // A newly supplied target can resolve an unchanged importer's diagnostic.
+    // Without a complete diagnostic ownership index, rebuild this native slice
+    // rather than carrying forward unresolved-import claims indefinitely.
+    if (options.files.some(file => GRAPH_INPUT_RE.test(file)) || existing?.unknowns.some(item => item.startsWith("unresolved import"))) {
+      result = await buildDependencyGraph(root);
+    } else {
     result = await buildDependencyGraph(root, { files: options.files, baseGraph: existing ?? undefined });
     if (existing) {
       const merged = await mergeIncrementalUpdate(existing, result.graph, options.files);
       result = { ...result, graph: merged, nodeCount: merged.nodes.length, edgeCount: merged.edges.length };
       wasIncremental = true;
+    }
     }
   } else {
     // Full build
@@ -123,9 +134,11 @@ export async function buildGraph(root: string, options: BuildGraphOptions = {}):
   // GraphWard remains canonical. Fresh Graphify output can corroborate or enrich the
   // native graph, while stale/out-of-scope provider evidence is rejected.
   const { loadGwConfig } = await import("../config/index.js");
+  let providerQuarantine: Awaited<ReturnType<typeof reconcileGraphifyEvidence>> | undefined;
   if (options.providerEvidence !== false && (await loadGwConfig(root)).providers.policy !== "native") {
     const reconciliation = await reconcileGraphifyEvidence(root, result.graph);
     result.graph = reconciliation.graph;
+    providerQuarantine = reconciliation;
   }
   result.nodeCount = result.graph.nodes.length;
   result.edgeCount = result.graph.edges.length;
@@ -135,6 +148,13 @@ export async function buildGraph(root: string, options: BuildGraphOptions = {}):
 
   if (options.write !== false) {
     const { writeProtectedFile } = await import("../manifest/lock.js");
+    if (providerQuarantine?.quarantinedEvidence) {
+      await writeProtectedFile(root, path.join(root, ".graphward", "reports", "provider-evidence-quarantine.json"), `${JSON.stringify({
+        schemaVersion: 1, provider: "graphify", generatedAt: new Date().toISOString(),
+        graphHash: providerQuarantine.graphHash, provenance: providerQuarantine.provenance,
+        quarantinedEvidence: providerQuarantine.quarantinedEvidence,
+      }, null, 2)}\n`);
+    }
     await writeProtectedFile(root, graphPath, `${JSON.stringify(result.graph, null, 2)}\n`);
     // Regenerate the orientation brief so it never drifts from the graph.
     try {
@@ -248,7 +268,7 @@ export async function ensureFreshGraph(root: string): Promise<FreshnessResult> {
   }
 
   try {
-    if (changed.length <= 200) {
+    if (changed.length <= 200 && !workspaceHashChanged) {
       await buildGraph(root, { update: true, files: changed, write: true });
     } else {
       await buildGraph(root, { write: true });
@@ -311,10 +331,17 @@ export async function analyzeImpact(root: string, changedFiles: string[]): Promi
     if (rel && changedRels.has(rel)) changedIds.add(node.id);
   }
   const nodeById = new Map<string, GraphNode>(existing.nodes.map((n) => [n.id, n]));
+  const policy = await ProjectFilePolicy.load(root);
+  const sourcePaths = new Map<string, string>();
+  for (const node of existing.nodes.filter(node => node.metadata.isTest === true)) {
+    const source = await nodeSourcePath(root, node, policy);
+    if (source) sourcePaths.set(node.id, source);
+  }
 
   // Reverse adjacency capturing the edge evidence that links importer -> target.
   const reverseAdj = new Map<string, Array<{ from: string; evidence: string[] }>>();
   for (const edge of existing.edges) {
+    if (!factualEdge(edge)) continue;
     if (!reverseAdj.has(edge.to)) reverseAdj.set(edge.to, []);
     reverseAdj.get(edge.to)!.push({ from: edge.from, evidence: edge.evidence });
   }
@@ -369,7 +396,7 @@ export async function analyzeImpact(root: string, changedFiles: string[]): Promi
       ...(isTest ? { isTest: true } : {}),
     };
     if (isTest) {
-      const file = node?.path ?? node?.evidence[0]?.split(":")[0];
+      const file = sourcePaths.get(id);
       if (file) testsToRun.add(file);
     }
     if (churn !== undefined && churn >= CHURN_RISK_THRESHOLD) {
@@ -425,14 +452,15 @@ export async function findSymbol(root: string, name: string): Promise<SymbolMatc
     ? exact
     : symbols.filter((n) => n.label.toLowerCase() === name.toLowerCase() || n.label.split(".").pop()?.toLowerCase() === name.toLowerCase());
 
-  return pool.map((n) => ({
+  const policy = await ProjectFilePolicy.load(root);
+  return Promise.all(pool.map(async (n) => ({
     id: n.id,
     label: n.label,
     kind: n.kind,
     symbolKind: typeof n.metadata.symbolKind === "string" ? (n.metadata.symbolKind as string) : undefined,
-    path: n.path,
+    path: await nodeSourcePath(root, n, policy),
     evidence: n.evidence,
-  }));
+  })));
 }
 
 export interface CallerInfo {
@@ -463,9 +491,10 @@ export async function whoCalls(root: string, name: string, options: { transitive
   const nodeById = new Map<string, GraphNode>(existing.nodes.map((n) => [n.id, n]));
 
   // Reverse index of `calls` edges: callee -> [caller edge].
+  const callerPolicy = await ProjectFilePolicy.load(root);
   const callersOf = new Map<string, Array<{ from: string; confidence: string; evidence: string[] }>>();
   for (const edge of existing.edges) {
-    if (edge.relation !== "calls") continue;
+    if (edge.relation !== "calls" || !factualEdge(edge)) continue;
     if (!callersOf.has(edge.to)) callersOf.set(edge.to, []);
     callersOf.get(edge.to)!.push({ from: edge.from, confidence: edge.confidence, evidence: edge.evidence });
   }
@@ -489,7 +518,7 @@ export async function whoCalls(root: string, name: string, options: { transitive
         kind: node?.kind ?? "unknown",
         confidence: c.confidence,
         evidence: c.evidence,
-        path: node?.path,
+        path: node ? await nodeSourcePath(root, node, callerPolicy) : undefined,
       });
       if (options.transitive) queue.push(c.from);
     }
@@ -538,7 +567,7 @@ export async function findExecutionPaths(
 
   const adj = new Map<string, Array<{ to: string; edge: GraphEdge }>>();
   for (const edge of existing.edges) {
-    if (!allowedRelations.has(edge.relation)) continue;
+    if (!allowedRelations.has(edge.relation) || !factualEdge(edge)) continue;
     if (!adj.has(edge.from)) adj.set(edge.from, []);
     adj.get(edge.from)!.push({ to: edge.to, edge });
   }

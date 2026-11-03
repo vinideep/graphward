@@ -3,6 +3,8 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { Server } from "@modelcontextprotocol/sdk/server";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { buildGraph, analyzeImpact, loadExistingGraph, ensureFreshGraph, findSymbol, whoCalls } from "../graph/index.js";
 import { preflight, postflight } from "../flight/index.js";
@@ -10,7 +12,7 @@ import { generateBrief, readBrief } from "../brief/index.js";
 import { shape, terseNode, terseEdge, packRows } from "./shaper.js";
 import { loadGwConfig } from "../config/index.js";
 import { packageVersion } from "../version.js";
-import { resolveRuntimeInvocation } from "../runtime/invocation.js";
+import { resolveRuntimeInvocation, runtimeIdentityStatus } from "../runtime/invocation.js";
 import { MCP_API_VERSION } from "../graph/schema.js";
 import { createConsolidatedRegistry } from "./consolidated.js";
 import type { ApiSnapshotExchange } from "../gates/api-snapshot.js";
@@ -265,7 +267,7 @@ const TOOLS = [
   {
     name: "evaluate_counterfactual",
     description:
-      "Stage 2 Post-Patch Counterfactual Graph Branch: Evaluates tentative in-memory patch overlays before committing, detecting newly introduced dependency cycles and broken call contracts with 100% precision.",
+      "Evaluates tentative patch overlays for dependency cycles and missing graph endpoints; signature and behavioral compatibility require separate tests.",
     inputSchema: {
       type: "object" as const,
       properties: {
@@ -359,24 +361,78 @@ function safeRegex(pattern: string | undefined): RegExp | undefined {
   }
 }
 
+// After dist/ is rebuilt this process still runs the code it loaded, so it must not
+// answer from it. Rather than refusing every call until a human reconnects, forward to
+// a child started from the current build. resolveRuntimeInvocation verifies every
+// module against the identity manifest and throws for a partial or invalid build.
+function currentGenerationDelegate(projectRoot: string): () => Promise<Client> {
+  let active: { generation: string; client: Promise<Client> } | undefined;
+  let childPid: number | undefined;
+  process.once("exit", () => { try { if (childPid) process.kill(childPid); } catch { /* already gone */ } });
+  return async () => {
+    const invocation = resolveRuntimeInvocation({ kind: "mcp", projectRoot });
+    if (active?.generation === invocation.generation) return active.client;
+    const previous = active;
+    const env = Object.fromEntries(Object.entries(process.env).filter((entry): entry is [string, string] => entry[1] !== undefined));
+    const transport = new StdioClientTransport({ command: invocation.command, args: invocation.args, cwd: projectRoot, env, stderr: "ignore" });
+    const client = new Client({ name: "graphward-generation-delegate", version: invocation.version });
+    const connecting = client.connect(transport).then(() => { childPid = transport.pid ?? undefined; return client; });
+    const current = { generation: invocation.generation, client: connecting };
+    active = current;
+    const forget = () => { if (active === current) active = undefined; };
+    client.onclose = forget;
+    connecting.catch(forget);
+    void previous?.client.then(old => old.close()).catch(() => {});
+    return connecting;
+  };
+}
+
 export async function startMcpServer(projectRoot: string): Promise<void> {
   const consolidated = await createConsolidatedRegistry(projectRoot);
   const server = new Server(
     { name: "graphward", version: await packageVersion() },
-    { capabilities: { tools: {}, experimental: { graphward: { apiVersion: MCP_API_VERSION } } } },
+    { capabilities: { tools: { listChanged: true }, experimental: { graphward: { apiVersion: MCP_API_VERSION, runtime: runtimeIdentityStatus() } } } },
   );
+  const delegate = currentGenerationDelegate(projectRoot);
+  let announcedStale = false;
+  // Tell the host once, so it re-lists and picks up the current build's schemas.
+  const announceStale = () => {
+    if (announcedStale) return;
+    announcedStale = true;
+    void server.sendToolListChanged().catch(() => {});
+  };
 
   // Advertise only the cohesive GraphWard control-plane surface. The legacy tools
   // remain callable below as compatibility wrappers for existing clients, but
   // are intentionally absent from discovery so the model does not have to
   // orchestrate GraphWard, Graphify, and CCE primitives itself.
-  server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: consolidated.list() }));
+  server.setRequestHandler(ListToolsRequestSchema, async () => {
+    if (!runtimeIdentityStatus().current) {
+      try { return await (await delegate()).listTools(); } catch { /* invalid build: calls will report it */ }
+    }
+    return { tools: consolidated.list() };
+  });
 
   server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
     const { name, arguments: args = {} } = request.params;
     const text = (t: string, isError = false) => ({ content: [{ type: "text", text: t }], ...(isError ? { isError: true } : {}) });
 
     try {
+      if (name !== "provider_status") {
+        const runtime = runtimeIdentityStatus();
+        if (!runtime.current) {
+          let client: Client;
+          try {
+            client = await delegate();
+          } catch (error) {
+            const reason = error instanceof Error ? error.message : String(error);
+            throw new Error(`GraphWard runtime generation changed after this MCP process loaded and the current build could not be started (${reason}). Restart this connection before using current evidence. Loaded: ${runtime.loadedGeneration ?? "unavailable"}; disk: ${"diskGeneration" in runtime ? runtime.diskGeneration : "invalid"}.`);
+          }
+          announceStale();
+          // Arguments are forwarded unchanged; the current build performs all validation.
+          return await client.callTool({ name, arguments: args }, undefined, { signal: extra.signal }) as any;
+        }
+      }
       const root = toCanonicalPath(typeof args.root === "string" ? args.root : projectRoot);
       if (root !== toCanonicalPath(projectRoot)) throw new Error("MCP connection is bound to another project; reconnect with the intended project root.");
       const cfg = await loadBudgetConfig(root);
@@ -393,7 +449,7 @@ export async function startMcpServer(projectRoot: string): Promise<void> {
             { budget: budgetOf(args, cfg, "who_calls", 1500), hints: { callers: { hint: "who_calls <caller> transitive=true (packed: {cols,rows})", mustKeep: true }, matched: { hint: "find_symbol <name>", mustKeep: true } } },
           ));
         }
-        return text(JSON.stringify(await consolidated.execute(name, { ...args, root }, { signal: extra.signal }), null, 2));
+        return text(JSON.stringify(await consolidated.execute(name, { ...args, root }, { signal: extra.signal })));
       }
       if (name === "get_brief") {
         await ensureFreshGraph(root);

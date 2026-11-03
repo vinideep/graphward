@@ -1,10 +1,10 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { loadGwConfig } from "../config/index.js";
-import { getEngineeringContext } from "../context/orchestrator.js";
+import { getEngineeringContext, formatEngineeringContext } from "../context/orchestrator.js";
 import { analyzeImpact, ensureFreshGraph, findSymbol, whoCalls, loadExistingGraph } from "../graph/index.js";
 import type { DependencyGraph, Snapshot } from "../graph/schema.js";
-import { ChangeSimulator, type ChangeIntent, type GraphLike } from "../simulation/change-simulator.js";
+import { ChangeSimulator, repositorySimulationGraph, type ChangeIntent, type GraphLike } from "../simulation/change-simulator.js";
 import { CounterfactualGraphBranch, type PatchDelta } from "../simulation/counterfactual-graph.js";
 import { RiskEngine } from "../risk/risk-engine.js";
 import { HierarchicalPartitioner } from "../graph/partitioning.js";
@@ -19,6 +19,7 @@ import { assessPromptClarity, checkPhaseGate, freezeRequirements, loadAidlcState
 import { createSessionHandoff, getSessionHandoff, listActiveFlights } from "../flight/index.js";
 import { migrateLegacyRegressionPatterns, promoteLearnedPattern, queryProjectMemory, recordLearnedPattern } from "../learning/index.js";
 import { packRows } from "./shaper.js";
+import { compactReport } from "./compact-report.js";
 import { McpToolRegistry } from "./registry.js";
 import { prepareTaskContext } from "../context/preparation.js";
 import { toCanonicalPath } from "../providers/workspace.js";
@@ -26,9 +27,11 @@ import { proposeTask, checkTaskReadiness, bindTaskContext, recordTaskChangeMappi
 import { hostSupportStatus } from "../adapters/qualification.js";
 import { IDE_IDS, type IdeId } from "../types.js";
 import type { PropertySchema } from "./registry.js";
+import { runtimeIdentityStatus } from "../runtime/invocation.js";
 
 const rootProperty = { type: "string" as const };
 const filesProperty = { type: "array" as const, items: { type: "string" as const } };
+const detailProperty = { type: "string" as const, enum: ["summary", "full"], description: "summary (default) keeps every count but lists only non-passing claims, citations and capped gate findings; full returns every row." };
 
 function rootOf(args: Record<string, unknown>, projectRoot: string): string {
   const root = toCanonicalPath(typeof args.root === "string" ? args.root : projectRoot);
@@ -43,11 +46,11 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
   const contract: PropertySchema = {
     type: "object", additionalProperties: false,
     required: ["kind", "request", "intendedUsers", "behavior", "nonGoals", "acceptanceCriteria", "scope", "constraints", "questions"],
-    properties: { kind: { type: "string", enum: ["feature", "fix", "refactor"] }, request: string, intendedUsers: strings, behavior: { ...strings, minItems: 1 }, nonGoals: strings, acceptanceCriteria: { ...strings, minItems: 1 }, scope: { ...strings, minItems: 1 }, constraints: strings, questions: { type: "array", items: { type: "object", additionalProperties: false, required: ["id", "question", "options"], properties: { id: string, question: string, options: strings, answer: string } } } },
+    properties: { kind: { type: "string", enum: ["feature", "fix", "refactor", "chore"] }, request: string, intendedUsers: strings, behavior: { ...strings, minItems: 1 }, nonGoals: strings, acceptanceCriteria: { ...strings, minItems: 1 }, scope: { ...strings, minItems: 1 }, constraints: strings, questions: { type: "array", items: { type: "object", additionalProperties: false, required: ["id", "question", "options"], properties: { id: string, question: string, options: strings, answer: string } } } },
   };
   registry.register({ name: "host_support_status", description: "Separate generated configuration from actual host discovery, enabled state, connection, invocation and enforcement qualification. Report potential global skill conflicts.", inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, host: { type: "string", enum: [...IDE_IDS] } } }, handler: async args => hostSupportStatus(rootOf(args, projectRoot), args.host as IdeId | undefined) });
   registry.register({ name: "propose_task_contract", description: "Record complete scope/questions/answers under an independent task revision. This cannot approve itself. Show the contract and exact confirmation challenge to the user, reuse previous decisions, and bind the native host/session.", inputSchema: { type: "object", additionalProperties: false, required: ["contract"], properties: { root: rootProperty, taskId: string, host: string, sessionId: string, contract } }, handler: async args => proposeTask(rootOf(args, projectRoot), args.contract, { taskId: args.taskId as string | undefined, host: args.host as string | undefined, sessionId: args.sessionId as string | undefined }) });
-  registry.register({ name: "record_task_change_mapping", description: "Record requirement-to-change-to-test evidence, including rationale. Does not claim tests passed.", inputSchema: { type: "object", additionalProperties: false, required: ["taskId", "entries"], properties: { root: rootProperty, taskId: string, entries: { type: "array", minItems: 1, items: { type: "object", additionalProperties: false, required: ["criterion", "files", "tests", "rationale"], properties: { criterion: string, files: { ...strings, minItems: 1 }, tests: { ...strings, minItems: 1 }, rationale: string } } } } }, handler: async args => recordTaskChangeMapping(rootOf(args, projectRoot), args.taskId as string, args.entries as any) });
+  registry.register({ name: "record_task_change_mapping", description: "Record requirement-to-change-to-test evidence, including rationale. Entries merge by criterion, so criteria can be mapped incrementally; the result lists criteria still unmapped. Does not claim tests passed.", inputSchema: { type: "object", additionalProperties: false, required: ["taskId", "entries"], properties: { root: rootProperty, taskId: string, entries: { type: "array", minItems: 1, items: { type: "object", additionalProperties: false, required: ["criterion", "files", "tests", "rationale"], properties: { criterion: string, files: { ...strings, minItems: 1 }, tests: { ...strings, minItems: 1 }, rationale: string } } } } }, handler: async args => recordTaskChangeMapping(rootOf(args, projectRoot), args.taskId as string, args.entries as any) });
   registry.register({ name: "get_task_readiness", description: "Check task/project/revision confirmation, scope and current prepared context. Prompt scores and empty documents cannot authorize edits.", inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, taskId: string, host: string, sessionId: string, files: filesProperty, stage: { type: "string", enum: ["requirements", "implementation"] } } }, handler: async args => checkTaskReadiness(rootOf(args, projectRoot), args as any) });
   registry.register({
     name: "prepare_task_context",
@@ -56,14 +59,27 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
     handler: async (args, context) => {
       const root = rootOf(args, projectRoot);
       const preparation = await prepareTaskContext(root, { retry: args.retry === true, timeoutMs: args.timeoutMs as number | undefined, signal: context?.signal });
-      return args.taskId && !["blocked", "cancelled"].includes(preparation.status) ? { preparation, ...(await bindTaskContext(root, args.taskId as string)) } : preparation;
+      // The bound context pack is persisted on the task; returning it whole here
+      // overflowed agent tool-result limits (100K+ chars). Return the decision-relevant receipt.
+      const summary = { id: preparation.id, status: preparation.status, requiresDecision: preparation.requiresDecision, sourceGeneration: preparation.sourceGeneration, policy: preparation.policy, providers: preparation.providers.map(run => ({ name: run.name, health: run.health, fallback: run.fallback })), unknowns: preparation.unknowns };
+      if (!args.taskId || ["blocked", "cancelled"].includes(preparation.status)) return summary;
+      const bound = await bindTaskContext(root, args.taskId as string);
+      return {
+        preparation: summary,
+        task: { taskId: bound.task.taskId, revision: bound.task.revision, revisionHash: bound.task.revisionHash, scope: bound.task.contract.scope },
+        context: { classification: bound.context.classification, risk: bound.context.risk, overallConfidence: bound.context.overallConfidence, stopReason: bound.context.stopReason, requiresDecision: bound.context.requiresDecision === true, unknowns: bound.context.unknowns, conflicts: bound.context.conflicts, tokenAllocation: bound.context.tokenAllocation },
+        next: "Context is bound to this task. Call get_task_readiness, then get_engineering_context with a focused task/files for code evidence. Edits inside the confirmed scope keep this context valid.",
+      };
     },
   });
   registry.register({
     name: "get_engineering_context",
-    description: "Build ContextPackV2 from verified GraphWard knowledge, the canonical normalized graph, and current scoped code evidence. Use this before direct file exploration.",
-    inputSchema: { type: "object", required: ["task"], additionalProperties: false, properties: { root: rootProperty, task: { type: "string" }, files: filesProperty, budget: { type: "number", minimum: 1 } } },
-    handler: async (args) => getEngineeringContext(rootOf(args, projectRoot), { task: args.task as string, files: args.files as string[] | undefined, budget: args.budget as number | undefined }),
+    description: "Build ContextPackV2 from verified GraphWard knowledge, the canonical normalized graph, and current scoped code evidence. Use this before direct file exploration. format: \"json\" (default, structured pack), \"markdown\" (rendered summary plus unknowns/risk), or \"full\" (both).",
+    inputSchema: { type: "object", required: ["task"], additionalProperties: false, properties: { root: rootProperty, task: { type: "string" }, files: filesProperty, budget: { type: "number", minimum: 1 }, format: { type: "string", enum: ["json", "markdown", "full"] } } },
+    handler: async (args) => {
+      const pack = await getEngineeringContext(rootOf(args, projectRoot), { task: args.task as string, files: args.files as string[] | undefined, budget: args.budget as number | undefined });
+      return formatEngineeringContext(pack, args.format === "full" || args.format === "markdown" ? args.format : "json");
+    },
   });
   registry.register({
     name: "analyze_change_impact",
@@ -78,14 +94,20 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
   registry.register({
     name: "validate_change",
     description: "Run deterministic change validation: impact, all built-in safety gates, claims, knowledge references, and citation freshness.",
-    inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, taskId: string, files: filesProperty, base: { type: "string" } } },
-    handler: async (args) => validateChange(rootOf(args, projectRoot), args.files as string[] | undefined, typeof args.base === "string" ? args.base : "HEAD", { taskId: args.taskId as string | undefined }),
+    inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, taskId: string, files: filesProperty, base: { type: "string" }, detail: detailProperty } },
+    handler: async (args) => {
+      const report = await validateChange(rootOf(args, projectRoot), args.files as string[] | undefined, typeof args.base === "string" ? args.base : "HEAD", { taskId: args.taskId as string | undefined });
+      return args.detail === "full" ? report : compactReport(report);
+    },
   });
   registry.register({
     name: "sync_engineering_knowledge",
     description: "Post-edit synchronization for GraphWard's graph, provider indexes, derived claims, and knowledge health. Canonical prose is flagged for model synthesis rather than silently rewritten.",
-    inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, files: filesProperty } },
-    handler: async (args) => syncEngineeringKnowledge(rootOf(args, projectRoot), args.files as string[] | undefined),
+    inputSchema: { type: "object", additionalProperties: false, properties: { root: rootProperty, files: filesProperty, detail: detailProperty } },
+    handler: async (args) => {
+      const report = await syncEngineeringKnowledge(rootOf(args, projectRoot), args.files as string[] | undefined);
+      return args.detail === "full" ? report : compactReport(report);
+    },
   });
   registry.register({
     name: "provider_status",
@@ -99,7 +121,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
         Promise.all(PROVIDER_NAMES.map((name) => providerStatus(name, { disabled }))),
         inspectProjectProviderRuns(root, { disabled }),
       ]);
-      return { policy: providerConfig.providers.policy, requireProviders: providerConfig.providers.requireProviders, binaries, projectRuns };
+      return { policy: providerConfig.providers.policy, requireProviders: providerConfig.providers.requireProviders, binaries, projectRuns, runtime: runtimeIdentityStatus() };
     },
   });
 
@@ -300,6 +322,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
     handler: async (args) => {
       const root = rootOf(args, projectRoot);
       const state = await loadAidlcState(root);
+      const startingWork = (typeof args.phase === "string" && args.phase !== state.position.phase) || (typeof args.stage === "string" && args.stage !== state.position.stage) || (typeof args.activeUnit === "string" && args.activeUnit !== state.position.activeUnit);
       if (typeof args.phase === "string" && args.phase !== state.position.phase) {
         const phase = state.position.phase as Phase;
         if (["discovery", "inception", "construction", "operations"].includes(phase)) {
@@ -316,6 +339,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
       if (typeof args.activeWorkflow === "string") state.position.activeWorkflow = args.activeWorkflow;
       if (typeof args.activeHat === "string") state.position.activeHat = args.activeHat;
       if (typeof args.activeUnit === "string") state.position.activeUnit = args.activeUnit;
+      if (startingWork) state.position.completionStatus = "in-progress";
       if (typeof args.breadcrumb === "string") state.breadcrumb = args.breadcrumb;
       else if (args.phase || args.stage) {
         state.breadcrumb = `AI-DLC: ${state.position.phase} -> ${state.position.stage} -> in-progress`;
@@ -563,12 +587,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
       if (!graph) {
         await ensureFreshGraph(root);
         const depGraph = await loadExistingGraph(path.join(root, ".graphward", "graph", "dependency-graph.json"));
-        graph = depGraph
-          ? {
-              nodes: depGraph.nodes.map((n) => ({ id: n.id, path: n.path ?? "", kind: n.kind, label: n.label })),
-              edges: depGraph.edges.map((e) => ({ from: e.from, to: e.to, relation: e.relation })),
-            }
-          : { nodes: [], edges: [] };
+        graph = depGraph ? await repositorySimulationGraph(root, depGraph) : {nodes:[],edges:[],coverage:{symbols:"unavailable",routes:"unavailable",tests:"validated-paths",limitations:["No canonical dependency graph is available."]}};
       }
 
       const maxDepth = typeof args.maxDepth === "number" ? args.maxDepth : 5;
@@ -578,7 +597,7 @@ export async function createConsolidatedRegistry(projectRoot: string): Promise<M
 
   registry.register({
     name: "evaluate_counterfactual",
-    description: "Stage 2 Post-Patch Counterfactual Graph Branch: Evaluates tentative in-memory patch overlays before committing, detecting newly introduced dependency cycles and broken call contracts with 100% precision.",
+    description: "Evaluates tentative in-memory patch overlays for dependency cycles and missing graph endpoints; signature and behavioral compatibility require separate tests.",
     inputSchema: {
       type: "object",
       additionalProperties: false,

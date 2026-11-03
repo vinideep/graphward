@@ -64,7 +64,16 @@ export async function runHealth(root: string): Promise<HealthResult> {
       .sort((a, b) => (b.metadata.churn as number) - (a.metadata.churn as number))
       .slice(0, 3)
       .map((n) => `${n.path ?? n.id.replace(/^module:/, "")} (${n.metadata.churn})`);
-    json.graph = { modules, symbols, edges: graph.edges.length, commit: graph.commit, disallowed };
+    const counts = new Map<string, number>();
+    for (const node of graph.nodes) counts.set(node.id, (counts.get(node.id) ?? 0) + 1);
+    const duplicateNodeIds = [...counts].filter(([, count]) => count > 1).map(([id]) => id);
+    const missingEndpoints = graph.edges.filter(edge => !counts.has(edge.from) || !counts.has(edge.to))
+      .map(edge => ({ from: edge.from, to: edge.to, relation: edge.relation }));
+    if (duplicateNodeIds.length || missingEndpoints.length) {
+      ok = false;
+      lines.push(`✗ Graph integrity: ${duplicateNodeIds.length} duplicate node ID(s), ${missingEndpoints.length} relationship(s) with missing endpoints`);
+    }
+    json.graph = { duplicateNodeIds, missingEndpoints, modules, symbols, edges: graph.edges.length, commit: graph.commit, disallowed };
     lines.push(`✓ Graph: ${modules} modules, ${symbols} symbols, ${graph.edges.length} edges${graph.commit ? ` @ ${graph.commit.slice(0, 7)}` : ""}`);
     if (disallowed.length > 0) {
       ok = false;
@@ -91,7 +100,15 @@ export async function runHealth(root: string): Promise<HealthResult> {
 
     // 4. Evidence freshness.
     const ev = await checkEvidenceHashes(root);
-    json.evidence = { checked: ev.checked, stale: ev.stale };
+    const unverifiedDocuments = (ev.documents ?? []).filter(document => !document.verified);
+    const navigationOnlyDocuments = (ev.documents ?? []).filter(document => document.navigationOnly).length;
+    json.evidence = { checked: ev.checked, stale: ev.stale, unverifiedDocuments, navigationOnlyDocuments };
+    if (unverifiedDocuments.length) {
+      ok = false;
+      lines.push(`✗ Evidence documents: ${unverifiedDocuments.length} unverified material document(s)`);
+      for (const document of unverifiedDocuments.slice(0, 5)) lines.push(`    ${document.path} — ${document.reason}`);
+    }
+    if (navigationOnlyDocuments) lines.push(`• Navigation-only guides: ${navigationOnlyDocuments}; no material source claims verified`);
     if (ev.checked === 0) {
       ok = false;
       lines.push("✗ Evidence hashes: none recorded (run `evidence-record` after validating the knowledge base)");

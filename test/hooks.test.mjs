@@ -27,6 +27,7 @@ import {
   claudeCodeHookSettings,
   cursorHookSettings,
   defaultConfigFile,
+  isReadOnlyShellCommand,
 } from "../dist/hooks/index.js";
 import { runVerification } from "../dist/verify/index.js";
 
@@ -254,15 +255,15 @@ test("normalizeInput maps Cursor field names and granular events to the neutral 
   assert.equal(claude.tool_name, "Write");
 });
 
-test("runHook formats output in Cursor's contract (agent_message / followup_message / permission)", async () => {
+test("runHook formats output in Cursor's contract (additional_context / followup_message / permission)", async () => {
   const root = await tmpRoot({ requireValidationOnStop: true, blockStaleEdits: true });
   await writeFile(path.join(root, "package.json"), JSON.stringify({ scripts: { test: "node --test" } }), "utf8");
   const sid = "cur";
 
-  // session-start → Cursor uses agent_message, not Claude's hookSpecificOutput.
+  // session-start → Cursor's documented sessionStart output is additional_context.
   const start = await runHook("session-start", root, { session_id: sid }, "cursor");
   const startOut = JSON.parse(start.stdout);
-  assert.ok("agent_message" in startOut, "cursor session-start should use agent_message");
+  assert.ok("additional_context" in startOut, "cursor session-start should use additional_context");
   assert.ok(!("hookSpecificOutput" in startOut));
 
   // Record a source change (Cursor afterFileEdit → Edit), then stop must block via followup_message.
@@ -284,4 +285,101 @@ test("Cursor edits with no discoverable file path fail safe (no false block)", a
   const input = normalizeInput("cursor", JSON.stringify({ session_id: "x", hook_event_name: "preToolUse" }));
   const res = await runHook("pre-tool-use", root, input, "cursor");
   assert.deepEqual(JSON.parse(res.stdout), { permission: "allow" });
+});
+
+test("discovery classifier allows read-only pipelines and quoted metacharacters, rejects writes and execution", () => {
+  const allowed = [
+    "ls -la",
+    "rg -n \"foo|bar\" src",
+    "git -C /repo log -5 --format=%h·%s",
+    "git status --short && git diff --stat",
+    "grep -rn 'a;b' src | head -20",
+    "find src -name '*.ts' | wc -l",
+    "sed -n '1,80p' src/web.ts",
+    "cat package.json 2>/dev/null",
+    "cd src && ls",
+    "sort -u list.txt | uniq -c",
+  ];
+  for (const command of allowed) assert.equal(isReadOnlyShellCommand(command), true, command);
+  const rejected = [
+    "touch src/index.ts",
+    "ls > out.txt",
+    "cat a | tee b",
+    "echo $(rm -rf x)",
+    "echo `id`",
+    "find . -name x -delete",
+    "find . -exec rm {} \;",
+    "sed -i 's/a/b/' f",
+    "sed -n '1p;w out' f",
+    "sort -o out.txt in.txt",
+    "uniq in.txt out.txt",
+    "git -c core.pager=sh log",
+    "git branch new-branch",
+    "rg --pre ./script x",
+    "sleep 1 &",
+    "FOO=1 ls",
+    "ls\nrm x",
+    "cat 'unterminated",
+    "ls &&",
+  ];
+  for (const command of rejected) assert.equal(isReadOnlyShellCommand(command), false, command);
+});
+
+test("discovery classifier accepts a trailing terminator and GraphWard's own read-only commands", () => {
+  const allowed = [
+    "ls;",
+    "cat package.json | head -3; ",
+    "git status --short; git log -1;",
+    "gw --version",
+    "graphward -v",
+    "gw health .",
+    "gw health . --json --strict",
+    "gw evidence-check .",
+    "gw claims",
+    "gw claims --json",
+    "gw claims verify .",
+    "gw claims list",
+  ];
+  for (const command of allowed) assert.equal(isReadOnlyShellCommand(command), true, command);
+  const rejected = [
+    "ls;;",
+    "; ls",
+    "ls; rm x;",
+    "gw health . --open",
+    "gw claims add --statement s --evidence src/a.ts:1-2 --author me",
+    "gw claims derive",
+    "gw claims --statement verify add",
+    "gw freshness .",
+    "gw git-analysis .",
+    "gw --version --json",
+  ];
+  for (const command of rejected) assert.equal(isReadOnlyShellCommand(command), false, command);
+});
+
+test("hook event log rotates instead of growing without bound", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "ei-hooks-rotate-"));
+  const state = path.join(root, ".graphward", ".hooks-state");
+  await mkdir(state, { recursive: true });
+  await writeFile(path.join(root, ".graphward", "install-manifest.json"), "{}");
+  await writeFile(path.join(state, "events.jsonl"), "x".repeat(1024 * 1024 + 1));
+  await runHook("post-tool-use", root, { session_id: "s", tool_name: "Read", tool_input: {} });
+  const rotated = await readFile(path.join(state, "events.jsonl.1"), "utf8");
+  const current = await readFile(path.join(state, "events.jsonl"), "utf8");
+  assert.equal(rotated.length, 1024 * 1024 + 1);
+  assert.equal(current.trim().split("\n").length, 1);
+});
+
+test("Stop allows a clean Git tree even when the session tracked edits that were since committed", async () => {
+  const root = await mkdtemp(path.join(tmpdir(), "ei-hooks-committed-"));
+  const git = (...args) => execFileSync("git", args, { cwd: root, stdio: "pipe" });
+  git("init", "-q"); git("config", "user.email", "t@t.co"); git("config", "user.name", "t");
+  await mkdir(path.join(root, "src"), { recursive: true });
+  await writeFile(path.join(root, "src", "app.ts"), "export const a = 1;\n");
+  await writeFile(path.join(root, "package.json"), JSON.stringify({ scripts: { test: "node -e 0" } }));
+  await runHook("post-tool-use", root, { session_id: "s", tool_name: "Edit", tool_input: { file_path: path.join(root, "src", "app.ts") } });
+  const dirty = await runHook("stop", root, { session_id: "s" });
+  assert.match(dirty.stdout ?? "", /no passing verification record/, "uncommitted, unverified source still blocks");
+  git("add", "-A"); git("commit", "-qm", "work");
+  const clean = await runHook("stop", root, { session_id: "s" });
+  assert.equal(clean.stdout, undefined, "nothing uncommitted remains to verify");
 });

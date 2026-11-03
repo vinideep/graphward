@@ -23,3 +23,7 @@ There is no SQL/NoSQL database in this package (see `05-database.md`) — "schem
 ## Unknowns
 
 - **Unclear from evidence**: no schema-migration precedent exists in this codebase to model a new migration after — the first real schema version bump will be setting precedent, not following one.
+
+## Local audit repair migration — 2026-10-27
+
+Verification schema3 binds check/config/runtime/execution identity; review schema1 binds contained current source; API snapshots/replays schema2 bind manifest/exchanges. Re-run supported checks/reviews rather than editing historical evidence into authority.

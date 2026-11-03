@@ -28,7 +28,8 @@ export interface CounterfactualEvaluationResult {
  * Stage 2: Post-Patch Counterfactual Graph Branch
  * Creates an ephemeral in-memory overlay snapshot that evaluates tentative patches
  * before any code is committed, detecting newly introduced circular dependencies
- * and broken call contracts with 100% precision.
+ * and missing graph endpoints. Signature compatibility and dynamic behavior
+ * require separate contract tests; this overlay is a topology check.
  */
 export class CounterfactualGraphBranch {
   private baseGraph: GraphLike;
@@ -163,14 +164,19 @@ export class CounterfactualGraphBranch {
       }
     }
 
-    // 2. Identify broken call contracts (edges pointing to removed nodes)
+    // 2. Validate the final overlay, after explicit edge removals. Deleting a
+    // source also removes its outgoing edges; surviving edges need both ends.
     const brokenEdges: Array<{ from: string; to: string; reason: string }> = [];
-    for (const e of this.baseGraph.edges) {
-      if (!this.removedNodeIds.has(e.from) && this.removedNodeIds.has(e.to)) {
+    const seenBroken = new Set<string>();
+    for (const e of [...this.baseGraph.edges, ...this.overlayEdges]) {
+      const key = `${e.from}->${e.to}`;
+      if (this.removedEdgeKeys.has(key) || this.removedNodeIds.has(e.from) || seenBroken.has(key)) continue;
+      if (!allNodeIds.has(e.from) || !allNodeIds.has(e.to)) {
+        seenBroken.add(key);
         brokenEdges.push({
           from: e.from,
           to: e.to,
-          reason: `Target node '${e.to}' was deleted in tentative patch`,
+          reason: `Final overlay is missing ${!allNodeIds.has(e.from) ? "source" : "target"} node '${!allNodeIds.has(e.from) ? e.from : e.to}'`,
         });
       }
     }

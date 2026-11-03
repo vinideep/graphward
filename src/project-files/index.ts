@@ -17,6 +17,7 @@ interface IgnoreRule {
   pattern: string;
   include: boolean;
   regex: RegExp;
+  base: string;
 }
 
 export interface CollectProjectFilesOptions {
@@ -87,7 +88,7 @@ function matches(pattern: string, relativePath: string): boolean {
 
 async function readRules(root: string, file: string, source: IgnoreRule["source"]): Promise<IgnoreRule[]> {
   try {
-    const text = await readFile(path.join(root, file), "utf8");
+    const text = await readFile(await containedFilePath(root, file), "utf8");
     const rules: IgnoreRule[] = [];
     for (const raw of text.split("\n")) {
       const trimmed = raw.trim();
@@ -95,17 +96,22 @@ async function readRules(root: string, file: string, source: IgnoreRule["source"
       const include = trimmed.startsWith("!");
       const pattern = include ? trimmed.slice(1) : trimmed;
       if (!pattern) continue;
-      rules.push({ source, pattern, include, regex: globRegex(pattern) });
+      rules.push({ source, pattern, include, regex: globRegex(pattern), base: source === "gitignore" ? slash(path.dirname(file)).replace(/^\.$/, "") : "" });
     }
     return rules;
-  } catch {
-    return [];
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return [];
+    throw new Error(`Cannot establish ignore policy from contained ${file}: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 
 function lastRule(rules: IgnoreRule[], relativePath: string): IgnoreRule | undefined {
   let result: IgnoreRule | undefined;
-  for (const rule of rules) if (rule.regex.test(relativePath)) result = rule;
+  for (const rule of rules) {
+    if (rule.base && !relativePath.startsWith(`${rule.base}/`)) continue;
+    const local = rule.base ? relativePath.slice(rule.base.length + 1) : relativePath;
+    if (rule.regex.test(local)) result = rule;
+  }
   return result;
 }
 
@@ -134,7 +140,21 @@ export class ProjectFilePolicy {
       readRules(resolved, ".gitignore", "gitignore"),
     ]);
     const ignoreRules = gwRules.length > 0 ? gwRules : eiRules;
-    return new ProjectFilePolicy(resolved, realRoot, config.projectFiles, ignoreRules, gitRules);
+    const policy = new ProjectFilePolicy(resolved, realRoot, config.projectFiles, ignoreRules, gitRules);
+    // Git ignore files are rooted at their own directory. Discover them once,
+    // pruning excluded directories before inspecting any descendants.
+    const visit = async (directory: string): Promise<void> => {
+      let entries;
+      try { entries = await readdir(path.join(resolved, directory), { withFileTypes: true }); } catch { return; }
+      if (directory) policy.gitRules.push(...await readRules(resolved, `${directory}/.gitignore`, "gitignore"));
+      for (const entry of entries) {
+        if (!entry.isDirectory()) continue;
+        const relative = directory ? `${directory}/${entry.name}` : entry.name;
+        if (policy.explain(relative, { directory: true }).included) await visit(relative);
+      }
+    };
+    await visit("");
+    return policy;
   }
 
   explain(inputPath: string, options: { directory?: boolean; realPath?: string } = {}): FileDecision {
@@ -174,6 +194,14 @@ export class ProjectFilePolicy {
     if (gw) {
       return { path: relative, included: gw.include, source: gw.source, pattern: gw.pattern, reason: gw.include ? `re-included by .${gw.source}` : `excluded by .${gw.source}` };
     }
+    // Git cannot re-include a file while one of its parent directories remains
+    // ignored. Apply that rule to direct lookups as well as directory walks.
+    const components = relative.replace(/\/$/, "").split("/");
+    for (let index = 1; index < components.length; index++) {
+      const parent = components.slice(0, index).join("/");
+      const ignoredParent = lastRule(this.gitRules, parent);
+      if (ignoredParent && !ignoredParent.include) return { path: relative, included: false, source: "gitignore", pattern: ignoredParent.pattern, reason: "parent directory excluded by .gitignore" };
+    }
     const git = lastRule(this.gitRules, pathForRules);
     if (git) {
       return { path: relative, included: git.include, source: "gitignore", pattern: git.pattern, reason: git.include ? "re-included by .gitignore" : "excluded by .gitignore" };
@@ -195,6 +223,35 @@ export class ProjectFilePolicy {
     const roots = override ?? this.config.roots;
     return roots && roots.length > 0 ? roots : ["."];
   }
+
+  /** Effective scope inputs participate in graph/provider generation identity. */
+  generationKey(): string {
+    return JSON.stringify({ config: this.config, rules: [...this.gwRules, ...this.gitRules].map(({ source, base, pattern, include }) => ({ source, base, pattern, include })) });
+  }
+}
+
+/** Resolve a regular file without permitting lexical or symlink escapes.
+ * This is also suitable for explicitly allowlisted GraphWard artifacts, which
+ * are deliberately outside the source indexing policy.
+ */
+export async function containedFilePath(root: string, input: string): Promise<string> {
+  const canonicalRoot = await realpath(root);
+  const absolute = path.resolve(root, input);
+  const lexical = path.relative(path.resolve(root), absolute);
+  if (lexical === ".." || lexical.startsWith(`..${path.sep}`) || path.isAbsolute(lexical)) throw new Error(`File escapes project root: ${input}`);
+  const target = await realpath(absolute);
+  const relative = path.relative(canonicalRoot, target);
+  if (relative === ".." || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative) || !(await lstat(target)).isFile()) throw new Error(`File is not a contained regular file: ${input}`);
+  return target;
+}
+
+/** Read source only after the shared realpath-aware project policy accepts it. */
+export async function readApprovedSource(root: string, input: string, policy?: ProjectFilePolicy): Promise<{ path: string; content: string }> {
+  const active = policy ?? await ProjectFilePolicy.load(root);
+  const target = await containedFilePath(root, input);
+  const decision = await active.explainExisting(input);
+  if (!decision.included) throw new Error(`Source excluded by project policy: ${input} (${decision.reason})`);
+  return { path: decision.path, content: await readFile(target, "utf8") };
 }
 
 export async function collectProjectFiles(
