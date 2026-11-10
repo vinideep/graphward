@@ -11,8 +11,9 @@ import { selectWorkflowMode } from "../dist/token-optimizer.js";
 
 test("canonical mode selection preserves original strict bytes and handles CRLF before projection", async () => {
   const originalHashes = [
-    ["workflows", "graphward", "507cd7fecbb1f0e4d6f976fe1cfc7057c5fbef6bbaad560e6bb756d7addcd2a0"],
-    ["skills", "graphward-skill", "7ff893ad3d8c9c6c27949619d7049c59cb82f4c8e3b00d4d7cf4f223ba9f619d"],
+    // Intentional verification cadence update in both strict projections.
+    ["workflows", "graphward", "191189454d1b06baba10e3f53f9c395ef80ba4082b6a764e7e3c6412976f2882"],
+    ["skills", "graphward-skill", "0e4eba067d5c50b50f1a7e7355b2f165a0dbd1bdc4b65171e2c87ebaa2165148"],
     ["skills", "aidlc-lifecycle-engine", "6a2a8df3fec54ad1bb58bc99387f22be69b7cd9bb741d229b9b077252e24eb1f"],
     ["skills", "context-budget-optimizer", "282725b55c87ab6b102bc2307e64bec9c07fb31840db2cc78edb6f703c78a2c3"],
     ["agents", "engineering-orchestrator", "45ca6ff53057ec2b8654ad7afde3c1feff0d6b55d4dd1565ff1ee871cd07eeb1"],
@@ -47,6 +48,37 @@ test("all providers select concise instructions consistently without changing ab
   await writeFile(configPath, JSON.stringify({ workflow: { mode: "concise" } }));
   const concise = await renderAdapters(ides, root);
   const get = name => concise.find(item => item.path === name)?.content ?? "";
+  const claudeVerificationPaths = [
+    ".claude/commands/graphward.md",
+    ".claude/skills/graphward/SKILL.md",
+    ".claude/skills/graphward-skill/SKILL.md",
+  ];
+  for (const [mode, rendered, requiredRuns] of [["strict", absent, 2], ["concise", concise, 1]]) {
+    for (const name of claudeVerificationPaths) {
+      const content = rendered.find(item => item.path === name)?.content ?? "";
+      const label = `${mode} ${name}`;
+      assert.equal((content.match(/\bverify \./g) ?? []).length, requiredRuns, label);
+      assert.match(content, /focused checks while editing/, label);
+      assert.match(content, /`validate_change` once/, label);
+      assert.match(content, /Reuse (?:this task's existing|the entry workflow's) sync/, label);
+      if (mode === "strict") {
+        assert.match(content, /before the first (?:implementation )?edit/i, label);
+      } else {
+        assert.match(content, /verify \.` at completion/, label);
+        assert.match(content, /required baselines/, label);
+      }
+    }
+    if (mode === "strict") {
+      const implementation = rendered.find(item => item.path === ".claude/skills/graphward-skill/SKILL.md")?.content ?? "";
+      assert.match(implementation, /Use the prose and evidence steps of `incremental-sync-engine`/);
+      assert.match(implementation, /Reuse the entry workflow's validation result if it already ran for the final inputs/);
+    }
+    const backpressure = rendered.find(item => item.path === ".claude/skills/environmental-backpressure-engine/SKILL.md")?.content ?? "";
+    assert.match(backpressure, /The verifier command `[^\n]+` executes/, mode);
+    assert.match(backpressure, /Strict work requires a pre-edit baseline/, mode);
+    assert.match(backpressure, /Ordinary concise work schedules its full run at completion/, mode);
+    assert.doesNotMatch(backpressure, /re-verify after every edit/, mode);
+  }
   for (const name of [".agents/workflows/graphward.md", ".claude/commands/graphward.md", ".cursor/commands/graphward.md", ".github/prompts/graphward.prompt.md", ".gemini/commands/graphward.toml", ".commandcode/commands/graphward.md", ".agents/skills/graphward/SKILL.md", ".github/skills/graphward/SKILL.md"]) {
     assert.match(get(name), /one working agent/, name);
     assert.match(get(name), /get_task_readiness/, name);

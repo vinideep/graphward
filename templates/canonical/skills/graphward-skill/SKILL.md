@@ -134,6 +134,8 @@ Before any code edit, write `.graphward/reports/IMP-XXX-<summary>.md`. Call `ana
 
 ### 4. Implement the Change
 
+Before the first edit in strict mode, run `graphward verify .` once for the starting state. Use the entry workflow's baseline result if it already ran for the same inputs. Record any baseline failures separately from post-edit failures.
+
 - Select the adaptive delivery mode inside the existing GraphWard workflow:
   - Standard Agile delivery for normal feature, bugfix, update, and refactor work
   - Adversarial delivery for auth, payment, public API, secrets, or compliance-sensitive work
@@ -174,13 +176,14 @@ Before any code edit, write `.graphward/reports/IMP-XXX-<summary>.md`. Call `ana
 - For `bugfix`: add a regression test reproducing the original issue
 - For `feature`: add unit tests and integration tests for the new behavior
 - For `architecture`/`security`: add boundary and negative-path tests
-- Run the project's test suite and record actual results
+- Use focused checks while editing and record actual results. Reserve full-suite runs for the baseline, final verification, or a separate run required by the project or delivery mode.
 
 ### 6. Validate
 
-- Run linters, type checks, and test suites available in the project
+- Run `graphward verify .` once against the finished source and check inputs. Reuse the entry workflow's final result while those inputs match. Rerun after a relevant change or to confirm a repair.
+- Run applicable lint and type checks separately where the configured verifier lacks that coverage.
 - Use environmental backpressure: analyze failed diagnostics, fix, and rerun the relevant command until it passes or a blocker is recorded
-- Run `type-safety-engine` for typed projects or record why no type system applies
+- Use `type-safety-engine` for typed projects or record why no type system applies. Reuse current verifier output where it supplies the required type evidence.
 - Run `api-backward-compatibility-engine` when API, event, webhook, SDK, route, or schema contracts changed — it also captures/replays response snapshots when API behavior can be sampled
 - Run `database-migration-safety-engine` when schema, ORM model, migration, index, or data persistence contracts changed
 - Run `security-audit-engine` when auth/authz, secrets, cryptography, sessions, untrusted input, public endpoints, LLM/MCP trust boundaries, or dependencies change. Use deterministic scanners where available; report `unavailable` rather than inventing CVE, license, or maintenance claims. Unwaived high/critical findings block completion.
@@ -208,7 +211,8 @@ Missing mappings block the Done gate and must be copied into the CHG record as o
 
 ### 7. Incremental Sync & Session Continuity
 
-Call `sync_engineering_knowledge` after edits, then use `incremental-sync-engine` to update only the affected canonical prose and durable artifacts it flags:
+Reuse the entry workflow's sync result for this task when the affected files and sync inputs match. Call `sync_engineering_knowledge` after edits when a current result is missing. Use the prose and evidence steps of `incremental-sync-engine` to update only the affected canonical artifacts. Follow this workflow's tool schedule for sync and final validation.
+
 - Knowledge docs reflecting changed behavior
 - Memory entries if decisions/patterns changed
 - Context maps if module/service topology changed
@@ -217,7 +221,7 @@ Call `sync_engineering_knowledge` after edits, then use `incremental-sync-engine
 - AI-DLC lifecycle artifacts if state, plan, NFRs, ADRs, operations readiness, or unit discoveries changed
 - Agile artifacts if backlog, story status, acceptance criteria, Ready/Done gates, or retrospective learning changed
 
-Run `validate_change` after synchronization. Completion requires current graph/index evidence, re-derived claims, applicable deterministic gates, and explicit reporting of any unavailable provider or validation. Provider caches are disposable; GraphWard artifacts remain durable authority.
+Reuse the entry workflow's validation result if it already ran for the final inputs. Otherwise run `validate_change` once after synchronization. Use its safety registry results for completion. Rerun individual gates when their inputs change, when confirming a repair, or when a separate check is required. Completion requires current graph/index evidence, re-derived claims, applicable deterministic gates, and explicit reporting of any unavailable provider or validation. Provider caches are disposable; GraphWard artifacts remain durable authority.
 
 #### Adaptive Session Handoff Trigger
 - **Trigger**: When context window limits approach, work is paused across sessions, or task is transferred to another agent.
@@ -351,11 +355,11 @@ Use one working agent for ordinary bounded implementation. Read the effective pr
 
 1. Write a short impact/acceptance record before edits, using `analyze_change_impact`: behavior, affected files, risks, acceptance targets, appropriate checks and unknowns. Reuse this record for completion evidence; separate backlog, context manifest, unit plan and CHG paperwork are not mandatory for routine work.
 2. Preserve existing user changes and instructions; implement only confirmed scope. Use the current project conventions and evidence pointers.
-3. Run meaningful tests and applicable type, lint and safety checks, plus `graphward verify .` against the finished bytes. Select `type-safety-engine`, `database-migration-safety-engine`, `api-backward-compatibility-engine`, security/tooling review or other engines only when affected behavior requires them. Failures and unavailable required checks remain visible and may block completion.
-4. Call `sync_engineering_knowledge`, refresh only affected canonical intelligence, then `validate_change`. Never certify unrelated stale documentation or claim a host/runtime outcome from local fixtures.
+3. Use focused checks while editing. Schedule the full `graphward verify .` at completion for ordinary bounded work. Reuse the entry workflow's final result while the source and check inputs match. Select separate type, lint, migration, API, or security checks where required coverage is missing. Failures and unavailable required checks remain visible and may block completion.
+4. Reuse the entry workflow's sync and validation results for this task when their inputs match. Call `sync_engineering_knowledge` when a current sync result is missing and refresh only affected canonical intelligence. Run `validate_change` once when a current final validation result is missing. Rerun an applicable check when its inputs change, when confirming a repair, or when a separate run is required. Never certify unrelated stale documentation or claim a host/runtime outcome from local fixtures.
 5. Add a compact Acceptance Criteria Verification Matrix to the same record: criterion, changed files, executed evidence and result. Finish with outcome, residual risks and `AI-DLC: <phase> -> <stage> -> <status>`.
 
 ## Escalation
 
-Complex, cross-cutting or high/critical-risk implementation and explicit backlog delivery use the full AI-DLC lifecycle and applicable review/approval gates. Load `aidlc-lifecycle-engine`, consult existing state and use its deterministic transition tools. Explicit backlog delivery preserves human approval before each feature. Add specialists only for a concrete risk or unresolved question and assign disjoint ownership. Native host permissions, domain safeguards, secrets, file policy, freshness, task readiness, provider decisions and verification receipts remain authoritative in both modes. Deployment, irreversible actions and external communications require their own authorization.
+Complex, cross-cutting or high/critical-risk implementation and explicit backlog delivery use the full AI-DLC lifecycle and its required baselines and review/approval gates. Load `aidlc-lifecycle-engine`, consult existing state and use its deterministic transition tools. Explicit backlog delivery preserves human approval before each feature. Add specialists only for a concrete risk or unresolved question and assign disjoint ownership. Native host permissions, domain safeguards, secrets, file policy, freshness, task readiness, provider decisions and verification receipts remain authoritative in both modes. Deployment, irreversible actions and external communications require their own authorization.
 <!-- /graphward:mode -->
